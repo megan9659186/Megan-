@@ -443,7 +443,7 @@
   <!-- Records list -->
   <div style="margin-top:16px">
     <div style="font-family:Georgia,serif;font-size:0.88rem;color:var(--ink);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)">📋 換班紀錄</div>
-    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:8px">換班紀錄自動儲存，永不消失 ☁️</p>
+    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:8px">換班紀錄自動儲存 ☁️</p>
     <ul class="sr-list" id="srList"></ul>
   </div>
 </div>
@@ -1047,7 +1047,7 @@ function getMyShiftWithSwaps(date) {
 
 function deleteSR(id) {
   swapRecords = swapRecords.filter(r=>r.id!==id);
-  renderSRList();
+  sbSave();renderSRList();
   renderCal();
   renderTab0();
 }
@@ -1189,7 +1189,7 @@ function confirmSwapWeek() {
     desc: `${date.getMonth()+1}/${date.getDate()} 那週：№${myNum} → №${targetNum}`
   });
 
-  renderSRList();
+  sbSave();renderSRList();
   renderCal();
   renderTab0();
   document.getElementById('swapPanel').style.display = 'none';
@@ -1215,11 +1215,43 @@ function confirmSwapGive() {
     desc: `${date.getMonth()+1}/${date.getDate()}（週${DOW[date.getDay()]}）${origShift}→${finalShift}`
   });
 
-  renderSRList();
+  sbSave();renderSRList();
   renderCal();
   document.getElementById('swapPanel').style.display = 'none';
   selectedSwapDate = null;
   selectedSwapMonday = null;
+}
+
+
+const SB_URL='https://dhonedoavijleeuonoaf.supabase.co';
+const SB_KEY='sb_publishable_0jggE9saHJF6KpG26MZkZA_xSFOv6Aj';
+
+async function sbSave(){
+  try{localStorage.setItem('megan_SR',JSON.stringify(swapRecords));localStorage.setItem('megan_SID',String(srIdCounter));}catch(e){}
+  try{
+    await fetch(SB_URL+'/rest/v1/swap_records?apikey='+SB_KEY,{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:1,records:JSON.stringify(swapRecords),counter:srIdCounter})
+    });
+  }catch(e){}
+}
+
+async function sbLoad(){
+  try{const s=localStorage.getItem('megan_SR');if(s){swapRecords=JSON.parse(s);srIdCounter=parseInt(localStorage.getItem('megan_SID'))||1;}}catch(e){}
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/swap_records?id=eq.1&apikey='+SB_KEY,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(r.ok){
+      const d=await r.json();
+      if(d.length>0){
+        swapRecords=JSON.parse(d[0].records||'[]');
+        srIdCounter=d[0].counter||1;
+        localStorage.setItem('megan_SR',JSON.stringify(swapRecords));
+        localStorage.setItem('megan_SID',String(srIdCounter));
+        renderSRList();renderCal();
+      }
+    }
+  }catch(e){}
 }
 
 // ═══════════════════════════════════
@@ -1231,9 +1263,9 @@ const todayStr = dateToKey(today());
 document.getElementById('dateInput').value = todayStr;
 
 initSwapPanel();
-renderSRList();
 renderTab0();
 renderCal();
+sbLoad();
 </script>
 
 </body>
