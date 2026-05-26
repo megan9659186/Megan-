@@ -1024,29 +1024,65 @@ function toggleCollapsible(header) {
 let swapRecords = [];
 let srIdCounter = 1;
 
+// GitHub API storage
+const GH_TOKEN = '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';
+const GH_OWNER = 'megan9659186';
+const GH_REPO = 'Megan-';
+const GH_FILE = 'swapdata.json';
+const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
+let ghFileSha = null;
+let saveTimer = null;
+
 function saveToStorage() {
+  // Also save locally as backup
   try {
-    const data = JSON.stringify(swapRecords);
-    const id = String(srIdCounter);
-    localStorage.setItem('megan_swapRecords', data);
-    localStorage.setItem('megan_srIdCounter', id);
-    sessionStorage.setItem('megan_swapRecords', data);
-    sessionStorage.setItem('megan_srIdCounter', id);
+    localStorage.setItem('megan_swapRecords', JSON.stringify(swapRecords));
+    localStorage.setItem('megan_srIdCounter', String(srIdCounter));
+  } catch(e) {}
+  // Debounce GitHub save (wait 1.5s after last change)
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveToGitHub, 1500);
+}
+
+async function saveToGitHub() {
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify({records: swapRecords, counter: srIdCounter}))));
+    const body = {message: 'update swap records', content};
+    if (ghFileSha) body.sha = ghFileSha;
+    const res = await fetch(GH_API, {
+      method: 'PUT',
+      headers: {'Authorization': `token ${GH_TOKEN}`, 'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.content) ghFileSha = data.content.sha;
   } catch(e) {}
 }
 
-function loadFromStorage() {
+async function loadFromStorage() {
+  // Load from localStorage first (instant)
   try {
-    let saved = localStorage.getItem('megan_swapRecords');
-    let savedId = localStorage.getItem('megan_srIdCounter');
-    // fallback to sessionStorage
-    if (!saved) saved = sessionStorage.getItem('megan_swapRecords');
-    if (!savedId) savedId = sessionStorage.getItem('megan_srIdCounter');
-    // fallback to old keys
-    if (!saved) saved = localStorage.getItem('swapRecords');
-    if (!savedId) savedId = localStorage.getItem('srIdCounter');
-    if (saved) swapRecords = JSON.parse(saved);
-    if (savedId) srIdCounter = parseInt(savedId);
+    const saved = localStorage.getItem('megan_swapRecords');
+    const savedId = localStorage.getItem('megan_srIdCounter');
+    if (saved) { swapRecords = JSON.parse(saved); srIdCounter = parseInt(savedId)||1; }
+  } catch(e) {}
+  // Then load from GitHub (authoritative)
+  try {
+    const res = await fetch(GH_API + '?t=' + Date.now(), {
+      headers: {'Authorization': `token ${GH_TOKEN}`}
+    });
+    if (res.ok) {
+      const data = await res.json();
+      ghFileSha = data.sha;
+      const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
+      swapRecords = decoded.records || [];
+      srIdCounter = decoded.counter || 1;
+      // Update localStorage with authoritative data
+      localStorage.setItem('megan_swapRecords', JSON.stringify(swapRecords));
+      localStorage.setItem('megan_srIdCounter', String(srIdCounter));
+      renderSRList();
+      renderCal();
+    }
   } catch(e) {}
 }
 let currentSRType = 0;
@@ -1257,8 +1293,8 @@ function confirmSwapGive() {
 const todayStr = dateToKey(today());
 document.getElementById('dateInput').value = todayStr;
 
-loadFromStorage();
 initSwapPanel();
+loadFromStorage().then(() => { renderSRList(); renderCal(); });
 renderSRList();
 renderTab0();
 renderCal();
