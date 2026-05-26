@@ -443,7 +443,7 @@
   <!-- Records list -->
   <div style="margin-top:16px">
     <div style="font-family:Georgia,serif;font-size:0.88rem;color:var(--ink);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)">📋 換班紀錄</div>
-    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:8px">換班紀錄會自動儲存，重整後不消失</p>
+    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:8px">換班紀錄自動儲存 ☁️</p>
     <ul class="sr-list" id="srList"></ul>
   </div>
 </div>
@@ -1023,109 +1023,6 @@ function toggleCollapsible(header) {
 
 let swapRecords = [];
 let srIdCounter = 1;
-
-// GitHub API storage
-const GH_TOKEN = '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';
-const GH_OWNER = 'megan9659186';
-const GH_REPO = 'Megan-';
-const GH_FILE = 'swapdata.json';
-const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
-let ghFileSha = null;
-let saveTimer = null;
-
-function saveToStorage() {
-  // Also save locally as backup
-  try {
-    localStorage.setItem('megan_swapRecords', JSON.stringify(swapRecords));
-    localStorage.setItem('megan_srIdCounter', String(srIdCounter));
-  } catch(e) {}
-  // Debounce GitHub save (wait 1.5s after last change)
-  if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveToGitHub, 1500);
-}
-
-
-async function testGitHub() {
-  const el = document.getElementById('ghStatus');
-  el.textContent = '測試中...';
-  try {
-    const res = await fetch(GH_API, {
-      headers: {'Authorization': `token ${GH_TOKEN}`, 'Accept': 'application/vnd.github.v3+json'}
-    });
-    if (res.status === 200) {
-      el.style.color = 'green';
-      el.textContent = '✓ 連線成功，檔案已存在';
-    } else if (res.status === 404) {
-      // File doesn't exist yet, try to create it
-      el.textContent = '嘗試建立儲存檔案...';
-      const content2 = btoa(JSON.stringify({records:[], counter:1}));
-      const res2 = await fetch(GH_API, {
-        method: 'PUT',
-        headers: {'Authorization': `token ${GH_TOKEN}`, 'Content-Type': 'application/json'},
-        body: JSON.stringify({message:'init swap data', content: content2})
-      });
-      if (res2.ok) {
-        el.style.color = 'green';
-        el.textContent = '✓ 建立成功！儲存功能正常';
-        const d = await res2.json();
-        ghFileSha = d.content.sha;
-      } else {
-        const err = await res2.json();
-        el.style.color = 'red';
-        el.textContent = '✗ 建立失敗：' + (err.message||res2.status);
-      }
-    } else {
-      const err = await res.json();
-      el.style.color = 'red';
-      el.textContent = '✗ 錯誤：' + (err.message||res.status);
-    }
-  } catch(e) {
-    el.style.color = 'red';
-    el.textContent = '✗ 網路錯誤：' + e.message;
-  }
-}
-
-async function saveToGitHub() {
-  try {
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify({records: swapRecords, counter: srIdCounter}))));
-    const body = {message: 'update swap records', content};
-    if (ghFileSha) body.sha = ghFileSha;
-    const res = await fetch(GH_API, {
-      method: 'PUT',
-      headers: {'Authorization': `token ${GH_TOKEN}`, 'Content-Type': 'application/json'},
-      body: JSON.stringify(body)
-    });
-    const data = await res.json();
-    if (data.content) ghFileSha = data.content.sha;
-  } catch(e) {}
-}
-
-async function loadFromStorage() {
-  // Load from localStorage first (instant)
-  try {
-    const saved = localStorage.getItem('megan_swapRecords');
-    const savedId = localStorage.getItem('megan_srIdCounter');
-    if (saved) { swapRecords = JSON.parse(saved); srIdCounter = parseInt(savedId)||1; }
-  } catch(e) {}
-  // Then load from GitHub (authoritative)
-  try {
-    const res = await fetch(GH_API + '?t=' + Date.now(), {
-      headers: {'Authorization': `token ${GH_TOKEN}`}
-    });
-    if (res.ok) {
-      const data = await res.json();
-      ghFileSha = data.sha;
-      const decoded = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
-      swapRecords = decoded.records || [];
-      srIdCounter = decoded.counter || 1;
-      // Update localStorage with authoritative data
-      localStorage.setItem('megan_swapRecords', JSON.stringify(swapRecords));
-      localStorage.setItem('megan_srIdCounter', String(srIdCounter));
-      renderSRList();
-      renderCal();
-    }
-  } catch(e) {}
-}
 let currentSRType = 0;
 
 // ── Override engine ──
@@ -1150,8 +1047,7 @@ function getMyShiftWithSwaps(date) {
 
 function deleteSR(id) {
   swapRecords = swapRecords.filter(r=>r.id!==id);
-  saveToStorage();
-  renderSRList();
+  sbSave();renderSRList();
   renderCal();
   renderTab0();
 }
@@ -1293,7 +1189,7 @@ function confirmSwapWeek() {
     desc: `${date.getMonth()+1}/${date.getDate()} 那週：№${myNum} → №${targetNum}`
   });
 
-  renderSRList();
+  sbSave();renderSRList();
   renderCal();
   renderTab0();
   document.getElementById('swapPanel').style.display = 'none';
@@ -1319,11 +1215,43 @@ function confirmSwapGive() {
     desc: `${date.getMonth()+1}/${date.getDate()}（週${DOW[date.getDay()]}）${origShift}→${finalShift}`
   });
 
-  renderSRList();
+  sbSave();renderSRList();
   renderCal();
   document.getElementById('swapPanel').style.display = 'none';
   selectedSwapDate = null;
   selectedSwapMonday = null;
+}
+
+
+const SB_URL='https://dhonedoavijleeuonoaf.supabase.co';
+const SB_KEY='sb_publishable_0jggE9saHJF6KpG26MZkZA_xSFOv6Aj';
+
+async function sbSave(){
+  try{localStorage.setItem('megan_SR',JSON.stringify(swapRecords));localStorage.setItem('megan_SID',String(srIdCounter));}catch(e){}
+  try{
+    await fetch(SB_URL+'/rest/v1/swap_records',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:1,records:JSON.stringify(swapRecords),counter:srIdCounter})
+    });
+  }catch(e){}
+}
+
+async function sbLoad(){
+  try{const s=localStorage.getItem('megan_SR');if(s){swapRecords=JSON.parse(s);srIdCounter=parseInt(localStorage.getItem('megan_SID'))||1;}}catch(e){}
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/swap_records?id=eq.1',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(r.ok){
+      const d=await r.json();
+      if(d.length>0){
+        swapRecords=JSON.parse(d[0].records||'[]');
+        srIdCounter=d[0].counter||1;
+        localStorage.setItem('megan_SR',JSON.stringify(swapRecords));
+        localStorage.setItem('megan_SID',String(srIdCounter));
+        renderSRList();renderCal();
+      }
+    }
+  }catch(e){}
 }
 
 // ═══════════════════════════════════
@@ -1335,10 +1263,9 @@ const todayStr = dateToKey(today());
 document.getElementById('dateInput').value = todayStr;
 
 initSwapPanel();
-loadFromStorage().then(() => { renderSRList(); renderCal(); });
-renderSRList();
 renderTab0();
 renderCal();
+sbLoad();
 </script>
 
 </body>
