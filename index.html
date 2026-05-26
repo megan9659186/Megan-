@@ -443,7 +443,7 @@
   <!-- Records list -->
   <div style="margin-top:16px">
     <div style="font-family:Georgia,serif;font-size:0.88rem;color:var(--ink);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)">📋 換班紀錄</div>
-    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:8px">重整後消失（artifact 限制）</p>
+    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:8px">換班紀錄會自動儲存，重整後不消失</p>
     <ul class="sr-list" id="srList"></ul>
   </div>
 </div>
@@ -1023,6 +1023,22 @@ function toggleCollapsible(header) {
 
 let swapRecords = [];
 let srIdCounter = 1;
+
+function saveToStorage() {
+  try {
+    localStorage.setItem('swapRecords', JSON.stringify(swapRecords));
+    localStorage.setItem('srIdCounter', srIdCounter);
+  } catch(e) {}
+}
+
+function loadFromStorage() {
+  try {
+    const saved = localStorage.getItem('swapRecords');
+    const savedId = localStorage.getItem('srIdCounter');
+    if (saved) swapRecords = JSON.parse(saved);
+    if (savedId) srIdCounter = parseInt(savedId);
+  } catch(e) {}
+}
 let currentSRType = 0;
 
 // ── Override engine ──
@@ -1047,6 +1063,7 @@ function getMyShiftWithSwaps(date) {
 
 function deleteSR(id) {
   swapRecords = swapRecords.filter(r=>r.id!==id);
+  saveToStorage();
   renderSRList();
   renderCal();
   renderTab0();
@@ -1230,6 +1247,7 @@ function confirmSwapGive() {
 const todayStr = dateToKey(today());
 document.getElementById('dateInput').value = todayStr;
 
+loadFromStorage();
 initSwapPanel();
 renderSRList();
 renderTab0();
