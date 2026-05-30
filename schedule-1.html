@@ -69,6 +69,65 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 .rec-del{background:none;border:none;color:#c89a96;font-size:18px;cursor:pointer;padding:0 4px}
 .rec-note{font-size:13px;color:#8a8078;margin-top:4px;padding-left:4px;border-left:2px solid #d8d0c0}
 .empty-msg{font-size:14px;color:#8a8078;text-align:center;padding:18px 0}
+/* ── 時數功能 ── */
+/* 餘額總覽卡片列 */
+.hours-summary{display:flex;gap:8px;margin-top:10px}
+.hs-card{flex:1;border-radius:10px;padding:10px 12px;border:1px solid #d8d0c0}
+.hs-card.jiji{background:#eef5f0;border-color:#b8d4c0}
+.hs-card.nian{background:#f0ecf8;border-color:#c8bce8}
+.hs-card-label{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.hs-card.jiji .hs-card-label{color:#5a8a6a}
+.hs-card.nian .hs-card-label{color:#7a6ab0}
+.hs-card-val{font-size:22px;font-weight:700;line-height:1}
+.hs-card.jiji .hs-card-val{color:#2d6040}
+.hs-card.nian .hs-card-val{color:#5a48a0}
+.hs-card-unit{font-size:11px;color:#8a8078;margin-top:2px}
+/* 年休進度條 */
+.nian-bar-row{display:flex;align-items:center;gap:8px;background:#faf7f2;border:1px solid #d8d0c0;border-radius:10px;padding:10px 14px;margin-top:8px}
+.nbl{font-size:12px;font-weight:700;color:#9b8fcc;width:28px;flex-shrink:0}
+.nbt{flex:1;height:6px;background:#e8e0d4;border-radius:99px;overflow:hidden}
+.nbf{height:100%;background:#9b8fcc;border-radius:99px;transition:width 0.4s}
+.nbn{font-size:11px;color:#8a8078;white-space:nowrap;min-width:80px;text-align:right}
+/* 設定列（年休總額、積休初始） */
+.hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap}
+.nts-group{display:flex;align-items:center;gap:5px}
+.nts-label{font-size:11px;color:#8a8078}
+.nts-input{width:52px;padding:3px 6px;border:1px solid #d8d0c0;border-radius:6px;font-size:13px;font-weight:600;color:#5a48a0;background:#fff;text-align:center;font-family:inherit}
+.nts-input.jiji-color{color:#2d6040}
+/* 時數 badge 在格子上 */
+.hbadge{display:block;font-size:8px;font-weight:700;padding:1px 3px;border-radius:3px;line-height:1.4;text-align:center;margin-top:1px}
+.hb-j-p{background:#e4f0e8;color:#5a8a6a}
+.hb-j-m{background:#f7eaea;color:#b03030}
+.hb-n-m{background:#f7eaea;color:#b03030}
+/* 時數按鈕（在 panel 底部） */
+.hours-trigger-btn{width:100%;padding:10px;background:#f0ece4;color:#6a7a6a;border:1px solid #d8d0c0;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.hours-trigger-btn.has-data{background:#eaf2ec;color:#2d6040;border-color:#a8c8a8}
+/* 時數輸入浮層 */
+.hours-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,26,0.4);z-index:300;align-items:flex-end;justify-content:center}
+.hours-overlay.open{display:flex}
+.hours-sheet{background:#faf7f2;border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.2s ease}
+@keyframes hup{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
+.hs-handle{padding:10px 0 0;display:flex;justify-content:center}
+.hs-handle-bar{width:36px;height:4px;background:#d8d0c0;border-radius:99px}
+.hs-head{padding:10px 16px 10px;border-bottom:1px solid #d8d0c0}
+.hs-date{font-size:15px;font-weight:600;color:#2d5043}
+.hs-shift{font-size:12px;color:#8a8078;margin-top:2px}
+.hs-body{padding:14px 16px 16px}
+.hs-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.hs-row-label{font-size:13px;font-weight:700;width:28px;flex-shrink:0}
+.hs-row-label.j{color:#5a8a6a}
+.hs-row-label.n{color:#7a6ab0}
+.hs-selwrap{display:flex;gap:6px;flex:1}
+.hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid #d8d0c0;border-radius:8px;padding:9px 6px 9px 10px;font-size:14px;font-weight:700;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer}
+.hdir.ot{border-color:#c8a87a;color:#7a5020;background:#fdf2e4}
+.hdir.jm{border-color:#c89a96;color:#b03030;background:#f7eaea}
+.hdir.nm{border-color:#c89a96;color:#b03030;background:#f7eaea}
+.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid #d8d0c0;border-radius:8px;padding:9px 10px;font-size:14px;font-weight:600;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer}
+.hs-btns{display:flex;gap:8px;margin-top:4px}
+.hs-btn-clear{padding:10px 12px;border:1px solid #e0c4c4;border-radius:8px;background:#f7eaea;color:#b03030;font-size:13px;cursor:pointer;font-family:inherit}
+.hs-btn-cancel{flex:1;padding:10px;border:1px solid #d8d0c0;border-radius:8px;background:transparent;color:#8a8078;font-size:14px;cursor:pointer;font-family:inherit}
+.hs-btn-save{flex:2;padding:10px;border:none;border-radius:8px;background:#2d5043;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+.hcustom{width:100%;padding:9px 12px;border:1px solid #c8a87a;border-radius:8px;font-size:15px;font-weight:600;background:#fdf2e4;color:#7a5020;font-family:inherit;outline:none}
 </style>
 </head>
 <body>
@@ -79,6 +138,40 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 </div>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
+
+<!-- 積休 年休 餘額總覽 -->
+<div class="hours-summary">
+  <div class="hs-card jiji">
+    <div class="hs-card-label">積　休</div>
+    <div class="hs-card-val" id="jijiBalVal">0</div>
+    <div class="hs-card-unit">小時</div>
+  </div>
+  <div class="hs-card nian">
+    <div class="hs-card-label">年　休</div>
+    <div class="hs-card-val" id="nianBalVal">0</div>
+    <div class="hs-card-unit">小時</div>
+  </div>
+</div>
+<!-- 年休進度條 -->
+<div class="nian-bar-row">
+  <span class="nbl">年休</span>
+  <div class="nbt"><div class="nbf" id="nianFill" style="width:0%"></div></div>
+  <span class="nbn" id="nianNums">已用 0 / 72 hr</span>
+</div>
+<!-- 設定：年休總額 + 積休初始 -->
+<div class="hours-settings">
+  <div class="nts-group">
+    <span class="nts-label">年休總額：</span>
+    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" value="52" onchange="saveSettings()">
+    <span class="nts-label">hr</span>
+  </div>
+  <div class="nts-group">
+    <span class="nts-label">積休初始：</span>
+    <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="21.45" onchange="saveSettings()">
+    <span class="nts-label">hr</span>
+  </div>
+</div>
+
 <div class="panel" id="panel">
   <div class="panel-title" id="panelTitle"></div>
   <div class="panel-sub" id="panelSub"></div>
@@ -105,6 +198,77 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
   </div>
   <button class="confirm-btn" onclick="confirmAction()">確認</button>
   <button class="cancel-btn" onclick="closePanel()">取消</button>
+  <!-- 時數按鈕 -->
+  <button class="hours-trigger-btn" id="hoursTriggerBtn" onclick="openHoursSheet()">⏱ 記錄時數（積休／年休）</button>
+</div>
+
+<!-- 時數輸入浮層 -->
+<div class="hours-overlay" id="hoursOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="hsDate"></div>
+      <div class="hs-shift" id="hsShift"></div>
+    </div>
+    <div class="hs-body">
+      <div class="hs-row">
+        <span class="hs-row-label j">積休</span>
+        <div class="hs-selwrap" style="flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <select class="hdir ot" id="jijiDir" onchange="updateHDir('jiji')">
+              <option value="+">加班</option>
+              <option value="-">拿時間</option>
+            </select>
+            <select class="hhrs" id="jijiHrs" onchange="toggleCustom('jiji')">
+              <option value="0">不填</option>
+              <option value="0.5">0.5 hr</option>
+              <option value="1">1 hr</option>
+              <option value="1.5">1.5 hr</option>
+              <option value="2">2 hr</option>
+              <option value="2.5">2.5 hr</option>
+              <option value="3">3 hr</option>
+              <option value="3.5">3.5 hr</option>
+              <option value="4">4 hr</option>
+              <option value="4.5">4.5 hr</option>
+              <option value="5">5 hr</option>
+              <option value="custom">自訂…</option>
+            </select>
+          </div>
+          <input class="hcustom" type="number" id="jijiCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
+        </div>
+      </div>
+      <div class="hs-row">
+        <span class="hs-row-label n">年休</span>
+        <div class="hs-selwrap" style="flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <select class="hdir nm" id="nianDir" style="pointer-events:none;opacity:0.6">
+              <option value="-">拿時間</option>
+            </select>
+            <select class="hhrs" id="nianHrs" onchange="toggleCustom('nian')">
+              <option value="0">不填</option>
+              <option value="0.5">0.5 hr</option>
+              <option value="1">1 hr</option>
+              <option value="1.5">1.5 hr</option>
+              <option value="2">2 hr</option>
+              <option value="2.5">2.5 hr</option>
+              <option value="3">3 hr</option>
+              <option value="3.5">3.5 hr</option>
+              <option value="4">4 hr</option>
+              <option value="4.5">4.5 hr</option>
+              <option value="5">5 hr</option>
+              <option value="custom">自訂…</option>
+            </select>
+          </div>
+          <input class="hcustom" type="number" id="nianCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
+        </div>
+      </div>
+      <div class="hs-btns">
+        <button class="hs-btn-clear" onclick="clearHoursForm()">清除</button>
+        <button class="hs-btn-cancel" onclick="document.getElementById('hoursOverlay').classList.remove('open')">取消</button>
+        <button class="hs-btn-save" onclick="saveHoursEntry()">儲存</button>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="sec-title">換班紀錄</div>
 <ul class="rec-list" id="recList"></ul>
@@ -129,6 +293,112 @@ let wS={},dS={},nS={};
 try{const s=localStorage.getItem('megan_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_notes');if(s)nS=JSON.parse(s);}catch(e){}
+// ── 時數資料 ──
+let hD={};
+let nianTotal=52, jijiInit=21.45;
+try{const s=localStorage.getItem('megan_hours');if(s)hD=JSON.parse(s);}catch(e){}
+try{const s=localStorage.getItem('megan_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal)||52;jijiInit=parseFloat(c.jijiInit)||0;}}catch(e){}
+function saveHours(){try{localStorage.setItem('megan_hours',JSON.stringify(hD));}catch(e){}}
+function saveSettings(){
+  nianTotal=parseFloat(document.getElementById('nianTotalInput').value)||52;
+  jijiInit=parseFloat(document.getElementById('jijiInitInput').value)||0;
+  try{localStorage.setItem('megan_hours_cfg',JSON.stringify({nianTotal,jijiInit}));}catch(e){}
+  refreshBalance();
+}
+// 計算積休餘額：初始 + 加班時數 - 拿時間時數
+function calcJijiBalance(){
+  let bal=jijiInit;
+  for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);}
+  return bal;
+}
+// 計算年休已用（全部 nian 都是拿時間 = 扣）
+function calcNianUsed(){
+  let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;
+}
+function refreshBalance(){
+  const jijiB=calcJijiBalance();
+  const nianU=calcNianUsed();
+  const nianB=nianTotal-nianU;
+  document.getElementById('jijiBalVal').textContent=jijiB;
+  document.getElementById('nianBalVal').textContent=nianB;
+  const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
+  document.getElementById('nianFill').style.width=pct+'%';
+  document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
+}
+function openHoursSheet(){
+  if(!selKey)return;
+  const date=kd(selKey);
+  const{s}=getShift(date);
+  document.getElementById('hsDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('hsShift').textContent='班別：'+s;
+  const e=hD[selKey]||{};
+  // 積休
+  document.getElementById('jijiDir').value=e.jijiDir||'+';
+  const jv=e.jiji||0;
+  const jSel=document.getElementById('jijiHrs');
+  const jCustom=document.getElementById('jijiCustom');
+  if(jv>0&&jv<=5&&jv*2===Math.round(jv*2)){jSel.value=jv;jCustom.style.display='none';}
+  else if(jv>5||jv%0.5!==0){jSel.value='custom';jCustom.style.display='block';jCustom.value=jv||'';}
+  else{jSel.value=0;jCustom.style.display='none';}
+  // 年休
+  const nv=e.nian||0;
+  const nSel=document.getElementById('nianHrs');
+  const nCustom=document.getElementById('nianCustom');
+  if(nv>0&&nv<=5&&nv*2===Math.round(nv*2)){nSel.value=nv;nCustom.style.display='none';}
+  else if(nv>5||nv%0.5!==0){nSel.value='custom';nCustom.style.display='block';nCustom.value=nv||'';}
+  else{nSel.value=0;nCustom.style.display='none';}
+  updateHDir('jiji');
+  document.getElementById('hoursOverlay').classList.add('open');
+}
+function toggleCustom(type){
+  const sel=document.getElementById(type+'Hrs');
+  const inp=document.getElementById(type+'Custom');
+  if(sel.value==='custom'){inp.style.display='block';inp.focus();}
+  else{inp.style.display='none';}
+}
+function getHoursVal(type){
+  const sel=document.getElementById(type+'Hrs');
+  if(sel.value==='custom'){const v=parseFloat(document.getElementById(type+'Custom').value);return isNaN(v)?0:v;}
+  return parseFloat(sel.value)||0;
+}
+function updateHDir(type){
+  if(type!=='jiji')return;
+  const sel=document.getElementById('jijiDir'),v=sel.value;
+  sel.className='hdir '+(v==='+'?'ot':'jm');
+}
+function clearHoursForm(){
+  document.getElementById('jijiDir').value='+';
+  document.getElementById('jijiHrs').value=0;
+  document.getElementById('jijiCustom').style.display='none';
+  document.getElementById('nianHrs').value=0;
+  document.getElementById('nianCustom').style.display='none';
+  updateHDir('jiji');
+}
+function saveHoursEntry(){
+  const jh=getHoursVal('jiji');
+  const jd=document.getElementById('jijiDir').value;
+  const nh=getHoursVal('nian');
+  if(jh===0&&nh===0){delete hD[selKey];}
+  else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
+  saveHours();refreshBalance();render();
+  document.getElementById('hoursOverlay').classList.remove('open');
+  updateHoursBtnStyle();
+}
+function updateHoursBtnStyle(){
+  const btn=document.getElementById('hoursTriggerBtn');
+  if(!btn||!selKey)return;
+  const e=hD[selKey];
+  const hasData=e&&(e.jiji>0||e.nian>0);
+  btn.className='hours-trigger-btn'+(hasData?' has-data':'');
+  if(hasData){
+    const parts=[];
+    if(e.jiji>0)parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);
+    if(e.nian>0)parts.push('年休－'+e.nian);
+    btn.textContent='⏱ '+parts.join('　');
+  }else{
+    btn.textContent='⏱ 記錄時數（積休／年休）';
+  }
+}
 function autoClean(){
   const now=new Date(),ym=now.getFullYear()*100+now.getMonth();
   let changed=false;
@@ -189,7 +459,7 @@ function render(){
     const isRight=col===6||getZoneIdx(ad(date,1))!==zi;
     const isTop=gridPos<7||getZoneIdx(above)!==zi;
     const isBottom=below.getMonth()!==date.getMonth()||below.getFullYear()!==date.getFullYear()||getZoneIdx(below)!==zi;
-    const hasNote=!!(nS[key]||(wS[mk]&&nS[mk]));
+    const hasNote=!!(nS[key]||nS[mk]||wS[mk]||dS[key]);
     const cell=document.createElement('div');
     cell.style.cssText='--zc:'+zc;
     let cls='cell';
@@ -210,6 +480,12 @@ function render(){
     if(h){const he=document.createElement('div');he.className='hol-name';he.textContent=h;top.appendChild(he);}
     const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
     const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;
+    // 時數 badge
+    const he=hD[key];
+    if(he){
+      if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
+      if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
+    }
     cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
   }
 }
@@ -230,6 +506,7 @@ function openPanel(key){
   document.getElementById('weekNote').value=nS[mk]||'';
   document.getElementById('dayNote').value=nS[key]||'';
   document.getElementById('panel').classList.add('open');
+  updateHoursBtnStyle();
   render();
   setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'}),100);
 }
@@ -311,6 +588,9 @@ function delRec(type,key){
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 autoClean();renderRecList();render();
+document.getElementById('nianTotalInput').value=nianTotal;
+document.getElementById('jijiInitInput').value=jijiInit;
+refreshBalance();
 </script>
 </body>
 </html>
