@@ -166,8 +166,8 @@ function sc(s,holD){
   return'sD';
 }
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
-function prev(){cm--;if(cm<0){cm=11;cy--;}render()}
-function next(){cm++;if(cm>11){cm=0;cy++;}render()}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList()}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList()}
 function render(){
   const me=new Date(cy,cm+1,0),totalDays=me.getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -259,9 +259,15 @@ function confirmAction(){
   if(curTab==='week'){
     const nv=document.getElementById('numSel').value;
     if(!nv){alert('請先選擇號碼班');return;}
-    wS[mk]=parseInt(nv);
+    const date=kd(selKey),origNum=nf(ME.w1,wo(date));
     const note=document.getElementById('weekNote').value.trim();
-    if(note)nS[mk]=note;else delete nS[mk];
+    if(parseInt(nv)===origNum){
+      // 換回原始號碼班 → 清除換班紀錄與備註
+      delete wS[mk];delete nS[mk];
+    }else{
+      wS[mk]=parseInt(nv);
+      if(note)nS[mk]=note;else delete nS[mk];
+    }
   }else{
     const chosen=getSelectedShift();
     if(chosen)dS[selKey]=chosen;else delete dS[selKey];
@@ -274,17 +280,24 @@ function confirmAction(){
 function closePanel(){selKey=null;document.getElementById('panel').classList.remove('open');render();}
 function renderRecList(){
   const el=document.getElementById('recList'),items=[];
+  // 只顯示目前瀏覽月份的紀錄
+  function inViewMonth(date){return date.getFullYear()===cy&&date.getMonth()===cm;}
   Object.keys(wS).sort().forEach(mk=>{
-    const date=kd(mk),origNum=nf(ME.w1,wo(date));
+    const date=kd(mk);
+    // 週換班：以週一日期的月份為準
+    if(!inViewMonth(date))return;
+    const origNum=nf(ME.w1,wo(date));
     items.push({type:'week',key:mk,desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週：N.'+origNum+' → N.'+wS[mk],note:nS[mk]||''});
   });
   Object.keys(dS).sort().forEach(key=>{
     const date=kd(key);
+    if(!inViewMonth(date))return;
     if(dS[key])items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key],note:nS[key]||''});
   });
   Object.keys(nS).sort().forEach(key=>{
     if(!wS[key]&&!dS[key]){
       const date=kd(key);
+      if(!inViewMonth(date))return;
       items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註',note:nS[key]});
     }
   });
