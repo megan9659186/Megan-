@@ -20,9 +20,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;co
 .cell.empty{background:transparent;border-color:transparent;cursor:default}
 .cell.today .dn{background:#a07850;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px}
 .cell.swapped .badge{background:#c9905a}
-.cell.day-mod .bot{outline:2px solid #c9905a;outline-offset:-2px}
 .cell.has-note::after{content:'•';position:absolute;top:2px;right:4px;font-size:10px;color:#8a8078;z-index:5}
-.cell.selected{box-shadow:inset 0 0 0 2px #c9905a}
+.cell.selected .top{background:#ecddd8!important}
+.cell.selected .dn{color:#804030!important}
+.cell.selected .bot{background:#f4ece8!important}
+.cell.other-working{background:#e8f0f8!important}
+.cell.other-working .bot{background:#d8e8f4!important}
 .cell.z-top{border-top:3px solid var(--zc)!important}
 .cell.z-bottom{border-bottom:3px solid var(--zc)!important}
 .cell.z-left{border-left:3px solid var(--zc)!important}
@@ -129,6 +132,19 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 .hs-btn-cancel{flex:1;padding:10px;border:1px solid #d8d0c0;border-radius:8px;background:transparent;color:#8a8078;font-size:14px;cursor:pointer;font-family:inherit}
 .hs-btn-save{flex:2;padding:10px;border:none;border-radius:8px;background:#2d5043;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 .hcustom{width:100%;padding:9px 12px;border:1px solid #c8a87a;border-radius:8px;font-size:15px;font-weight:600;background:#fdf2e4;color:#7a5020;font-family:inherit;outline:none}
+/* ── 夜班津貼 ── */
+.allow-wrap{margin-top:10px;background:#faf7f2;border:1px solid #d8d0c0;border-radius:10px;overflow:hidden}
+.allow-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px}
+.allow-title{font-size:12px;font-weight:700;color:#4a5a52;letter-spacing:1px}
+.allow-month-total{font-size:13px;font-weight:700;color:#2d5043}
+.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #ece6dc}
+.allow-cell{padding:8px 10px;border-right:1px solid #ece6dc;border-bottom:1px solid #ece6dc}
+.allow-cell:nth-child(3n){border-right:none}
+.allow-cell-label{font-size:10px;color:#8a8078;margin-bottom:3px;letter-spacing:0.5px}
+.allow-cell-val{font-size:14px;font-weight:700;color:#2d5043}
+.allow-cell-count{font-size:10px;color:#a89880;margin-top:1px}
+.allow-note{font-size:10px;color:#a89880;padding:6px 14px 8px;border-top:1px solid #ece6dc}
+.allow-manual{width:100%;margin-top:5px;padding:3px 6px;border:1px solid #d8d0c0;border-radius:5px;font-size:11px;background:#faf7f2;color:#2d5043;font-family:inherit;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -171,6 +187,40 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
     <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="21.45" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
+</div>
+
+<!-- 夜班津貼 -->
+<div class="allow-wrap">
+  <div class="allow-header">
+    <span class="allow-title">夜班津貼</span>
+    <span class="allow-month-total" id="allowTotal">本月 $0</span>
+  </div>
+  <div class="allow-grid">
+    <div class="allow-cell">
+      <div class="allow-cell-label">12-8 班 $270</div>
+      <div class="allow-cell-val" id="allow12Val">$0</div>
+      <div class="allow-cell-count" id="allow12Count">0 班</div>
+      <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">E 班 $560／包班 $640</div>
+      <div class="allow-cell-val" id="allowEVal">$0</div>
+      <div class="allow-cell-count" id="allowECount">0 班</div>
+      <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">N 班 $770／包班 $960</div>
+      <div class="allow-cell-val" id="allowNVal">$0</div>
+      <div class="allow-cell-count" id="allowNCount">0 班</div>
+      <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">D班加班 $270</div>
+      <div class="allow-cell-val" id="allowDotVal">$0</div>
+      <div class="allow-cell-count" id="allowDotCount">0 班</div>
+    </div>
+  </div>
+  <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270</div>
 </div>
 
 <div class="panel" id="panel">
@@ -294,6 +344,14 @@ let wS={},dS={},nS={};
 try{const s=localStorage.getItem('megan_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_notes');if(s)nS=JSON.parse(s);}catch(e){}
+let oD={};  // 他人班表
+try{const s=localStorage.getItem('megan_other');if(s)oD=JSON.parse(s);}catch(e){}
+function saveOther(){try{localStorage.setItem('megan_other',JSON.stringify(oD));}catch(e){}}
+function updateOtherLabel(){
+  const el=document.getElementById('otherWorking');
+  const label=document.getElementById('otherLabel');
+  if(el&&label)label.textContent=el.checked?'有班':'休息';
+}
 // ── 時數資料 ──
 let hD={};
 let nianTotal=52, jijiInit=21.45;
@@ -381,9 +439,11 @@ function saveHoursEntry(){
   const nh=getHoursVal('nian');
   if(jh===0&&nh===0){delete hD[selKey];}
   else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
-  saveHours();refreshBalance();render();
+  saveHours();refreshBalance();refreshAllow();
+  render();
   document.getElementById('hoursOverlay').classList.remove('open');
   updateHoursBtnStyle();
+  document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function updateHoursBtnStyle(){
   const btn=document.getElementById('hoursTriggerBtn');
@@ -399,6 +459,64 @@ function updateHoursBtnStyle(){
   }else{
     btn.textContent='⏱ 記錄時數（積休／年休）';
   }
+}
+// ── 夜班津貼 ──
+const ALLOW_RATE={'12-8':270,'E':560,'N':770,'Dot':270};
+let allowAdj={};  // {yyyymm: {a12, aE, aN}} 手動調整
+try{const s=localStorage.getItem('megan_allow_adj');if(s)allowAdj=JSON.parse(s);}catch(e){}
+function saveAllowAdj(){
+  const ym=cy*100+(cm+1);
+  const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
+  const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
+  const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
+  if(a12===0&&aE===0&&aN===0)delete allowAdj[ym];
+  else allowAdj[ym]={a12,aE,aN};
+  try{localStorage.setItem('megan_allow_adj',JSON.stringify(allowAdj));}catch(e){}
+  refreshAllow();
+}
+function calcAllow(){
+  const totalDays=new Date(cy,cm+1,0).getDate();
+  let c12=0,cE=0,cN=0,cDot=0;
+  for(let d=1;d<=totalDays;d++){
+    const date=new Date(cy,cm,d);
+    const{s}=getShift(date);
+    const dow=date.getDay();
+    if(s.startsWith('12-8'))c12++;
+    else if(s.startsWith('E'))cE++;
+    else if(s.startsWith('N'))cN++;
+    // D班 週一到五 加班 ≥ 1.5hr
+    if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){
+      const key=dk(date);
+      const he=hD[key];
+      if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;
+    }
+  }
+  // 包班費：E≥15天→$640/天，N≥15天→$960/天
+  const rateE=cE>=15?640:560;
+  const rateN=cN>=15?960:770;
+  return{c12,cE,cN,cDot,rateE,rateN};
+}
+function refreshAllow(){
+  const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
+  const ym=cy*100+(cm+1);
+  const adj=allowAdj[ym]||{};
+  const adj12=adj.a12||0, adjE=adj.aE||0, adjN=adj.aN||0;
+  const a12=c12*270+adj12, aE=cE*rateE+adjE, aN=cN*rateN+adjN, aDot=cDot*270;
+  const total=a12+aE+aN+aDot;
+  const labelE='E 班 $'+(cE>=15?'640（包班）':'560')+(cE>=15?' ✓':'');
+  const labelN='N 班 $'+(cN>=15?'960（包班）':'770')+(cN>=15?' ✓':'');
+  document.getElementById('allow12Val').textContent='$'+a12;
+  document.getElementById('allow12Count').textContent=c12+' 班';
+  document.getElementById('allowEVal').textContent='$'+aE;
+  document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
+  document.getElementById('allowNVal').textContent='$'+aN;
+  document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
+  document.getElementById('allowDotVal').textContent='$'+aDot;
+  document.getElementById('allowDotCount').textContent=cDot+' 班';
+  document.getElementById('allow12Adj').value=adj12||'';
+  document.getElementById('allowEAdj').value=adjE||'';
+  document.getElementById('allowNAdj').value=adjN||'';
+  document.getElementById('allowTotal').textContent='本月 $'+total;
 }
 function autoClean(){
   const now=new Date(),ym=now.getFullYear()*100+now.getMonth();
@@ -437,8 +555,8 @@ function sc(s,holD){
   return'sD';
 }
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList()}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList()}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();}
 function render(){
   const me=new Date(cy,cm+1,0),totalDays=me.getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -469,13 +587,23 @@ function render(){
     if(dm)cls+=' day-mod';
     if(selKey===key)cls+=' selected';
     if(hasNote)cls+=' has-note';
+    if(oD[key])cls+=' other-working';
     if(isTop)cls+=' z-top';
     if(isBottom)cls+=' z-bottom';
     if(isLeft)cls+=' z-left';
     if(isRight)cls+=' z-right';
     cell.className=cls;
     cell.onclick=()=>openPanel(key);
-    if(isMon||isFirst){const b=document.createElement('div');b.className='badge';b.textContent=origNum;cell.appendChild(b);}
+    if(isMon||isFirst){
+      const b=document.createElement('div');b.className='badge';b.textContent=origNum;
+      b.onclick=function(e){
+        e.stopPropagation();
+        openPanel(key);
+        switchTab('week');
+        document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
+      };
+      cell.appendChild(b);
+    }
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
     if(h){const he=document.createElement('div');he.className='hol-name';he.textContent=h;top.appendChild(he);}
@@ -506,10 +634,12 @@ function openPanel(key){
   renderShiftBtns(dS[key]||curShift);
   document.getElementById('weekNote').value=nS[mk]||'';
   document.getElementById('dayNote').value=nS[key]||'';
+  const otherEl=document.getElementById('otherWorking');
+  if(otherEl){otherEl.checked=oD[key]||false;updateOtherLabel();}
   document.getElementById('panel').classList.add('open');
   updateHoursBtnStyle();
   render();
-  setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+  setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'}),50);
 }
 function switchTab(tab){
   curTab=tab;
@@ -548,14 +678,35 @@ function confirmAction(){
     }
   }else{
     const chosen=getSelectedShift();
-    if(chosen)dS[selKey]=chosen;else delete dS[selKey];
+    const date=kd(selKey);
+    const{s:origShift}=getShift(date);  // 先取得原始班別（不含dS覆蓋）
     const note=document.getElementById('dayNote').value.trim();
+    // 取得無dS覆蓋的原始班別
+    const savedDS=dS[selKey];delete dS[selKey];
+    const{s:baseShift}=getShift(date);
+    if(savedDS)dS[selKey]=savedDS; // 恢復暫存
+    if(chosen&&chosen!==baseShift){
+      dS[selKey]=chosen;
+    }else{
+      delete dS[selKey]; // 選的和原始一樣 → 清除
+    }
     if(note)nS[selKey]=note;else delete nS[selKey];
     if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+    // 他人班表
+    const otherEl=document.getElementById('otherWorking');
+    if(otherEl&&otherEl.checked){oD[selKey]=true;}else{delete oD[selKey];}
+    saveOther();
   }
-  save();renderRecList();closePanel();
+  save();renderRecList();
+  render();refreshAllow();closePanel();
+  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function closePanel(){selKey=null;document.getElementById('panel').classList.remove('open');render();}
+function closePanel(){
+  selKey=null;
+  document.getElementById('panel').classList.remove('open');
+  document.querySelectorAll('.cell.selected').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+}
 function renderRecList(){
   const el=document.getElementById('recList'),items=[];
   // 只顯示目前瀏覽月份的紀錄
@@ -591,7 +742,7 @@ for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.text
 autoClean();renderRecList();render();
 document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
-refreshBalance();
+refreshBalance();refreshAllow();
 </script>
 </body>
 </html>
