@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Frog">
-<title>Frog 排班</title>
+<meta name="apple-mobile-web-app-title" content="排班">
+<link rel="apple-touch-icon" href="icon.png">
+<title>排班</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#1a1a1a;background:#f5f1e8;padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 12px 12px;font-size:16px}
@@ -72,7 +73,7 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 .rec-del{background:none;border:none;color:#c89a96;font-size:18px;cursor:pointer;padding:0 4px}
 .rec-note{font-size:13px;color:#8a8078;margin-top:4px;padding-left:4px;border-left:2px solid #d8d0c0}
 .empty-msg{font-size:14px;color:#8a8078;text-align:center;padding:18px 0}
-/* 積休 年休 */
+/* ── 時數功能 ── */
 .hours-summary{display:flex;gap:8px;margin-top:10px}
 .hs-card{flex:1;border-radius:10px;padding:10px 12px;border:1px solid #d8d0c0}
 .hs-card.jiji{background:#eef5f0;border-color:#b8d4c0}
@@ -125,7 +126,7 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 .hs-btn-cancel{flex:1;padding:10px;border:1px solid #d8d0c0;border-radius:8px;background:transparent;color:#8a8078;font-size:14px;cursor:pointer;font-family:inherit}
 .hs-btn-save{flex:2;padding:10px;border:none;border-radius:8px;background:#2d5043;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
 .hcustom{width:100%;padding:9px 12px;border:1px solid #c8a87a;border-radius:8px;font-size:15px;font-weight:600;background:#fdf2e4;color:#7a5020;font-family:inherit;outline:none}
-/* 夜班津貼 */
+/* ── 夜班津貼 ── */
 .allow-wrap{margin-top:10px;background:#faf7f2;border:1px solid #d8d0c0;border-radius:10px;overflow:hidden}
 .allow-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px}
 .allow-title{font-size:12px;font-weight:700;color:#4a5a52;letter-spacing:1px}
@@ -149,6 +150,7 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
 
+<!-- 積休 年休 餘額總覽 -->
 <div class="hours-summary">
   <div class="hs-card jiji">
     <div class="hs-card-label">積　休</div>
@@ -161,11 +163,13 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
     <div class="hs-card-unit">小時</div>
   </div>
 </div>
+<!-- 年休進度條 -->
 <div class="nian-bar-row">
   <span class="nbl">年休</span>
   <div class="nbt"><div class="nbf" id="nianFill" style="width:0%"></div></div>
   <span class="nbn" id="nianNums">已用 0 / 72 hr</span>
 </div>
+<!-- 設定：年休總額 + 積休初始 -->
 <div class="hours-settings">
   <div class="nts-group">
     <span class="nts-label">年休總額：</span>
@@ -179,6 +183,7 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
   </div>
 </div>
 
+<!-- 夜班津貼 -->
 <div class="allow-wrap">
   <div class="allow-header">
     <span class="allow-title">夜班津貼</span>
@@ -238,9 +243,11 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
   </div>
   <button class="confirm-btn" onclick="confirmAction()">確認</button>
   <button class="cancel-btn" onclick="closePanel()">取消</button>
+  <!-- 時數按鈕 -->
   <button class="hours-trigger-btn" id="hoursTriggerBtn" onclick="openHoursSheet()">⏱ 記錄時數（積休／年休）</button>
 </div>
 
+<!-- 時數輸入浮層 -->
 <div class="hours-overlay" id="hoursOverlay" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="hours-sheet">
     <div class="hs-handle"><div class="hs-handle-bar"></div></div>
@@ -308,24 +315,17 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
     </div>
   </div>
 </div>
-
 <div class="sec-title">換班紀錄</div>
 <ul class="rec-list" id="recList"></ul>
-
 <script>
-// ── 人員 24 (Frog) 專用設定 ──
-// w1 = 14，錨點 2026/06/08 = 號碼班14，06/01那週 weekOffset=-1 → 號碼班13 ✓
 const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
-
-const ANC=new Date(2026,5,8);       // 錨點 2026/06/08
+const ANC=new Date(2026,5,8);
 const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#8a9ea8','#a89bb0','#b8a878','#8fa68a','#b8a898','#9aabba'];
-const ME={w1:14};  // 人員 24 的 w1 = 14
-
+const ME={w1:14};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
 const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','OFF'];
 const DZ=['日','一','二','三','四','五','六'];
-
 function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function ad(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function kd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
@@ -334,18 +334,23 @@ function nf(w,woff){return((w-1+woff)%35+35)%35+1}
 function monKey(date){return dk(ad(date,-((date.getDay()+6)%7)))}
 function getZoneIdx(date){return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6;}
 function getZoneColor(date){return ZONE_COLORS[getZoneIdx(date)];}
-
-// localStorage key 前綴用 frog_ 避免和其他人員衝突
 let wS={},dS={},nS={};
 try{const s=localStorage.getItem('frog_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('frog_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('frog_notes');if(s)nS=JSON.parse(s);}catch(e){}
-
+let oD={};
+try{const s=localStorage.getItem('frog_other');if(s)oD=JSON.parse(s);}catch(e){}
+function saveOther(){try{localStorage.setItem('frog_other',JSON.stringify(oD));}catch(e){}}
+function updateOtherLabel(){
+  const el=document.getElementById('otherWorking');
+  const label=document.getElementById('otherLabel');
+  if(el&&label)label.textContent=el.checked?'有班':'休息';
+}
+// ── 時數資料 ──
 let hD={};
-let nianTotal=52,jijiInit=0;
+let nianTotal=52, jijiInit=0;
 try{const s=localStorage.getItem('frog_hours');if(s)hD=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('frog_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal)||52;jijiInit=parseFloat(c.jijiInit)||0;}}catch(e){}
-
 function saveHours(){try{localStorage.setItem('frog_hours',JSON.stringify(hD));}catch(e){}}
 function saveSettings(){
   nianTotal=parseFloat(document.getElementById('nianTotalInput').value)||52;
@@ -353,10 +358,18 @@ function saveSettings(){
   try{localStorage.setItem('frog_hours_cfg',JSON.stringify({nianTotal,jijiInit}));}catch(e){}
   refreshBalance();
 }
-function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);}return bal;}
-function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
+function calcJijiBalance(){
+  let bal=jijiInit;
+  for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);}
+  return bal;
+}
+function calcNianUsed(){
+  let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;
+}
 function refreshBalance(){
-  const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
+  const jijiB=calcJijiBalance();
+  const nianU=calcNianUsed();
+  const nianB=nianTotal-nianU;
   document.getElementById('jijiBalVal').textContent=jijiB;
   document.getElementById('nianBalVal').textContent=nianB;
   const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
@@ -372,12 +385,14 @@ function openHoursSheet(){
   const e=hD[selKey]||{};
   document.getElementById('jijiDir').value=e.jijiDir||'+';
   const jv=e.jiji||0;
-  const jSel=document.getElementById('jijiHrs'),jCustom=document.getElementById('jijiCustom');
+  const jSel=document.getElementById('jijiHrs');
+  const jCustom=document.getElementById('jijiCustom');
   if(jv>0&&jv<=5&&jv*2===Math.round(jv*2)){jSel.value=jv;jCustom.style.display='none';}
   else if(jv>5||jv%0.5!==0){jSel.value='custom';jCustom.style.display='block';jCustom.value=jv||'';}
   else{jSel.value=0;jCustom.style.display='none';}
   const nv=e.nian||0;
-  const nSel=document.getElementById('nianHrs'),nCustom=document.getElementById('nianCustom');
+  const nSel=document.getElementById('nianHrs');
+  const nCustom=document.getElementById('nianCustom');
   if(nv>0&&nv<=5&&nv*2===Math.round(nv*2)){nSel.value=nv;nCustom.style.display='none';}
   else if(nv>5||nv%0.5!==0){nSel.value='custom';nCustom.style.display='block';nCustom.value=nv||'';}
   else{nSel.value=0;nCustom.style.display='none';}
@@ -385,8 +400,10 @@ function openHoursSheet(){
   document.getElementById('hoursOverlay').classList.add('open');
 }
 function toggleCustom(type){
-  const sel=document.getElementById(type+'Hrs'),inp=document.getElementById(type+'Custom');
-  if(sel.value==='custom'){inp.style.display='block';inp.focus();}else{inp.style.display='none';}
+  const sel=document.getElementById(type+'Hrs');
+  const inp=document.getElementById(type+'Custom');
+  if(sel.value==='custom'){inp.style.display='block';inp.focus();}
+  else{inp.style.display='none';}
 }
 function getHoursVal(type){
   const sel=document.getElementById(type+'Hrs');
@@ -407,9 +424,13 @@ function clearHoursForm(){
   updateHDir('jiji');
 }
 function saveHoursEntry(){
-  const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value,nh=getHoursVal('nian');
-  if(jh===0&&nh===0){delete hD[selKey];}else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
-  saveHours();refreshBalance();refreshAllow();render();
+  const jh=getHoursVal('jiji');
+  const jd=document.getElementById('jijiDir').value;
+  const nh=getHoursVal('nian');
+  if(jh===0&&nh===0){delete hD[selKey];}
+  else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
+  saveHours();refreshBalance();refreshAllow();
+  render();
   document.getElementById('hoursOverlay').classList.remove('open');
   updateHoursBtnStyle();
   document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
@@ -425,10 +446,12 @@ function updateHoursBtnStyle(){
     if(e.jiji>0)parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);
     if(e.nian>0)parts.push('年休－'+e.nian);
     btn.textContent='⏱ '+parts.join('　');
-  }else{btn.textContent='⏱ 記錄時數（積休／年休）';}
+  }else{
+    btn.textContent='⏱ 記錄時數（積休／年休）';
+  }
 }
-
-// 夜班津貼
+// ── 夜班津貼 ──
+const ALLOW_RATE={'12-8':270,'E':560,'N':770,'Dot':270};
 let allowAdj={};
 try{const s=localStorage.getItem('frog_allow_adj');if(s)allowAdj=JSON.parse(s);}catch(e){}
 function saveAllowAdj(){
@@ -436,7 +459,8 @@ function saveAllowAdj(){
   const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
   const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
   const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
-  if(a12===0&&aE===0&&aN===0)delete allowAdj[ym];else allowAdj[ym]={a12,aE,aN};
+  if(a12===0&&aE===0&&aN===0)delete allowAdj[ym];
+  else allowAdj[ym]={a12,aE,aN};
   try{localStorage.setItem('frog_allow_adj',JSON.stringify(allowAdj));}catch(e){}
   refreshAllow();
 }
@@ -451,18 +475,21 @@ function calcAllow(){
     else if(s.startsWith('E'))cE++;
     else if(s.startsWith('N'))cN++;
     if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){
-      const key=dk(date),he=hD[key];
+      const key=dk(date);
+      const he=hD[key];
       if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;
     }
   }
-  const rateE=cE>=15?640:560,rateN=cN>=15?960:770;
+  const rateE=cE>=15?640:560;
+  const rateN=cN>=15?960:770;
   return{c12,cE,cN,cDot,rateE,rateN};
 }
 function refreshAllow(){
   const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
-  const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
-  const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0;
-  const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270;
+  const ym=cy*100+(cm+1);
+  const adj=allowAdj[ym]||{};
+  const adj12=adj.a12||0, adjE=adj.aE||0, adjN=adj.aN||0;
+  const a12=c12*270+adj12, aE=cE*rateE+adjE, aN=cN*rateN+adjN, aDot=cDot*270;
   const total=a12+aE+aN+aDot;
   const labelE='E 班 $'+(cE>=15?'640（包班）':'560')+(cE>=15?' ✓':'');
   const labelN='N 班 $'+(cN>=15?'960（包班）':'770')+(cN>=15?' ✓':'');
@@ -479,7 +506,6 @@ function refreshAllow(){
   document.getElementById('allowNAdj').value=adjN||'';
   document.getElementById('allowTotal').textContent='本月 $'+total;
 }
-
 function autoClean(){
   const now=new Date(),ym=now.getFullYear()*100+now.getMonth();
   let changed=false;
@@ -493,7 +519,6 @@ function save(){
   try{localStorage.setItem('frog_dswaps',JSON.stringify(dS));}catch(e){}
   try{localStorage.setItem('frog_notes',JSON.stringify(nS));}catch(e){}
 }
-
 function getNum(date){return wS[monKey(date)]||nf(ME.w1,wo(date))}
 function getShift(date){
   const key=dk(date);
@@ -517,11 +542,9 @@ function sc(s,holD){
   if(holD)return'sDhol';
   return'sD';
 }
-
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
 function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();}
 function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();}
-
 function render(){
   const me=new Date(cy,cm+1,0),totalDays=me.getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -534,7 +557,8 @@ function render(){
   for(let day=1;day<=totalDays;day++){
     const date=new Date(cy,cm,day),key=dk(date);
     const{s,h,dm,holD}=getShift(date);
-    const dow=date.getDay(),mk=monKey(date),origNum=nf(ME.w1,wo(date));
+    const dow=date.getDay(),isMon=((dow+6)%7)===0,isFirst=day===1;
+    const mk=monKey(date),origNum=nf(ME.w1,wo(date));
     const zc=getZoneColor(date),zi=getZoneIdx(date);
     const gridPos=off+day-1,col=gridPos%7;
     const above=ad(date,-7),below=ad(date,7);
@@ -551,13 +575,21 @@ function render(){
     if(dm)cls+=' day-mod';
     if(selKey===key)cls+=' selected';
     if(hasNote)cls+=' has-note';
-    if(isTop)cls+=' z-top';if(isBottom)cls+=' z-bottom';if(isLeft)cls+=' z-left';if(isRight)cls+=' z-right';
+    if(oD[key])cls+=' other-working';
+    if(isTop)cls+=' z-top';
+    if(isBottom)cls+=' z-bottom';
+    if(isLeft)cls+=' z-left';
+    if(isRight)cls+=' z-right';
     cell.className=cls;
     cell.onclick=()=>openPanel(key);
-    const isMon=((dow+6)%7)===0,isFirst=day===1;
     if(isMon||isFirst){
       const b=document.createElement('div');b.className='badge';b.textContent=origNum;
-      b.onclick=function(e){e.stopPropagation();openPanel(key);switchTab('week');document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});};
+      b.onclick=function(e){
+        e.stopPropagation();
+        openPanel(key);
+        switchTab('week');
+        document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
+      };
       cell.appendChild(b);
     }
     const top=document.createElement('div');top.className='top';
@@ -573,7 +605,6 @@ function render(){
     cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
   }
 }
-
 function openPanel(key){
   selKey=key;
   const date=kd(key),dow=date.getDay(),isMon=((dow+6)%7)===0;
@@ -590,6 +621,8 @@ function openPanel(key){
   renderShiftBtns(dS[key]||curShift);
   document.getElementById('weekNote').value=nS[mk]||'';
   document.getElementById('dayNote').value=nS[key]||'';
+  const otherEl=document.getElementById('otherWorking');
+  if(otherEl){otherEl.checked=oD[key]||false;updateOtherLabel();}
   document.getElementById('panel').classList.add('open');
   updateHoursBtnStyle();
   render();
@@ -623,8 +656,12 @@ function confirmAction(){
     if(!nv){alert('請先選擇號碼班');return;}
     const date=kd(selKey),origNum=nf(ME.w1,wo(date));
     const note=document.getElementById('weekNote').value.trim();
-    if(parseInt(nv)===origNum){delete wS[mk];delete nS[mk];}
-    else{wS[mk]=parseInt(nv);if(note)nS[mk]=note;else delete nS[mk];}
+    if(parseInt(nv)===origNum){
+      delete wS[mk];delete nS[mk];
+    }else{
+      wS[mk]=parseInt(nv);
+      if(note)nS[mk]=note;else delete nS[mk];
+    }
   }else{
     const chosen=getSelectedShift();
     const date=kd(selKey);
@@ -632,11 +669,19 @@ function confirmAction(){
     const savedDS=dS[selKey];delete dS[selKey];
     const{s:baseShift}=getShift(date);
     if(savedDS)dS[selKey]=savedDS;
-    if(chosen&&chosen!==baseShift){dS[selKey]=chosen;}else{delete dS[selKey];}
+    if(chosen&&chosen!==baseShift){
+      dS[selKey]=chosen;
+    }else{
+      delete dS[selKey];
+    }
     if(note)nS[selKey]=note;else delete nS[selKey];
     if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+    const otherEl=document.getElementById('otherWorking');
+    if(otherEl&&otherEl.checked){oD[selKey]=true;}else{delete oD[selKey];}
+    saveOther();
   }
-  save();renderRecList();render();refreshAllow();closePanel();
+  save();renderRecList();
+  render();refreshAllow();closePanel();
   document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function closePanel(){
@@ -673,10 +718,8 @@ function delRec(type,key){
   if(type==='week'){delete wS[key];delete nS[key];}else{delete dS[key];delete nS[key];}
   save();renderRecList();render();
 }
-
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
-
 autoClean();renderRecList();render();
 document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
