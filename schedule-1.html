@@ -8,143 +8,173 @@
 <meta name="apple-mobile-web-app-title" content="排班">
 <link rel="apple-touch-icon" href="icon.png">
 <title>排班</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+:root{
+  --bg:#f7f5f1;
+  --surface:#ffffff;
+  --surface2:#f2f0ec;
+  --border:#e4e0d8;
+  --border2:#d0ccc4;
+  --ink:#1c1a18;
+  --ink2:#6b6560;
+  --ink3:#a09890;
+  --accent:#2a2420;
+  --accent2:#5a4a3a;
+  --red:#c0392b;
+  --red-soft:#f5ebe9;
+  --radius:12px;
+  --radius-sm:8px;
+}
+@keyframes hup{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#1a1a1a;background:#f5f1e8;padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 12px 12px;font-size:16px}
-.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.nav h2{font-size:22px;font-weight:500;color:#2d5043}
-.nav button{background:#2d5043;color:#fff;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:16px}
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.dh{text-align:center;font-size:14px;color:#8a8078;padding:4px 0;font-weight:500}
-.cell{position:relative;background:#faf7f2;border:0.5px solid #d8d0c0;border-radius:0;min-height:70px;display:flex;flex-direction:column;overflow:visible;cursor:pointer}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 24px 12px;font-size:16px}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.nav h2{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:400;color:var(--ink);letter-spacing:-0.3px}
+.nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.nav button:active{background:var(--surface2)}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.dh{text-align:center;font-size:11px;color:var(--ink3);padding:4px 0 6px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.cell{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:0;min-height:64px;display:flex;flex-direction:column;overflow:visible;cursor:pointer;transition:background 0.1s}
+.cell:first-child{border-radius:var(--radius-sm) 0 0 0}
 .cell.empty{background:transparent;border-color:transparent;cursor:default}
-.cell.today .dn{background:#a07850;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.cell.swapped .badge{background:#c9905a}
-.cell.has-note::after{content:'•';position:absolute;top:2px;right:4px;font-size:10px;color:#8a8078;z-index:5}
-.cell.selected .top{background:#ecddd8!important}
-.cell.selected .dn{color:#804030!important}
-.cell.selected .bot{background:#f4ece8!important}
-.cell.other-working{background:#e8f0f8!important}
-.cell.other-working .bot{background:#d8e8f4!important}
-.cell.z-top{border-top:3px solid var(--zc)!important}
-.cell.z-bottom{border-bottom:3px solid var(--zc)!important}
-.cell.z-left{border-left:3px solid var(--zc)!important}
-.cell.z-right{border-right:3px solid var(--zc)!important}
-.badge{position:absolute;top:-7px;left:-7px;width:22px;height:22px;background:#2d5043;color:#fff;border-radius:50%;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:10}
-.top{background:#fff;flex:0 0 50%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:10px}
-.hol-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:8px;color:#b03030;font-weight:600;line-height:1}
-.dn{font-size:21px;font-weight:600;color:#1a1a1a}
-.dn.holiday{color:#b03030}
-.bot{flex:0 0 50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;padding:2px}
-.sD{background:#f9f6f0;color:#5a4a2a}
-.sDhol{background:#c8bfaa;color:#3a2a10}
-.sE{background:#b5c4ce;color:#2a4050}
-.sN{background:#d9c891;color:#50420a}
-.sOFF{background:#c89a96;color:#5a1a18}
-.s12{background:#a8b89d;color:#1a3020}
-.panel{background:#faf7f2;border:1px solid #d8d0c0;border-radius:12px;padding:16px;margin-top:14px;display:none}
+.cell.today{background:#fdfaf7}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.cell.swapped .badge{background:var(--accent2)}
+.cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
+.cell.selected{background:#f5f0eb!important}
+.cell.selected .bot{opacity:0.8}
+.cell.other-working{background:#f0f4f8!important}
+.cell.z-top{border-top:2px solid var(--zc)!important}
+.cell.z-bottom{border-bottom:2px solid var(--zc)!important}
+.cell.z-left{border-left:2px solid var(--zc)!important}
+.cell.z-right{border-right:2px solid var(--zc)!important}
+/* BADGE */
+.badge{position:absolute;top:-6px;left:-6px;width:18px;height:18px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:10;border:1.5px solid var(--bg)}
+.top{background:transparent;flex:0 0 46%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:6px}
+.hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
+.dn{font-size:17px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.dn.holiday{color:var(--red)}
+.bot{flex:0 0 54%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+/* SHIFT COLOURS — 簡約莫蘭迪 */
+.sD{background:#ede9e2;color:#3a3228}
+.sDhol{background:#c8bfaa;color:#2a2018}
+.sE{background:#c8d4d8;color:#1e3040}
+.sN{background:#d4cba0;color:#3a3010}
+.sOFF{background:#e8d8d0;color:#5a2820}
+.s12{background:#c4d0c0;color:#1e3020}
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:12px;display:none}
 .panel.open{display:block}
-.panel-title{font-size:17px;font-weight:600;margin-bottom:4px;color:#2d5043}
-.panel-sub{font-size:14px;color:#8a8078;margin-bottom:4px}
-.panel-hol{font-size:14px;color:#b03030;font-weight:600;margin-bottom:10px;display:none}
-.tabs{display:flex;gap:6px;margin-bottom:14px}
-.tab-btn{flex:1;padding:9px;border:1px solid #d8d0c0;border-radius:8px;background:transparent;font-size:14px;cursor:pointer;color:#8a8078}
-.tab-btn.active{background:#2d5043;color:#fff;border-color:#2d5043}
-.field-label{font-size:14px;color:#8a8078;margin-bottom:5px}
-select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;background:#fff;color:#1a1a1a;font-size:16px;appearance:none}
+.panel-title{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400;margin-bottom:3px;color:var(--ink)}
+.panel-sub{font-size:13px;color:var(--ink2);margin-bottom:4px;font-weight:400}
+.panel-hol{font-size:13px;color:var(--red);font-weight:500;margin-bottom:10px;display:none}
+.tabs{display:flex;gap:1px;margin-bottom:16px;background:var(--surface2);border-radius:var(--radius-sm);padding:3px}
+.tab-btn{flex:1;padding:8px;border:none;border-radius:6px;background:transparent;font-size:13px;cursor:pointer;color:var(--ink2);font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.field-label{font-size:12px;color:var(--ink3);margin-bottom:6px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
+select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:15px;appearance:none;font-family:'DM Sans',sans-serif;font-weight:400}
 .preview-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:10px}
-.pg-head{text-align:center;background:#2d5043;color:#fff;border-radius:4px;font-size:10px;padding:3px 1px;font-weight:600}
-.pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:10px;font-weight:600}
-.shift-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.sb{padding:7px 11px;border-radius:8px;border:1px solid #d8d0c0;font-size:13px;cursor:pointer;font-weight:600}
-.sb.active{border:2px solid #2d5043}
-.note-area{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;font-size:16px;background:#fff;color:#1a1a1a;margin-top:6px;min-height:70px;resize:none;font-family:inherit}
-.confirm-btn{width:100%;padding:13px;background:#2d5043;color:#fff;border:none;border-radius:8px;font-size:17px;font-weight:600;cursor:pointer;margin-top:14px}
-.cancel-btn{width:100%;padding:10px;background:transparent;color:#8a8078;border:1px solid #d8d0c0;border-radius:8px;font-size:14px;cursor:pointer;margin-top:8px}
-.sec-title{font-size:17px;font-weight:600;color:#2d5043;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #d8d0c0}
+.pg-head{text-align:center;background:var(--accent);color:#fff;border-radius:4px;font-size:9px;padding:3px 1px;font-weight:500;letter-spacing:0.3px}
+.pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:9px;font-weight:500}
+.shift-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sb{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-weight:500;background:var(--surface);color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all 0.1s}
+.sb.active{border-color:var(--accent);background:var(--accent);color:#fff}
+.note-area{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;background:var(--surface);color:var(--ink);margin-top:6px;min-height:70px;resize:none;font-family:'DM Sans',sans-serif;font-weight:400}
+.confirm-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:16px;font-weight:500;cursor:pointer;margin-top:16px;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;transition:opacity 0.1s}
+.confirm-btn:active{opacity:0.85}
+.cancel-btn{width:100%;padding:11px;background:transparent;color:var(--ink3);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif}
+.sec-title{font-family:'Libre Baskerville',serif;font-size:18px;font-weight:400;color:var(--ink);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .rec-list{list-style:none}
-.rec-item{padding:10px 0;border-bottom:0.5px solid #f0ece0}
+.rec-item{padding:12px 0;border-bottom:1px solid var(--border)}
 .rec-item:last-child{border:none}
 .rec-item-head{display:flex;align-items:center;gap:8px}
-.rec-tag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
-.rec-tag.week{background:#e8f0e8;color:#2d5043}
-.rec-tag.day{background:#fdf0e8;color:#8a4020}
-.rec-desc{flex:1;font-size:14px}
-.rec-del{background:none;border:none;color:#c89a96;font-size:18px;cursor:pointer;padding:0 4px}
-.rec-note{font-size:13px;color:#8a8078;margin-top:4px;padding-left:4px;border-left:2px solid #d8d0c0}
-.empty-msg{font-size:14px;color:#8a8078;text-align:center;padding:18px 0}
+.rec-tag{font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600;white-space:nowrap;letter-spacing:0.3px;text-transform:uppercase}
+.rec-tag.week{background:var(--surface2);color:var(--ink2)}
+.rec-tag.day{background:#f0ece4;color:var(--accent2)}
+.rec-desc{flex:1;font-size:13px;color:var(--ink);font-weight:400}
+.rec-del{background:none;border:none;color:var(--ink3);font-size:16px;cursor:pointer;padding:0 4px}
+.rec-note{font-size:12px;color:var(--ink2);margin-top:5px;padding-left:10px;border-left:2px solid var(--border2)}
+.empty-msg{font-size:13px;color:var(--ink3);text-align:center;padding:20px 0}
 /* ── 時數功能 ── */
-/* 餘額總覽卡片列 */
-.hours-summary{display:flex;gap:8px;margin-top:10px}
-.hs-card{flex:1;border-radius:10px;padding:10px 12px;border:1px solid #d8d0c0}
-.hs-card.jiji{background:#eef5f0;border-color:#b8d4c0}
-.hs-card.nian{background:#f0ecf8;border-color:#c8bce8}
-.hs-card-label{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
-.hs-card.jiji .hs-card-label{color:#5a8a6a}
-.hs-card.nian .hs-card-label{color:#7a6ab0}
-.hs-card-val{font-size:22px;font-weight:700;line-height:1}
-.hs-card.jiji .hs-card-val{color:#2d6040}
-.hs-card.nian .hs-card-val{color:#5a48a0}
-.hs-card-unit{font-size:11px;color:#8a8078;margin-top:2px}
+.hours-summary{display:flex;gap:8px;margin-top:12px}
+.hs-card{flex:1;border-radius:var(--radius);padding:14px;border:1px solid var(--border);background:var(--surface)}
+.hs-card.jiji{background:#f0f7f2;border-color:#c8ddd0}
+.hs-card.nian{background:#f2f0f8;border-color:#ccc8dc}
+.hs-card-label{font-size:10px;font-weight:600;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase}
+.hs-card.jiji .hs-card-label{color:#4a7a5a}
+.hs-card.nian .hs-card-label{color:#6a5a90}
+.hs-card-val{font-family:'Libre Baskerville',serif;font-size:28px;font-weight:400;line-height:1}
+.hs-card.jiji .hs-card-val{color:#1a4a2a}
+.hs-card.nian .hs-card-val{color:#3a2a70}
+.hs-card-unit{font-size:11px;color:var(--ink3);margin-top:3px}
 /* 年休進度條 */
-.nian-bar-row{display:flex;align-items:center;gap:8px;background:#faf7f2;border:1px solid #d8d0c0;border-radius:10px;padding:10px 14px;margin-top:8px}
-.nbl{font-size:12px;font-weight:700;color:#9b8fcc;width:28px;flex-shrink:0}
-.nbt{flex:1;height:6px;background:#e8e0d4;border-radius:99px;overflow:hidden}
-.nbf{height:100%;background:#9b8fcc;border-radius:99px;transition:width 0.4s}
-.nbn{font-size:11px;color:#8a8078;white-space:nowrap;min-width:80px;text-align:right}
-/* 設定列（年休總額、積休初始） */
+.nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
+.nbl{font-size:11px;font-weight:600;color:var(--ink3);width:28px;flex-shrink:0;letter-spacing:0.3px}
+.nbt{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.nbf{height:100%;background:var(--accent);border-radius:99px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.nbn{font-size:11px;color:var(--ink3);white-space:nowrap;min-width:80px;text-align:right}
+/* 設定 */
 .hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap}
-.nts-group{display:flex;align-items:center;gap:5px}
-.nts-label{font-size:11px;color:#8a8078}
-.nts-input{width:52px;padding:3px 6px;border:1px solid #d8d0c0;border-radius:6px;font-size:13px;font-weight:600;color:#5a48a0;background:#fff;text-align:center;font-family:inherit}
-.nts-input.jiji-color{color:#2d6040}
-/* 時數 badge 在格子上 */
-.hbadge{display:block;font-size:8px;font-weight:700;padding:1px 3px;border-radius:3px;line-height:1.4;text-align:center;margin-top:1px}
-.hb-j-p{background:#e4f0e8;color:#5a8a6a}
-.hb-j-m{background:#f7eaea;color:#b03030}
-.hb-n-m{background:#f7eaea;color:#b03030}
-/* 時數按鈕（在 panel 底部） */
-.hours-trigger-btn{width:100%;padding:10px;background:#f0ece4;color:#6a7a6a;border:1px solid #d8d0c0;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
-.hours-trigger-btn.has-data{background:#eaf2ec;color:#2d6040;border-color:#a8c8a8}
-/* 時數輸入浮層 */
-.hours-overlay{display:none;position:fixed;inset:0;background:rgba(26,26,26,0.4);z-index:300;align-items:flex-end;justify-content:center}
+.nts-group{display:flex;align-items:center;gap:6px}
+.nts-label{font-size:11px;color:var(--ink3)}
+.nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
+.nts-input.jiji-color{color:#1a4a2a}
+/* hbadge */
+.hbadge{display:block;font-size:7px;font-weight:600;padding:1px 4px;border-radius:3px;line-height:1.5;text-align:center;margin-top:1px;letter-spacing:0.2px}
+.hb-j-p{background:#d8edd8;color:#1a4a2a}
+.hb-j-m{background:#f0ddd8;color:#7a2018}
+.hb-n-m{background:#f0ddd8;color:#7a2018}
+/* hours trigger btn */
+.hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
+.hours-trigger-btn.has-data{background:#f0f7f2;color:#1a4a2a;border-color:#c8ddd0}
+/* 浮層 */
+.hours-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:300;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .hours-overlay.open{display:flex}
-.hours-sheet{background:#faf7f2;border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.2s ease}
-@keyframes hup{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
-.hs-handle{padding:10px 0 0;display:flex;justify-content:center}
-.hs-handle-bar{width:36px;height:4px;background:#d8d0c0;border-radius:99px}
-.hs-head{padding:10px 16px 10px;border-bottom:1px solid #d8d0c0}
-.hs-date{font-size:15px;font-weight:600;color:#2d5043}
-.hs-shift{font-size:12px;color:#8a8078;margin-top:2px}
-.hs-body{padding:14px 16px 16px}
-.hs-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.hs-row-label{font-size:13px;font-weight:700;width:28px;flex-shrink:0}
-.hs-row-label.j{color:#5a8a6a}
-.hs-row-label.n{color:#7a6ab0}
+.hours-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
+.hs-handle{padding:12px 0 0;display:flex;justify-content:center}
+.hs-handle-bar{width:36px;height:3px;background:var(--border2);border-radius:99px}
+.hs-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.hs-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
+.hs-shift{font-size:12px;color:var(--ink3);margin-top:2px}
+.hs-body{padding:16px 18px 18px}
+.hs-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.hs-row-label{font-size:12px;font-weight:600;width:28px;flex-shrink:0;letter-spacing:0.3px;text-transform:uppercase}
+.hs-row-label.j{color:#4a7a5a}
+.hs-row-label.n{color:#6a5a90}
 .hs-selwrap{display:flex;gap:6px;flex:1}
-.hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid #d8d0c0;border-radius:8px;padding:9px 6px 9px 10px;font-size:14px;font-weight:700;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer}
-.hdir.ot{border-color:#c8a87a;color:#7a5020;background:#fdf2e4}
-.hdir.jm{border-color:#c89a96;color:#b03030;background:#f7eaea}
-.hdir.nm{border-color:#c89a96;color:#b03030;background:#f7eaea}
-.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid #d8d0c0;border-radius:8px;padding:9px 10px;font-size:14px;font-weight:600;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer}
-.hs-btns{display:flex;gap:8px;margin-top:4px}
-.hs-btn-clear{padding:10px 12px;border:1px solid #e0c4c4;border-radius:8px;background:#f7eaea;color:#b03030;font-size:13px;cursor:pointer;font-family:inherit}
-.hs-btn-cancel{flex:1;padding:10px;border:1px solid #d8d0c0;border-radius:8px;background:transparent;color:#8a8078;font-size:14px;cursor:pointer;font-family:inherit}
-.hs-btn-save{flex:2;padding:10px;border:none;border-radius:8px;background:#2d5043;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
-.hcustom{width:100%;padding:9px 12px;border:1px solid #c8a87a;border-radius:8px;font-size:15px;font-weight:600;background:#fdf2e4;color:#7a5020;font-family:inherit;outline:none}
-/* ── 夜班津貼 ── */
-.allow-wrap{margin-top:10px;background:#faf7f2;border:1px solid #d8d0c0;border-radius:10px;overflow:hidden}
-.allow-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px}
-.allow-title{font-size:12px;font-weight:700;color:#4a5a52;letter-spacing:1px}
-.allow-month-total{font-size:13px;font-weight:700;color:#2d5043}
-.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #ece6dc}
-.allow-cell{padding:8px 10px;border-right:1px solid #ece6dc;border-bottom:1px solid #ece6dc}
+.hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hdir.ot{border-color:#c8a860;color:#6a4800;background:#fdf5e0}
+.hdir.jm{border-color:#d0a8a0;color:#7a2018;background:#faf0ee}
+.hdir.nm{border-color:#d0a8a0;color:#7a2018;background:#faf0ee}
+.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hs-btns{display:flex;gap:8px;margin-top:6px}
+.hs-btn-clear{padding:11px 14px;border:1px solid #e0c8c4;border-radius:var(--radius-sm);background:#faf0ee;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hs-btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hs-btn-save{flex:2;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hcustom{width:100%;padding:10px 14px;border:1px solid #c8a860;border-radius:var(--radius-sm);font-size:15px;font-weight:400;background:#fdf5e0;color:#6a4800;font-family:'DM Sans',sans-serif;outline:none}
+/* 12-8 津貼 */
+.allow12-row{display:none;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f0f7f2;border:1px solid #c8ddd0}
+.allow12-row.show{display:flex}
+.allow12-row.no-allow{background:#faf0ee;border-color:#e0c8c4}
+.allow12-toggle{width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
+.allow12-label{font-size:13px;font-weight:500;color:#1a4a2a;flex:1;cursor:pointer}
+.allow12-row.no-allow .allow12-label{color:var(--red)}
+/* 夜班津貼 */
+.allow-wrap{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.allow-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px}
+.allow-title{font-size:11px;font-weight:600;color:var(--ink3);letter-spacing:1px;text-transform:uppercase}
+.allow-month-total{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:400;color:var(--ink)}
+.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border)}
+.allow-cell{padding:10px 12px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
 .allow-cell:nth-child(3n){border-right:none}
-.allow-cell-label{font-size:10px;color:#8a8078;margin-bottom:3px;letter-spacing:0.5px}
-.allow-cell-val{font-size:14px;font-weight:700;color:#2d5043}
-.allow-cell-count{font-size:10px;color:#a89880;margin-top:1px}
-.allow-note{font-size:10px;color:#a89880;padding:6px 14px 8px;border-top:1px solid #ece6dc}
-.allow-manual{width:100%;margin-top:5px;padding:3px 6px;border:1px solid #d8d0c0;border-radius:5px;font-size:11px;background:#faf7f2;color:#2d5043;font-family:inherit;box-sizing:border-box}
+.allow-cell-label{font-size:10px;color:var(--ink3);margin-bottom:4px;letter-spacing:0.3px}
+.allow-cell-val{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:400;color:var(--ink)}
+.allow-cell-count{font-size:10px;color:var(--ink3);margin-top:1px}
+.allow-note{font-size:10px;color:var(--ink3);padding:8px 16px 10px;border-top:1px solid var(--border)}
+.allow-manual{width:100%;margin-top:6px;padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--surface2);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -313,6 +343,11 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
           <input class="hcustom" type="number" id="nianCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
       </div>
+      <!-- 12-8 津貼勾選 -->
+      <div class="allow12-row" id="allow12Row">
+        <input type="checkbox" class="allow12-toggle" id="allow12Check" checked onchange="updateAllow12Style()">
+        <label class="allow12-label" for="allow12Check" id="allow12CheckLabel">✓ 計入 12-8 津貼（$270）</label>
+      </div>
       <div class="hs-btns">
         <button class="hs-btn-clear" onclick="clearHoursForm()">清除</button>
         <button class="hs-btn-cancel" onclick="document.getElementById('hoursOverlay').classList.remove('open')">取消</button>
@@ -407,6 +442,11 @@ function openHoursSheet(){
   else if(nv>5||nv%0.5!==0){nSel.value='custom';nCustom.style.display='block';nCustom.value=nv||'';}
   else{nSel.value=0;nCustom.style.display='none';}
   updateHDir('jiji');
+  const is128=s.startsWith('12-8');
+  const allow12Row=document.getElementById('allow12Row');
+  const allow12Check=document.getElementById('allow12Check');
+  if(is128){allow12Row.classList.add('show');const sv=e.allow12!==undefined?e.allow12:true;allow12Check.checked=sv;updateAllow12Style();}
+  else{allow12Row.classList.remove('show');allow12Check.checked=true;}
   document.getElementById('hoursOverlay').classList.add('open');
 }
 function toggleCustom(type){
@@ -425,20 +465,31 @@ function updateHDir(type){
   const sel=document.getElementById('jijiDir'),v=sel.value;
   sel.className='hdir '+(v==='+'?'ot':'jm');
 }
+function updateAllow12Style(){
+  const check=document.getElementById('allow12Check');
+  const row=document.getElementById('allow12Row');
+  const label=document.getElementById('allow12CheckLabel');
+  if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
+  else{row.classList.add('no-allow');label.textContent='✕ 不計入 12-8 津貼';}
+}
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   document.getElementById('jijiHrs').value=0;
   document.getElementById('jijiCustom').style.display='none';
   document.getElementById('nianHrs').value=0;
   document.getElementById('nianCustom').style.display='none';
-  updateHDir('jiji');
+  document.getElementById('allow12Check').checked=true;
+  updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
   const jh=getHoursVal('jiji');
   const jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian');
-  if(jh===0&&nh===0){delete hD[selKey];}
-  else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
+  const allow12Row=document.getElementById('allow12Row');
+  const allow12Check=document.getElementById('allow12Check');
+  const is128=allow12Row.classList.contains('show');
+  if(jh===0&&nh===0&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  else{const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};if(is128)entry.allow12=allow12Check.checked;hD[selKey]=entry;}
   saveHours();refreshBalance();refreshAllow();
   render();
   document.getElementById('hoursOverlay').classList.remove('open');
@@ -449,12 +500,13 @@ function updateHoursBtnStyle(){
   const btn=document.getElementById('hoursTriggerBtn');
   if(!btn||!selKey)return;
   const e=hD[selKey];
-  const hasData=e&&(e.jiji>0||e.nian>0);
+  const hasData=e&&(e.jiji>0||e.nian>0||e.allow12===false);
   btn.className='hours-trigger-btn'+(hasData?' has-data':'');
   if(hasData){
     const parts=[];
     if(e.jiji>0)parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);
     if(e.nian>0)parts.push('年休－'+e.nian);
+    if(e.allow12===false)parts.push('不計津貼');
     btn.textContent='⏱ '+parts.join('　');
   }else{
     btn.textContent='⏱ 記錄時數（積休／年休）';
@@ -481,12 +533,12 @@ function calcAllow(){
     const date=new Date(cy,cm,d);
     const{s}=getShift(date);
     const dow=date.getDay();
-    if(s.startsWith('12-8'))c12++;
+    const key=dk(date);
+    if(s.startsWith('12-8')){const he=hD[key];if(!(he&&he.allow12===false))c12++;}
     else if(s.startsWith('E'))cE++;
     else if(s.startsWith('N'))cN++;
     // D班 週一到五 加班 ≥ 1.5hr
     if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){
-      const key=dk(date);
       const he=hD[key];
       if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;
     }
@@ -614,6 +666,7 @@ function render(){
     if(he){
       if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
       if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
+      if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
   }
