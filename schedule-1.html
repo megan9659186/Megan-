@@ -81,7 +81,13 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:9px;font-weight:500}
 .shift-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 .sb{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-weight:500;background:var(--surface);color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all 0.1s}
-.sb.active{border-color:var(--accent);background:var(--accent);color:#fff}
+.sb.active{border-color:var(--accent)!important;box-shadow:0 0 0 2px var(--accent)}
+.sb.sD{background:#ede9e2;color:#3a3228;border-color:#d8d4cc}
+.sb.sDhol{background:#c8bfaa;color:#2a2018;border-color:#b8af9a}
+.sb.sE{background:#c8d4d8;color:#1e3040;border-color:#b0c0c8}
+.sb.sN{background:#d4cba0;color:#3a3010;border-color:#c0b888}
+.sb.sOFF{background:#e8d8d0;color:#5a2820;border-color:#d4c0b8}
+.sb.s12{background:#c4d0c0;color:#1e3020;border-color:#aabca8}
 .note-area{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;background:var(--surface);color:var(--ink);margin-top:6px;min-height:70px;resize:none;font-family:'DM Sans',sans-serif;font-weight:400}
 .confirm-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:16px;font-weight:500;cursor:pointer;margin-top:16px;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;transition:opacity 0.1s}
 .confirm-btn:active{opacity:0.85}
@@ -752,13 +758,12 @@ function confirmAction(){
   }
   save();renderRecList();
   render();refreshAllow();closePanel();
-  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function closePanel(){
   selKey=null;
   document.getElementById('panel').classList.remove('open');
   document.querySelectorAll('.cell.selected').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),30);
 }
 function renderRecList(){
   const el=document.getElementById('recList'),items=[];
