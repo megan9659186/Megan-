@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lena 排班">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Lena 排班</title>
+<style>
+:root {
+  --pink-deep:   #c8826a;
+  --pink-mid:    #d4a090;
+  --pink-light:  #f0ddd8;
+  --pink-pale:   #faf4f2;
+  --brown-deep:  #7a5a4a;
+  --brown-mid:   #a07860;
+  --brown-light: #d8c4b8;
+  --brown-pale:  #f5ede8;
+  --cream:       #fdf8f5;
+  --ink:         #2e1e16;
+  --ink-soft:    #7a6058;
+  --ink-faint:   #b8a09a;
+  --white:       #ffffff;
+
+  --sD:   #f5ede8;
+  --sDc:  #7a5a4a;
+  --sDhol:#d8c4b8;
+  --sDhc: #4a2e1e;
+  --sE:   #d4dde6;
+  --sEc:  #2a3e50;
+  --sN:   #e8dfc0;
+  --sNc:  #504010;
+  --sOFF: #e8cec8;
+  --sOFc: #7a2e2a;
+  --s12:  #ccd8c4;
+  --s12c: #1e3020;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Libre Franklin', sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+  padding: calc(env(safe-area-inset-top, 20px) + 20px) 14px 20px 14px;
+  font-size: 17px;
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.nav-name {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--pink-deep);
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+}
+.nav h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brown-deep);
+  letter-spacing: 0.02em;
+}
+.nav-center { text-align: center; }
+.nav button {
+  background: var(--brown-pale);
+  color: var(--brown-deep);
+  border: 1.5px solid var(--brown-light);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.nav button:active { background: var(--brown-light); }
+
+/* ── GRID HEADER ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.dh {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-faint);
+  padding: 4px 0 8px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* ── CELLS ── */
+.cell {
+  position: relative;
+  background: var(--white);
+  border: 0.5px solid var(--brown-light);
+  border-radius: 2px;
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+.cell.empty { background: transparent; border-color: transparent; cursor: default; }
+.cell:active { opacity: 0.75; }
+
+.cell.today .top { background: var(--pink-pale); }
+.cell.today .dn {
+  background: var(--pink-deep);
+  color: var(--white);
+  border-radius: 50%;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.cell.swapped .badge { background: var(--ink); color: var(--brown-pale); }
+.cell.has-note::after {
+  content: '·';
+  position: absolute;
+  top: 3px; right: 5px;
+  font-size: 16px;
+  color: var(--pink-deep);
+  z-index: 5;
+}
+.cell.selected .top { background: var(--pink-light) !important; }
+.cell.selected .dn { color: var(--pink-deep) !important; }
+.cell.selected .bot { opacity: 0.85; }
+
+/* Zone borders */
+.cell.z-top    { border-top:    2.5px solid var(--zc) !important; }
+.cell.z-bottom { border-bottom: 2.5px solid var(--zc) !important; }
+.cell.z-left   { border-left:   2.5px solid var(--zc) !important; }
+.cell.z-right  { border-right:  2.5px solid var(--zc) !important; }
+
+.badge {
+  position: absolute;
+  top: -8px; left: -8px;
+  width: 24px; height: 24px;
+  background: var(--brown-mid);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+  font-family: 'Libre Franklin', sans-serif;
+}
+
+.top {
+  background: var(--white);
+  flex: 0 0 48%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-bottom: 8px;
+}
+.hol-name {
+  position: absolute;
+  bottom: 1px; left: 0; right: 0;
+  text-align: center;
+  font-size: 8px;
+  color: #c04040;
+  font-weight: 600;
+  line-height: 1;
+}
+.dn {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.dn.holiday { color: #c04040; }
+
+.bot {
+  flex: 0 0 52%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 2px;
+  gap: 1px;
+  font-family: 'Libre Franklin', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Shift colors */
+.sD   { background: var(--sD);   color: var(--sDc); }
+.sDhol{ background: var(--sDhol);color: var(--sDhc); }
+.sE   { background: var(--sE);   color: var(--sEc); }
+.sN   { background: var(--sN);   color: var(--sNc); }
+.sOFF { background: var(--sOFF); color: var(--sOFc); }
+.s12  { background: var(--s12);  color: var(--s12c); }
+
+/* Hours badges on cell */
+.hbadge {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 3px;
+  border-radius: 3px;
+  line-height: 1.4;
+  text-align: center;
+  margin-top: 1px;
+}
+.hb-j-p { background: #e4f0e8; color: #3a7a4a; }
+.hb-j-m { background: #f7eaea; color: #b03030; }
+.hb-n-m { background: #f7eaea; color: #b03030; }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--brown-light);
+  margin: 22px 0 0;
+}
+
+/* ── HOURS SUMMARY ── */
+.hours-summary {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.hs-card {
+  flex: 1;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--brown-light);
+}
+.hs-card.jiji { background: var(--pink-pale); border-color: var(--pink-mid); }
+.hs-card.nian { background: var(--brown-pale); border-color: var(--brown-light); }
+.hs-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.hs-card.jiji .hs-card-label { color: var(--pink-deep); }
+.hs-card.nian .hs-card-label { color: var(--brown-mid); }
+.hs-card-val {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+.hs-card.jiji .hs-card-val { color: var(--pink-deep); }
+.hs-card.nian .hs-card-val { color: var(--brown-deep); }
+.hs-card-unit { font-size: 12px; color: var(--ink-faint); margin-top: 3px; }
+
+/* Nian progress */
+.nian-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--brown-pale);
+  border: 1.5px solid var(--brown-light);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 10px;
+}
+.nbl { font-size: 13px; font-weight: 600; color: var(--brown-mid); width: 28px; flex-shrink: 0; }
+.nbt { flex: 1; height: 6px; background: var(--brown-light); border-radius: 99px; overflow: hidden; }
+.nbf { height: 100%; background: var(--brown-mid); border-radius: 99px; transition: width 0.4s; }
+.nbn { font-size: 12px; color: var(--ink-faint); white-space: nowrap; min-width: 84px; text-align: right; }
+
+/* Settings row */
+.hours-settings {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  padding: 0 2px;
+  flex-wrap: wrap;
+}
+.nts-group { display: flex; align-items: center; gap: 6px; }
+.nts-label { font-size: 13px; color: var(--ink-soft); }
+.nts-input {
+  width: 56px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--brown-light);
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brown-deep);
+  background: var(--white);
+  text-align: center;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.nts-input.jiji-color { color: var(--pink-deep); }
+
+/* ── ALLOWANCE ── */
+.allow-wrap {
+  margin-top: 14px;
+  background: var(--white);
+  border: 1.5px solid var(--brown-light);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.allow-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+}
+.allow-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: 0.08em;
+}
+.allow-month-total {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--brown-deep);
+}
+.allow-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--brown-light);
+}
+.allow-cell {
+  padding: 10px 12px;
+  border-right: 1px solid var(--brown-light);
+  border-bottom: 1px solid var(--brown-light);
+}
+.allow-cell:nth-child(3n) { border-right: none; }
+.allow-cell-label { font-size: 10px; color: var(--ink-faint); margin-bottom: 4px; letter-spacing: 0.03em; }
+.allow-cell-val { font-size: 15px; font-weight: 700; color: var(--brown-deep); font-family: 'Libre Baskerville', serif; }
+.allow-cell-count { font-size: 10px; color: var(--ink-faint); margin-top: 2px; }
+.allow-note { font-size: 10px; color: var(--ink-faint); padding: 8px 16px 10px; border-top: 1px solid var(--brown-light); }
+.allow-manual {
+  width: 100%;
+  margin-top: 5px;
+  padding: 3px 6px;
+  border: 1px solid var(--brown-light);
+  border-radius: 5px;
+  font-size: 11px;
+  background: var(--brown-pale);
+  color: var(--brown-deep);
+  font-family: 'Libre Franklin', sans-serif;
+  box-sizing: border-box;
+}
+
+/* ── PANEL ── */
+.panel {
+  background: var(--white);
+  border: 1.5px solid var(--brown-light);
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 18px;
+  display: none;
+}
+.panel.open { display: block; }
+.panel-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 3px;
+  color: var(--brown-deep);
+}
+.panel-sub { font-size: 14px; color: var(--ink-soft); margin-bottom: 3px; }
+.panel-hol { font-size: 14px; color: #c04040; font-weight: 600; margin-bottom: 10px; display: none; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 18px; margin-top: 14px; }
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--brown-light);
+  border-radius: 9px;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  font-family: 'Libre Franklin', sans-serif;
+  transition: all 0.15s;
+}
+.tab-btn.active {
+  background: var(--brown-deep);
+  color: var(--white);
+  border-color: var(--brown-deep);
+}
+
+.field-label { font-size: 13px; color: var(--ink-faint); margin-bottom: 6px; letter-spacing: 0.04em; }
+
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--brown-light);
+  border-radius: 9px;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 16px;
+  font-family: 'Libre Franklin', sans-serif;
+  appearance: none;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-top: 10px;
+}
+.pg-head {
+  text-align: center;
+  background: var(--brown-deep);
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 4px 1px;
+  font-weight: 600;
+}
+.pg-cell {
+  text-align: center;
+  padding: 6px 1px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.shift-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sb {
+  padding: 8px 13px;
+  border-radius: 9px;
+  border: 1.5px solid var(--brown-light);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Libre Franklin', sans-serif;
+  transition: border-color 0.1s;
+}
+.sb.active { border: 2.5px solid var(--pink-deep); }
+
+.note-area {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--brown-light);
+  border-radius: 9px;
+  font-size: 16px;
+  background: var(--cream);
+  color: var(--ink);
+  margin-top: 6px;
+  min-height: 74px;
+  resize: none;
+  font-family: 'Libre Franklin', sans-serif;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--brown-deep);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 16px;
+  font-family: 'Libre Baskerville', serif;
+  letter-spacing: 0.04em;
+  transition: background 0.15s;
+}
+.confirm-btn:active { background: var(--brown-mid); }
+
+.cancel-btn {
+  width: 100%;
+  padding: 11px;
+  background: transparent;
+  color: var(--ink-faint);
+  border: 1.5px solid var(--brown-light);
+  border-radius: 9px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-family: 'Libre Franklin', sans-serif;
+}
+
+.hours-trigger-btn {
+  width: 100%;
+  padding: 11px;
+  background: var(--pink-pale);
+  color: var(--pink-deep);
+  border: 1.5px solid var(--pink-mid);
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  font-family: 'Libre Franklin', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.hours-trigger-btn.has-data {
+  background: var(--sD);
+  color: var(--brown-deep);
+  border-color: var(--brown-mid);
+}
+
+/* ── HOURS OVERLAY ── */
+.hours-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 30, 22, 0.35);
+  z-index: 300;
+  align-items: flex-end;
+  justify-content: center;
+}
+.hours-overlay.open { display: flex; }
+.hours-sheet {
+  background: var(--cream);
+  border-radius: 18px 18px 0 0;
+  width: 100%;
+  max-width: 480px;
+  padding: 0 0 env(safe-area-inset-bottom, 16px);
+  animation: slideUp 0.22s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.hs-handle { padding: 10px 0 0; display: flex; justify-content: center; }
+.hs-handle-bar { width: 38px; height: 4px; background: var(--brown-light); border-radius: 99px; }
+.hs-head { padding: 12px 18px 12px; border-bottom: 1px solid var(--brown-light); }
+.hs-date { font-family: 'Libre Baskerville', serif; font-size: 17px; font-weight: 700; color: var(--brown-deep); }
+.hs-shift { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+.hs-body { padding: 16px 18px 18px; }
+
+.hs-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.hs-row-label { font-size: 14px; font-weight: 700; width: 30px; flex-shrink: 0; font-family: 'Libre Franklin', sans-serif; }
+.hs-row-label.j { color: var(--pink-deep); }
+.hs-row-label.n { color: var(--brown-mid); }
+.hs-selwrap { display: flex; gap: 6px; flex: 1; }
+
+.hdir, .hhrs {
+  appearance: none; -webkit-appearance: none;
+  border: 1.5px solid var(--brown-light);
+  border-radius: 9px;
+  padding: 10px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'Libre Franklin', sans-serif;
+  cursor: pointer;
+}
+.hdir { flex: 0 0 96px; }
+.hhrs { flex: 1; }
+.hdir.ot  { border-color: var(--pink-mid);   color: var(--pink-deep);  background: var(--pink-pale); }
+.hdir.jm  { border-color: #c89a96;           color: #b03030;           background: #f7eaea; }
+.hdir.nm  { border-color: #c89a96;           color: #b03030;           background: #f7eaea; }
+.hcustom {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--pink-mid);
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  background: var(--pink-pale);
+  color: var(--pink-deep);
+  font-family: 'Libre Franklin', sans-serif;
+  outline: none;
+  margin-top: 6px;
+}
+.hs-btns { display: flex; gap: 8px; margin-top: 6px; }
+.hs-btn-clear  { padding: 11px 13px; border: 1.5px solid #e0c4c4; border-radius: 9px; background: #f7eaea; color: #b03030; font-size: 14px; cursor: pointer; font-family: 'Libre Franklin', sans-serif; }
+.hs-btn-cancel { flex: 1; padding: 11px; border: 1.5px solid var(--brown-light); border-radius: 9px; background: transparent; color: var(--ink-soft); font-size: 14px; cursor: pointer; font-family: 'Libre Franklin', sans-serif; }
+.hs-btn-save   { flex: 2; padding: 11px; border: none; border-radius: 9px; background: var(--brown-deep); color: var(--white); font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Libre Franklin', sans-serif; }
+
+/* ── RECORDS ── */
+.sec-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brown-deep);
+  margin: 22px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--brown-light);
+}
+.rec-list { list-style: none; }
+.rec-item { padding: 12px 0; border-bottom: 0.5px solid var(--pink-light); }
+.rec-item:last-child { border: none; }
+.rec-item-head { display: flex; align-items: center; gap: 8px; }
+.rec-tag {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  font-family: 'Libre Franklin', sans-serif;
+}
+.rec-tag.week { background: var(--brown-pale); color: var(--brown-deep); }
+.rec-tag.day  { background: var(--pink-pale);  color: var(--pink-deep); }
+.rec-desc { flex: 1; font-size: 14px; color: var(--ink); }
+.rec-del { background: none; border: none; color: var(--pink-mid); font-size: 18px; cursor: pointer; padding: 0 4px; }
+.rec-note { font-size: 13px; color: var(--ink-soft); margin-top: 5px; padding-left: 6px; border-left: 2.5px solid var(--pink-light); }
+.empty-msg { font-size: 14px; color: var(--ink-faint); text-align: center; padding: 20px 0; font-style: italic; font-family: 'Libre Baskerville', serif; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button onclick="prev()">‹</button>
+  <div class="nav-center">
+    <div class="nav-name">Lena</div>
+    <h2 id="title"></h2>
+  </div>
+  <button onclick="next()">›</button>
+</div>
+
+<div class="grid" id="gridHead"></div>
+<div class="grid" id="grid"></div>
+
+<!-- Hours Summary -->
+<div class="hours-summary">
+  <div class="hs-card jiji">
+    <div class="hs-card-label">積　休</div>
+    <div class="hs-card-val" id="jijiBalVal">0</div>
+    <div class="hs-card-unit">小時</div>
+  </div>
+  <div class="hs-card nian">
+    <div class="hs-card-label">年　休</div>
+    <div class="hs-card-val" id="nianBalVal">0</div>
+    <div class="hs-card-unit">小時</div>
+  </div>
+</div>
+<div class="nian-bar-row">
+  <span class="nbl">年休</span>
+  <div class="nbt"><div class="nbf" id="nianFill" style="width:0%"></div></div>
+  <span class="nbn" id="nianNums">已用 0 / 52 hr</span>
+</div>
+<div class="hours-settings">
+  <div class="nts-group">
+    <span class="nts-label">年休總額：</span>
+    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" value="52" onchange="saveSettings()">
+    <span class="nts-label">hr</span>
+  </div>
+  <div class="nts-group">
+    <span class="nts-label">積休初始：</span>
+    <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
+    <span class="nts-label">hr</span>
+  </div>
+</div>
+
+<!-- Allowance -->
+<div class="allow-wrap">
+  <div class="allow-header">
+    <span class="allow-title">夜班津貼</span>
+    <span class="allow-month-total" id="allowTotal">本月 $0</span>
+  </div>
+  <div class="allow-grid">
+    <div class="allow-cell">
+      <div class="allow-cell-label">12-8 班 $270</div>
+      <div class="allow-cell-val" id="allow12Val">$0</div>
+      <div class="allow-cell-count" id="allow12Count">0 班</div>
+      <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">E 班 $560／包班 $640</div>
+      <div class="allow-cell-val" id="allowEVal">$0</div>
+      <div class="allow-cell-count" id="allowECount">0 班</div>
+      <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">N 班 $770／包班 $960</div>
+      <div class="allow-cell-val" id="allowNVal">$0</div>
+      <div class="allow-cell-count" id="allowNCount">0 班</div>
+      <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">D班加班 $270</div>
+      <div class="allow-cell-val" id="allowDotVal">$0</div>
+      <div class="allow-cell-count" id="allowDotCount">0 班</div>
+    </div>
+  </div>
+  <div class="allow-note">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270</div>
+</div>
+
+<!-- Panel -->
+<div class="panel" id="panel">
+  <div class="panel-title" id="panelTitle"></div>
+  <div class="panel-sub" id="panelSub"></div>
+  <div class="panel-hol" id="panelHol"></div>
+  <div class="tabs">
+    <button class="tab-btn active" id="tabWeek" onclick="switchTab('week')">換號碼班（整週）</button>
+    <button class="tab-btn" id="tabDay"  onclick="switchTab('day')">修改當天班別</button>
+  </div>
+  <div id="formWeek">
+    <div class="field-label">換成哪個號碼班</div>
+    <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
+    <div id="preview" style="display:none">
+      <div class="field-label" style="margin-top:12px">換後班表預覽：</div>
+      <div class="preview-grid" id="previewGrid"></div>
+    </div>
+    <div class="field-label" style="margin-top:16px">備註</div>
+    <textarea class="note-area" id="weekNote" placeholder="例：和同事換班"></textarea>
+  </div>
+  <div id="formDay" style="display:none">
+    <div class="field-label">選擇班別</div>
+    <div class="shift-btns" id="shiftBtns"></div>
+    <div class="field-label" style="margin-top:16px">備註</div>
+    <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
+  </div>
+  <button class="confirm-btn" onclick="confirmAction()">確認</button>
+  <button class="cancel-btn" onclick="closePanel()">取消</button>
+  <button class="hours-trigger-btn" id="hoursTriggerBtn" onclick="openHoursSheet()">⏱ 記錄時數（積休 / 年休）</button>
+</div>
+
+<!-- Hours Overlay -->
+<div class="hours-overlay" id="hoursOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="hsDate"></div>
+      <div class="hs-shift" id="hsShift"></div>
+    </div>
+    <div class="hs-body">
+      <div class="hs-row">
+        <span class="hs-row-label j">積休</span>
+        <div class="hs-selwrap" style="flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <select class="hdir ot" id="jijiDir" onchange="updateHDir('jiji')">
+              <option value="+">加班</option>
+              <option value="-">拿時間</option>
+            </select>
+            <select class="hhrs" id="jijiHrs" onchange="toggleCustom('jiji')">
+              <option value="0">不填</option>
+              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
+              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
+              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
+              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
+              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
+              <option value="custom">自訂…</option>
+            </select>
+          </div>
+          <input class="hcustom" type="number" id="jijiCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
+        </div>
+      </div>
+      <div class="hs-row">
+        <span class="hs-row-label n">年休</span>
+        <div class="hs-selwrap" style="flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <select class="hdir nm" id="nianDir" style="pointer-events:none;opacity:0.6">
+              <option value="-">拿時間</option>
+            </select>
+            <select class="hhrs" id="nianHrs" onchange="toggleCustom('nian')">
+              <option value="0">不填</option>
+              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
+              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
+              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
+              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
+              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
+              <option value="custom">自訂…</option>
+            </select>
+          </div>
+          <input class="hcustom" type="number" id="nianCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
+        </div>
+      </div>
+      <div class="hs-btns">
+        <button class="hs-btn-clear"  onclick="clearHoursForm()">清除</button>
+        <button class="hs-btn-cancel" onclick="document.getElementById('hoursOverlay').classList.remove('open')">取消</button>
+        <button class="hs-btn-save"   onclick="saveHoursEntry()">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-title">換班紀錄</div>
+<ul class="rec-list" id="recList"></ul>
+
+<script>
+/* ── SHIFT DATA ── */
+const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
+
+const ANC      = new Date(2026,5,8);
+const ZONE_ANC = new Date(2026,5,8);
+const ZONE_COLORS = ['#c8826a','#a07860','#d4a090','#b8906a','#c8a890','#907060'];
+const ME = { w1: 22 };  // Lena: w1=22
+
+const HOL = {'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
+const COMMON = ['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','OFF'];
+const DZ = ['日','一','二','三','四','五','六'];
+
+/* ── UTILS ── */
+function dk(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function ad(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function kd(s){ const[y,m,dd]=s.split('-').map(Number); return new Date(y,m-1,dd); }
+function wo(date){ const dow=date.getDay(), mon=ad(date,-((dow+6)%7)); return Math.round((mon-ANC)/(7*86400000)); }
+function nf(w,woff){ return((w-1+woff)%35+35)%35+1; }
+function monKey(date){ return dk(ad(date,-((date.getDay()+6)%7))); }
+function getZoneIdx(date){ return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6; }
+function getZoneColor(date){ return ZONE_COLORS[getZoneIdx(date)]; }
+
+/* ── STORAGE (Lena-specific keys) ── */
+let wS={}, dS={}, nS={};
+try{ const s=localStorage.getItem('lena_wswaps'); if(s) wS=JSON.parse(s); }catch(e){}
+try{ const s=localStorage.getItem('lena_dswaps'); if(s) dS=JSON.parse(s); }catch(e){}
+try{ const s=localStorage.getItem('lena_notes');  if(s) nS=JSON.parse(s); }catch(e){}
+function save(){
+  try{ localStorage.setItem('lena_wswaps', JSON.stringify(wS)); }catch(e){}
+  try{ localStorage.setItem('lena_dswaps', JSON.stringify(dS)); }catch(e){}
+  try{ localStorage.setItem('lena_notes',  JSON.stringify(nS)); }catch(e){}
+}
+
+/* ── HOURS ── */
+let hD={}, nianTotal=52, jijiInit=0;
+try{ const s=localStorage.getItem('lena_hours');     if(s) hD=JSON.parse(s); }catch(e){}
+try{ const s=localStorage.getItem('lena_hours_cfg'); if(s){ const c=JSON.parse(s); nianTotal=parseFloat(c.nianTotal)||52; jijiInit=parseFloat(c.jijiInit)||0; } }catch(e){}
+function saveHours(){ try{ localStorage.setItem('lena_hours', JSON.stringify(hD)); }catch(e){} }
+function saveSettings(){
+  nianTotal = parseFloat(document.getElementById('nianTotalInput').value)||52;
+  jijiInit  = parseFloat(document.getElementById('jijiInitInput').value)||0;
+  try{ localStorage.setItem('lena_hours_cfg', JSON.stringify({nianTotal, jijiInit})); }catch(e){}
+  refreshBalance();
+}
+function calcJijiBalance(){
+  let bal=jijiInit;
+  for(const k in hD){ const e=hD[k]; if(e.jiji>0) bal+=(e.jijiDir==='+'?e.jiji:-e.jiji); }
+  return bal;
+}
+function calcNianUsed(){
+  let u=0; for(const k in hD){ const e=hD[k]; if(e.nian>0) u+=e.nian; } return u;
+}
+function refreshBalance(){
+  const jijiB=calcJijiBalance(), nianU=calcNianUsed(), nianB=nianTotal-nianU;
+  document.getElementById('jijiBalVal').textContent=jijiB;
+  document.getElementById('nianBalVal').textContent=nianB;
+  const pct=Math.min(100, nianTotal>0 ? Math.round(nianU/nianTotal*100) : 0);
+  document.getElementById('nianFill').style.width=pct+'%';
+  document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
+}
+
+/* ── ALLOWANCE ── */
+let allowAdj={};
+try{ const s=localStorage.getItem('lena_allow_adj'); if(s) allowAdj=JSON.parse(s); }catch(e){}
+function saveAllowAdj(){
+  const ym=cy*100+(cm+1);
+  const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
+  const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
+  const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
+  if(a12===0&&aE===0&&aN===0) delete allowAdj[ym]; else allowAdj[ym]={a12,aE,aN};
+  try{ localStorage.setItem('lena_allow_adj', JSON.stringify(allowAdj)); }catch(e){}
+  refreshAllow();
+}
+function calcAllow(){
+  const totalDays=new Date(cy,cm+1,0).getDate();
+  let c12=0,cE=0,cN=0,cDot=0;
+  for(let d=1;d<=totalDays;d++){
+    const date=new Date(cy,cm,d);
+    const{s}=getShift(date);
+    const dow=date.getDay();
+    if(s.startsWith('12-8')) c12++;
+    else if(s.startsWith('E')) cE++;
+    else if(s.startsWith('N')) cN++;
+    if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){
+      const key=dk(date), he=hD[key];
+      if(he&&he.jijiDir==='+'&&he.jiji>=1.5) cDot++;
+    }
+  }
+  const rateE=cE>=15?640:560, rateN=cN>=15?960:770;
+  return{c12,cE,cN,cDot,rateE,rateN};
+}
+function refreshAllow(){
+  const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
+  const ym=cy*100+(cm+1), adj=allowAdj[ym]||{};
+  const adj12=adj.a12||0, adjE=adj.aE||0, adjN=adj.aN||0;
+  const a12=c12*270+adj12, aE=cE*rateE+adjE, aN=cN*rateN+adjN, aDot=cDot*270;
+  const total=a12+aE+aN+aDot;
+  document.getElementById('allow12Val').textContent='$'+a12;
+  document.getElementById('allow12Count').textContent=c12+' 班';
+  document.getElementById('allowEVal').textContent='$'+aE;
+  document.getElementById('allowECount').textContent=cE+' 班';
+  document.getElementById('allowNVal').textContent='$'+aN;
+  document.getElementById('allowNCount').textContent=cN+' 班';
+  document.getElementById('allowDotVal').textContent='$'+aDot;
+  document.getElementById('allowDotCount').textContent=cDot+' 班';
+  document.getElementById('allow12Adj').value=adj12||'';
+  document.getElementById('allowEAdj').value=adjE||'';
+  document.getElementById('allowNAdj').value=adjN||'';
+  document.getElementById('allowTotal').textContent='本月 $'+total;
+}
+
+/* ── AUTO CLEAN ── */
+function autoClean(){
+  const now=new Date(), ym=now.getFullYear()*100+now.getMonth();
+  let changed=false;
+  for(const k of Object.keys(wS)){ if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){ delete wS[k]; changed=true; } }
+  for(const k of Object.keys(dS)){ if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){ delete dS[k]; changed=true; } }
+  for(const k of Object.keys(nS)){ if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){ delete nS[k]; changed=true; } }
+  if(changed) save();
+}
+
+/* ── SHIFT LOGIC ── */
+function getNum(date){ return wS[monKey(date)] || nf(ME.w1, wo(date)); }
+function getShift(date){
+  const key=dk(date);
+  if(dS[key]) return{s:dS[key], h:HOL[key]||null, dm:true, holD:false};
+  const num=getNum(date), idx=(date.getDay()+6)%7;
+  let s=SCH[num][idx];
+  const h=HOL[key];
+  let holD=false;
+  if(h && date.getDay()!==0 && date.getDay()!==6){
+    const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3',"D'OFF"];
+    if(mo.includes(s)){ s='OFF'; }
+    else if(s==='D1'||s==='D2') holD=true;
+  }
+  return{s, h:h||null, dm:false, holD};
+}
+function sc(s, holD){
+  if(!s||s==='OFF'||s==='OFF.B'||s==="D'OFF") return 'sOFF';
+  if(s.startsWith('12-8')) return 's12';
+  if(s.startsWith('E')) return 'sE';
+  if(s.startsWith('N')) return 'sN';
+  if(holD) return 'sDhol';
+  return 'sD';
+}
+
+/* ── STATE ── */
+let cy=new Date().getFullYear(), cm=new Date().getMonth(), selKey=null, curTab='week';
+
+function prev(){ cm--; if(cm<0){cm=11;cy--;} render(); renderRecList(); refreshAllow(); }
+function next(){ cm++; if(cm>11){cm=0;cy++;} render(); renderRecList(); refreshAllow(); }
+
+/* ── RENDER ── */
+function render(){
+  const totalDays=new Date(cy,cm+1,0).getDate();
+  document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
+  const gh=document.getElementById('gridHead'); gh.innerHTML='';
+  for(const d of['一','二','三','四','五','六','日']){
+    const e=document.createElement('div'); e.className='dh'; e.textContent=d; gh.appendChild(e);
+  }
+  const g=document.getElementById('grid'); g.innerHTML='';
+  const fd=new Date(cy,cm,1).getDay(), off=(fd+6)%7;
+  for(let i=0;i<off;i++){ const e=document.createElement('div'); e.className='cell empty'; g.appendChild(e); }
+  const tk=dk(new Date());
+  for(let day=1; day<=totalDays; day++){
+    const date=new Date(cy,cm,day), key=dk(date);
+    const{s,h,dm,holD}=getShift(date);
+    const dow=date.getDay(), isMon=((dow+6)%7)===0, isFirst=day===1;
+    const mk=monKey(date), origNum=nf(ME.w1, wo(date));
+    const zc=getZoneColor(date), zi=getZoneIdx(date);
+    const gridPos=off+day-1, col=gridPos%7;
+    const above=ad(date,-7), below=ad(date,7);
+    const isLeft  = col===0  || getZoneIdx(ad(date,-1))!==zi;
+    const isRight = col===6  || getZoneIdx(ad(date, 1))!==zi;
+    const isTop   = gridPos<7|| getZoneIdx(above)!==zi;
+    const isBottom= below.getMonth()!==date.getMonth()||below.getFullYear()!==date.getFullYear()||getZoneIdx(below)!==zi;
+    const hasNote = !!(nS[key]||nS[mk]||wS[mk]||dS[key]);
+    const cell=document.createElement('div');
+    cell.style.cssText='--zc:'+zc;
+    let cls='cell';
+    if(key===tk) cls+=' today';
+    if(wS[mk]) cls+=' swapped';
+    if(dm) cls+=' day-mod';
+    if(selKey===key) cls+=' selected';
+    if(hasNote) cls+=' has-note';
+    if(isTop)    cls+=' z-top';
+    if(isBottom) cls+=' z-bottom';
+    if(isLeft)   cls+=' z-left';
+    if(isRight)  cls+=' z-right';
+    cell.className=cls;
+    cell.onclick=()=>openPanel(key);
+    if(isMon||isFirst){
+      const b=document.createElement('div'); b.className='badge'; b.textContent=origNum;
+      b.onclick=function(e){
+        e.stopPropagation(); openPanel(key); switchTab('week');
+        document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
+      };
+      cell.appendChild(b);
+    }
+    const top=document.createElement('div'); top.className='top';
+    const dn=document.createElement('div'); dn.className='dn'+(h?' holiday':''); dn.textContent=day; top.appendChild(dn);
+    if(h){ const he=document.createElement('div'); he.className='hol-name'; he.textContent=h; top.appendChild(he); }
+    const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
+    const bot=document.createElement('div'); bot.className='bot '+sc(s,isHolD); bot.textContent=s;
+    const he=hD[key];
+    if(he){
+      if(he.jiji>0){ const b=document.createElement('span'); b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m'); b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji; bot.appendChild(b); }
+      if(he.nian>0){ const b=document.createElement('span'); b.className='hbadge hb-n-m'; b.textContent='年－'+he.nian; bot.appendChild(b); }
+    }
+    cell.appendChild(top); cell.appendChild(bot); g.appendChild(cell);
+  }
+}
+
+/* ── PANEL ── */
+function openPanel(key){
+  selKey=key;
+  const date=kd(key), dow=date.getDay(), isMon=((dow+6)%7)===0;
+  const{s:curShift, h}=getShift(date);
+  document.getElementById('panelTitle').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）';
+  document.getElementById('panelSub').textContent='目前班別：'+curShift;
+  const holEl=document.getElementById('panelHol');
+  if(h){ holEl.textContent='🎌 '+h; holEl.style.display='block'; } else { holEl.style.display='none'; }
+  switchTab(isMon?'week':'day');
+  const mk=monKey(date);
+  document.getElementById('numSel').value=wS[mk]||'';
+  document.getElementById('preview').style.display='none';
+  if(wS[mk]) renderPreview();
+  renderShiftBtns(dS[key]||curShift);
+  document.getElementById('weekNote').value=nS[mk]||'';
+  document.getElementById('dayNote').value=nS[key]||'';
+  document.getElementById('panel').classList.add('open');
+  updateHoursBtnStyle();
+  render();
+  setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'}), 50);
+}
+function switchTab(tab){
+  curTab=tab;
+  document.getElementById('tabWeek').classList.toggle('active', tab==='week');
+  document.getElementById('tabDay').classList.toggle('active',  tab==='day');
+  document.getElementById('formWeek').style.display=tab==='week'?'block':'none';
+  document.getElementById('formDay').style.display=tab==='day'?'block':'none';
+}
+function renderShiftBtns(cur){
+  document.getElementById('shiftBtns').innerHTML=COMMON.map(s=>'<button class="sb '+sc(s,false)+' '+(s===cur?'active':'')+'" onclick="selectShift(\''+s+'\')">'+s+'</button>').join('');
+}
+function selectShift(s){ renderShiftBtns(s); }
+function getSelectedShift(){ const a=document.querySelector('#shiftBtns .sb.active'); return a?a.textContent:''; }
+function renderPreview(){
+  const nv=document.getElementById('numSel').value, pv=document.getElementById('preview'), pg=document.getElementById('previewGrid');
+  if(!nv){ pv.style.display='none'; return; }
+  const num=parseInt(nv), wds=['一','二','三','四','五','六','日'];
+  let h=''; for(const d of wds) h+='<div class="pg-head">'+d+'</div>';
+  for(let i=0;i<7;i++){ const s=SCH[num][i]; h+='<div class="pg-cell '+sc(s,false)+'">'+s+'</div>'; }
+  pg.innerHTML=h; pv.style.display='block';
+}
+function confirmAction(){
+  if(!selKey) return;
+  const mk=monKey(kd(selKey));
+  if(curTab==='week'){
+    const nv=document.getElementById('numSel').value;
+    if(!nv){ alert('請先選擇號碼班'); return; }
+    const date=kd(selKey), origNum=nf(ME.w1, wo(date));
+    const note=document.getElementById('weekNote').value.trim();
+    if(parseInt(nv)===origNum){ delete wS[mk]; delete nS[mk]; }
+    else{ wS[mk]=parseInt(nv); if(note) nS[mk]=note; else delete nS[mk]; }
+  } else {
+    const chosen=getSelectedShift();
+    const date=kd(selKey);
+    const note=document.getElementById('dayNote').value.trim();
+    const savedDS=dS[selKey]; delete dS[selKey];
+    const{s:baseShift}=getShift(date);
+    if(savedDS) dS[selKey]=savedDS;
+    if(chosen&&chosen!==baseShift){ dS[selKey]=chosen; } else { delete dS[selKey]; }
+    if(note) nS[selKey]=note; else delete nS[selKey];
+    if(!chosen&&!note){ alert('請選擇班別或填寫備註'); return; }
+  }
+  save(); renderRecList(); render(); refreshAllow(); closePanel();
+  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function closePanel(){
+  selKey=null;
+  document.getElementById('panel').classList.remove('open');
+  document.querySelectorAll('.cell.selected').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ── HOURS SHEET ── */
+function openHoursSheet(){
+  if(!selKey) return;
+  const date=kd(selKey);
+  const{s}=getShift(date);
+  document.getElementById('hsDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('hsShift').textContent='班別：'+s;
+  const e=hD[selKey]||{};
+  document.getElementById('jijiDir').value=e.jijiDir||'+';
+  const jv=e.jiji||0, jSel=document.getElementById('jijiHrs'), jCustom=document.getElementById('jijiCustom');
+  if(jv>0&&jv<=5&&jv*2===Math.round(jv*2)){ jSel.value=jv; jCustom.style.display='none'; }
+  else if(jv>0){ jSel.value='custom'; jCustom.style.display='block'; jCustom.value=jv; }
+  else{ jSel.value=0; jCustom.style.display='none'; }
+  const nv=e.nian||0, nSel=document.getElementById('nianHrs'), nCustom=document.getElementById('nianCustom');
+  if(nv>0&&nv<=5&&nv*2===Math.round(nv*2)){ nSel.value=nv; nCustom.style.display='none'; }
+  else if(nv>0){ nSel.value='custom'; nCustom.style.display='block'; nCustom.value=nv; }
+  else{ nSel.value=0; nCustom.style.display='none'; }
+  updateHDir('jiji');
+  document.getElementById('hoursOverlay').classList.add('open');
+}
+function toggleCustom(type){
+  const sel=document.getElementById(type+'Hrs'), inp=document.getElementById(type+'Custom');
+  if(sel.value==='custom'){ inp.style.display='block'; inp.focus(); } else { inp.style.display='none'; }
+}
+function getHoursVal(type){
+  const sel=document.getElementById(type+'Hrs');
+  if(sel.value==='custom'){ const v=parseFloat(document.getElementById(type+'Custom').value); return isNaN(v)?0:v; }
+  return parseFloat(sel.value)||0;
+}
+function updateHDir(type){
+  if(type!=='jiji') return;
+  const sel=document.getElementById('jijiDir'), v=sel.value;
+  sel.className='hdir '+(v==='+'?'ot':'jm');
+}
+function clearHoursForm(){
+  document.getElementById('jijiDir').value='+';
+  document.getElementById('jijiHrs').value=0;
+  document.getElementById('jijiCustom').style.display='none';
+  document.getElementById('nianHrs').value=0;
+  document.getElementById('nianCustom').style.display='none';
+  updateHDir('jiji');
+}
+function saveHoursEntry(){
+  const jh=getHoursVal('jiji'), jd=document.getElementById('jijiDir').value, nh=getHoursVal('nian');
+  if(jh===0&&nh===0){ delete hD[selKey]; } else { hD[selKey]={jiji:jh, jijiDir:jd, nian:nh, nianDir:'-'}; }
+  saveHours(); refreshBalance(); refreshAllow(); render();
+  document.getElementById('hoursOverlay').classList.remove('open');
+  updateHoursBtnStyle();
+  document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function updateHoursBtnStyle(){
+  const btn=document.getElementById('hoursTriggerBtn');
+  if(!btn||!selKey) return;
+  const e=hD[selKey];
+  const hasData=e&&(e.jiji>0||e.nian>0);
+  btn.className='hours-trigger-btn'+(hasData?' has-data':'');
+  if(hasData){
+    const parts=[];
+    if(e.jiji>0) parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);
+    if(e.nian>0) parts.push('年休－'+e.nian);
+    btn.textContent='⏱ '+parts.join('　');
+  } else {
+    btn.textContent='⏱ 記錄時數（積休 / 年休）';
+  }
+}
+
+/* ── RECORDS ── */
+function renderRecList(){
+  const el=document.getElementById('recList'), items=[];
+  function inViewMonth(d){ return d.getFullYear()===cy && d.getMonth()===cm; }
+  Object.keys(wS).sort().forEach(mk=>{
+    const date=kd(mk); if(!inViewMonth(date)) return;
+    const origNum=nf(ME.w1, wo(date));
+    items.push({type:'week', key:mk, desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週：N.'+origNum+' → N.'+wS[mk], note:nS[mk]||''});
+  });
+  Object.keys(dS).sort().forEach(key=>{
+    const date=kd(key); if(!inViewMonth(date)) return;
+    if(dS[key]) items.push({type:'day', key, desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key], note:nS[key]||''});
+  });
+  Object.keys(nS).sort().forEach(key=>{
+    if(!wS[key]&&!dS[key]){
+      const date=kd(key); if(!inViewMonth(date)) return;
+      items.push({type:'day', key, desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註', note:nS[key]});
+    }
+  });
+  if(!items.length){ el.innerHTML='<li class="empty-msg">尚無換班紀錄</li>'; return; }
+  el.innerHTML=items.map(({type,key,desc,note})=>'<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+type+'">'+(type==='week'?'換號碼班':'單日')+'</span><span class="rec-desc">'+desc+'</span><button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button></div>'+(note?'<div class="rec-note">💬 '+note+'</div>':'')+'</li>').join('');
+}
+function delRec(type,key){
+  if(type==='week'){ delete wS[key]; delete nS[key]; } else { delete dS[key]; delete nS[key]; }
+  save(); renderRecList(); render();
+}
+
+/* ── INIT ── */
+const sel=document.getElementById('numSel');
+for(let i=1;i<=35;i++){ const o=document.createElement('option'); o.value=i; o.textContent='號碼班 '+i; sel.appendChild(o); }
+autoClean(); renderRecList(); render();
+document.getElementById('nianTotalInput').value=nianTotal;
+document.getElementById('jijiInitInput').value=jijiInit;
+refreshBalance(); refreshAllow();
+</script>
+</body>
+</html>
