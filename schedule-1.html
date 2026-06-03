@@ -34,6 +34,8 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .nav h2{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:400;color:var(--ink);letter-spacing:-0.3px}
 .nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .nav button:active{background:var(--surface2)}
+.today-btn{display:none;margin:0 auto 10px;padding:6px 18px;background:transparent;color:var(--ink2);border:1px solid var(--border2);border-radius:99px;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.today-btn:active{background:var(--surface2)}
 /* GRID */
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
 .dh{text-align:center;font-size:11px;color:var(--ink3);padding:4px 0 6px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
@@ -41,7 +43,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell:first-child{border-radius:var(--radius-sm) 0 0 0}
 .cell.empty{background:transparent;border-color:transparent;cursor:default}
 .cell.today{background:#fdfaf7}
-.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
 .cell.swapped .badge{background:#d4b896;color:#6a4828}
 .cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
 .cell.selected{background:#f5f0eb!important}
@@ -55,9 +57,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .badge{position:absolute;top:-6px;left:-6px;width:18px;height:18px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:10;border:1.5px solid var(--bg)}
 .top{background:transparent;flex:0 0 46%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:6px}
 .hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
-.dn{font-size:17px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
-.bot{flex:0 0 54%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+.bot{flex:0 0 54%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
 /* SHIFT COLOURS — 簡約莫蘭迪 */
 .sD{background:#ede9e2;color:#3a3228}
 .sDhol{background:#c8bfaa;color:#2a2018}
@@ -189,6 +191,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
   <h2 id="title"></h2>
   <button onclick="next()">&#8250;</button>
 </div>
+<button class="today-btn" id="todayBtn" onclick="goToday()">回到今日 ↩</button>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
 
@@ -613,8 +616,10 @@ function sc(s,holD){
   return'sD';
 }
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();}
+function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();}
+function updateTodayBtn(){const n=new Date();const btn=document.getElementById('todayBtn');btn.style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();}
 function render(){
   const me=new Date(cy,cm+1,0),totalDays=me.getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -797,7 +802,7 @@ function delRec(type,key){
 }
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
-autoClean();renderRecList();render();
+autoClean();renderRecList();render();updateTodayBtn();
 document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
 refreshBalance();refreshAllow();
