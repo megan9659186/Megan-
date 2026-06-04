@@ -433,12 +433,15 @@ try{const s=localStorage.getItem('yanghan_dswaps');if(s)dS=JSON.parse(s);}catch(
 try{const s=localStorage.getItem('yanghan_notes');if(s)nS=JSON.parse(s);}catch(e){}
 let hD={};let nianTotal=52,yanTotal=0,jijiInit=0;
 try{const s=localStorage.getItem('yanghan_hours');if(s)hD=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem('yanghan_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal)||52;yanTotal=parseFloat(c.yanTotal)||0;jijiInit=parseFloat(c.jijiInit)||0;}}catch(e){}
+try{const s=localStorage.getItem('yanghan_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal);if(isNaN(nianTotal))nianTotal=52;yanTotal=parseFloat(c.yanTotal);if(isNaN(yanTotal))yanTotal=0;jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;}}catch(e){}
 function saveHours(){try{localStorage.setItem('yanghan_hours',JSON.stringify(hD));}catch(e){}}
 function saveSettings(){
-  nianTotal=parseFloat(document.getElementById('nianTotalInput').value)||52;
-  yanTotal=parseFloat(document.getElementById('yanTotalInput').value)||0;
-  jijiInit=parseFloat(document.getElementById('jijiInitInput').value)||0;
+  const nv=document.getElementById('nianTotalInput').value;
+  const yv=document.getElementById('yanTotalInput').value;
+  const jv=document.getElementById('jijiInitInput').value;
+  nianTotal=nv===''?52:parseFloat(nv);if(isNaN(nianTotal))nianTotal=52;
+  yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
+  jijiInit=jv===''?0:parseFloat(jv);if(isNaN(jijiInit))jijiInit=0;
   try{localStorage.setItem('yanghan_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
   refreshBalance();
 }
