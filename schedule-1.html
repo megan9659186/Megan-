@@ -545,9 +545,10 @@ function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.
 function refreshBalance(){
   const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
   const yanU=calcYanUsed(),yanB=yanTotal-yanU;
-  document.getElementById('jijiBalVal').textContent=jijiB;
-  document.getElementById('nianBalVal').textContent=nianB;
-  document.getElementById('yanBalVal').textContent=yanB;
+  function r2(v){return parseFloat(v.toFixed(2));}
+  document.getElementById('jijiBalVal').textContent=r2(jijiB);
+  document.getElementById('nianBalVal').textContent=r2(nianB);
+  document.getElementById('yanBalVal').textContent=r2(yanB);
   const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
   document.getElementById('nianFill').style.width=pct+'%';
   document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
