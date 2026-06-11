@@ -299,13 +299,13 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">E 班 $560／包班 $640</div>
+      <div class="allow-cell-label">E 班 $560／包班 $660</div>
       <div class="allow-cell-val" id="allowEVal">$0</div>
       <div class="allow-cell-count" id="allowECount">0 班</div>
       <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">N 班 $770／包班 $960</div>
+      <div class="allow-cell-label">N 班 $770／包班 $940</div>
       <div class="allow-cell-val" id="allowNVal">$0</div>
       <div class="allow-cell-count" id="allowNCount">0 班</div>
       <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
@@ -635,7 +635,7 @@ function calcAllow(){
     else if(s.startsWith('N'))cN++;
     if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){const he=hD[key];if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;}
   }
-  const rateE=cE>=15?640:560,rateN=cN>=15?960:770;
+  const rateE=cE>=15?660:560,rateN=cN>=15?940:770;
   return{c12,cE,cN,cDot,rateE,rateN};
 }
 function refreshAllow(){
@@ -643,8 +643,8 @@ function refreshAllow(){
   const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
   const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0;
   const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270,total=a12+aE+aN+aDot;
-  const labelE='E 班 $'+(cE>=15?'640（包班）':'560')+(cE>=15?' ✓':'');
-  const labelN='N 班 $'+(cN>=15?'960（包班）':'770')+(cN>=15?' ✓':'');
+  const labelE='E 班 $'+(cE>=15?'660（包班）':'560')+(cE>=15?' ✓':'');
+  const labelN='N 班 $'+(cN>=15?'940（包班）':'770')+(cN>=15?' ✓':'');
   document.getElementById('allow12Val').textContent='$'+a12;document.getElementById('allow12Count').textContent=c12+' 班';
   document.getElementById('allowEVal').textContent='$'+aE;document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
   document.getElementById('allowNVal').textContent='$'+aN;document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
