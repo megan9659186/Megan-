@@ -481,7 +481,13 @@ function saveOtherName(){
   render();
 }
 function enterOtherEditMode(){
-  if(!otherName)return;
+  if(!otherName){
+    const n=prompt('請輸入同事暱稱：');
+    if(!n||!n.trim())return;
+    otherName=n.trim();
+    try{localStorage.setItem('megan_other_name',otherName);}catch(e){}
+    const inp=document.getElementById('otherNameInput');if(inp)inp.value=otherName;
+  }
   otherEditMode=true;otherEditSnapshot=JSON.stringify(oD);
   closePanel();
   document.body.classList.add('other-edit-mode');
@@ -508,8 +514,9 @@ function cancelOtherEdit(){
 }
 function updateOtherTrigger(){
   const btn=document.getElementById('otherEditTrigger');if(!btn)return;
-  if(otherName&&!otherEditMode){btn.className='other-edit-trigger show';btn.textContent='📅 輸入 '+otherName+' 的上班日';}
-  else{btn.className='other-edit-trigger';}
+  if(otherEditMode){btn.className='other-edit-trigger';return;}
+  btn.className='other-edit-trigger show';
+  btn.textContent=otherName?'📅 輸入 '+otherName+' 的上班日':'📅 輸入上班日';
 }
 function setOtherDay(val){
   if(!selKey)return;
