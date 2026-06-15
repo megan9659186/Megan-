@@ -299,13 +299,13 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">E 班 $560／包班 $660</div>
+      <div class="allow-cell-label">E 班 $560／包班 $640</div>
       <div class="allow-cell-val" id="allowEVal">$0</div>
       <div class="allow-cell-count" id="allowECount">0 班</div>
       <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">N 班 $770／包班 $940</div>
+      <div class="allow-cell-label">N 班 $770／包班 $960</div>
       <div class="allow-cell-val" id="allowNVal">$0</div>
       <div class="allow-cell-count" id="allowNCount">0 班</div>
       <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
@@ -442,8 +442,8 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     </div>
   </div>
 </div>
-<div class="sec-title" id="recTitle" onclick="toggleRecList()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>換班・行程紀錄</span><span id="recToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:400">展開 ﹀</span></div>
-<ul class="rec-list" id="recList" style="display:none"></ul>
+<div class="sec-title">換班・行程紀錄</div>
+<ul class="rec-list" id="recList"></ul>
 <script>
 const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
 const ANC=new Date(2026,5,8);
@@ -481,13 +481,7 @@ function saveOtherName(){
   render();
 }
 function enterOtherEditMode(){
-  if(!otherName){
-    const n=prompt('請輸入同事暱稱：');
-    if(!n||!n.trim())return;
-    otherName=n.trim();
-    try{localStorage.setItem('megan_other_name',otherName);}catch(e){}
-    const inp=document.getElementById('otherNameInput');if(inp)inp.value=otherName;
-  }
+  if(!otherName)return;
   otherEditMode=true;otherEditSnapshot=JSON.stringify(oD);
   closePanel();
   document.body.classList.add('other-edit-mode');
@@ -514,9 +508,8 @@ function cancelOtherEdit(){
 }
 function updateOtherTrigger(){
   const btn=document.getElementById('otherEditTrigger');if(!btn)return;
-  if(otherEditMode){btn.className='other-edit-trigger';return;}
-  btn.className='other-edit-trigger show';
-  btn.textContent=otherName?'📅 輸入 '+otherName+' 的上班日':'📅 輸入上班日';
+  if(otherName&&!otherEditMode){btn.className='other-edit-trigger show';btn.textContent='📅 輸入 '+otherName+' 的上班日';}
+  else{btn.className='other-edit-trigger';}
 }
 function setOtherDay(val){
   if(!selKey)return;
@@ -552,10 +545,9 @@ function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.
 function refreshBalance(){
   const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
   const yanU=calcYanUsed(),yanB=yanTotal-yanU;
-  function r2(v){return parseFloat(v.toFixed(2));}
-  document.getElementById('jijiBalVal').textContent=r2(jijiB);
-  document.getElementById('nianBalVal').textContent=r2(nianB);
-  document.getElementById('yanBalVal').textContent=r2(yanB);
+  document.getElementById('jijiBalVal').textContent=jijiB;
+  document.getElementById('nianBalVal').textContent=nianB;
+  document.getElementById('yanBalVal').textContent=yanB;
   const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
   document.getElementById('nianFill').style.width=pct+'%';
   document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
@@ -589,7 +581,7 @@ function openHoursSheet(){
   else{allow12Row.classList.remove('show');allow12Check.checked=true;}
   document.getElementById('hoursOverlay').classList.add('open');
 }
-function toggleCustom(type){const sel=document.getElementById(type+'Hrs'),inp=document.getElementById(type+'Custom');if(sel.value==='custom'){inp.value='';inp.style.display='block';inp.focus();}else{inp.style.display='none';}}
+function toggleCustom(type){const sel=document.getElementById(type+'Hrs'),inp=document.getElementById(type+'Custom');if(sel.value==='custom'){inp.style.display='block';inp.focus();}else{inp.style.display='none';}}
 function getHoursVal(type){const sel=document.getElementById(type+'Hrs');if(sel.value==='custom'){const v=parseFloat(document.getElementById(type+'Custom').value);return isNaN(v)?0:v;}return parseFloat(sel.value)||0;}
 function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
 function updateAllow12Style(){
@@ -643,7 +635,7 @@ function calcAllow(){
     else if(s.startsWith('N'))cN++;
     if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){const he=hD[key];if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;}
   }
-  const rateE=cE>=15?660:560,rateN=cN>=15?940:770;
+  const rateE=cE>=15?640:560,rateN=cN>=15?960:770;
   return{c12,cE,cN,cDot,rateE,rateN};
 }
 function refreshAllow(){
@@ -651,8 +643,8 @@ function refreshAllow(){
   const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
   const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0;
   const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270,total=a12+aE+aN+aDot;
-  const labelE='E 班 $'+(cE>=15?'660（包班）':'560')+(cE>=15?' ✓':'');
-  const labelN='N 班 $'+(cN>=15?'940（包班）':'770')+(cN>=15?' ✓':'');
+  const labelE='E 班 $'+(cE>=15?'640（包班）':'560')+(cE>=15?' ✓':'');
+  const labelN='N 班 $'+(cN>=15?'960（包班）':'770')+(cN>=15?' ✓':'');
   document.getElementById('allow12Val').textContent='$'+a12;document.getElementById('allow12Count').textContent=c12+' 班';
   document.getElementById('allowEVal').textContent='$'+aE;document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
   document.getElementById('allowNVal').textContent='$'+aN;document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
@@ -812,13 +804,10 @@ function renderRecList(){
   Object.keys(dS).sort().forEach(key=>{const date=kd(key);if(!inViewMonth(date))return;if(dS[key])items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key],note:nS[key]||''});});
   Object.keys(nS).sort().forEach(key=>{if(!wS[key]&&!dS[key]){const date=kd(key);if(!inViewMonth(date))return;items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註',note:nS[key]});}});
   Object.keys(pS).sort().forEach(key=>{const date=kd(key);if(!inViewMonth(date))return;items.push({type:'plan',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）',note:pS[key]});});
-  const icon=document.getElementById('recToggleIcon'),isOpen=document.getElementById('recList').style.display!=='none';
-  if(!items.length){el.innerHTML='<li class="empty-msg">尚無紀錄</li>';if(icon)icon.textContent='展開 ﹀';return;}
+  if(!items.length){el.innerHTML='<li class="empty-msg">尚無紀錄</li>';return;}
   el.innerHTML=items.map(({type,key,desc,note})=>{var lbl=type==='week'?'換號碼班':(type==='plan'?'📌 行程':'單日');var ic=type==='plan'?'📌':'💬';return '<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+type+'">'+lbl+'</span><span class="rec-desc">'+desc+'</span><button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button></div>'+(note?'<div class="rec-note">'+ic+' '+note+'</div>':'')+'</li>';}).join('');
-  if(icon)icon.textContent=isOpen?'收合 ︿ ('+items.length+')':'展開 ﹀ ('+items.length+')';
 }
 function delRec(type,key){if(type==='week'){delete wS[key];delete nS[key];}else if(type==='plan'){delete pS[key];}else{delete dS[key];delete nS[key];}save();renderRecList();render();}
-function toggleRecList(){const el=document.getElementById('recList'),icon=document.getElementById('recToggleIcon'),isOpen=el.style.display!=='none';el.style.display=isOpen?'none':'block';const count=el.querySelectorAll('.rec-item').length;icon.textContent=isOpen?('展開 ﹀'+(count>0?' ('+count+')':'')):'收合 ︿ ('+count+')';}
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 autoClean();renderRecList();render();updateTodayBtn();
