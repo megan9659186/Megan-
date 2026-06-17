@@ -938,7 +938,7 @@ function render(){
       }
     }
     // 📷 標記（同步讀 localStorage）
-    if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.right='18px';pp.textContent='📷';cell.appendChild(pp);}
+    if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top='13px';pp.textContent='📷';cell.appendChild(pp);}
     cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
   }
   // 補滿最後一排
