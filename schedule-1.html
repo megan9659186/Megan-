@@ -143,6 +143,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .nts-input.jiji-color{color:#1a4a2a}
 /* hbadge */
 .hbadge{display:block;font-size:7px;font-weight:600;padding:1px 4px;border-radius:3px;line-height:1.5;text-align:center;margin-top:1px;letter-spacing:0.2px}
+.bot.overtime{color:#8b2020!important;font-weight:600}
 .hb-j-p{background:#d8edd8;color:#1a4a2a}
 .hb-j-m{background:#f0ddd8;color:#7a2018}
 .hb-n-m{background:#f0ddd8;color:#7a2018}
@@ -921,8 +922,9 @@ function render(){
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
     if(h){const he=document.createElement('div');he.className='hol-name';he.textContent=h;top.appendChild(he);}
     const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
-    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;
     const he=hD[key];
+    const isOT=he&&he.jiji>0&&he.jijiDir==='+';
+    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);if(isOT)bot.style.cssText='color:#8b2020!important;font-weight:600';bot.textContent=s;
     if(he){
       if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
       if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
