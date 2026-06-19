@@ -45,7 +45,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 /* badge 防裁切 */
 .grid#grid{overflow:visible;margin-top:8px}
 .cell.today{background:#fdfaf7}
-.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:14px}
 .cell.swapped .badge{background:#d4b896;color:#6a4828}
 .cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
 .plan-pin{position:absolute;top:1px;right:2px;font-size:10px;line-height:1;z-index:6;pointer-events:none}
@@ -58,11 +58,10 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-right{border-right:2px solid var(--zc)!important}
 /* BADGE */
 .badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
-.top{background:transparent;flex:0 0 46%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:6px}
-.hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
-.dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.top{background:transparent;flex:0 0 40%;display:flex;align-items:center;justify-content:center;position:relative}
+.dn{font-size:17px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
-.bot{flex:0 0 54%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+.bot{flex:0 0 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
 /* SHIFT COLOURS */
 .sD{background:#ede9e2;color:#3a3228}
 .sDhol{background:#c8bfaa;color:#2a2018}
@@ -149,6 +148,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hb-n-m{background:#f0ddd8;color:#7a2018}
 .hb-y-m{background:#fdf0c8;color:#8a6800}
 .hb-other{background:#dde4ec;color:#1a3050}
+.hb-hol{background:var(--red-soft);color:var(--red)}
 /* hours trigger btn */
 .hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
 .hours-trigger-btn.has-data{background:#f0f7f2;color:#1a4a2a;border-color:#c8ddd0}
@@ -920,11 +920,11 @@ function render(){
     }
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
-    if(h){const holDiv=document.createElement('div');holDiv.className='hol-name';holDiv.textContent=h;top.appendChild(holDiv);}
     const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
     const he=hD[key];
     const isDayMod=!!dS[key];
     const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){bot.style.color='#a83232';bot.style.fontWeight='700';}
+    if(h){const hb=document.createElement('span');hb.className='hbadge hb-hol';hb.textContent=h;bot.appendChild(hb);}
     if(he){
       if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
       if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
