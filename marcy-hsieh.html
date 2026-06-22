@@ -14,6 +14,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;co
 .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .nav h2{font-size:22px;font-weight:500;color:#2d5043}
 .nav button{background:#2d5043;color:#fff;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:16px}
+.today-btn{display:none;margin:0 auto 10px;padding:6px 18px;background:transparent;color:#8a8078;border:1px solid #d8d0c0;border-radius:99px;font-size:14px;cursor:pointer;font-family:inherit}
+.today-btn:active{background:#f0ece4}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .dh{text-align:center;font-size:14px;color:#8a8078;padding:4px 0;font-weight:500}
 .cell{position:relative;background:#faf7f2;border:0.5px solid #d8d0c0;border-radius:0;min-height:70px;display:flex;flex-direction:column;overflow:visible;cursor:pointer}
@@ -175,6 +177,7 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
   <h2 id="title"></h2>
   <button onclick="next()">&#8250;</button>
 </div>
+<button class="today-btn" id="todayBtn" onclick="goToday()">回到今日 ↩</button>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
 
@@ -413,7 +416,7 @@ select{width:100%;padding:10px 12px;border:1px solid #d8d0c0;border-radius:8px;b
 <script>
 const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
 const ANC=new Date(2026,5,1);
-const ZONE_ANC=new Date(2026,5,1);
+const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#8a9ea8','#a89bb0','#b8a878','#8fa68a','#b8a898','#9aabba'];
 const ME={w1:7};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
@@ -723,8 +726,10 @@ function sc(s,holD){
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
 let curZoneAbs=absZoneNum(new Date());
 let zoneDetailOpen=false;
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();}
+function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();}
+function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();}
 function render(){
   const me=new Date(cy,cm+1,0),totalDays=me.getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -908,7 +913,7 @@ function delRec(type,key){
 }
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
-autoClean();renderRecList();render();
+autoClean();renderRecList();render();updateTodayBtn();
 document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
