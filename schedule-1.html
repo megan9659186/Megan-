@@ -45,7 +45,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 /* badge 防裁切 */
 .grid#grid{overflow:visible;margin-top:8px}
 .cell.today{background:#fdfaf7}
-.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
 .cell.swapped .badge{background:#d4b896;color:#6a4828}
 .cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
 .plan-pin{position:absolute;top:1px;right:2px;font-size:10px;line-height:1;z-index:6;pointer-events:none}
@@ -58,10 +58,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-right{border-right:2px solid var(--zc)!important}
 /* BADGE */
 .badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
-.top{background:transparent;flex:0 0 40%;display:flex;align-items:center;justify-content:center;position:relative}
-.dn{font-size:17px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.top{background:transparent;flex:0 0 46%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:6px}
+.hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
+.dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
-.bot{flex:0 0 60%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+.bot{flex:0 0 54%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
 /* SHIFT COLOURS */
 .sD{background:#ede9e2;color:#3a3228}
 .sDhol{background:#c8bfaa;color:#2a2018}
@@ -127,6 +128,22 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-card.nian .hs-card-val{color:#3a2a70}
 .hs-card.yan  .hs-card-val{color:#8a6800}
 .hs-card-unit{font-size:13px;color:var(--ink3);margin-top:3px}
+/* 積休區間卡片 */
+.zone-card{background:var(--surface);border:1px solid #c8ddd0;border-radius:var(--radius);padding:12px 16px;margin-top:10px}
+.zone-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.zone-nav-btn{background:transparent;border:1px solid var(--border2);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink2);font-size:14px;flex-shrink:0}
+.zone-nav-btn:active{background:var(--surface2)}
+.zone-title{flex:1;text-align:center;font-size:13px;font-weight:600;color:#4a7a5a;letter-spacing:0.3px}
+.zone-range{font-size:11px;color:var(--ink3);text-align:center;margin-top:1px}
+.zone-today-btn{font-size:11px;color:var(--ink3);text-align:center;margin-top:4px;text-decoration:underline;cursor:pointer;display:none}
+.zone-nums{display:flex;gap:8px;margin-top:10px}
+.zone-num-box{flex:1;text-align:center;padding:8px 4px;border-radius:8px}
+.zone-num-box.plus{background:#f0f7f2}
+.zone-num-box.minus{background:#faf0ee}
+.zone-num-label{font-size:11px;color:var(--ink3);margin-bottom:2px}
+.zone-num-val{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-num-box.plus .zone-num-val{color:#1a4a2a}
+.zone-num-box.minus .zone-num-val{color:#7a2018}
 /* 年休/延年休進度條 */
 .nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
 .nbl{font-size:13px;font-weight:600;color:var(--ink3);width:28px;flex-shrink:0;letter-spacing:0.3px}
@@ -148,7 +165,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hb-n-m{background:#f0ddd8;color:#7a2018}
 .hb-y-m{background:#fdf0c8;color:#8a6800}
 .hb-other{background:#dde4ec;color:#1a3050}
-.hb-hol{background:var(--red-soft);color:var(--red)}
 /* hours trigger btn */
 .hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
 .hours-trigger-btn.has-data{background:#f0f7f2;color:#1a4a2a;border-color:#c8ddd0}
@@ -281,6 +297,28 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     <div class="hs-card-label">延年休</div>
     <div class="hs-card-val" id="yanBalVal">0</div>
     <div class="hs-card-unit">小時</div>
+  </div>
+</div>
+<!-- 積休本區間卡片 -->
+<div class="zone-card">
+  <div class="zone-head">
+    <button class="zone-nav-btn" onclick="zoneNav(-1)">‹</button>
+    <div>
+      <div class="zone-title" id="zoneTitle">本區間</div>
+      <div class="zone-range" id="zoneRange"></div>
+    </div>
+    <button class="zone-nav-btn" onclick="zoneNav(1)">›</button>
+  </div>
+  <div class="zone-today-btn" id="zoneTodayBtn" onclick="zoneGoToday()">回到本區間 ↩</div>
+  <div class="zone-nums">
+    <div class="zone-num-box plus">
+      <div class="zone-num-label">本區間加班</div>
+      <div class="zone-num-val" id="zonePlusVal">0</div>
+    </div>
+    <div class="zone-num-box minus">
+      <div class="zone-num-label">本區間拿時間</div>
+      <div class="zone-num-val" id="zoneMinusVal">0</div>
+    </div>
   </div>
 </div>
 <!-- 年休進度條 -->
@@ -495,6 +533,8 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     </div>
   </div>
 </div>
+<div class="sec-title" id="zoneDetailTitle" onclick="toggleZoneDetail()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>本區間積休明細</span><span id="zoneDetailToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:400">展開 ﹀</span></div>
+<ul class="rec-list" id="zoneDetailList" style="display:none"></ul>
 <div class="sec-title" id="recTitle" onclick="toggleRecList()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>換班・行程紀錄</span><span id="recToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:400">展開 ﹀</span></div>
 <ul class="rec-list" id="recList" style="display:none"></ul>
 <script>
@@ -514,6 +554,10 @@ function nf(w,woff){return((w-1+woff)%35+35)%35+1}
 function monKey(date){return dk(ad(date,-((date.getDay()+6)%7)))}
 function getZoneIdx(date){return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6;}
 function getZoneColor(date){return ZONE_COLORS[getZoneIdx(date)];}
+// 絕對區間編號（不取 mod，用於積休區間累計，避免跨6區間後重複）
+function absZoneNum(date){return Math.floor((date-ZONE_ANC)/86400000/28);}
+function zoneStartDate(absNum){return ad(ZONE_ANC,absNum*28);}
+function zoneEndDate(absNum){return ad(ZONE_ANC,absNum*28+27);}
 let wS={},dS={},nS={};
 try{const s=localStorage.getItem('megan_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
@@ -615,6 +659,58 @@ function refreshBalance(){
   const yanPct=Math.min(100,yanTotal>0?Math.round(yanU/yanTotal*100):0);
   document.getElementById('yanFill').style.width=yanPct+'%';
   document.getElementById('yanNums').textContent='已用 '+yanU+' / '+yanTotal+' hr';
+  refreshZone();
+}
+// ── 積休區間（28天，跟班表4週區間同步） ──
+function calcZoneJiji(absNum){
+  const start=zoneStartDate(absNum),end=zoneEndDate(absNum);
+  let plus=0,minus=0;const entries=[];
+  for(const k in hD){
+    const e=hD[k];if(!(e.jiji>0))continue;
+    const d=kd(k);
+    if(d<start||d>end)continue;
+    if(e.jijiDir==='+')plus+=e.jiji;else minus+=e.jiji;
+    entries.push({key:k,date:d,hrs:e.jiji,dir:e.jijiDir});
+  }
+  entries.sort((a,b)=>a.date-b.date);
+  function r2(v){return parseFloat(v.toFixed(2));}
+  return{plus:r2(plus),minus:r2(minus),entries};
+}
+function refreshZone(){
+  const{plus,minus,entries}=calcZoneJiji(curZoneAbs);
+  const start=zoneStartDate(curZoneAbs),end=zoneEndDate(curZoneAbs);
+  function fmt(d){return(d.getMonth()+1)+'/'+d.getDate()}
+  document.getElementById('zoneRange').textContent=fmt(start)+' － '+fmt(end);
+  document.getElementById('zonePlusVal').textContent=plus;
+  document.getElementById('zoneMinusVal').textContent=minus;
+  const todayAbs=absZoneNum(new Date());
+  const titleEl=document.getElementById('zoneTitle');
+  if(curZoneAbs===todayAbs){titleEl.textContent='本區間';}
+  else if(curZoneAbs<todayAbs){titleEl.textContent='本區間（已過）';}
+  else{titleEl.textContent='本區間（未來）';}
+  document.getElementById('zoneTodayBtn').style.display=(curZoneAbs===todayAbs)?'none':'block';
+  renderZoneDetail(entries);
+}
+function zoneNav(dir){curZoneAbs+=dir;refreshZone();}
+function zoneGoToday(){curZoneAbs=absZoneNum(new Date());refreshZone();}
+function renderZoneDetail(entries){
+  const el=document.getElementById('zoneDetailList');if(!el)return;
+  if(!entries.length){el.innerHTML='<li class="empty-msg">本區間尚無積休紀錄</li>';}
+  else{
+    el.innerHTML=entries.map(en=>{
+      const d=en.date,lbl=en.dir==='+'?'加班':'拿時間',cls=en.dir==='+'?'week':'day';
+      return '<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+cls+'">'+lbl+'</span><span class="rec-desc">'+(d.getMonth()+1)+'/'+d.getDate()+'（週'+DZ[d.getDay()]+'）'+(en.dir==='+'?'＋':'－')+en.hrs+' hr</span></div></li>';
+    }).join('');
+  }
+  const icon=document.getElementById('zoneDetailToggleIcon');
+  if(icon)icon.textContent=zoneDetailOpen?'收合 ︿ ('+entries.length+')':'展開 ﹀ ('+entries.length+')';
+}
+function toggleZoneDetail(){
+  zoneDetailOpen=!zoneDetailOpen;
+  document.getElementById('zoneDetailList').style.display=zoneDetailOpen?'block':'none';
+  const{entries}=calcZoneJiji(curZoneAbs);
+  const icon=document.getElementById('zoneDetailToggleIcon');
+  if(icon)icon.textContent=zoneDetailOpen?'收合 ︿ ('+entries.length+')':'展開 ﹀ ('+entries.length+')';
 }
 function openHoursSheet(){
   if(!selKey)return;
@@ -879,6 +975,8 @@ function sc(s,holD){
   if(holD)return'sDhol';return'sD';
 }
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
+let curZoneAbs=absZoneNum(new Date());
+let zoneDetailOpen=false;
 function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();}
 function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
 function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();}
@@ -920,11 +1018,11 @@ function render(){
     }
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
+    if(h){const holDiv=document.createElement('div');holDiv.className='hol-name';holDiv.textContent=h;top.appendChild(holDiv);}
     const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
     const he=hD[key];
     const isDayMod=!!dS[key];
     const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){bot.style.color='#a83232';bot.style.fontWeight='700';}
-    if(h){const hb=document.createElement('span');hb.className='hbadge hb-hol';hb.textContent=h;bot.appendChild(hb);}
     if(he){
       if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
       if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
