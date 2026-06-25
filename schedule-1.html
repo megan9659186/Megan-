@@ -391,55 +391,82 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
   </div>
 </div>
 
-<div class="panel" id="panel">
-  <div class="panel-title" id="panelTitle"></div>
-  <div class="panel-sub" id="panelSub"></div>
-  <div class="panel-hol" id="panelHol"></div>
-  <div class="plan-field">
-    <div class="field-label">📌 當天的事／行程</div>
-    <ul class="plan-list" id="planList"></ul>
-    <div class="plan-add-row">
-      <input class="plan-add-input" id="planAddInput" type="text" placeholder="新增行程…" onkeydown="if(event.key==='Enter')addPlanItem()">
-      <button class="plan-add-btn" onclick="addPlanItem()">＋</button>
+<!-- 換號碼班（整週）浮層 -->
+<div class="hours-overlay" id="weekOverlay" onclick="if(event.target===this)closeWeekSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="weekDate"></div>
+      <div class="hs-shift" id="weekShift"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">換成哪個號碼班</div>
+      <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
+      <div id="preview" style="display:none">
+        <div class="field-label" style="margin-top:10px">換後班表預覽：</div>
+        <div class="preview-grid" id="previewGrid"></div>
+      </div>
+      <div class="field-label" style="margin-top:14px">備註</div>
+      <textarea class="note-area" id="weekNote" placeholder="例：和真真換班"></textarea>
+      <div class="hs-btns">
+        <button class="hs-btn-cancel" onclick="closeWeekSheet()">取消</button>
+        <button class="hs-btn-save" onclick="confirmWeekAction()">確認</button>
+      </div>
     </div>
   </div>
-  <!-- 圖片附加 -->
-  <div class="plan-field photo-section">
-    <div class="field-label">📷 附加圖片</div>
-    <div class="photo-thumbs" id="photoThumbs"></div>
-    <div class="photo-count" id="photoCount"></div>
-    <label class="photo-upload-btn"><span>＋ 選擇圖片</span><input type="file" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)"></label>
-  </div>
-  <div class="other-row" id="otherTrackRow">
-    <span class="other-row-label" id="otherPersonLabel">同事</span>
-    <div class="other-day-btns">
-      <button class="odb on" id="odbOn" onclick="setOtherDay(true)">有班</button>
-      <button class="odb off" id="odbOff" onclick="setOtherDay(false)">休息</button>
+</div>
+
+<!-- 修改當天班別浮層 -->
+<div class="hours-overlay" id="dayOverlay" onclick="if(event.target===this)closeDaySheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="dayDate"></div>
+      <div class="hs-shift" id="dayShift"></div>
+      <div class="panel-hol" id="dayHol" style="margin-top:4px"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">選擇班別</div>
+      <div class="shift-btns" id="shiftBtns"></div>
+      <div class="field-label" style="margin-top:14px">備註</div>
+      <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
+      <div class="other-row" id="otherTrackRow" style="margin-top:14px">
+        <span class="other-row-label" id="otherPersonLabel">同事</span>
+        <div class="other-day-btns">
+          <button class="odb on" id="odbOn" onclick="setOtherDay(true)">有班</button>
+          <button class="odb off" id="odbOff" onclick="setOtherDay(false)">休息</button>
+        </div>
+      </div>
+      <div class="hs-btns">
+        <button class="hs-btn-cancel" onclick="closeDaySheet()">取消</button>
+        <button class="hs-btn-save" onclick="confirmDayAction()">確認</button>
+      </div>
     </div>
   </div>
-  <div class="tabs">
-    <button class="tab-btn active" id="tabWeek" onclick="switchTab('week')">換號碼班（整週）</button>
-    <button class="tab-btn" id="tabDay" onclick="switchTab('day')">修改當天班別</button>
-  </div>
-  <div id="formWeek">
-    <div class="field-label">換成哪個號碼班</div>
-    <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
-    <div id="preview" style="display:none">
-      <div class="field-label" style="margin-top:10px">換後班表預覽：</div>
-      <div class="preview-grid" id="previewGrid"></div>
+</div>
+
+<!-- 行程／圖片浮層 -->
+<div class="hours-overlay" id="planOverlay" onclick="if(event.target===this)closePlanSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="planDate"></div>
+      <div class="hs-shift" id="planShift"></div>
     </div>
-    <div class="field-label" style="margin-top:14px">備註</div>
-    <textarea class="note-area" id="weekNote" placeholder="例：和真真換班"></textarea>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">📌 當天的事／行程</div>
+      <ul class="plan-list" id="planList"></ul>
+      <div class="plan-add-row">
+        <input class="plan-add-input" id="planAddInput" type="text" placeholder="新增行程…" onkeydown="if(event.key==='Enter')addPlanItem()">
+        <button class="plan-add-btn" onclick="addPlanItem()">＋</button>
+      </div>
+      <div class="field-label" style="margin-top:18px">📷 附加圖片</div>
+      <div class="photo-thumbs" id="photoThumbs"></div>
+      <div class="photo-count" id="photoCount"></div>
+      <label class="photo-upload-btn"><span>＋ 選擇圖片</span><input type="file" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)"></label>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closePlanSheet()">完成</button>
+    </div>
   </div>
-  <div id="formDay" style="display:none">
-    <div class="field-label">選擇班別</div>
-    <div class="shift-btns" id="shiftBtns"></div>
-    <div class="field-label" style="margin-top:14px">備註</div>
-    <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
-  </div>
-  <button class="confirm-btn" onclick="confirmAction()">確認</button>
-  <button class="cancel-btn" onclick="closePanel()">取消</button>
-  <button class="hours-trigger-btn" id="hoursTriggerBtn" onclick="openHoursSheet()">⏱ 記錄時數（積休／年休）</button>
 </div>
 
 <!-- 時數輸入浮層 -->
@@ -572,7 +599,7 @@ function enterOtherEditMode(){
     const inp=document.getElementById('otherNameInput');if(inp)inp.value=otherName;
   }
   otherEditMode=true;otherEditSnapshot=JSON.stringify(oD);
-  closePanel();
+  closeAllSheets();
   document.body.classList.add('other-edit-mode');
   const bar=document.getElementById('otherEditBar');if(bar)bar.classList.add('show');
   const lbl=document.getElementById('oebLabel');if(lbl)lbl.innerHTML=otherName+' 的上班日<span class="oeb-hint">點格子 = 有班，再點 = 清除</span>';
@@ -693,15 +720,7 @@ function saveHoursEntry(){
   if(jh===0&&nh===0&&yh===0&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};if(is128)entry.allow12=allow12Check.checked;hD[selKey]=entry;}
   saveHours();refreshBalance();refreshAllow();render();
-  document.getElementById('hoursOverlay').classList.remove('open');updateHoursBtnStyle();
-  document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function updateHoursBtnStyle(){
-  const btn=document.getElementById('hoursTriggerBtn');if(!btn||!selKey)return;
-  const e=hD[selKey],hasData=e&&(e.jiji>0||e.nian>0||e.yan>0||e.allow12===false);
-  btn.className='hours-trigger-btn'+(hasData?' has-data':'');
-  if(hasData){const parts=[];if(e.jiji>0)parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);if(e.nian>0)parts.push('年休－'+e.nian);if(e.yan>0)parts.push('延休－'+e.yan);if(e.allow12===false)parts.push('不計津貼');btn.textContent='⏱ '+parts.join('　');}
-  else{btn.textContent='⏱ 記錄時數（積休／年休）';}
+  document.getElementById('hoursOverlay').classList.remove('open');
 }
 // ── 夜班津貼 ──
 let allowAdj={};
@@ -908,7 +927,7 @@ function sc(s,holD){
   if(s.startsWith('12-8'))return's12';if(s.startsWith('E'))return'sE';if(s.startsWith('N'))return'sN';
   if(holD)return'sDhol';return'sD';
 }
-let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week',pendingKey=null;
+let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null;
 function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();}
 function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
 function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();}
@@ -945,7 +964,7 @@ function render(){
     cell.className=cls;cell.dataset.key=key;cell.onclick=otherEditMode?()=>toggleOtherDay(key):()=>showQuickActions(key);
     if(isMon||isFirst){
       const b=document.createElement('div');b.className='badge';b.textContent=origNum;
-      b.onclick=function(e){e.stopPropagation();if(otherEditMode){toggleOtherDay(key);}else{openPanel(key,'week');}};
+      b.onclick=function(e){e.stopPropagation();if(otherEditMode){toggleOtherDay(key);}else{openWeekSheet(key);}};
       cell.appendChild(b);
     }
     const top=document.createElement('div');top.className='top';
@@ -994,41 +1013,52 @@ function quickAction(action){
   const key=pendingKey;
   closeQuickActions();
   if(!key)return;
-  openPanel(key,action);
+  if(action==='week')openWeekSheet(key);
+  else if(action==='day')openDaySheet(key);
+  else if(action==='plan')openPlanSheet(key);
+  else if(action==='hours'){selKey=key;openHoursSheet();}
 }
-function openPanel(key,action){
-  selKey=key;const date=kd(key),dow=date.getDay(),isMon=((dow+6)%7)===0;
-  const{s:curShift,h}=getShift(date),mk=monKey(date);
-  document.getElementById('panelTitle').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）';
-  document.getElementById('panelSub').textContent='目前班別：'+curShift;
-  const holEl=document.getElementById('panelHol');
-  if(h){holEl.textContent='🎌 '+h;holEl.style.display='block';}else{holEl.style.display='none';}
-  if(action==='week'||action==='day'){switchTab(action);}else{switchTab(isMon?'week':'day');}
+function openWeekSheet(key){
+  selKey=key;const date=kd(key),mk=monKey(date);
+  const{s:curShift,h}=getShift(date);
+  document.getElementById('weekDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）'+(h?'　🎌 '+h:'');
+  document.getElementById('weekShift').textContent='目前班別：'+curShift;
   const wv=wS[mk];const curFinal=wv?(typeof wv==='object'?wv.final:wv):'';
   document.getElementById('numSel').value=curFinal||'';document.getElementById('preview').style.display='none';
   if(curFinal)renderPreview();
-  renderShiftBtns(dS[key]||curShift);
   const lastNote=wv&&typeof wv==='object'&&wv.log&&wv.log.length?wv.log[wv.log.length-1].note:'';
-  document.getElementById('weekNote').value=lastNote||(nS[mk]||'');document.getElementById('dayNote').value=nS[key]||'';
+  document.getElementById('weekNote').value=lastNote||(nS[mk]||'');
+  document.getElementById('weekOverlay').classList.add('open');
+}
+function closeWeekSheet(){document.getElementById('weekOverlay').classList.remove('open');}
+function openDaySheet(key){
+  selKey=key;const date=kd(key);
+  const{s:curShift,h}=getShift(date);
+  document.getElementById('dayDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('dayShift').textContent='目前班別：'+curShift;
+  const dayHolEl=document.getElementById('dayHol');
+  if(h){dayHolEl.textContent='🎌 '+h;dayHolEl.style.display='block';}else{dayHolEl.style.display='none';}
+  renderShiftBtns(dS[key]||curShift);
+  document.getElementById('dayNote').value=nS[key]||'';
   const otherTrackRow=document.getElementById('otherTrackRow');
   if(otherTrackRow){
     otherTrackRow.classList.toggle('show',!!otherName);
     const lbl=document.getElementById('otherPersonLabel');if(lbl)lbl.textContent=otherName||'同事';
     updateOtherBtns();
   }
-  document.getElementById('panel').classList.add('open');updateHoursBtnStyle();render();
-  renderPlanList();renderPhotos();
-  if(action==='hours'){setTimeout(()=>openHoursSheet(),80);return;}
-  setTimeout(()=>{
-    let target=document.getElementById('panel');
-    if(action==='plan'){target=document.querySelector('.plan-field');}
-    else if(action==='week'){target=document.getElementById('formWeek');}
-    else if(action==='day'){target=document.getElementById('formDay');}
-    target.scrollIntoView({behavior:'smooth',block:'start'});
-    if(action==='plan'){const inp=document.getElementById('planAddInput');if(inp)setTimeout(()=>inp.focus(),300);}
-  },50);
+  document.getElementById('dayOverlay').classList.add('open');
 }
-function switchTab(tab){curTab=tab;document.getElementById('tabWeek').classList.toggle('active',tab==='week');document.getElementById('tabDay').classList.toggle('active',tab==='day');document.getElementById('formWeek').style.display=tab==='week'?'block':'none';document.getElementById('formDay').style.display=tab==='day'?'block':'none';}
+function closeDaySheet(){document.getElementById('dayOverlay').classList.remove('open');}
+function openPlanSheet(key){
+  selKey=key;const date=kd(key);
+  const{s:curShift}=getShift(date);
+  document.getElementById('planDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('planShift').textContent='目前班別：'+curShift;
+  renderPlanList();renderPhotos();
+  document.getElementById('planOverlay').classList.add('open');
+  setTimeout(()=>{const inp=document.getElementById('planAddInput');if(inp)inp.focus();},300);
+}
+function closePlanSheet(){document.getElementById('planOverlay').classList.remove('open');render();}
 function renderShiftBtns(cur){document.getElementById('shiftBtns').innerHTML=COMMON.map(s=>'<button class="sb '+sc(s,false)+' '+(s===cur?'active':'')+'" onclick="selectShift(\''+s+'\')">'+s+'</button>').join('');}
 function selectShift(s){renderShiftBtns(s);}
 function getSelectedShift(){const a=document.querySelector('#shiftBtns .sb.active');return a?a.textContent:'';}
@@ -1041,33 +1071,37 @@ function renderPreview(){
   pg.innerHTML=h;pv.style.display='block';
 }
 function savePlan(){/* 已由 addPlanItem/togglePlanItem/deletePlanItem 取代 */}
-function confirmAction(){
+function confirmWeekAction(){
   if(!selKey)return;const mk=monKey(kd(selKey));
-  if(curTab==='week'){
-    const nv=document.getElementById('numSel').value;if(!nv){alert('請先選擇號碼班');return;}
-    const date=kd(selKey),origNum=nf(ME.w1,wo(date)),note=document.getElementById('weekNote').value.trim();
-    const newNum=parseInt(nv);
-    // 讀取現有 log
-    const existing=wS[mk];
-    let log=existing&&typeof existing==='object'&&existing.log?[...existing.log]:[];
-    const prevNum=log.length?log[log.length-1].to:origNum;
-    if(newNum===origNum&&!log.length){delete wS[mk];delete nS[mk];}
-    else if(newNum===prevNum){alert('班別與目前相同，無需換班');return;}
-    else{
-      // 若新 final 等於 origNum 且清空 log → 視為還原
-      if(newNum===origNum){log=[];delete wS[mk];delete nS[mk];}
-      else{log.push({from:prevNum,to:newNum,note});wS[mk]={final:newNum,log};}
-    }
-  }else{
-    const chosen=getSelectedShift(),date=kd(selKey),note=document.getElementById('dayNote').value.trim();
-    const savedDS=dS[selKey];delete dS[selKey];const{s:baseShift}=getShift(date);if(savedDS)dS[selKey]=savedDS;
-    if(chosen&&chosen!==baseShift){dS[selKey]=chosen;}else{delete dS[selKey];}
-    if(note)nS[selKey]=note;else delete nS[selKey];
-    if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+  const nv=document.getElementById('numSel').value;if(!nv){alert('請先選擇號碼班');return;}
+  const date=kd(selKey),origNum=nf(ME.w1,wo(date)),note=document.getElementById('weekNote').value.trim();
+  const newNum=parseInt(nv);
+  // 讀取現有 log
+  const existing=wS[mk];
+  let log=existing&&typeof existing==='object'&&existing.log?[...existing.log]:[];
+  const prevNum=log.length?log[log.length-1].to:origNum;
+  if(newNum===origNum&&!log.length){delete wS[mk];delete nS[mk];}
+  else if(newNum===prevNum){alert('班別與目前相同，無需換班');return;}
+  else{
+    // 若新 final 等於 origNum 且清空 log → 視為還原
+    if(newNum===origNum){log=[];delete wS[mk];delete nS[mk];}
+    else{log.push({from:prevNum,to:newNum,note});wS[mk]={final:newNum,log};}
   }
-  save();renderRecList();render();refreshAllow();closePanel();
+  save();renderRecList();render();refreshAllow();closeWeekSheet();
 }
-function closePanel(){selKey=null;document.getElementById('panel').classList.remove('open');document.querySelectorAll('.cell.selected').forEach(c=>c.classList.remove('selected'));setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),30);}
+function confirmDayAction(){
+  if(!selKey)return;
+  const chosen=getSelectedShift(),date=kd(selKey),note=document.getElementById('dayNote').value.trim();
+  const savedDS=dS[selKey];delete dS[selKey];const{s:baseShift}=getShift(date);if(savedDS)dS[selKey]=savedDS;
+  if(chosen&&chosen!==baseShift){dS[selKey]=chosen;}else{delete dS[selKey];}
+  if(note)nS[selKey]=note;else delete nS[selKey];
+  if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+  save();renderRecList();render();refreshAllow();closeDaySheet();
+}
+function closeAllSheets(){
+  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  selKey=null;pendingKey=null;
+}
 function renderRecList(){
   const el=document.getElementById('recList'),items=[];
   function inViewMonth(date){return date.getFullYear()===cy&&date.getMonth()===cm;}
