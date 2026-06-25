@@ -141,6 +141,20 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .nts-label{font-size:13px;color:var(--ink3)}
 .nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
 .nts-input.jiji-color{color:#1a4a2a}
+/* 本區間積休明細 */
+.zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 16px 14px}
+.zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:16px}
+.zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.zone-rec-nav button:active{background:var(--surface2)}
+.zone-rec-title{font-size:15px;font-weight:600;color:#4a7a5a}
+.zone-rec-range{text-align:center;font-size:14px;color:var(--ink3);margin-top:2px;margin-bottom:14px}
+.zone-rec-summary{display:flex;gap:10px}
+.zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
+.zone-rec-box.add{background:#f0f7f2;border-color:#c8ddd0}
+.zone-rec-box.take{background:#faf0ee;border-color:#e0c8c4}
+.zone-rec-box-label{font-size:13px;color:var(--ink3);margin-bottom:8px}
+.zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400}
+.zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400}
 /* hbadge */
 .hbadge{display:block;font-size:7px;font-weight:600;padding:1px 4px;border-radius:3px;line-height:1.5;text-align:center;margin-top:1px;letter-spacing:0.2px}
 .bot.overtime{color:#8b2020!important;font-weight:600}
@@ -293,6 +307,25 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     <div class="hs-card-label">延年休</div>
     <div class="hs-card-val" id="yanBalVal">0</div>
     <div class="hs-card-unit">小時</div>
+  </div>
+</div>
+<!-- 本區間（按4週區間分組顯示加班/拿時間） -->
+<div class="zone-rec-card">
+  <div class="zone-rec-nav">
+    <button onclick="prevZoneRec()">&#8249;</button>
+    <span class="zone-rec-title">本區間</span>
+    <button onclick="nextZoneRec()">&#8250;</button>
+  </div>
+  <div class="zone-rec-range" id="zoneRecRange"></div>
+  <div class="zone-rec-summary">
+    <div class="zone-rec-box add">
+      <div class="zone-rec-box-label">本區間加班</div>
+      <div class="zone-rec-box-val" id="zoneAddVal">0</div>
+    </div>
+    <div class="zone-rec-box take">
+      <div class="zone-rec-box-label">本區間拿時間</div>
+      <div class="zone-rec-box-val" id="zoneTakeVal">0</div>
+    </div>
   </div>
 </div>
 <!-- 年休進度條 -->
@@ -571,6 +604,9 @@ function nf(w,woff){return((w-1+woff)%35+35)%35+1}
 function monKey(date){return dk(ad(date,-((date.getDay()+6)%7)))}
 function getZoneIdx(date){return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6;}
 function getZoneColor(date){return ZONE_COLORS[getZoneIdx(date)];}
+function absZoneNum(date){return Math.floor((date-ZONE_ANC)/86400000/28);}
+function zoneStart(absNum){return ad(ZONE_ANC,absNum*28);}
+function zoneEnd(absNum){return ad(zoneStart(absNum),27);}
 let wS={},dS={},nS={};
 try{const s=localStorage.getItem('megan_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
@@ -719,7 +755,7 @@ function saveHoursEntry(){
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   if(jh===0&&nh===0&&yh===0&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};if(is128)entry.allow12=allow12Check.checked;hD[selKey]=entry;}
-  saveHours();refreshBalance();refreshAllow();render();
+  saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
   document.getElementById('hoursOverlay').classList.remove('open');
 }
 // ── 夜班津貼 ──
@@ -927,7 +963,7 @@ function sc(s,holD){
   if(s.startsWith('12-8'))return's12';if(s.startsWith('E'))return'sE';if(s.startsWith('N'))return'sN';
   if(holD)return'sDhol';return'sD';
 }
-let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null;
+let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null,zoneViewAbs=null;
 function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();}
 function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
 function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();}
@@ -1163,6 +1199,26 @@ function delRec(type,key,logIdx){
   save();renderRecList();render();
 }
 function toggleRecList(){const el=document.getElementById('recList'),icon=document.getElementById('recToggleIcon'),isOpen=el.style.display!=='none';el.style.display=isOpen?'none':'block';const count=el.querySelectorAll('.rec-item').length;icon.textContent=isOpen?('展開 ﹀'+(count>0?' ('+count+')':'')):'收合 ︿ ('+count+')';}
+// ── 本區間（按4週區間分組，與月曆顯示月份無關） ──
+function prevZoneRec(){zoneViewAbs--;renderZoneRecList();}
+function nextZoneRec(){zoneViewAbs++;renderZoneRecList();}
+function renderZoneRecList(){
+  if(zoneViewAbs===null)zoneViewAbs=absZoneNum(new Date());
+  const start=zoneStart(zoneViewAbs),end=zoneEnd(zoneViewAbs);
+  const rangeEl=document.getElementById('zoneRecRange');
+  if(rangeEl)rangeEl.textContent=(start.getMonth()+1)+'/'+start.getDate()+' － '+(end.getMonth()+1)+'/'+end.getDate();
+  function r2(v){return parseFloat(v.toFixed(2));}
+  let addTotal=0,takeTotal=0;
+  Object.keys(hD).forEach(key=>{
+    const d=kd(key);
+    if(d<start||d>end)return;
+    const e=hD[key];
+    if(e.jiji>0){if(e.jijiDir==='+')addTotal+=e.jiji;else takeTotal+=e.jiji;}
+  });
+  const addEl=document.getElementById('zoneAddVal'),takeEl=document.getElementById('zoneTakeVal');
+  if(addEl)addEl.textContent=r2(addTotal);
+  if(takeEl)takeEl.textContent=r2(takeTotal);
+}
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 autoClean();renderRecList();render();updateTodayBtn();
@@ -1170,7 +1226,7 @@ document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
 document.getElementById('otherNameInput').value=otherName;
-refreshBalance();refreshAllow();
+refreshBalance();refreshAllow();renderZoneRecList();
 </script>
 <!-- 燈箱 -->
 <div class="lightbox" id="lightbox">
