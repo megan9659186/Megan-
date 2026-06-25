@@ -147,7 +147,9 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .zone-rec-nav button:active{background:var(--surface2)}
 .zone-rec-title{font-size:15px;font-weight:600;color:#4a7a5a}
-.zone-rec-range{text-align:center;font-size:14px;color:var(--ink3);margin-top:2px;margin-bottom:14px}
+.zone-rec-range{text-align:center;font-size:14px;color:var(--ink3);margin-top:2px;margin-bottom:6px}
+.zone-today-btn{display:none;margin:0 auto 12px;padding:4px 14px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.zone-today-btn:active{background:var(--surface2)}
 .zone-rec-summary{display:flex;gap:10px}
 .zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
 .zone-rec-box.add{background:#f0f7f2;border-color:#c8ddd0}
@@ -317,6 +319,7 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     <button onclick="nextZoneRec()">&#8250;</button>
   </div>
   <div class="zone-rec-range" id="zoneRecRange"></div>
+  <button class="zone-today-btn" id="zoneTodayBtn" onclick="goTodayZone()">回到本期 ↩</button>
   <div class="zone-rec-summary">
     <div class="zone-rec-box add">
       <div class="zone-rec-box-label">本區間加班</div>
@@ -964,10 +967,10 @@ function sc(s,holD){
   if(holD)return'sDhol';return'sD';
 }
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null,zoneViewAbs=null;
-function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();}
+function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
 function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
 function render(){
   const totalDays=new Date(cy,cm+1,0).getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -1202,6 +1205,12 @@ function toggleRecList(){const el=document.getElementById('recList'),icon=docume
 // ── 本區間（按4週區間分組，與月曆顯示月份無關） ──
 function prevZoneRec(){zoneViewAbs--;renderZoneRecList();}
 function nextZoneRec(){zoneViewAbs++;renderZoneRecList();}
+function syncZoneToMonth(){zoneViewAbs=absZoneNum(new Date(cy,cm,1));renderZoneRecList();}
+function goTodayZone(){zoneViewAbs=absZoneNum(new Date());renderZoneRecList();}
+function updateZoneTodayBtn(){
+  const btn=document.getElementById('zoneTodayBtn');if(!btn)return;
+  btn.style.display=(zoneViewAbs===absZoneNum(new Date()))?'none':'block';
+}
 function renderZoneRecList(){
   if(zoneViewAbs===null)zoneViewAbs=absZoneNum(new Date());
   const start=zoneStart(zoneViewAbs),end=zoneEnd(zoneViewAbs);
@@ -1218,6 +1227,7 @@ function renderZoneRecList(){
   const addEl=document.getElementById('zoneAddVal'),takeEl=document.getElementById('zoneTakeVal');
   if(addEl)addEl.textContent=r2(addTotal);
   if(takeEl)takeEl.textContent=r2(takeTotal);
+  updateZoneTodayBtn();
 }
 const sel=document.getElementById('numSel');
 for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
