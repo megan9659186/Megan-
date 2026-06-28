@@ -142,21 +142,21 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
 .nts-input.jiji-color{color:#1a4a2a}
 /* 本區間積休明細 */
-.zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 16px 14px}
-.zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:16px}
-.zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px 8px}
+.zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:10px}
+.zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .zone-rec-nav button:active{background:var(--surface2)}
-.zone-rec-title{font-size:15px;font-weight:600;color:#4a7a5a}
-.zone-rec-range{text-align:center;font-size:14px;color:var(--ink3);margin-top:2px;margin-bottom:6px}
-.zone-today-btn{display:none;margin:0 auto 12px;padding:4px 14px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.zone-rec-title{font-size:13px;font-weight:600;color:#4a7a5a}
+.zone-rec-range{text-align:center;font-size:11px;color:var(--ink3);margin-top:1px;margin-bottom:3px}
+.zone-today-btn{display:none;margin:0 auto 6px;padding:2px 10px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
 .zone-today-btn:active{background:var(--surface2)}
-.zone-rec-summary{display:flex;gap:10px}
-.zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
+.zone-rec-summary{display:flex;gap:6px}
+.zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:8px 6px;text-align:center;border:1px solid var(--border)}
 .zone-rec-box.add{background:#f0f7f2;border-color:#c8ddd0}
 .zone-rec-box.take{background:#faf0ee;border-color:#e0c8c4}
-.zone-rec-box-label{font-size:13px;color:var(--ink3);margin-bottom:8px}
-.zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400}
-.zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400}
+.zone-rec-box-label{font-size:10px;color:var(--ink3);margin-bottom:2px}
+.zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 /* hbadge */
 .hbadge{display:block;font-size:7px;font-weight:600;padding:1px 4px;border-radius:3px;line-height:1.5;text-align:center;margin-top:1px;letter-spacing:0.2px}
 .bot.overtime{color:#8b2020!important;font-weight:600}
@@ -165,6 +165,9 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hb-n-m{background:#f0ddd8;color:#7a2018}
 .hb-y-m{background:#fdf0c8;color:#8a6800}
 .hb-other{background:#dde4ec;color:#1a3050}
+.hbadge.tappable{cursor:pointer}
+.hbadge.tappable:active{opacity:0.6}
+.hbadge.confirmed{box-shadow:inset 0 0 0 1px #4a7a90;font-weight:700}
 /* hours trigger btn */
 .hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
 .hours-trigger-btn.has-data{background:#f0f7f2;color:#1a4a2a;border-color:#c8ddd0}
@@ -278,6 +281,10 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 .allow-cell-label{font-size:12px;color:var(--ink3);margin-bottom:4px;letter-spacing:0.3px}
 .allow-cell-val{font-family:'Libre Baskerville',serif;font-size:19px;font-weight:400;color:var(--ink)}
 .allow-cell-count{font-size:12px;color:var(--ink3);margin-top:1px}
+.allow-confirm{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:99px;border:1px dashed var(--border2);color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif}
+.allow-confirm:active{opacity:0.6}
+.allow-confirm.confirmed{border:1px solid #4a7a90;background:#eaf2f5;color:#2a5a70;font-weight:600}
+.allow-confirm.hidden{display:none}
 .allow-note{font-size:12px;color:var(--ink3);padding:8px 16px 10px;border-top:1px solid var(--border)}
 .allow-manual{width:100%;margin-top:6px;padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--surface2);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
 </style>
@@ -387,23 +394,27 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="allow-cell-val" id="allow12Val">$0</div>
       <div class="allow-cell-count" id="allow12Count">0 班</div>
       <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allow12ConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">E 班 $560／包班 $660</div>
       <div class="allow-cell-val" id="allowEVal">$0</div>
       <div class="allow-cell-count" id="allowECount">0 班</div>
       <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowEConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">N 班 $770／包班 $940</div>
       <div class="allow-cell-val" id="allowNVal">$0</div>
       <div class="allow-cell-count" id="allowNCount">0 班</div>
       <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowNConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">D班加班 $270</div>
       <div class="allow-cell-val" id="allowDotVal">$0</div>
       <div class="allow-cell-count" id="allowDotCount">0 班</div>
+      <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
   <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270</div>
@@ -685,6 +696,12 @@ let nianTotal=52,yanTotal=0,jijiInit=21.45;
 try{const s=localStorage.getItem('megan_hours');if(s)hD=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal);if(isNaN(nianTotal))nianTotal=52;yanTotal=parseFloat(c.yanTotal);if(isNaN(yanTotal))yanTotal=0;jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;}}catch(e){}
 function saveHours(){try{localStorage.setItem('megan_hours',JSON.stringify(hD));}catch(e){}}
+function toggleHoursConfirm(key,type){
+  const e=hD[key];if(!e)return;
+  const f=type+'Confirmed';
+  e[f]=!e[f];
+  saveHours();render();
+}
 function saveSettings(){
   const nv=document.getElementById('nianTotalInput').value;
   const yv=document.getElementById('yanTotalInput').value;
@@ -756,14 +773,42 @@ function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
+  const prev=hD[selKey]||{};
   if(jh===0&&nh===0&&yh===0&&(!is128||allow12Check.checked)){delete hD[selKey];}
-  else{const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};if(is128)entry.allow12=allow12Check.checked;hD[selKey]=entry;}
+  else{
+    const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(is128)entry.allow12=allow12Check.checked;
+    if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
+    if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
+    if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
+    hD[selKey]=entry;
+  }
   saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
   document.getElementById('hoursOverlay').classList.remove('open');
 }
 // ── 夜班津貼 ──
 let allowAdj={};
 try{const s=localStorage.getItem('megan_allow_adj');if(s)allowAdj=JSON.parse(s);}catch(e){}
+let allowConfirmed={};
+try{const s=localStorage.getItem('megan_allow_confirmed');if(s)allowConfirmed=JSON.parse(s);}catch(e){}
+function saveAllowConfirmed(){try{localStorage.setItem('megan_allow_confirmed',JSON.stringify(allowConfirmed));}catch(e){}}
+function toggleAllowConfirm(type,amt){
+  const ym=cy*100+(cm+1);
+  const rec=allowConfirmed[ym]?{...allowConfirmed[ym]}:{};
+  if(rec[type]===amt)delete rec[type];else rec[type]=amt;
+  if(Object.keys(rec).length)allowConfirmed[ym]=rec;else delete allowConfirmed[ym];
+  saveAllowConfirmed();
+  refreshAllow();
+}
+function renderAllowConfirmPill(elId,type,amt){
+  const el=document.getElementById(elId);if(!el)return;
+  el.classList.remove('hidden');
+  const ym=cy*100+(cm+1),rec=allowConfirmed[ym]||{};
+  const isConfirmed=rec[type]===amt;
+  el.textContent=isConfirmed?'✓ 已核對':'核對';
+  el.classList.toggle('confirmed',isConfirmed);
+  el.onclick=function(){toggleAllowConfirm(type,amt);};
+}
 function saveAllowAdj(){
   const ym=cy*100+(cm+1);
   const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
@@ -800,6 +845,10 @@ function refreshAllow(){
   document.getElementById('allowDotVal').textContent='$'+aDot;document.getElementById('allowDotCount').textContent=cDot+' 班';
   document.getElementById('allow12Adj').value=adj12||'';document.getElementById('allowEAdj').value=adjE||'';document.getElementById('allowNAdj').value=adjN||'';
   document.getElementById('allowTotal').textContent='本月 $'+total;
+  renderAllowConfirmPill('allow12ConfirmPill','a12',a12);
+  renderAllowConfirmPill('allowEConfirmPill','aE',aE);
+  renderAllowConfirmPill('allowNConfirmPill','aN',aN);
+  renderAllowConfirmPill('allowDotConfirmPill','aDot',aDot);
 }
 // ── pS 升格：純字串 → [{text,done}] ──
 function upgradePlan(v){
@@ -928,7 +977,7 @@ function save(){
   try{localStorage.setItem('megan_other',JSON.stringify(oD));}catch(e){}
 }
 function exportBackup(){
-  const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_other','megan_other_name','megan_hours','megan_hours_cfg','megan_allow_adj'];
+  const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_other','megan_other_name','megan_hours','megan_hours_cfg','megan_allow_adj','megan_allow_confirmed'];
   const data={_version:1,_exported:new Date().toISOString()};
   keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v;});
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -946,7 +995,7 @@ function importBackup(e){
       const data=JSON.parse(ev.target.result);
       if(!data._version){alert('格式不符，請選擇正確的備份檔');return;}
       if(!confirm('匯入後將覆蓋目前所有資料，確定繼續？'))return;
-      const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_other','megan_other_name','megan_hours','megan_hours_cfg','megan_allow_adj'];
+      const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_other','megan_other_name','megan_hours','megan_hours_cfg','megan_allow_adj','megan_allow_confirmed'];
       keys.forEach(k=>{if(data[k]!==undefined)localStorage.setItem(k,data[k]);else localStorage.removeItem(k);});
       alert('匯入成功！即將重新載入。');location.reload();
     }catch(err){alert('匯入失敗：'+err.message);}
@@ -1014,9 +1063,9 @@ function render(){
     const isDayMod=!!dS[key];
     const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){bot.style.color='#a83232';bot.style.fontWeight='700';}
     if(he){
-      if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
-      if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
-      if(he.yan>0){const b=document.createElement('span');b.className='hbadge hb-y-m';b.textContent='延－'+he.yan;bot.appendChild(b);}
+      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
+      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+he.nian;b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
+      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+he.yan;b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';bot.appendChild(b);}
