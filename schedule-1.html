@@ -197,7 +197,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-btn-clear{padding:11px 14px;border:1px solid #e0c8c4;border-radius:var(--radius-sm);background:#faf0ee;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .hs-btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .hs-btn-save{flex:2;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
-.hcustom{width:100%;padding:10px 14px;border:1px solid #c8a860;border-radius:var(--radius-sm);font-size:15px;font-weight:400;background:#fdf5e0;color:#6a4800;font-family:'DM Sans',sans-serif;outline:none}
 /* 快速選單 */
 .quick-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:280;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .quick-overlay.open{display:flex}
@@ -533,17 +532,9 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
               <option value="+">加班</option>
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="jijiHrs" onchange="toggleCustom('jiji')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="jijiHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="jijiMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="jijiCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
       </div>
       <div class="hs-row">
@@ -553,17 +544,9 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
             <select class="hdir nm" id="nianDir" style="pointer-events:none;opacity:0.6">
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="nianHrs" onchange="toggleCustom('nian')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="nianHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="nianMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="nianCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
       </div>
       <div class="hs-row">
@@ -573,17 +556,9 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
             <select class="hdir ym" id="yanDir" style="pointer-events:none;opacity:0.6">
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="yanHrs" onchange="toggleCustom('yan')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="yanHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="yanMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="yanCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
       </div>
       <!-- 12-8 津貼勾選 -->
@@ -602,7 +577,7 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 <div class="sec-title" id="recTitle" onclick="toggleRecList()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>換班・行程紀錄</span><span id="recToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:400">展開 ﹀</span></div>
 <ul class="rec-list" id="recList" style="display:none"></ul>
 <script>
-const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
+const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF'],36:['D','D','D','D','D','OFF','OFF']};
 const ANC=new Date(2026,5,8);
 const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#8a9ea8','#a89bb0','#b8a878','#8fa68a','#b8a898','#9aabba'];
@@ -614,7 +589,7 @@ function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')
 function ad(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function kd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
 function wo(date){const dow=date.getDay(),mon=ad(date,-((dow+6)%7));return Math.round((mon-ANC)/(7*86400000))}
-function nf(w,woff){return((w-1+woff)%35+35)%35+1}
+function nf(w,woff){return((w-1+woff)%36+36)%36+1}
 function monKey(date){return dk(ad(date,-((date.getDay()+6)%7)))}
 function getZoneIdx(date){return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6;}
 function getZoneColor(date){return ZONE_COLORS[getZoneIdx(date)];}
@@ -724,10 +699,10 @@ function refreshBalance(){
   document.getElementById('yanBalVal').textContent=r2(yanB);
   const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
   document.getElementById('nianFill').style.width=pct+'%';
-  document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
+  document.getElementById('nianNums').textContent='已用 '+fmtH(nianU)+' / '+nianTotal+' hr';
   const yanPct=Math.min(100,yanTotal>0?Math.round(yanU/yanTotal*100):0);
   document.getElementById('yanFill').style.width=yanPct+'%';
-  document.getElementById('yanNums').textContent='已用 '+yanU+' / '+yanTotal+' hr';
+  document.getElementById('yanNums').textContent='已用 '+fmtH(yanU)+' / '+yanTotal+' hr';
 }
 function openHoursSheet(){
   if(!selKey)return;
@@ -736,18 +711,9 @@ function openHoursSheet(){
   document.getElementById('hsShift').textContent='班別：'+s;
   const e=hD[selKey]||{};
   document.getElementById('jijiDir').value=e.jijiDir||'+';
-  const jv=e.jiji||0,jSel=document.getElementById('jijiHrs'),jCustom=document.getElementById('jijiCustom');
-  if(jv>0&&jv<=5&&jv*2===Math.round(jv*2)){jSel.value=jv;jCustom.style.display='none';}
-  else if(jv>5||jv%0.5!==0){jSel.value='custom';jCustom.style.display='block';jCustom.value=jv||'';}
-  else{jSel.value=0;jCustom.style.display='none';}
-  const nv=e.nian||0,nSel=document.getElementById('nianHrs'),nCustom=document.getElementById('nianCustom');
-  if(nv>0&&nv<=5&&nv*2===Math.round(nv*2)){nSel.value=nv;nCustom.style.display='none';}
-  else if(nv>5||nv%0.5!==0){nSel.value='custom';nCustom.style.display='block';nCustom.value=nv||'';}
-  else{nSel.value=0;nCustom.style.display='none';}
-  const yv=e.yan||0,ySel=document.getElementById('yanHrs'),yCustom=document.getElementById('yanCustom');
-  if(yv>0&&yv<=5&&yv*2===Math.round(yv*2)){ySel.value=yv;yCustom.style.display='none';}
-  else if(yv>5||yv%0.5!==0){ySel.value='custom';yCustom.style.display='block';yCustom.value=yv||'';}
-  else{ySel.value=0;yCustom.style.display='none';}
+  setHM('jiji',e.jiji);
+  setHM('nian',e.nian);
+  setHM('yan',e.yan);
   updateHDir('jiji');
   const is128=s.startsWith('12-8');
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
@@ -755,8 +721,17 @@ function openHoursSheet(){
   else{allow12Row.classList.remove('show');allow12Check.checked=true;}
   document.getElementById('hoursOverlay').classList.add('open');
 }
-function toggleCustom(type){const sel=document.getElementById(type+'Hrs'),inp=document.getElementById(type+'Custom');if(sel.value==='custom'){inp.value='';inp.style.display='block';inp.focus();}else{inp.style.display='none';}}
-function getHoursVal(type){const sel=document.getElementById(type+'Hrs');if(sel.value==='custom'){const v=parseFloat(document.getElementById(type+'Custom').value);return isNaN(v)?0:v;}return parseFloat(sel.value)||0;}
+function fmtH(v){return parseFloat(v.toFixed(2));}
+function setHM(type,v){
+  v=v||0;
+  let h=Math.floor(v),m=Math.round((v-h)*60);
+  m=Math.round(m/5)*5;
+  if(m>=60){h++;m=0;}
+  if(h>12)h=12;
+  document.getElementById(type+'Hrs').value=h;
+  document.getElementById(type+'Min').value=m;
+}
+function getHoursVal(type){const h=parseFloat(document.getElementById(type+'Hrs').value)||0;const m=parseFloat(document.getElementById(type+'Min').value)||0;return h+m/60;}
 function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
 function updateAllow12Style(){
   const check=document.getElementById('allow12Check'),row=document.getElementById('allow12Row'),label=document.getElementById('allow12CheckLabel');
@@ -764,9 +739,8 @@ function updateAllow12Style(){
   else{row.classList.add('no-allow');label.textContent='✕ 不計入 12-8 津貼';}
 }
 function clearHoursForm(){
-  document.getElementById('jijiDir').value='+';document.getElementById('jijiHrs').value=0;document.getElementById('jijiCustom').style.display='none';
-  document.getElementById('nianHrs').value=0;document.getElementById('nianCustom').style.display='none';
-  document.getElementById('yanHrs').value=0;document.getElementById('yanCustom').style.display='none';
+  document.getElementById('jijiDir').value='+';
+  setHM('jiji',0);setHM('nian',0);setHM('yan',0);
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
@@ -960,8 +934,13 @@ function deletePlanItem(idx){
   save();renderPlanList();render();renderRecList();
 }
 function autoClean(){
-  // 換班紀錄（wS/dS/nS）永久保留，不再自動清除。
-  // 僅清除舊相片以節省 localStorage 空間。
+  const now=new Date(),ym=now.getFullYear()*100+now.getMonth();let changed=false;
+  for(const k of Object.keys(wS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete wS[k];changed=true;}}
+  for(const k of Object.keys(dS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete dS[k];changed=true;}}
+  for(const k of Object.keys(nS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete nS[k];changed=true;}}
+  for(const k of Object.keys(pS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete pS[k];changed=true;}}
+  for(const k of Object.keys(oD)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete oD[k];changed=true;}}
+  if(changed)save();
   cleanOldPhotos();
 }
 function save(){
@@ -1058,9 +1037,9 @@ function render(){
     const isDayMod=!!dS[key];
     const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){bot.style.color='#a83232';bot.style.fontWeight='700';}
     if(he){
-      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
-      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+he.nian;b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
-      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+he.yan;b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
+      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
+      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
+      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';bot.appendChild(b);}
@@ -1274,7 +1253,7 @@ function renderZoneRecList(){
   updateZoneTodayBtn();
 }
 const sel=document.getElementById('numSel');
-for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
+for(let i=1;i<=36;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 autoClean();renderRecList();render();updateTodayBtn();
 document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('yanTotalInput').value=yanTotal;
