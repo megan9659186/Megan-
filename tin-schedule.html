@@ -8,489 +8,281 @@
 <meta name="apple-mobile-web-app-title" content="Tin排班">
 <link rel="apple-touch-icon" href="tin-icon.png">
 <title>Tin 排班</title>
-<!-- Moomin-style: use a rounded, storybook-feel font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── Moomin Color Palette ── */
 :root{
-  /* Raw swatch */
-  --moo-black:#1a1a1a;
-  --moo-dk-grey:#6b6b6b;
-  --moo-lt-grey:#a8adb5;
-  --moo-red:#c8564a;       /* rött */
-  --moo-lt-red:#e8c4bc;    /* ljusrött */
-  --moo-blue:#5a7ab0;      /* blått */
-  --moo-lt-blue:#a8bcd8;   /* ljusblått */
-  --moo-rdbrown:#7a2a28;   /* rödbrunt */
-  --moo-warm-yel:#e8a020;  /* varmgult */
-  --moo-lt-yel:#f0d840;    /* ljusgult */
-  --moo-violet:#8a60b0;    /* violett */
-  --moo-dk-violet:#4a3870; /* mörk violett */
-  --moo-orange:#d4602a;    /* orange */
-
-  /* UI surface */
   --bg:#f5f0e8;
   --surface:#fdfaf4;
+  --surface2:#f0e9da;
   --border:#d4c9b0;
-  --accent-primary:#5a7ab0;
-  --accent-dark:#3a5a90;
-  --text-main:#1a1a1a;
-  --text-sub:#6b6b6b;
-  --text-light:#a8adb5;
-
-  /* Shift block colours — all from Moomin swatch */
-  --c-D:#fdfaf4;           /* D班: 白底 */
-  --c-D-text:#1a1a1a;
-  --c-Dhol:#e8c4bc;        /* 假日D1/D2: ljusrött 淺紅 */
-  --c-Dhol-text:#7a2a28;
-  --c-E:#a8bcd8;           /* E班: ljusblått 淺藍 */
-  --c-E-text:#3a5a90;
-  --c-N:#f0d840;           /* N班: ljusgult 亮黃 */
-  --c-N-text:#4a3800;
-  --c-OFF:#c8564a;         /* OFF: rött 紅 */
-  --c-OFF-text:#fff;
-  --c-12:#8a60b0;          /* 12-8: violett 紫 */
-  --c-12-text:#fff;
-
-  /* Zone frame — 6 Moomin colours */
-  --zone0:#5a7ab0;
-  --zone1:#c8564a;
-  --zone2:#e8a020;
-  --zone3:#8a60b0;
-  --zone4:#7a2a28;
-  --zone5:#4a3870;
-
-  /* 積休 → varmgult 暖黃  |  年休 → ljusrött 淺紅 */
-  --jiji-bg0:#fdf5d8;
-  --jiji-bg1:#f5e4a0;
-  --jiji-border:#e8a020;
-  --jiji-label:#7a5000;
-  --jiji-val:#5a3800;
-  --nian-bg0:#fae8e4;
-  --nian-bg1:#f0c8c0;
-  --nian-border:#c8564a;
-  --nian-label:#7a2a28;
-  --nian-val:#5a1a18;
+  --border2:#c2b596;
+  --ink:#1a1a1a;
+  --ink2:#6b6b6b;
+  --ink3:#9a9488;
+  --accent:#5a7ab0;
+  --accent2:#3a5a90;
+  --red:#c8564a;
+  --red-soft:#fae8e4;
+  --grid-line:#b09d72;
+  --radius:12px;
+  --radius-sm:8px;
 }
+@keyframes hup{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Nunito',sans-serif;
-  color:var(--text-main);
-  background:var(--bg);
-  padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 12px 12px;
-  font-size:16px;
-  min-height:100vh;
-}
-
-/* ── Header ── */
-.nav{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
-  background:transparent;
-  padding:4px 2px;
-}
-.nav h2{
-  font-family:'Nunito',sans-serif;
-  font-size:20px;font-weight:700;
-  color:var(--text-main);
-  letter-spacing:0.2px;
-}
-.nav-title-wrap{display:flex;flex-direction:column;align-items:center;}
-.nav button{
-  background:transparent;
-  color:var(--accent-primary);
-  border:1.5px solid var(--border);
-  border-radius:10px;
-  padding:6px 14px;cursor:pointer;
-  font-family:'Nunito',sans-serif;
-  font-size:18px;font-weight:700;
-  line-height:1;
-  transition:opacity 0.15s;
-}
-.nav button:active{opacity:0.6;}
-
-/* ── Moomin decorative wave ── */
-.moo-deco{
-  text-align:center;
-  font-family:'Baloo 2',cursive;
-  font-size:13px;
-  color:var(--text-light);
-  letter-spacing:3px;
-  margin-bottom:10px;
-  opacity:0.7;
-}
-
-/* ── Grid ── */
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.dh{
-  text-align:center;font-size:12px;
-  color:var(--accent-primary);
-  padding:4px 0;font-weight:800;
-  font-family:'Baloo 2',cursive;
-  letter-spacing:0.5px;
-}
-.cell{
-  position:relative;
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:0;
-  min-height:68px;
-  display:flex;flex-direction:column;
-  overflow:visible;cursor:pointer;
-  transition:transform 0.1s;
-}
-.cell:active{transform:scale(0.97);}
-.cell.empty{background:transparent;border-color:transparent;cursor:default;}
-.cell.today .dn{
-  background:var(--accent-primary);color:#fff;
-  border-radius:50%;width:26px;height:26px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:800;
-}
-.cell.swapped .badge{background:var(--moo-orange);}
-.cell.has-note::after{
-  content:'✦';position:absolute;top:2px;right:3px;
-  font-size:7px;color:var(--moo-violet);z-index:5;
-}
-.cell.selected .top{background:var(--jiji-bg0)!important;}
-.cell.selected .dn{color:var(--accent-dark)!important;}
-.cell.selected .bot{background:var(--jiji-bg1)!important;color:var(--jiji-val)!important;}
-.cell.z-top{border-top:3px solid var(--zc)!important;}
-.cell.z-bottom{border-bottom:3px solid var(--zc)!important;}
-.cell.z-left{border-left:3px solid var(--zc)!important;}
-.cell.z-right{border-right:3px solid var(--zc)!important;}
-
-/* Badge (week number) */
-.badge{
-  position:absolute;top:-8px;left:-8px;
-  width:22px;height:22px;
-  background:var(--accent-primary);
-  color:#fff;border-radius:50%;
-  font-family:'Baloo 2',cursive;
-  font-size:10px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;
-  z-index:10;
-  box-shadow:0 1px 4px rgba(90,122,176,0.4);
-  border:1.5px solid #fff;
-}
-
-/* Cell top (date) */
-.top{
-  background:#fff;flex:0 0 48%;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;padding-bottom:8px;
-  border-radius:0;
-}
-.hol-name{
-  position:absolute;bottom:1px;left:0;right:0;
-  text-align:center;font-size:7px;
-  color:var(--moo-red);font-weight:800;line-height:1;
-  font-family:'Nunito',sans-serif;
-}
-.dn{
-  font-family:'Baloo 2',cursive;
-  font-size:18px;font-weight:700;color:var(--text-main);
-}
-.dn.holiday{color:var(--moo-red);}
-
-/* Cell bot (shift) */
-.bot{
-  flex:0 0 52%;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  font-family:'Nunito',sans-serif;
-  font-size:11px;font-weight:800;
-  padding:2px;gap:1px;
-}
-/* Shift colors */
-.sD{background:var(--c-D);color:var(--c-D-text);}
-.sDhol{background:var(--c-Dhol);color:var(--c-Dhol-text);}
-.sE{background:var(--c-E);color:var(--c-E-text);}
-.sN{background:var(--c-N);color:var(--c-N-text);}
-.sOFF{background:var(--c-OFF);color:var(--c-OFF-text);}
-.s12{background:var(--c-12);color:var(--c-12-text);}
-
-/* ── Balance cards ── */
-.hours-summary{display:flex;gap:8px;margin-top:12px;}
-.hs-card{
-  flex:1;border-radius:14px;padding:10px 12px;
-  border:2px solid transparent;
-  font-family:'Nunito',sans-serif;
-}
-.hs-card.jiji{
-  background:var(--jiji-bg0);
-  border-color:var(--jiji-border);
-}
-.hs-card.nian{
-  background:var(--nian-bg0);
-  border-color:var(--nian-border);
-}
-.hs-card-label{
-  font-size:15px;font-weight:800;letter-spacing:2px;margin-bottom:4px;
-  font-family:'Baloo 2',cursive;
-}
-.hs-card.jiji .hs-card-label{color:var(--jiji-label);}
-.hs-card.nian .hs-card-label{color:var(--nian-label);}
-.hs-card-val{font-size:24px;font-weight:800;line-height:1;font-family:'Baloo 2',cursive;}
-.hs-card.jiji .hs-card-val{color:var(--jiji-val);}
-.hs-card.nian .hs-card-val{color:var(--nian-val);}
-.hs-card-unit{font-size:10px;color:var(--text-light);margin-top:2px;}
-
-/* ── Nian bar ── */
-.nian-bar-row{
-  display:flex;align-items:center;gap:8px;
-  background:var(--surface);border:1.5px solid var(--border);
-  border-radius:12px;padding:10px 14px;margin-top:8px;
-}
-.nbl{font-size:16px;font-weight:800;color:var(--nian-label);width:36px;flex-shrink:0;font-family:'Baloo 2',cursive;}
-.nbt{flex:1;height:8px;background:var(--nian-bg1);border-radius:99px;overflow:hidden;}
-.nbf{height:100%;background:var(--moo-red);border-radius:99px;transition:width 0.4s;}
-.nbn{font-size:11px;color:var(--text-light);white-space:nowrap;min-width:80px;text-align:right;font-weight:700;}
-
-/* ── Settings ── */
-.hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap;}
-.nts-group{display:flex;align-items:center;gap:5px;}
-.nts-label{font-size:11px;color:var(--text-light);font-weight:700;}
-.nts-input{
-  width:58px;padding:4px 6px;border:1.5px solid var(--border);
-  border-radius:8px;font-size:13px;font-weight:800;
-  color:var(--nian-val);background:#fff;text-align:center;
-  font-family:'Nunito',sans-serif;
-}
-.nts-input.jiji-color{color:var(--jiji-val);}
-
-/* ── Hours badge on cells ── */
-.hbadge{
-  display:block;font-size:7px;font-weight:800;
-  padding:1px 3px;border-radius:4px;line-height:1.4;
-  text-align:center;margin-top:1px;
-  font-family:'Nunito',sans-serif;
-}
-.hb-j-p{background:var(--jiji-bg1);color:var(--jiji-val);}
-.hb-j-m{background:var(--moo-lt-red);color:var(--moo-rdbrown);}
-.hb-n-m{background:var(--moo-lt-red);color:var(--moo-rdbrown);}
-
-/* ── Night allowance ── */
-.allow-wrap{
-  margin-top:10px;
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:14px;overflow:hidden;
-}
-.allow-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 14px 8px;
-  background:linear-gradient(135deg,rgba(90,122,176,0.10),rgba(138,96,176,0.08));
-}
-.allow-title{
-  font-size:16px;font-weight:800;
-  color:var(--accent-primary);letter-spacing:1.5px;
-  font-family:'Baloo 2',cursive;
-}
-.allow-month-total{font-size:16px;font-weight:800;color:var(--accent-primary);font-family:'Baloo 2',cursive;}
-.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1.5px solid var(--border);}
-.allow-cell{padding:8px 10px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
-.allow-cell:nth-child(3n){border-right:none;}
-.allow-cell-label{font-size:12px;color:var(--text-light);margin-bottom:3px;letter-spacing:0.5px;font-weight:700;}
-.allow-cell-val{font-size:18px;font-weight:800;color:var(--accent-primary);font-family:'Baloo 2',cursive;}
-.allow-cell-count{font-size:12px;color:var(--text-light);margin-top:1px;}
-.allow-note{font-size:12px;color:var(--text-light);padding:6px 14px 8px;border-top:1px solid var(--border);}
-.allow-manual{
-  width:100%;margin-top:5px;padding:3px 6px;
-  border:1px solid var(--border);border-radius:6px;
-  font-size:13px;background:var(--bg);color:var(--accent-primary);
-  font-family:'Nunito',sans-serif;box-sizing:border-box;
-}
-
-/* ── Panel ── */
-.panel{
-  background:var(--surface);
-  border:2px solid var(--border);
-  border-radius:18px;padding:16px;margin-top:14px;
-  display:none;
-  box-shadow:0 4px 16px rgba(90,122,176,0.12);
-}
-.panel.open{display:block;}
-.panel-title{
-  font-family:'Baloo 2',cursive;
-  font-size:18px;font-weight:800;margin-bottom:2px;
-  color:var(--accent-primary);
-}
-.panel-sub{font-size:14px;color:var(--text-sub);margin-bottom:3px;font-weight:700;}
-.panel-hol{font-size:14px;color:var(--moo-red);font-weight:800;margin-bottom:10px;display:none;}
-.tabs{display:flex;gap:6px;margin-bottom:14px;}
-.tab-btn{
-  flex:1;padding:9px;
-  border:1.5px solid var(--border);
-  border-radius:12px;background:transparent;
-  font-family:'Baloo 2',cursive;
-  font-size:13px;font-weight:700;cursor:pointer;color:var(--text-light);
-  transition:all 0.15s;
-}
-.tab-btn.active{background:var(--accent-primary);color:#fff;border-color:var(--accent-primary);}
-.field-label{font-size:13px;color:var(--text-sub);margin-bottom:5px;font-weight:800;font-family:'Baloo 2',cursive;}
-select{
-  width:100%;padding:10px 12px;
-  border:1.5px solid var(--border);border-radius:10px;
-  background:#fff;color:var(--text-main);font-size:15px;
-  appearance:none;font-family:'Nunito',sans-serif;font-weight:700;
-}
-
-/* Preview grid */
-.preview-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:10px;}
-.pg-head{
-  text-align:center;background:var(--accent-primary);color:#fff;
-  border-radius:4px;font-size:10px;padding:3px 1px;font-weight:800;
-  font-family:'Baloo 2',cursive;
-}
-.pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:10px;font-weight:800;font-family:'Nunito',sans-serif;}
-
-/* Shift buttons */
-.shift-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
-.sb{
-  padding:7px 11px;border-radius:10px;border:1.5px solid var(--border);
-  font-size:12px;cursor:pointer;font-weight:800;
-  font-family:'Nunito',sans-serif;transition:transform 0.1s;
-}
-.sb:active{transform:scale(0.95);}
-.sb.active{border:2.5px solid var(--accent-primary);box-shadow:0 0 0 1px var(--accent-primary);}
-
-/* Note area */
-.note-area{
-  width:100%;padding:10px 12px;
-  border:1.5px solid var(--border);border-radius:10px;
-  font-size:15px;background:#fff;color:var(--text-main);
-  margin-top:6px;min-height:65px;resize:none;
-  font-family:'Nunito',sans-serif;font-weight:600;
-}
-
-/* Buttons */
-.confirm-btn{
-  width:100%;padding:13px;
-  background:var(--accent-primary);color:#fff;border:none;
-  border-radius:12px;font-family:'Baloo 2',cursive;
-  font-size:17px;font-weight:800;cursor:pointer;margin-top:14px;
-  box-shadow:0 3px 10px rgba(90,122,176,0.35);
-  transition:background 0.15s,transform 0.1s;
-}
-.confirm-btn:active{background:var(--accent-dark);transform:scale(0.98);}
-.cancel-btn{
-  width:100%;padding:10px;background:transparent;
-  color:var(--text-light);border:1.5px solid var(--border);
-  border-radius:10px;font-family:'Nunito',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;
-}
-
-/* ── Section title ── */
-.sec-title{
-  font-family:'Baloo 2',cursive;
-  font-size:16px;font-weight:800;
-  color:var(--accent-primary);
-  margin:18px 0 10px;padding-bottom:6px;
-  border-bottom:2px solid var(--border);
-  display:flex;align-items:center;gap:8px;
-}
-.sec-title::before{content:'✦';font-size:10px;color:var(--moo-warm-yel);}
-
-/* Rec list */
-.rec-list{list-style:none;}
-.rec-item{padding:10px 0;border-bottom:1px solid var(--border);}
-.rec-item:last-child{border:none;}
-.rec-item-head{display:flex;align-items:center;gap:8px;}
-.rec-tag{
-  font-size:10px;padding:3px 8px;border-radius:20px;
-  font-weight:800;white-space:nowrap;font-family:'Baloo 2',cursive;
-}
-.rec-tag.week{background:var(--jiji-bg0);color:var(--accent-primary);}
-.rec-tag.day{background:var(--moo-lt-red);color:var(--moo-rdbrown);}
-.rec-desc{flex:1;font-size:13px;font-weight:700;color:var(--text-sub);}
-.rec-del{background:none;border:none;color:var(--moo-red);font-size:18px;cursor:pointer;padding:0 4px;}
-.rec-note{font-size:12px;color:var(--text-light);margin-top:4px;padding-left:4px;border-left:3px solid var(--moo-violet);font-weight:700;}
-.empty-msg{font-size:13px;color:var(--text-light);text-align:center;padding:18px 0;font-weight:700;}
-
-/* ── Hours trigger button ── */
-.hours-trigger-btn{
-  width:100%;padding:10px;background:var(--jiji-bg0);
-  color:var(--text-sub);border:1.5px solid var(--border);
-  border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;
-  font-family:'Nunito',sans-serif;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.hours-trigger-btn.has-data{background:var(--jiji-bg1);color:var(--jiji-val);border-color:var(--jiji-border);}
-
-/* ── Hours overlay ── */
-.hours-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(26,26,26,0.45);z-index:300;
-  align-items:flex-end;justify-content:center;
-}
-.hours-overlay.open{display:flex;}
-.hours-sheet{
-  background:var(--surface);border-radius:22px 22px 0 0;
-  width:100%;max-width:480px;
-  padding:0 0 env(safe-area-inset-bottom,16px);
-  animation:hup 0.22s ease;
-  border-top:3px solid var(--accent-primary);
-}
-@keyframes hup{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.hs-handle{padding:10px 0 0;display:flex;justify-content:center;}
-.hs-handle-bar{width:36px;height:4px;background:var(--border);border-radius:99px;}
-.hs-head{padding:10px 16px 10px;border-bottom:1.5px solid var(--border);}
-.hs-date{font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;color:var(--accent-primary);}
-.hs-shift{font-size:12px;color:var(--text-light);margin-top:2px;font-weight:700;}
-.hs-body{padding:14px 16px 16px;}
-.hs-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.hs-row-label{font-family:'Baloo 2',cursive;font-size:13px;font-weight:800;width:28px;flex-shrink:0;}
-.hs-row-label.j{color:var(--jiji-label);}
-.hs-row-label.n{color:var(--nian-label);}
-.hs-selwrap{display:flex;gap:6px;flex:1;}
-.hdir{
-  flex:0 0 96px;appearance:none;-webkit-appearance:none;
-  border:1.5px solid var(--border);border-radius:10px;
-  padding:9px 6px 9px 10px;font-size:13px;font-weight:800;
-  background:#fff;color:var(--text-main);font-family:'Nunito',sans-serif;cursor:pointer;
-}
-.hdir.ot{border-color:var(--moo-warm-yel);color:#5a3800;background:#fdf0c0;}
-.hdir.jm{border-color:var(--moo-red);color:var(--moo-red);background:var(--moo-lt-red);}
-.hdir.nm{border-color:var(--moo-red);color:var(--moo-red);background:var(--moo-lt-red);}
-.hhrs{
-  flex:1;appearance:none;-webkit-appearance:none;
-  border:1.5px solid var(--border);border-radius:10px;
-  padding:9px 10px;font-size:13px;font-weight:700;
-  background:#fff;color:var(--text-main);font-family:'Nunito',sans-serif;cursor:pointer;
-}
-.hs-btns{display:flex;gap:8px;margin-top:4px;}
-.hs-btn-clear{padding:10px 12px;border:1.5px solid var(--moo-red);border-radius:10px;background:var(--moo-lt-red);color:var(--moo-rdbrown);font-size:13px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
-.hs-btn-cancel{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:10px;background:transparent;color:var(--text-light);font-size:14px;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
-.hs-btn-save{flex:2;padding:10px;border:none;border-radius:10px;background:var(--accent-primary);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:'Baloo 2',cursive;}
-.hcustom{
-  width:100%;padding:9px 12px;border:1.5px solid var(--moo-warm-yel);border-radius:10px;
-  font-size:15px;font-weight:700;background:#fdf0c0;color:#5a3800;font-family:'Nunito',sans-serif;outline:none;
-}
-
-/* ── Moomin decorative footer ── */
-.moo-footer{
-  text-align:center;margin-top:24px;margin-bottom:8px;
-  font-family:'Baloo 2',cursive;
-  font-size:12px;color:var(--text-light);letter-spacing:2px;
-  opacity:0.6;
-}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 24px 12px;font-size:16px}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.nav h2{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:400;color:var(--ink);letter-spacing:-0.3px}
+.nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.nav button:active{background:var(--surface2)}
+.today-btn{display:none;margin:0 auto 10px;padding:6px 18px;background:transparent;color:var(--ink2);border:1px solid var(--border2);border-radius:99px;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.today-btn:active{background:var(--surface2)}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;background:var(--bg)}
+.dh{text-align:center;font-size:11px;color:var(--ink3);padding:4px 0 6px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
+.cell{position:relative;background:var(--surface);border-right:1px solid var(--grid-line);border-bottom:1px solid var(--grid-line);border-radius:0;min-height:64px;display:flex;flex-direction:column;overflow:visible;cursor:pointer;transition:background 0.1s}
+.cell:nth-child(7n){border-right:none}
+.cell.empty{background:var(--bg);border-color:transparent;cursor:default;min-height:64px}
+/* badge 防裁切 */
+.grid#grid{overflow:visible;margin-top:8px}
+.cell.today{background:#fbf6ea}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.cell.swapped .badge{background:#d4602a;color:#fff}
+.cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
+.plan-pin{position:absolute;top:1px;right:2px;font-size:10px;line-height:1;z-index:6;pointer-events:none}
+.cell.selected{background:#f5ecd8!important}
+.cell.selected .bot{opacity:0.8}
+.cell.z-top{border-top:2px solid var(--zc)!important}
+.cell.z-bottom{border-bottom:2px solid var(--zc)!important}
+.cell.z-left{border-left:2px solid var(--zc)!important}
+.cell.z-right{border-right:2px solid var(--zc)!important}
+/* BADGE */
+.badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
+.top{background:transparent;flex:0 0 38%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
+.hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
+.dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.dn.holiday{color:var(--red)}
+.bot{flex:0 0 62%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+/* SHIFT COLOURS */
+.sD{background:#fdfaf4;color:#1a1a1a}
+.sDhol{background:#e8c4bc;color:#7a2a28}
+.sE{background:#a8bcd8;color:#3a5a90}
+.sN{background:#f0d840;color:#4a3800}
+.sOFF{background:#c8564a;color:#ffffff}
+.s12{background:#8a60b0;color:#ffffff}
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:12px;display:none}
+.panel.open{display:block}
+.panel-title{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400;margin-bottom:3px;color:var(--ink)}
+.panel-sub{font-size:13px;color:var(--ink2);margin-bottom:4px;font-weight:400}
+.panel-hol{font-size:13px;color:var(--red);font-weight:500;margin-bottom:10px;display:none}
+.plan-field{background:#fbf7ee;border:1px solid #e8dcc2;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px}
+.plan-field .field-label{margin-bottom:6px;color:#8a6a30}
+.plan-field .note-area{margin-top:0;min-height:50px;background:#fffdf8;border-color:#e0d2b4}
+.tabs{display:flex;gap:1px;margin-bottom:16px;background:var(--surface2);border-radius:var(--radius-sm);padding:3px}
+.tab-btn{flex:1;padding:8px;border:none;border-radius:6px;background:transparent;font-size:13px;cursor:pointer;color:var(--ink2);font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.field-label{font-size:12px;color:var(--ink3);margin-bottom:6px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
+select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:15px;appearance:none;font-family:'DM Sans',sans-serif;font-weight:400}
+.preview-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:10px}
+.pg-head{text-align:center;background:var(--accent);color:#fff;border-radius:4px;font-size:9px;padding:3px 1px;font-weight:500;letter-spacing:0.3px}
+.pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:9px;font-weight:500}
+.shift-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sb{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-weight:500;background:var(--surface);color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all 0.1s}
+.sb.active{border-color:var(--accent)!important;box-shadow:0 0 0 2px var(--accent)}
+.sb.sD{background:#fdfaf4;color:#1a1a1a;border-color:#d4c9b0}
+.sb.sDhol{background:#e8c4bc;color:#7a2a28;border-color:#d8a89c}
+.sb.sE{background:#a8bcd8;color:#3a5a90;border-color:#90a8cc}
+.sb.sN{background:#f0d840;color:#4a3800;border-color:#d8bc28}
+.sb.sOFF{background:#c8564a;color:#ffffff;border-color:#b04a40}
+.sb.s12{background:#8a60b0;color:#ffffff;border-color:#7a50a0}
+.note-area{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;background:var(--surface);color:var(--ink);margin-top:6px;min-height:70px;resize:none;font-family:'DM Sans',sans-serif;font-weight:400}
+.confirm-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:16px;font-weight:500;cursor:pointer;margin-top:16px;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;transition:opacity 0.1s}
+.confirm-btn:active{opacity:0.85}
+.cancel-btn{width:100%;padding:11px;background:transparent;color:var(--ink3);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif}
+.sec-title{font-family:'Libre Baskerville',serif;font-size:18px;font-weight:400;color:var(--ink);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.rec-list{list-style:none}
+.rec-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border:none}
+.rec-item-head{display:flex;align-items:center;gap:8px}
+.rec-tag{font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600;white-space:nowrap;letter-spacing:0.3px;text-transform:uppercase}
+.rec-tag.week{background:var(--surface2);color:var(--ink2)}
+.rec-tag.day{background:#f0ece4;color:var(--accent2)}
+.rec-tag.plan{background:#f3ecdd;color:#7a5a20}
+.rec-desc{flex:1;font-size:13px;color:var(--ink);font-weight:400}
+.rec-del{background:none;border:none;color:var(--ink3);font-size:16px;cursor:pointer;padding:0 4px}
+.rec-note{font-size:12px;color:var(--ink2);margin-top:5px;padding-left:10px;border-left:2px solid var(--border2)}
+.empty-msg{font-size:13px;color:var(--ink3);text-align:center;padding:20px 0}
+/* ── 時數功能 ── */
+.hours-summary{display:flex;gap:8px;margin-top:12px}
+.hs-card{flex:1;border-radius:var(--radius);padding:14px;border:1px solid var(--border);background:var(--surface)}
+.hs-card.jiji{background:#fdf5d8;border-color:#eed08c}
+.hs-card.nian{background:#fae8e4;border-color:#eec4bc}
+.hs-card.yan{background:#f2eaf8;border-color:#c8aade}
+.hs-card-label{font-size:13px;font-weight:600;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase}
+.hs-card.jiji .hs-card-label{color:#8a6000}
+.hs-card.nian .hs-card-label{color:#a04038}
+.hs-card.yan  .hs-card-label{color:#5a3880}
+.hs-card-val{font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400;line-height:1}
+.hs-card.jiji .hs-card-val{color:#5a3800}
+.hs-card.nian .hs-card-val{color:#5a1a18}
+.hs-card.yan  .hs-card-val{color:#5a3880}
+.hs-card-unit{font-size:13px;color:var(--ink3);margin-top:3px}
+/* 年休/延年休進度條 */
+.nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
+.nbl{font-size:13px;font-weight:600;color:var(--ink3);width:28px;flex-shrink:0;letter-spacing:0.3px}
+.nbt{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.nbf{height:100%;background:var(--accent);border-radius:99px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.nbf.yan-bar{background:#8a60b0}
+.nbn{font-size:13px;color:var(--ink3);white-space:nowrap;min-width:80px;text-align:right}
+/* 設定 */
+.hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap}
+.nts-group{display:flex;align-items:center;gap:6px}
+.nts-label{font-size:13px;color:var(--ink3)}
+.nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
+.nts-input.jiji-color{color:#5a3800}
+/* 本區間積休明細 */
+.zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px 8px}
+.zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:10px}
+.zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.zone-rec-nav button:active{background:var(--surface2)}
+.zone-rec-title{font-size:13px;font-weight:600;color:#8a6000}
+.zone-rec-range{text-align:center;font-size:11px;color:var(--ink3);margin-top:1px;margin-bottom:3px}
+.zone-today-btn{display:none;margin:0 auto 6px;padding:2px 10px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.zone-today-btn:active{background:var(--surface2)}
+.zone-rec-summary{display:flex;gap:6px}
+.zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:11px 8px;text-align:center;border:1px solid var(--border)}
+.zone-rec-box.add{background:#fdf5d8;border-color:#eed08c}
+.zone-rec-box.take{background:#fbe9e5;border-color:#e6c0b8}
+.zone-rec-box-label{font-size:13px;font-weight:700;color:var(--ink3);margin-bottom:4px}
+.zone-rec-box.add .zone-rec-box-val{color:#5a3800;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.take .zone-rec-box-val{color:#7a2a28;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+/* hbadge */
+.hbadge{display:block;font-size:9px;font-weight:600;padding:1px 4px;border-radius:3px;line-height:1.5;text-align:center;margin-top:1px;letter-spacing:0.2px}
+.bot.overtime{color:#8b2020!important;font-weight:600}
+.hb-j-p{background:#f5e4a0;color:#5a3800}
+.hb-j-m{background:#f0ddd8;color:#7a2a28}
+.hb-n-m{background:#f0ddd8;color:#7a2a28}
+.hb-y-m{background:#e8daf4;color:#5a3880}
+.hbadge.tappable{cursor:pointer}
+.hbadge.tappable:active{opacity:0.6}
+.hbadge.confirmed{box-shadow:inset 0 0 0 1px #4a7a90;font-weight:700}
+/* hours trigger btn */
+.hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
+.hours-trigger-btn.has-data{background:#fdf5d8;color:#5a3800;border-color:#eed08c}
+/* 浮層 */
+.hours-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:300;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.hours-overlay.open{display:flex}
+.hours-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
+.hs-handle{padding:12px 0 0;display:flex;justify-content:center}
+.hs-handle-bar{width:36px;height:3px;background:var(--border2);border-radius:99px}
+.hs-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.hs-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
+.hs-shift{font-size:12px;color:var(--ink3);margin-top:2px}
+.hs-body{padding:16px 18px 18px}
+.hs-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.hs-row-label{font-size:12px;font-weight:600;width:28px;flex-shrink:0;letter-spacing:0.3px;text-transform:uppercase}
+.hs-row-label.j{color:#8a6000}
+.hs-row-label.n{color:#a04038}
+.hs-row-label.y{color:#5a3880}
+.hs-selwrap{display:flex;gap:6px;flex:1}
+.hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hdir.ot{border-color:#e8a020;color:#5a3800;background:#fdf0c0}
+.hdir.jm{border-color:#cc9488;color:#7a2a28;background:#fbe9e5}
+.hdir.nm{border-color:#cc9488;color:#7a2a28;background:#fbe9e5}
+.hdir.ym{border-color:#c8aade;color:#5a3880;background:#f2eaf8}
+.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hs-btns{display:flex;gap:8px;margin-top:6px}
+.hs-btn-clear{padding:11px 14px;border:1px solid #e6c0b8;border-radius:var(--radius-sm);background:#fbe9e5;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hs-btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hs-btn-save{flex:2;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 快速選單 */
+.quick-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:280;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.quick-overlay.open{display:flex}
+.quick-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
+.quick-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.quick-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
+.quick-shift{font-size:12px;color:var(--ink3);margin-top:2px}
+.quick-body{padding:14px 18px 6px;display:flex;flex-direction:column;gap:8px}
+.quick-btn{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;transition:background 0.1s}
+.quick-btn:active{background:var(--surface2)}
+.quick-btn .qi{font-size:18px;flex-shrink:0;width:22px;text-align:center}
+.quick-cancel{width:calc(100% - 36px);margin:8px 18px 4px;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink3);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 12-8 津貼 */
+.allow12-row{display:none;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#fdf5d8;border:1px solid #eed08c}
+.allow12-row.show{display:flex}
+.allow12-row.no-allow{background:#fbe9e5;border-color:#e6c0b8}
+.allow12-toggle{width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
+.allow12-label{font-size:13px;font-weight:500;color:#5a3800;flex:1;cursor:pointer}
+.allow12-row.no-allow .allow12-label{color:var(--red)}
+/* 天災假 */
+.tz-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f2eaf8;border:1px solid #c8aade}
+.tz-label{color:#5a3880!important}
+.hb-tz{background:#e8daf4;color:#4a3870}
+/* 行程多則 */
+.plan-list{list-style:none;margin-bottom:8px}
+.plan-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.plan-item:last-child{border:none}
+.plan-check{width:18px;height:18px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--accent)}
+.plan-text{flex:1;font-size:14px;color:var(--ink);line-height:1.5;word-break:break-all}
+.plan-item.done .plan-text{opacity:0.4;text-decoration:line-through}
+.plan-del{background:none;border:none;color:var(--ink3);font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
+.plan-add-row{display:flex;gap:6px;margin-top:4px}
+.plan-add-input{flex:1;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif}
+.plan-add-btn{padding:9px 14px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500}
+/* 圖片區 */
+.photo-section{margin-top:10px}
+.photo-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.photo-thumb-wrap{position:relative;width:72px;height:72px;border-radius:8px;overflow:visible}
+.photo-thumb{width:72px;height:72px;object-fit:cover;border-radius:8px;cursor:pointer;display:block}
+.photo-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#c0392b;color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:10}
+.photo-upload-btn{display:flex;align-items:center;gap:6px;padding:9px 14px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.photo-count{font-size:11px;color:var(--ink3);margin-top:4px}
+/* 燈箱 */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center;flex-direction:column}
+.lightbox.open{display:flex}
+.lightbox-img{max-width:96vw;max-height:80vh;object-fit:contain;border-radius:8px}
+.lightbox-nav{display:flex;align-items:center;gap:24px;margin-top:16px}
+.lb-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:28px;width:48px;height:48px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-close{position:absolute;top:env(safe-area-inset-top,16px);right:16px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-counter{color:rgba(255,255,255,0.7);font-size:13px;min-width:48px;text-align:center}
+/* 備份匯出入 */
+.backup-row{display:flex;gap:8px;margin-top:10px}
+.backup-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
+.backup-btn.export{background:#fdf5d8;color:#5a3800;border:1px solid #eed08c}
+.backup-btn.export:active{background:#f5e8c0}
+.backup-btn.import{background:#fae8e4;color:#5a1a18;border:1px solid #eec4bc}
+.backup-btn.import:active{background:#f5d8d2}
+/* 夜班津貼 */
+.allow-wrap{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.allow-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px}
+.allow-title{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:1px;text-transform:uppercase}
+.allow-month-total{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:var(--ink)}
+.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border)}
+.allow-cell{padding:10px 12px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.allow-cell:nth-child(3n){border-right:none}
+.allow-cell-label{font-size:12px;color:var(--ink3);margin-bottom:4px;letter-spacing:0.3px}
+.allow-cell-val{font-family:'Libre Baskerville',serif;font-size:19px;font-weight:400;color:var(--ink)}
+.allow-cell-count{font-size:12px;color:var(--ink3);margin-top:1px}
+.allow-confirm{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:99px;border:1px dashed var(--border2);color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif}
+.allow-confirm:active{opacity:0.6}
+.allow-confirm.confirmed{border:1px solid #4a7a90;background:#eaf2f5;color:#2a5a70;font-weight:600}
+.allow-confirm.hidden{display:none}
+.allow-note{font-size:12px;color:var(--ink3);padding:8px 16px 10px;border-top:1px solid var(--border)}
+.allow-manual{width:100%;margin-top:6px;padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--surface2);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
 </style>
 </head>
 <body>
-
 <div class="nav">
-  <button onclick="prev()">‹</button>
+  <button onclick="prev()">&#8249;</button>
   <h2 id="title"></h2>
-  <button onclick="next()">›</button>
+  <button onclick="next()">&#8250;</button>
 </div>
-
+<button class="today-btn" id="todayBtn" onclick="goToday()">回到今日 ↩</button>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
 
-<!-- 積休 年休 餘額 -->
+<!-- 積休 年休 延年休 餘額總覽 -->
 <div class="hours-summary">
   <div class="hs-card jiji">
     <div class="hs-card-label">積　休</div>
@@ -502,12 +294,45 @@ select{
     <div class="hs-card-val" id="nianBalVal">0</div>
     <div class="hs-card-unit">小時</div>
   </div>
+  <div class="hs-card yan">
+    <div class="hs-card-label">延年休</div>
+    <div class="hs-card-val" id="yanBalVal">0</div>
+    <div class="hs-card-unit">小時</div>
+  </div>
 </div>
+<!-- 本區間（按4週區間分組顯示加班/拿時間） -->
+<div class="zone-rec-card">
+  <div class="zone-rec-nav">
+    <button onclick="prevZoneRec()">&#8249;</button>
+    <span class="zone-rec-title">本區間</span>
+    <button onclick="nextZoneRec()">&#8250;</button>
+  </div>
+  <div class="zone-rec-range" id="zoneRecRange"></div>
+  <button class="zone-today-btn" id="zoneTodayBtn" onclick="goTodayZone()">回到本期 ↩</button>
+  <div class="zone-rec-summary">
+    <div class="zone-rec-box add">
+      <div class="zone-rec-box-label">本區間加班</div>
+      <div class="zone-rec-box-val" id="zoneAddVal">0</div>
+    </div>
+    <div class="zone-rec-box take">
+      <div class="zone-rec-box-label">本區間拿時間</div>
+      <div class="zone-rec-box-val" id="zoneTakeVal">0</div>
+    </div>
+  </div>
+</div>
+<!-- 年休進度條 -->
 <div class="nian-bar-row">
   <span class="nbl">年休</span>
   <div class="nbt"><div class="nbf" id="nianFill" style="width:0%"></div></div>
-  <span class="nbn" id="nianNums">已用 0 / 72 hr</span>
+  <span class="nbn" id="nianNums">已用 0 / 52 hr</span>
 </div>
+<!-- 延年休進度條 -->
+<div class="nian-bar-row">
+  <span class="nbl" style="color:#8a60b0">延休</span>
+  <div class="nbt"><div class="nbf yan-bar" id="yanFill" style="width:0%"></div></div>
+  <span class="nbn" id="yanNums">已用 0 / 0 hr</span>
+</div>
+<!-- 設定：年休總額 + 延年休 + 積休初始 -->
 <div class="hours-settings">
   <div class="nts-group">
     <span class="nts-label">年休總額：</span>
@@ -515,10 +340,22 @@ select{
     <span class="nts-label">hr</span>
   </div>
   <div class="nts-group">
+    <span class="nts-label">延年休：</span>
+    <input class="nts-input" id="yanTotalInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
+    <span class="nts-label">hr</span>
+  </div>
+  <div class="nts-group">
     <span class="nts-label">積休初始：</span>
     <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
+</div>
+
+<!-- 備份 -->
+<div class="backup-row">
+  <button class="backup-btn export" onclick="exportBackup()">⬇ 匯出備份</button>
+  <button class="backup-btn import" onclick="document.getElementById('importFile').click()">⬆ 匯入備份</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
 </div>
 
 <!-- 夜班津貼 -->
@@ -533,56 +370,120 @@ select{
       <div class="allow-cell-val" id="allow12Val">$0</div>
       <div class="allow-cell-count" id="allow12Count">0 班</div>
       <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allow12ConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">E 班 $560／包班 $640</div>
+      <div class="allow-cell-label">E 班 $560／包班 $660</div>
       <div class="allow-cell-val" id="allowEVal">$0</div>
       <div class="allow-cell-count" id="allowECount">0 班</div>
       <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowEConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">N 班 $770／包班 $960</div>
+      <div class="allow-cell-label">N 班 $770／包班 $940</div>
       <div class="allow-cell-val" id="allowNVal">$0</div>
       <div class="allow-cell-count" id="allowNCount">0 班</div>
       <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowNConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">D班加班 $270</div>
       <div class="allow-cell-val" id="allowDotVal">$0</div>
       <div class="allow-cell-count" id="allowDotCount">0 班</div>
+      <input class="allow-manual" id="allowDotAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
-  <div class="allow-note">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270</div>
+  <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
 </div>
 
-<!-- 換班面板 -->
-<div class="panel" id="panel">
-  <div class="panel-title" id="panelTitle"></div>
-  <div class="panel-sub" id="panelSub"></div>
-  <div class="panel-hol" id="panelHol"></div>
-  <div class="tabs">
-    <button class="tab-btn active" id="tabWeek" onclick="switchTab('week')">換號碼班（整週）</button>
-    <button class="tab-btn" id="tabDay" onclick="switchTab('day')">修改當天班別</button>
-  </div>
-  <div id="formWeek">
-    <div class="field-label">換成哪個號碼班</div>
-    <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
-    <div id="preview" style="display:none">
-      <div class="field-label" style="margin-top:10px">換後班表預覽：</div>
-      <div class="preview-grid" id="previewGrid"></div>
+<!-- 快速選單：點日期後先問要幹嘛 -->
+<div class="quick-overlay" id="quickOverlay" onclick="if(event.target===this)closeQuickActions()">
+  <div class="quick-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="quick-head">
+      <div class="quick-date" id="quickDate"></div>
+      <div class="quick-shift" id="quickShift"></div>
     </div>
-    <div class="field-label" style="margin-top:14px">備註</div>
-    <textarea class="note-area" id="weekNote" placeholder="例：和同事換班…"></textarea>
+    <div class="quick-body">
+      <button class="quick-btn" onclick="quickAction('week')"><span class="qi">🔄</span>換號碼班（整週）</button>
+      <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
+      <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
+      <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
+    </div>
+    <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
   </div>
-  <div id="formDay" style="display:none">
-    <div class="field-label">選擇班別</div>
-    <div class="shift-btns" id="shiftBtns"></div>
-    <div class="field-label" style="margin-top:14px">備註</div>
-    <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
+</div>
+
+<!-- 換號碼班（整週）浮層 -->
+<div class="hours-overlay" id="weekOverlay" onclick="if(event.target===this)closeWeekSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="weekDate"></div>
+      <div class="hs-shift" id="weekShift"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">換成哪個號碼班</div>
+      <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
+      <div id="preview" style="display:none">
+        <div class="field-label" style="margin-top:10px">換後班表預覽：</div>
+        <div class="preview-grid" id="previewGrid"></div>
+      </div>
+      <div class="field-label" style="margin-top:14px">備註</div>
+      <textarea class="note-area" id="weekNote" placeholder="例：和同事換班"></textarea>
+      <div class="hs-btns">
+        <button class="hs-btn-cancel" onclick="closeWeekSheet()">取消</button>
+        <button class="hs-btn-save" onclick="confirmWeekAction()">確認</button>
+      </div>
+    </div>
   </div>
-  <button class="confirm-btn" onclick="confirmAction()">確認</button>
-  <button class="cancel-btn" onclick="closePanel()">取消</button>
-  <button class="hours-trigger-btn" id="hoursTriggerBtn" onclick="openHoursSheet()">⏱ 記錄時數（積休／年休）</button>
+</div>
+
+<!-- 修改當天班別浮層 -->
+<div class="hours-overlay" id="dayOverlay" onclick="if(event.target===this)closeDaySheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="dayDate"></div>
+      <div class="hs-shift" id="dayShift"></div>
+      <div class="panel-hol" id="dayHol" style="margin-top:4px"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">選擇班別</div>
+      <div class="shift-btns" id="shiftBtns"></div>
+      <div class="field-label" style="margin-top:14px">備註</div>
+      <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
+      <div class="hs-btns">
+        <button class="hs-btn-cancel" onclick="closeDaySheet()">取消</button>
+        <button class="hs-btn-save" onclick="confirmDayAction()">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 行程／圖片浮層 -->
+<div class="hours-overlay" id="planOverlay" onclick="if(event.target===this)closePlanSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="planDate"></div>
+      <div class="hs-shift" id="planShift"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">📌 當天的事／行程</div>
+      <ul class="plan-list" id="planList"></ul>
+      <div class="plan-add-row">
+        <input class="plan-add-input" id="planAddInput" type="text" placeholder="新增行程…" onkeydown="if(event.key==='Enter')addPlanItem()">
+        <button class="plan-add-btn" onclick="addPlanItem()">＋</button>
+      </div>
+      <div class="field-label" style="margin-top:18px">📷 附加圖片</div>
+      <div class="photo-thumbs" id="photoThumbs"></div>
+      <div class="photo-count" id="photoCount"></div>
+      <label class="photo-upload-btn"><span>＋ 選擇圖片</span><input type="file" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)"></label>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closePlanSheet()">完成</button>
+    </div>
+  </div>
 </div>
 
 <!-- 時數輸入浮層 -->
@@ -602,17 +503,9 @@ select{
               <option value="+">加班</option>
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="jijiHrs" onchange="toggleCustom('jiji')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="jijiHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="jijiMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="jijiCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
       </div>
       <div class="hs-row">
@@ -622,18 +515,32 @@ select{
             <select class="hdir nm" id="nianDir" style="pointer-events:none;opacity:0.6">
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="nianHrs" onchange="toggleCustom('nian')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option><option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option><option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option><option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option><option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option><option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="nianHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="nianMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="nianCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
+      </div>
+      <div class="hs-row">
+        <span class="hs-row-label y">延休</span>
+        <div class="hs-selwrap" style="flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <select class="hdir ym" id="yanDir" style="pointer-events:none;opacity:0.6">
+              <option value="-">拿時間</option>
+            </select>
+            <select class="hhrs" id="yanHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="yanMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
+          </div>
+        </div>
+      </div>
+      <!-- 天災假出勤 -->
+      <div class="tz-row">
+        <input type="checkbox" class="allow12-toggle" id="tzCheck">
+        <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤（積休 ＋8 hr，不計加班費）</label>
+      </div>
+      <!-- 12-8 津貼勾選 -->
+      <div class="allow12-row" id="allow12Row">
+        <input type="checkbox" class="allow12-toggle" id="allow12Check" checked onchange="updateAllow12Style()">
+        <label class="allow12-label" for="allow12Check" id="allow12CheckLabel">✓ 計入 12-8 津貼（$270）</label>
       </div>
       <div class="hs-btns">
         <button class="hs-btn-clear" onclick="clearHoursForm()">清除</button>
@@ -643,154 +550,165 @@ select{
     </div>
   </div>
 </div>
-
-<div class="sec-title">換班紀錄</div>
-<ul class="rec-list" id="recList"></ul>
-<div class="moo-footer">✦ ✦ ✦</div>
-
+<div class="sec-title" id="recTitle" onclick="toggleRecList()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>換班・行程紀錄</span><span id="recToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:400">展開 ﹀</span></div>
+<ul class="rec-list" id="recList" style="display:none"></ul>
 <script>
-// ── Tin's config ──
-// w1 = 27 (verified: nf(27,-1) = 26 for week of 6/1/2026)
-const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
-
-const ANC=new Date(2026,5,8); // anchor: 2026/06/08
+const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF'],36:['D','D','D','D','D','OFF','OFF']};
+const ANC=new Date(2026,5,8);
 const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#5a7ab0','#c8564a','#e8a020','#8a60b0','#7a2a28','#4a3870'];
-const ME={w1:26}; // TIN's w1
+const ME={w1:26};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
 const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','OFF'];
 const DZ=['日','一','二','三','四','五','六'];
-
 function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function ad(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function kd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
 function wo(date){const dow=date.getDay(),mon=ad(date,-((dow+6)%7));return Math.round((mon-ANC)/(7*86400000))}
-function nf(w,woff){return((w-1+woff)%35+35)%35+1}
+function nf(w,woff){return((w-1+woff)%36+36)%36+1}
 function monKey(date){return dk(ad(date,-((date.getDay()+6)%7)))}
 function getZoneIdx(date){return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6;}
 function getZoneColor(date){return ZONE_COLORS[getZoneIdx(date)];}
-
-// Use tin_ prefix for localStorage to avoid conflicts with Megan's data
+function absZoneNum(date){return Math.floor((date-ZONE_ANC)/86400000/28);}
+function zoneStart(absNum){return ad(ZONE_ANC,absNum*28);}
+function zoneEnd(absNum){return ad(zoneStart(absNum),27);}
 let wS={},dS={},nS={};
 try{const s=localStorage.getItem('tin_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('tin_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('tin_notes');if(s)nS=JSON.parse(s);}catch(e){}
-
+let pS={};
+try{const s=localStorage.getItem('tin_plans');if(s)pS=JSON.parse(s);}catch(e){}
 // ── 時數資料 ──
 let hD={};
-let nianTotal=52, jijiInit=0;
+let nianTotal=52,yanTotal=0,jijiInit=0;
 try{const s=localStorage.getItem('tin_hours');if(s)hD=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem('tin_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal)||52;jijiInit=parseFloat(c.jijiInit)||0;}}catch(e){}
+try{const s=localStorage.getItem('tin_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal);if(isNaN(nianTotal))nianTotal=52;yanTotal=parseFloat(c.yanTotal);if(isNaN(yanTotal))yanTotal=0;jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;}}catch(e){}
 function saveHours(){try{localStorage.setItem('tin_hours',JSON.stringify(hD));}catch(e){}}
+function toggleHoursConfirm(key,type){
+  const e=hD[key];if(!e)return;
+  const f=type+'Confirmed';
+  e[f]=!e[f];
+  saveHours();render();
+}
 function saveSettings(){
-  nianTotal=parseFloat(document.getElementById('nianTotalInput').value)||52;
-  jijiInit=parseFloat(document.getElementById('jijiInitInput').value)||0;
-  try{localStorage.setItem('tin_hours_cfg',JSON.stringify({nianTotal,jijiInit}));}catch(e){}
+  const nv=document.getElementById('nianTotalInput').value;
+  const yv=document.getElementById('yanTotalInput').value;
+  const jv=document.getElementById('jijiInitInput').value;
+  nianTotal=nv===''?52:parseFloat(nv);if(isNaN(nianTotal))nianTotal=52;
+  yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
+  jijiInit=jv===''?0:parseFloat(jv);if(isNaN(jijiInit))jijiInit=0;
+  try{localStorage.setItem('tin_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
   refreshBalance();
 }
-function calcJijiBalance(){
-  let bal=jijiInit;
-  for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);}
-  return bal;
-}
-function calcNianUsed(){
-  let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;
-}
+function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;}return bal;}
+function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
+function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
 function refreshBalance(){
-  const jijiB=calcJijiBalance();
-  const nianU=calcNianUsed();
-  const nianB=nianTotal-nianU;
-  document.getElementById('jijiBalVal').textContent=jijiB;
-  document.getElementById('nianBalVal').textContent=nianB;
+  const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
+  const yanU=calcYanUsed(),yanB=yanTotal-yanU;
+  function r2(v){return parseFloat(v.toFixed(2));}
+  document.getElementById('jijiBalVal').textContent=r2(jijiB);
+  document.getElementById('nianBalVal').textContent=r2(nianB);
+  document.getElementById('yanBalVal').textContent=r2(yanB);
   const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
   document.getElementById('nianFill').style.width=pct+'%';
-  document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
+  document.getElementById('nianNums').textContent='已用 '+fmtH(nianU)+' / '+nianTotal+' hr';
+  const yanPct=Math.min(100,yanTotal>0?Math.round(yanU/yanTotal*100):0);
+  document.getElementById('yanFill').style.width=yanPct+'%';
+  document.getElementById('yanNums').textContent='已用 '+fmtH(yanU)+' / '+yanTotal+' hr';
 }
 function openHoursSheet(){
   if(!selKey)return;
-  const date=kd(selKey);
-  const{s}=getShift(date);
+  const date=kd(selKey);const{s}=getShift(date);
   document.getElementById('hsDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
   document.getElementById('hsShift').textContent='班別：'+s;
   const e=hD[selKey]||{};
   document.getElementById('jijiDir').value=e.jijiDir||'+';
-  const jv=e.jiji||0;
-  const jSel=document.getElementById('jijiHrs');
-  const jCustom=document.getElementById('jijiCustom');
-  if(jv>0&&jv<=5&&jv*2===Math.round(jv*2)){jSel.value=jv;jCustom.style.display='none';}
-  else if(jv>5||jv%0.5!==0){jSel.value='custom';jCustom.style.display='block';jCustom.value=jv||'';}
-  else{jSel.value=0;jCustom.style.display='none';}
-  const nv=e.nian||0;
-  const nSel=document.getElementById('nianHrs');
-  const nCustom=document.getElementById('nianCustom');
-  if(nv>0&&nv<=5&&nv*2===Math.round(nv*2)){nSel.value=nv;nCustom.style.display='none';}
-  else if(nv>5||nv%0.5!==0){nSel.value='custom';nCustom.style.display='block';nCustom.value=nv||'';}
-  else{nSel.value=0;nCustom.style.display='none';}
+  setHM('jiji',e.jiji);
+  setHM('nian',e.nian);
+  setHM('yan',e.yan);
+  document.getElementById('tzCheck').checked=!!e.tz;
   updateHDir('jiji');
+  const is128=s.startsWith('12-8');
+  const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
+  if(is128){allow12Row.classList.add('show');const sv=e.allow12!==undefined?e.allow12:true;allow12Check.checked=sv;updateAllow12Style();}
+  else{allow12Row.classList.remove('show');allow12Check.checked=true;}
   document.getElementById('hoursOverlay').classList.add('open');
 }
-function toggleCustom(type){
-  const sel=document.getElementById(type+'Hrs');
-  const inp=document.getElementById(type+'Custom');
-  if(sel.value==='custom'){inp.style.display='block';inp.focus();}
-  else{inp.style.display='none';}
+function fmtH(v){return parseFloat(v.toFixed(2));}
+function setHM(type,v){
+  v=v||0;
+  let h=Math.floor(v),m=Math.round((v-h)*60);
+  m=Math.round(m/5)*5;
+  if(m>=60){h++;m=0;}
+  if(h>12)h=12;
+  document.getElementById(type+'Hrs').value=h;
+  document.getElementById(type+'Min').value=m;
 }
-function getHoursVal(type){
-  const sel=document.getElementById(type+'Hrs');
-  if(sel.value==='custom'){const v=parseFloat(document.getElementById(type+'Custom').value);return isNaN(v)?0:v;}
-  return parseFloat(sel.value)||0;
-}
-function updateHDir(type){
-  if(type!=='jiji')return;
-  const sel=document.getElementById('jijiDir'),v=sel.value;
-  sel.className='hdir '+(v==='+'?'ot':'jm');
+function getHoursVal(type){const h=parseFloat(document.getElementById(type+'Hrs').value)||0;const m=parseFloat(document.getElementById(type+'Min').value)||0;return h+m/60;}
+function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
+function updateAllow12Style(){
+  const check=document.getElementById('allow12Check'),row=document.getElementById('allow12Row'),label=document.getElementById('allow12CheckLabel');
+  if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
+  else{row.classList.add('no-allow');label.textContent='✕ 不計入 12-8 津貼';}
 }
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
-  document.getElementById('jijiHrs').value=0;
-  document.getElementById('jijiCustom').style.display='none';
-  document.getElementById('nianHrs').value=0;
-  document.getElementById('nianCustom').style.display='none';
-  updateHDir('jiji');
+  setHM('jiji',0);setHM('nian',0);setHM('yan',0);
+  document.getElementById('tzCheck').checked=false;
+  document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
-  const jh=getHoursVal('jiji');
-  const jd=document.getElementById('jijiDir').value;
-  const nh=getHoursVal('nian');
-  if(jh===0&&nh===0){delete hD[selKey];}
-  else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
-  saveHours();refreshBalance();refreshAllow();
-  render();
-  document.getElementById('hoursOverlay').classList.remove('open');
-  updateHoursBtnStyle();
-  document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function updateHoursBtnStyle(){
-  const btn=document.getElementById('hoursTriggerBtn');
-  if(!btn||!selKey)return;
-  const e=hD[selKey];
-  const hasData=e&&(e.jiji>0||e.nian>0);
-  btn.className='hours-trigger-btn'+(hasData?' has-data':'');
-  if(hasData){
-    const parts=[];
-    if(e.jiji>0)parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);
-    if(e.nian>0)parts.push('年休－'+e.nian);
-    btn.textContent='⏱ '+parts.join('　');
-  }else{
-    btn.textContent='⏱ 記錄時數（積休／年休）';
+  const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
+  const nh=getHoursVal('nian'),yh=getHoursVal('yan');
+  const tz=document.getElementById('tzCheck').checked;
+  const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
+  const prev=hD[selKey]||{};
+  if(jh===0&&nh===0&&yh===0&&!tz&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  else{
+    const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(tz)entry.tz=8;
+    if(is128)entry.allow12=allow12Check.checked;
+    if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
+    if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
+    if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
+    if(prev.tz===8&&tz&&prev.tzConfirmed)entry.tzConfirmed=true;
+    hD[selKey]=entry;
   }
+  saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
+  document.getElementById('hoursOverlay').classList.remove('open');
 }
-
 // ── 夜班津貼 ──
 let allowAdj={};
 try{const s=localStorage.getItem('tin_allow_adj');if(s)allowAdj=JSON.parse(s);}catch(e){}
+let allowConfirmed={};
+try{const s=localStorage.getItem('tin_allow_confirmed');if(s)allowConfirmed=JSON.parse(s);}catch(e){}
+function saveAllowConfirmed(){try{localStorage.setItem('tin_allow_confirmed',JSON.stringify(allowConfirmed));}catch(e){}}
+function toggleAllowConfirm(type,amt){
+  const ym=cy*100+(cm+1);
+  const rec=allowConfirmed[ym]?{...allowConfirmed[ym]}:{};
+  if(rec[type]===amt)delete rec[type];else rec[type]=amt;
+  if(Object.keys(rec).length)allowConfirmed[ym]=rec;else delete allowConfirmed[ym];
+  saveAllowConfirmed();
+  refreshAllow();
+}
+function renderAllowConfirmPill(elId,type,amt){
+  const el=document.getElementById(elId);if(!el)return;
+  el.classList.remove('hidden');
+  const ym=cy*100+(cm+1),rec=allowConfirmed[ym]||{};
+  const isConfirmed=rec[type]===amt;
+  el.textContent=isConfirmed?'✓ 已核對':'核對';
+  el.classList.toggle('confirmed',isConfirmed);
+  el.onclick=function(){toggleAllowConfirm(type,amt);};
+}
 function saveAllowAdj(){
   const ym=cy*100+(cm+1);
   const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
   const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
   const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
-  if(a12===0&&aE===0&&aN===0)delete allowAdj[ym];
-  else allowAdj[ym]={a12,aE,aN};
+  const aDot=parseFloat(document.getElementById('allowDotAdj').value)||0;
+  if(a12===0&&aE===0&&aN===0&&aDot===0)delete allowAdj[ym];
+  else allowAdj[ym]={a12,aE,aN,aDot};
   try{localStorage.setItem('tin_allow_adj',JSON.stringify(allowAdj));}catch(e){}
   refreshAllow();
 }
@@ -798,96 +716,204 @@ function calcAllow(){
   const totalDays=new Date(cy,cm+1,0).getDate();
   let c12=0,cE=0,cN=0,cDot=0;
   for(let d=1;d<=totalDays;d++){
-    const date=new Date(cy,cm,d);
-    const{s}=getShift(date);
-    const dow=date.getDay();
-    if(s.startsWith('12-8'))c12++;
+    const date=new Date(cy,cm,d),{s}=getShift(date),dow=date.getDay(),key=dk(date);
+    if(s.startsWith('12-8')){const he=hD[key];if(!(he&&he.allow12===false))c12++;}
     else if(s.startsWith('E'))cE++;
     else if(s.startsWith('N'))cN++;
-    if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){
-      const key=dk(date);
-      const he=hD[key];
-      if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;
-    }
+    if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){const he=hD[key];if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;}
   }
-  const rateE=cE>=15?640:560;
-  const rateN=cN>=15?960:770;
+  const rateE=cE>=15?660:560,rateN=cN>=15?940:770;
   return{c12,cE,cN,cDot,rateE,rateN};
 }
 function refreshAllow(){
   const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
-  const ym=cy*100+(cm+1);
-  const adj=allowAdj[ym]||{};
-  const adj12=adj.a12||0, adjE=adj.aE||0, adjN=adj.aN||0;
-  const a12=c12*270+adj12, aE=cE*rateE+adjE, aN=cN*rateN+adjN, aDot=cDot*270;
-  const total=a12+aE+aN+aDot;
-  const labelE='E班 $'+(cE>=15?'640（包班）':'560')+(cE>=15?' ✓':'');
-  const labelN='N班 $'+(cN>=15?'960（包班）':'770')+(cN>=15?' ✓':'');
-  document.getElementById('allow12Val').textContent='$'+a12;
-  document.getElementById('allow12Count').textContent=c12+' 班';
-  document.getElementById('allowEVal').textContent='$'+aE;
-  document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
-  document.getElementById('allowNVal').textContent='$'+aN;
-  document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
-  document.getElementById('allowDotVal').textContent='$'+aDot;
-  document.getElementById('allowDotCount').textContent=cDot+' 班';
-  document.getElementById('allow12Adj').value=adj12||'';
-  document.getElementById('allowEAdj').value=adjE||'';
-  document.getElementById('allowNAdj').value=adjN||'';
+  const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
+  const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0,adjDot=adj.aDot||0;
+  const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270+adjDot,total=a12+aE+aN+aDot;
+  const labelE='E 班 $'+(cE>=15?'660（包班）':'560')+(cE>=15?' ✓':'');
+  const labelN='N 班 $'+(cN>=15?'940（包班）':'770')+(cN>=15?' ✓':'');
+  document.getElementById('allow12Val').textContent='$'+a12;document.getElementById('allow12Count').textContent=c12+' 班';
+  document.getElementById('allowEVal').textContent='$'+aE;document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
+  document.getElementById('allowNVal').textContent='$'+aN;document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
+  document.getElementById('allowDotVal').textContent='$'+aDot;document.getElementById('allowDotCount').textContent=cDot+' 班';
+  document.getElementById('allow12Adj').value=adj12||'';document.getElementById('allowEAdj').value=adjE||'';document.getElementById('allowNAdj').value=adjN||'';document.getElementById('allowDotAdj').value=adjDot||'';
   document.getElementById('allowTotal').textContent='本月 $'+total;
+  renderAllowConfirmPill('allow12ConfirmPill','a12',a12);
+  renderAllowConfirmPill('allowEConfirmPill','aE',aE);
+  renderAllowConfirmPill('allowNConfirmPill','aN',aN);
+  renderAllowConfirmPill('allowDotConfirmPill','aDot',aDot);
 }
-
-function autoClean(){
+// ── pS 升格：純字串 → [{text,done}] ──
+function upgradePlan(v){
+  if(!v)return[];
+  if(Array.isArray(v))return v;
+  // 舊格式純字串
+  return v.split(/\n/).filter(s=>s.trim()).map(s=>({text:s.trim(),done:false}));
+}
+// ── 圖片：用 localStorage 存 base64 ──
+const PHOTO_PREFIX='tin_photo_';
+function photoKey(dateKey){return PHOTO_PREFIX+dateKey;}
+function getPhotos(dateKey){try{const v=localStorage.getItem(photoKey(dateKey));return v?JSON.parse(v):[];}catch(e){return[];}}
+function setPhotos(dateKey,arr){try{if(arr.length)localStorage.setItem(photoKey(dateKey),JSON.stringify(arr));else localStorage.removeItem(photoKey(dateKey));}catch(e){alert('儲存空間不足，請先刪除部分圖片');}}
+function compressImage(file){
+  return new Promise(res=>{
+    const img=new Image(),url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const max=900;let w=img.width,h=img.height;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg',0.72));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);res(null);};
+    img.src=url;
+  });
+}
+async function uploadPhotos(e){
+  if(!selKey)return;
+  const files=Array.from(e.target.files);if(!files.length)return;
+  const existing=getPhotos(selKey);
+  const slots=20-existing.length;
+  if(slots<=0){alert('已達 20 張上限');e.target.value='';return;}
+  const toAdd=files.slice(0,slots);
+  for(const f of toAdd){
+    const b64=await compressImage(f);
+    if(b64)existing.push(b64);
+  }
+  setPhotos(selKey,existing);
+  e.target.value='';
+  renderPhotos();render();
+}
+function deletePhoto(idx){
+  if(!selKey)return;
+  const arr=getPhotos(selKey);
+  arr.splice(idx,1);
+  setPhotos(selKey,arr);
+  renderPhotos();render();
+  if(lbPhotos.length){lbPhotos.splice(idx,1);if(!lbPhotos.length){closeLightbox();}else{lbIdx=Math.min(lbIdx,lbPhotos.length-1);showLb(lbIdx);}}
+}
+let lbPhotos=[],lbIdx=0;
+function openLightbox(photos,idx){lbPhotos=[...photos];lbIdx=idx;showLb(lbIdx);document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');lbPhotos=[];lbIdx=0;}
+function showLb(idx){document.getElementById('lbImg').src=lbPhotos[idx];document.getElementById('lbCounter').textContent=(idx+1)+' / '+lbPhotos.length;}
+function lbNav(dir){lbIdx=(lbIdx+dir+lbPhotos.length)%lbPhotos.length;showLb(lbIdx);}
+function renderPhotos(){
+  const thumbs=document.getElementById('photoThumbs'),countEl=document.getElementById('photoCount');
+  if(!thumbs)return;
+  if(!selKey){thumbs.innerHTML='';if(countEl)countEl.textContent='';return;}
+  const arr=getPhotos(selKey);
+  thumbs.innerHTML='';
+  arr.forEach((b64,i)=>{
+    const wrap=document.createElement('div');wrap.className='photo-thumb-wrap';
+    const img=document.createElement('img');img.className='photo-thumb';img.src=b64;img.onclick=()=>openLightbox(arr,i);
+    const del=document.createElement('button');del.className='photo-del';del.textContent='✕';del.onclick=(ev)=>{ev.stopPropagation();deletePhoto(i);};
+    wrap.appendChild(img);wrap.appendChild(del);thumbs.appendChild(wrap);
+  });
+  if(countEl)countEl.textContent=arr.length?arr.length+' / 20 張':'';
+}
+async function renderCellPhotoMark(){render();}
+// 過月清除圖片
+function cleanOldPhotos(){
   const now=new Date(),ym=now.getFullYear()*100+now.getMonth();
-  let changed=false;
-  for(const k of Object.keys(wS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete wS[k];changed=true;}}
-  for(const k of Object.keys(dS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete dS[k];changed=true;}}
-  for(const k of Object.keys(nS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete nS[k];changed=true;}}
-  if(changed)save();
+  for(const k of Object.keys(localStorage)){
+    if(!k.startsWith(PHOTO_PREFIX))continue;
+    const dateStr=k.slice(PHOTO_PREFIX.length);
+    try{const d=kd(dateStr);if(d.getFullYear()*100+d.getMonth()<ym)localStorage.removeItem(k);}catch(e){}
+  }
+}
+// ── 行程多則 ──
+function renderPlanList(){
+  const ul=document.getElementById('planList');if(!ul)return;
+  const items=selKey?(Array.isArray(pS[selKey])?pS[selKey]:upgradePlan(pS[selKey])):[]; 
+  ul.innerHTML=items.map((it,i)=>`<li class="plan-item${it.done?' done':''}">
+    <input type="checkbox" class="plan-check" ${it.done?'checked':''} onchange="togglePlanItem(${i})">
+    <span class="plan-text">${it.text.replace(/</g,'&lt;')}</span>
+    <button class="plan-del" onclick="deletePlanItem(${i})">✕</button>
+  </li>`).join('');
+}
+function addPlanItem(){
+  if(!selKey)return;
+  const inp=document.getElementById('planAddInput');const v=inp.value.trim();if(!v)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  arr.push({text:v,done:false});
+  pS[selKey]=arr;inp.value='';save();renderPlanList();render();renderRecList();
+}
+function togglePlanItem(idx){
+  if(!selKey)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  arr[idx].done=!arr[idx].done;
+  pS[selKey]=arr;save();renderPlanList();render();
+}
+function deletePlanItem(idx){
+  if(!selKey)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  arr.splice(idx,1);
+  if(arr.length)pS[selKey]=arr;else delete pS[selKey];
+  save();renderPlanList();render();renderRecList();
+}
+function autoClean(){
+  // 換班／備註／行程／同事紀錄全部永久保留，只清過月的舊圖片
+  cleanOldPhotos();
 }
 function save(){
   try{localStorage.setItem('tin_wswaps',JSON.stringify(wS));}catch(e){}
   try{localStorage.setItem('tin_dswaps',JSON.stringify(dS));}catch(e){}
   try{localStorage.setItem('tin_notes',JSON.stringify(nS));}catch(e){}
+  try{localStorage.setItem('tin_plans',JSON.stringify(pS));}catch(e){}
 }
-function getNum(date){return wS[monKey(date)]||nf(ME.w1,wo(date))}
+function exportBackup(){
+  const keys=['tin_wswaps','tin_dswaps','tin_notes','tin_plans','tin_hours','tin_hours_cfg','tin_allow_adj','tin_allow_confirmed'];
+  const data={_version:1,_exported:new Date().toISOString()};
+  keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v;});
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const d=new Date(),ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  a.href=url;a.download='tin_backup_'+ds+'.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function importBackup(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data._version){alert('格式不符，請選擇正確的備份檔');return;}
+      if(!confirm('匯入後將覆蓋目前所有資料，確定繼續？'))return;
+      const keys=['tin_wswaps','tin_dswaps','tin_notes','tin_plans','tin_hours','tin_hours_cfg','tin_allow_adj','tin_allow_confirmed'];
+      keys.forEach(k=>{if(data[k]!==undefined)localStorage.setItem(k,data[k]);else localStorage.removeItem(k);});
+      alert('匯入成功！即將重新載入。');location.reload();
+    }catch(err){alert('匯入失敗：'+err.message);}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+function getNum(date){const v=wS[monKey(date)];if(!v)return nf(ME.w1,wo(date));return typeof v==='object'?v.final:v;}
 function getShift(date){
-  const key=dk(date);
-  if(dS[key])return{s:dS[key],h:HOL[key]||null,dm:true,holD:false};
-  const num=getNum(date),idx=(date.getDay()+6)%7;
-  let s=SCH[num][idx];
-  const h=HOL[key];
-  let holD=false;
-  if(h&&date.getDay()!==0&&date.getDay()!==6){
-    const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3',"D'OFF"];
-    if(mo.includes(s)){s='OFF';}
-    else if(s==='D1'||s==='D2')holD=true;
-  }
+  const key=dk(date);if(dS[key])return{s:dS[key],h:HOL[key]||null,dm:true,holD:false};
+  const num=getNum(date),idx=(date.getDay()+6)%7;let s=SCH[num][idx];const h=HOL[key];let holD=false;
+  if(h&&date.getDay()!==0&&date.getDay()!==6){const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3',"D'OFF"];if(mo.includes(s)){s='OFF';}else if(s==='D1'||s==='D2')holD=true;}
   return{s,h:h||null,dm:false,holD};
 }
 function sc(s,holD){
   if(!s||s==='OFF'||s==='OFF.B'||s==="D'OFF")return'sOFF';
-  if(s.startsWith('12-8'))return's12';
-  if(s.startsWith('E'))return'sE';
-  if(s.startsWith('N'))return'sN';
-  if(holD)return'sDhol';
-  return'sD';
+  if(s.startsWith('12-8'))return's12';if(s.startsWith('E'))return'sE';if(s.startsWith('N'))return'sN';
+  if(holD)return'sDhol';return'sD';
 }
-
-let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();}
-
+let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null,zoneViewAbs=null;
+function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
 function render(){
-  const me=new Date(cy,cm+1,0),totalDays=me.getDate();
+  const totalDays=new Date(cy,cm+1,0).getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
   const gh=document.getElementById('gridHead');gh.innerHTML='';
-  for(const d of['一','二','三','四','五','六','日']){
-    const e=document.createElement('div');e.className='dh';e.textContent=d;gh.appendChild(e);
-  }
+  for(const d of['一','二','三','四','五','六','日']){const e=document.createElement('div');e.className='dh';e.textContent=d;gh.appendChild(e)}
   const g=document.getElementById('grid');g.innerHTML='';
   const fd=new Date(cy,cm,1).getDay(),off=(fd+6)%7;
-  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cell empty';g.appendChild(e);}
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cell empty';const t=document.createElement('div');t.className='top';const b=document.createElement('div');b.className='bot';e.appendChild(t);e.appendChild(b);g.appendChild(e)}
   const tk=dk(new Date());
   for(let day=1;day<=totalDays;day++){
     const date=new Date(cy,cm,day),key=dk(date);
@@ -905,70 +931,101 @@ function render(){
     const cell=document.createElement('div');
     cell.style.cssText='--zc:'+zc;
     let cls='cell';
-    if(key===tk)cls+=' today';
-    if(wS[mk])cls+=' swapped';
-    if(dm)cls+=' day-mod';
-    if(selKey===key)cls+=' selected';
-    if(hasNote)cls+=' has-note';
-    if(isTop)cls+=' z-top';
-    if(isBottom)cls+=' z-bottom';
-    if(isLeft)cls+=' z-left';
-    if(isRight)cls+=' z-right';
-    cell.className=cls;
-    cell.onclick=()=>openPanel(key);
+    if(key===tk)cls+=' today';if(wS[mk])cls+=' swapped';if(dm)cls+=' day-mod';
+    if(selKey===key)cls+=' selected';if(hasNote)cls+=' has-note';
+    if(isTop)cls+=' z-top';if(isBottom)cls+=' z-bottom';if(isLeft)cls+=' z-left';if(isRight)cls+=' z-right';
+    cell.className=cls;cell.dataset.key=key;cell.onclick=()=>showQuickActions(key);
     if(isMon||isFirst){
       const b=document.createElement('div');b.className='badge';b.textContent=origNum;
-      b.onclick=function(e){
-        e.stopPropagation();openPanel(key);switchTab('week');
-        document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
-      };
+      b.onclick=function(e){e.stopPropagation();openWeekSheet(key);};
       cell.appendChild(b);
     }
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
-    if(h){const he=document.createElement('div');he.className='hol-name';he.textContent=h;top.appendChild(he);}
+    if(h){const holDiv=document.createElement('div');holDiv.className='hol-name';holDiv.textContent=h;top.appendChild(holDiv);}
     const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
-    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;
     const he=hD[key];
+    const isDayMod=!!dS[key];
+    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){const _c=sc(s,isHolD);bot.style.color=(_c==='sOFF'||_c==='s12')?'#ffe1a8':'#a83232';bot.style.fontWeight='700';}
     if(he){
-      if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
-      if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
+      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
+      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
+      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
+      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
+      if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
+    if(pS[key]){
+      const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);
+      if(arr.length){
+        const allDone=arr.every(it=>it.done);
+        const pin=document.createElement('div');pin.className='plan-pin';pin.textContent=allDone?'✅':'📌';cell.appendChild(pin);
+      }
+    }
+    // 📷 標記（同步讀 localStorage）
+    if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top='13px';pp.textContent='📷';cell.appendChild(pp);}
     cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
   }
+  // 補滿最後一排
+  const totalCells=off+totalDays,remainder=totalCells%7;
+  if(remainder!==0){const trailing=7-remainder;for(let i=0;i<trailing;i++){const e=document.createElement('div');e.className='cell empty';const t=document.createElement('div');t.className='top';const b=document.createElement('div');b.className='bot';e.appendChild(t);e.appendChild(b);g.appendChild(e);}}
 }
-
-function openPanel(key){
-  selKey=key;
-  const date=kd(key),dow=date.getDay(),isMon=((dow+6)%7)===0;
+function showQuickActions(key){
+  pendingKey=key;
+  const date=kd(key),dow=date.getDay();
+  const{s,h}=getShift(date);
+  document.getElementById('quickDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）'+(h?'　🎌 '+h:'');
+  document.getElementById('quickShift').textContent='目前班別：'+s;
+  document.getElementById('quickOverlay').classList.add('open');
+}
+function closeQuickActions(){
+  document.getElementById('quickOverlay').classList.remove('open');
+  pendingKey=null;
+}
+function quickAction(action){
+  const key=pendingKey;
+  closeQuickActions();
+  if(!key)return;
+  if(action==='week')openWeekSheet(key);
+  else if(action==='day')openDaySheet(key);
+  else if(action==='plan')openPlanSheet(key);
+  else if(action==='hours'){selKey=key;openHoursSheet();}
+}
+function openWeekSheet(key){
+  selKey=key;const date=kd(key),mk=monKey(date);
   const{s:curShift,h}=getShift(date);
-  const mk=monKey(date);
-  document.getElementById('panelTitle').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）';
-  document.getElementById('panelSub').textContent='目前班別：'+curShift;
-  const holEl=document.getElementById('panelHol');
-  if(h){holEl.textContent='🎌 '+h;holEl.style.display='block';}else{holEl.style.display='none';}
-  switchTab(isMon?'week':'day');
-  document.getElementById('numSel').value=wS[mk]||'';
-  document.getElementById('preview').style.display='none';
-  if(wS[mk])renderPreview();
+  document.getElementById('weekDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）'+(h?'　🎌 '+h:'');
+  document.getElementById('weekShift').textContent='目前班別：'+curShift;
+  const wv=wS[mk];const curFinal=wv?(typeof wv==='object'?wv.final:wv):'';
+  document.getElementById('numSel').value=curFinal||'';document.getElementById('preview').style.display='none';
+  if(curFinal)renderPreview();
+  const lastNote=wv&&typeof wv==='object'&&wv.log&&wv.log.length?wv.log[wv.log.length-1].note:'';
+  document.getElementById('weekNote').value=lastNote||(nS[mk]||'');
+  document.getElementById('weekOverlay').classList.add('open');
+}
+function closeWeekSheet(){document.getElementById('weekOverlay').classList.remove('open');}
+function openDaySheet(key){
+  selKey=key;const date=kd(key);
+  const{s:curShift,h}=getShift(date);
+  document.getElementById('dayDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('dayShift').textContent='目前班別：'+curShift;
+  const dayHolEl=document.getElementById('dayHol');
+  if(h){dayHolEl.textContent='🎌 '+h;dayHolEl.style.display='block';}else{dayHolEl.style.display='none';}
   renderShiftBtns(dS[key]||curShift);
-  document.getElementById('weekNote').value=nS[mk]||'';
   document.getElementById('dayNote').value=nS[key]||'';
-  document.getElementById('panel').classList.add('open');
-  updateHoursBtnStyle();
-  render();
-  setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'}),50);
+  document.getElementById('dayOverlay').classList.add('open');
 }
-function switchTab(tab){
-  curTab=tab;
-  document.getElementById('tabWeek').classList.toggle('active',tab==='week');
-  document.getElementById('tabDay').classList.toggle('active',tab==='day');
-  document.getElementById('formWeek').style.display=tab==='week'?'block':'none';
-  document.getElementById('formDay').style.display=tab==='day'?'block':'none';
+function closeDaySheet(){document.getElementById('dayOverlay').classList.remove('open');}
+function openPlanSheet(key){
+  selKey=key;const date=kd(key);
+  const{s:curShift}=getShift(date);
+  document.getElementById('planDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('planShift').textContent='目前班別：'+curShift;
+  renderPlanList();renderPhotos();
+  document.getElementById('planOverlay').classList.add('open');
+  setTimeout(()=>{const inp=document.getElementById('planAddInput');if(inp)inp.focus();},300);
 }
-function renderShiftBtns(cur){
-  document.getElementById('shiftBtns').innerHTML=COMMON.map(s=>'<button class="sb '+sc(s,false)+' '+(s===cur?'active':'')+'" onclick="selectShift(\''+s+'\')">'+s+'</button>').join('');
-}
+function closePlanSheet(){document.getElementById('planOverlay').classList.remove('open');render();}
+function renderShiftBtns(cur){document.getElementById('shiftBtns').innerHTML=COMMON.map(s=>'<button class="sb '+sc(s,false)+' '+(s===cur?'active':'')+'" onclick="selectShift(\''+s+'\')">'+s+'</button>').join('');}
 function selectShift(s){renderShiftBtns(s);}
 function getSelectedShift(){const a=document.querySelector('#shiftBtns .sb.active');return a?a.textContent:'';}
 function renderPreview(){
@@ -979,81 +1036,144 @@ function renderPreview(){
   for(let i=0;i<7;i++){const s=SCH[num][i];h+='<div class="pg-cell '+sc(s,false)+'">'+s+'</div>';}
   pg.innerHTML=h;pv.style.display='block';
 }
-function confirmAction(){
-  if(!selKey)return;
-  const mk=monKey(kd(selKey));
-  if(curTab==='week'){
-    const nv=document.getElementById('numSel').value;
-    if(!nv){alert('請先選擇號碼班');return;}
-    const date=kd(selKey),origNum=nf(ME.w1,wo(date));
-    const note=document.getElementById('weekNote').value.trim();
-    if(parseInt(nv)===origNum){
-      delete wS[mk];delete nS[mk];
-    }else{
-      wS[mk]=parseInt(nv);
-      if(note)nS[mk]=note;else delete nS[mk];
-    }
-  }else{
-    const chosen=getSelectedShift();
-    const date=kd(selKey);
-    const note=document.getElementById('dayNote').value.trim();
-    const savedDS=dS[selKey];delete dS[selKey];
-    const{s:baseShift}=getShift(date);
-    if(savedDS)dS[selKey]=savedDS;
-    if(chosen&&chosen!==baseShift){
-      dS[selKey]=chosen;
-    }else{
-      delete dS[selKey];
-    }
-    if(note)nS[selKey]=note;else delete nS[selKey];
-    if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+function savePlan(){/* 已由 addPlanItem/togglePlanItem/deletePlanItem 取代 */}
+function confirmWeekAction(){
+  if(!selKey)return;const mk=monKey(kd(selKey));
+  const nv=document.getElementById('numSel').value;if(!nv){alert('請先選擇號碼班');return;}
+  const date=kd(selKey),origNum=nf(ME.w1,wo(date)),note=document.getElementById('weekNote').value.trim();
+  const newNum=parseInt(nv);
+  // 讀取現有 log
+  const existing=wS[mk];
+  let log=existing&&typeof existing==='object'&&existing.log?[...existing.log]:[];
+  const prevNum=log.length?log[log.length-1].to:origNum;
+  if(newNum===origNum&&!log.length){delete wS[mk];delete nS[mk];}
+  else if(newNum===prevNum){alert('班別與目前相同，無需換班');return;}
+  else{
+    // 若新 final 等於 origNum 且清空 log → 視為還原
+    if(newNum===origNum){log=[];delete wS[mk];delete nS[mk];}
+    else{log.push({from:prevNum,to:newNum,note});wS[mk]={final:newNum,log};}
   }
-  save();renderRecList();render();refreshAllow();closePanel();
-  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+  save();renderRecList();render();refreshAllow();closeWeekSheet();
 }
-function closePanel(){
-  selKey=null;
-  document.getElementById('panel').classList.remove('open');
-  document.querySelectorAll('.cell.selected').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+function confirmDayAction(){
+  if(!selKey)return;
+  const chosen=getSelectedShift(),date=kd(selKey),note=document.getElementById('dayNote').value.trim();
+  const savedDS=dS[selKey];delete dS[selKey];const{s:baseShift}=getShift(date);if(savedDS)dS[selKey]=savedDS;
+  if(chosen&&chosen!==baseShift){dS[selKey]=chosen;}else{delete dS[selKey];}
+  if(note)nS[selKey]=note;else delete nS[selKey];
+  if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+  save();renderRecList();render();refreshAllow();closeDaySheet();
+}
+function closeAllSheets(){
+  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  selKey=null;pendingKey=null;
 }
 function renderRecList(){
   const el=document.getElementById('recList'),items=[];
   function inViewMonth(date){return date.getFullYear()===cy&&date.getMonth()===cm;}
   Object.keys(wS).sort().forEach(mk=>{
-    const date=kd(mk);
-    if(!inViewMonth(date))return;
+    const date=kd(mk);if(!inViewMonth(date))return;
     const origNum=nf(ME.w1,wo(date));
-    items.push({type:'week',key:mk,desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週：N.'+origNum+' → N.'+wS[mk],note:nS[mk]||''});
-  });
-  Object.keys(dS).sort().forEach(key=>{
-    const date=kd(key);
-    if(!inViewMonth(date))return;
-    if(dS[key])items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key],note:nS[key]||''});
-  });
-  Object.keys(nS).sort().forEach(key=>{
-    if(!wS[key]&&!dS[key]){
-      const date=kd(key);
-      if(!inViewMonth(date))return;
-      items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註',note:nS[key]});
+    const wv=wS[mk];
+    if(typeof wv==='object'&&wv.log&&wv.log.length){
+      wv.log.forEach((entry,idx)=>{
+        const fromLabel='N.'+entry.from,toLabel='N.'+entry.to;
+        const isTail=idx===wv.log.length-1;
+        items.push({type:'week',key:mk,logIdx:idx,isTail,
+          desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週（第'+(idx+1)+'次）：'+fromLabel+' → '+toLabel,
+          note:entry.note||''});
+      });
+    }else{
+      // 舊格式相容
+      const oldNum=typeof wv==='number'?wv:(wv.final||wv);
+      items.push({type:'week',key:mk,logIdx:0,isTail:true,
+        desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週：N.'+origNum+' → N.'+oldNum,
+        note:nS[mk]||''});
     }
   });
-  if(!items.length){el.innerHTML='<li class="empty-msg">尚無換班紀錄</li>';return;}
-  el.innerHTML=items.map(({type,key,desc,note})=>'<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+type+'">'+(type==='week'?'換號碼班':'單日')+'</span><span class="rec-desc">'+desc+'</span><button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button></div>'+(note?'<div class="rec-note">💬 '+note+'</div>':'')+'</li>').join('');
+  Object.keys(dS).sort().forEach(key=>{const date=kd(key);if(!inViewMonth(date))return;if(dS[key])items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key],note:nS[key]||''});});
+  Object.keys(nS).sort().forEach(key=>{if(!wS[key]&&!dS[key]){const date=kd(key);if(!inViewMonth(date))return;items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註',note:nS[key]});}});
+  Object.keys(pS).sort().forEach(key=>{
+    const date=kd(key);if(!inViewMonth(date))return;
+    const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);
+    if(!arr.length)return;
+    const summary=arr.map(it=>(it.done?'✓ ':'')+(it.text||'')).join('、');
+    items.push({type:'plan',key,logIdx:undefined,isTail:true,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）',note:summary});
+  });
+  const icon=document.getElementById('recToggleIcon'),isOpen=document.getElementById('recList').style.display!=='none';
+  if(!items.length){el.innerHTML='<li class="empty-msg">尚無紀錄</li>';if(icon)icon.textContent='展開 ﹀';return;}
+  el.innerHTML=items.map(({type,key,logIdx,isTail,desc,note})=>{
+    var lbl=type==='week'?'換號碼班':(type==='plan'?'📌 行程':'單日');
+    var ic=type==='plan'?'📌':'💬';
+    var delBtn=type==='week'
+      ?'<button class="rec-del" onclick="delRec(\'week\',\''+key+'\','+logIdx+')" title="'+(isTail?'刪除此筆':'刪除此筆及之後所有換班紀錄')+'">✕</button>'
+      :'<button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button>';
+    var tailHint=(!isTail&&type==='week')?'<div class="rec-note" style="color:#c0392b;border-color:#e0b0a8">⚠ 刪此筆將一併清除後續換班紀錄</div>':'';
+    return '<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+type+'">'+lbl+'</span><span class="rec-desc">'+desc+'</span>'+delBtn+'</div>'
+      +tailHint
+      +(note?'<div class="rec-note">'+ic+' '+note+'</div>':'')
+      +'</li>';
+  }).join('');
+  if(icon)icon.textContent=isOpen?'收合 ︿ ('+items.length+')':'展開 ﹀ ('+items.length+')';
 }
-function delRec(type,key){
-  if(type==='week'){delete wS[key];delete nS[key];}else{delete dS[key];delete nS[key];}
+function delRec(type,key,logIdx){
+  if(type==='week'){
+    const wv=wS[key];
+    if(typeof wv==='object'&&wv.log){
+      const newLog=wv.log.slice(0,logIdx);
+      if(!newLog.length){delete wS[key];delete nS[key];}
+      else{wS[key]={final:newLog[newLog.length-1].to,log:newLog};}
+    }else{delete wS[key];delete nS[key];}
+  }else if(type==='plan'){delete pS[key];}
+  else{delete dS[key];delete nS[key];}
   save();renderRecList();render();
 }
-
-// Init number selector
+function toggleRecList(){const el=document.getElementById('recList'),icon=document.getElementById('recToggleIcon'),isOpen=el.style.display!=='none';el.style.display=isOpen?'none':'block';const count=el.querySelectorAll('.rec-item').length;icon.textContent=isOpen?('展開 ﹀'+(count>0?' ('+count+')':'')):'收合 ︿ ('+count+')';}
+// ── 本區間（按4週區間分組，與月曆顯示月份無關） ──
+function prevZoneRec(){zoneViewAbs--;renderZoneRecList();}
+function nextZoneRec(){zoneViewAbs++;renderZoneRecList();}
+function syncZoneToMonth(){zoneViewAbs=absZoneNum(new Date(cy,cm,1));renderZoneRecList();}
+function goTodayZone(){zoneViewAbs=absZoneNum(new Date());renderZoneRecList();}
+function updateZoneTodayBtn(){
+  const btn=document.getElementById('zoneTodayBtn');if(!btn)return;
+  btn.style.display=(zoneViewAbs===absZoneNum(new Date()))?'none':'block';
+}
+function renderZoneRecList(){
+  if(zoneViewAbs===null)zoneViewAbs=absZoneNum(new Date());
+  const start=zoneStart(zoneViewAbs),end=zoneEnd(zoneViewAbs);
+  const rangeEl=document.getElementById('zoneRecRange');
+  if(rangeEl)rangeEl.textContent=(start.getMonth()+1)+'/'+start.getDate()+' － '+(end.getMonth()+1)+'/'+end.getDate();
+  function r2(v){return parseFloat(v.toFixed(2));}
+  let addTotal=0,takeTotal=0;
+  Object.keys(hD).forEach(key=>{
+    const d=kd(key);
+    if(d<start||d>end)return;
+    const e=hD[key];
+    if(e.jiji>0){if(e.jijiDir==='+')addTotal+=e.jiji;else takeTotal+=e.jiji;}
+    if(e.tz)addTotal+=e.tz;
+  });
+  const addEl=document.getElementById('zoneAddVal'),takeEl=document.getElementById('zoneTakeVal');
+  if(addEl)addEl.textContent=r2(addTotal);
+  if(takeEl)takeEl.textContent=r2(takeTotal);
+  updateZoneTodayBtn();
+}
 const sel=document.getElementById('numSel');
-for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
-
-autoClean();renderRecList();render();
+for(let i=1;i<=36;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
+autoClean();renderRecList();render();updateTodayBtn();
 document.getElementById('nianTotalInput').value=nianTotal;
+document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
-refreshBalance();refreshAllow();
+refreshBalance();refreshAllow();renderZoneRecList();
 </script>
+<!-- 燈箱 -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img class="lightbox-img" id="lbImg" src="" alt="">
+  <div class="lightbox-nav">
+    <button class="lb-btn" onclick="lbNav(-1)">‹</button>
+    <span class="lb-counter" id="lbCounter"></span>
+    <button class="lb-btn" onclick="lbNav(1)">›</button>
+  </div>
+</div>
 </body>
 </html>
