@@ -950,13 +950,7 @@ function deletePlanItem(idx){
   save();renderPlanList();render();renderRecList();
 }
 function autoClean(){
-  const now=new Date(),ym=now.getFullYear()*100+now.getMonth();let changed=false;
-  for(const k of Object.keys(wS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete wS[k];changed=true;}}
-  for(const k of Object.keys(dS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete dS[k];changed=true;}}
-  for(const k of Object.keys(nS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete nS[k];changed=true;}}
-  for(const k of Object.keys(pS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete pS[k];changed=true;}}
-  for(const k of Object.keys(oD)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete oD[k];changed=true;}}
-  if(changed)save();
+  // 換班／備註／行程／同事紀錄全部永久保留，只清過月的舊圖片
   cleanOldPhotos();
 }
 function save(){
