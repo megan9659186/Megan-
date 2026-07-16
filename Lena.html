@@ -246,6 +246,22 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .photo-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#c0392b;color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:10}
 .photo-upload-btn{display:flex;align-items:center;gap:6px;padding:9px 14px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'Libre Franklin',sans-serif}
 .photo-count{font-size:11px;color:var(--ink3);margin-top:4px}
+/* 重訓課 */
+.gym-list{list-style:none;margin-bottom:8px}
+.gym-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.gym-item:last-child{border:none}
+.gym-check{width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:var(--pink-deep)}
+.gym-time{font-size:12px;font-weight:600;color:#8a6a58;background:var(--surface2);border-radius:6px;padding:2px 7px;flex-shrink:0}
+.gym-name{flex:1;min-width:0;font-size:14px;color:var(--ink);line-height:1.4;word-break:break-all}
+.gym-item.done .gym-name{opacity:0.4;text-decoration:line-through}
+.gym-dur{font-size:12px;color:var(--ink2);flex-shrink:0;white-space:nowrap}
+.gym-del{background:none;border:none;color:var(--pink-mid);font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
+.gym-add-row{display:flex;gap:6px;margin-top:6px}
+.gym-add-time{flex:0 0 88px;min-width:0;padding:8px 4px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--surface);color:var(--ink);font-family:'Libre Franklin',sans-serif}
+.gym-add-name{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;background:var(--surface);color:var(--ink);font-family:'Libre Franklin',sans-serif}
+.gym-add-dur{flex:0 0 70px;min-width:0;padding:8px 4px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--surface);color:var(--ink);font-family:'Libre Franklin',sans-serif;appearance:none;-webkit-appearance:none}
+.gym-add-btn{flex:0 0 auto;padding:8px 13px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;cursor:pointer;font-family:'Libre Franklin',sans-serif;font-weight:500}
+.rec-tag.gym{background:#fbeae2;color:#a05630}
 /* 燈箱 */
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center;flex-direction:column}
 .lightbox.open{display:flex}
@@ -394,6 +410,28 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
   <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
 </div>
 
+<!-- 重訓課統計 -->
+<div class="allow-wrap">
+  <div class="allow-header">
+    <span class="allow-title">重訓課統計</span>
+    <span class="allow-month-total" id="gymMonthTotal">本月 0 堂</span>
+  </div>
+  <div class="allow-grid">
+    <div class="allow-cell">
+      <div class="allow-cell-label">已上完</div>
+      <div class="allow-cell-val" style="color:#3a7a4a" id="gymDoneVal">0</div>
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">未上</div>
+      <div class="allow-cell-val" style="color:#a05630" id="gymTodoVal">0</div>
+    </div>
+    <div class="allow-cell">
+      <div class="allow-cell-label">總時數</div>
+      <div class="allow-cell-val" id="gymHrsVal">0 hr</div>
+    </div>
+  </div>
+</div>
+
 <!-- 快速選單：點日期後先問要幹嘛 -->
 <div class="quick-overlay" id="quickOverlay" onclick="if(event.target===this)closeQuickActions()">
   <div class="quick-sheet">
@@ -406,6 +444,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <button class="quick-btn" onclick="quickAction('week')"><span class="qi">🔄</span>換號碼班（整週）</button>
       <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
       <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
+      <button class="quick-btn" onclick="quickAction('gym')"><span class="qi">🏋️</span>重訓課（課表／紀錄）</button>
       <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
     </div>
     <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
@@ -479,6 +518,28 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="photo-count" id="photoCount"></div>
       <label class="photo-upload-btn"><span>＋ 選擇圖片</span><input type="file" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)"></label>
       <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closePlanSheet()">完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- 重訓課浮層 -->
+<div class="hours-overlay" id="gymOverlay" onclick="if(event.target===this)closeGymSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="gymDate"></div>
+      <div class="hs-shift" id="gymShift"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">🏋️ 當天課表</div>
+      <ul class="gym-list" id="gymList"></ul>
+      <div class="gym-add-row">
+        <input class="gym-add-time" id="gymAddTime" type="time">
+        <input class="gym-add-name" id="gymAddName" type="text" placeholder="課程／學員…" onkeydown="if(event.key==='Enter')addGymItem()">
+        <select class="gym-add-dur" id="gymAddDur"><option value="30">30分</option><option value="45">45分</option><option value="50">50分</option><option value="60" selected>60分</option><option value="90">90分</option><option value="120">120分</option></select>
+        <button class="gym-add-btn" onclick="addGymItem()">＋</button>
+      </div>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeGymSheet()">完成</button>
     </div>
   </div>
 </div>
@@ -575,6 +636,8 @@ try{const s=localStorage.getItem('lena_dswaps');if(s)dS=JSON.parse(s);}catch(e){
 try{const s=localStorage.getItem('lena_notes');if(s)nS=JSON.parse(s);}catch(e){}
 let pS={};
 try{const s=localStorage.getItem('lena_plans');if(s)pS=JSON.parse(s);}catch(e){}
+let gS={};
+try{const s=localStorage.getItem('lena_gym');if(s)gS=JSON.parse(s);}catch(e){}
 // ── 時數資料 ──
 let hD={};
 let nianTotal=52,yanTotal=0,jijiInit=0;
@@ -849,6 +912,66 @@ function deletePlanItem(idx){
   if(arr.length)pS[selKey]=arr;else delete pS[selKey];
   save();renderPlanList();render();renderRecList();
 }
+// ── 重訓課 ──
+function gymSort(arr){arr.sort((a,b)=>((a.t||'99:99')+'').localeCompare((b.t||'99:99')+''));return arr;}
+function openGymSheet(key){
+  selKey=key;const date=kd(key);
+  const{s}=getShift(date);
+  document.getElementById('gymDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  updateGymShiftLine(s);
+  renderGymList();
+  document.getElementById('gymOverlay').classList.add('open');
+  setTimeout(()=>{const inp=document.getElementById('gymAddName');if(inp)inp.focus();},300);
+}
+function updateGymShiftLine(s){
+  const n=(gS[selKey]||[]).length;
+  document.getElementById('gymShift').textContent='班別：'+s+(n?'　·　重訓課 '+n+' 堂':'');
+}
+function closeGymSheet(){document.getElementById('gymOverlay').classList.remove('open');render();refreshGym();}
+function renderGymList(){
+  const ul=document.getElementById('gymList');if(!ul)return;
+  const items=selKey?(gS[selKey]||[]):[];
+  ul.innerHTML=items.map((it,i)=>`<li class="gym-item${it.done?' done':''}">
+    <input type="checkbox" class="gym-check" ${it.done?'checked':''} onchange="toggleGymItem(${i})">
+    ${it.t?'<span class="gym-time">'+it.t+'</span>':''}
+    <span class="gym-name">${(it.name||'').replace(/</g,'&lt;')}</span>
+    <span class="gym-dur">${it.min}分</span>
+    <button class="gym-del" onclick="deleteGymItem(${i})">✕</button>
+  </li>`).join('');
+}
+function addGymItem(){
+  if(!selKey)return;
+  const tInp=document.getElementById('gymAddTime'),nInp=document.getElementById('gymAddName'),dSel=document.getElementById('gymAddDur');
+  const name=nInp.value.trim();if(!name){nInp.focus();return;}
+  const arr=gS[selKey]?[...gS[selKey]]:[];
+  arr.push({t:tInp.value||'',name,min:parseInt(dSel.value)||60,done:false});
+  gS[selKey]=gymSort(arr);
+  nInp.value='';
+  save();renderGymList();const{s}=getShift(kd(selKey));updateGymShiftLine(s);render();refreshGym();renderRecList();
+}
+function toggleGymItem(idx){
+  if(!selKey||!gS[selKey])return;
+  const arr=[...gS[selKey]];arr[idx].done=!arr[idx].done;gS[selKey]=arr;
+  save();renderGymList();refreshGym();renderRecList();
+}
+function deleteGymItem(idx){
+  if(!selKey||!gS[selKey])return;
+  const arr=[...gS[selKey]];arr.splice(idx,1);
+  if(arr.length)gS[selKey]=arr;else delete gS[selKey];
+  save();renderGymList();const{s}=getShift(kd(selKey));updateGymShiftLine(s);render();refreshGym();renderRecList();
+}
+function refreshGym(){
+  let tot=0,done=0,mins=0;
+  Object.keys(gS).forEach(key=>{
+    const d=kd(key);if(d.getFullYear()!==cy||d.getMonth()!==cm)return;
+    (gS[key]||[]).forEach(it=>{tot++;if(it.done)done++;mins+=(parseInt(it.min)||0);});
+  });
+  const tEl=document.getElementById('gymMonthTotal'),dEl=document.getElementById('gymDoneVal'),uEl=document.getElementById('gymTodoVal'),hEl=document.getElementById('gymHrsVal');
+  if(tEl)tEl.textContent='本月 '+tot+' 堂';
+  if(dEl)dEl.textContent=done;
+  if(uEl)uEl.textContent=tot-done;
+  if(hEl)hEl.textContent=fmtH(mins/60)+' hr';
+}
 function autoClean(){
   // 僅清除上個月以前的圖片；換班、備註、行程、時數紀錄永久保留
   cleanOldPhotos();
@@ -858,6 +981,7 @@ function save(){
   try{localStorage.setItem('lena_dswaps',JSON.stringify(dS));}catch(e){}
   try{localStorage.setItem('lena_notes',JSON.stringify(nS));}catch(e){}
   try{localStorage.setItem('lena_plans',JSON.stringify(pS));}catch(e){}
+  try{localStorage.setItem('lena_gym',JSON.stringify(gS));}catch(e){}
 }
 function getNum(date){const v=wS[monKey(date)];if(!v)return nf(ME.w1,wo(date));return typeof v==='object'?v.final:v;}
 function getShift(date){
@@ -872,10 +996,10 @@ function sc(s,holD){
   if(holD)return'sDhol';return'sD';
 }
 let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null,zoneViewAbs=null;
-function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();refreshGym();updateTodayBtn();syncZoneToMonth();}
 function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();refreshGym();updateTodayBtn();syncZoneToMonth();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();refreshGym();updateTodayBtn();syncZoneToMonth();}
 function render(){
   const totalDays=new Date(cy,cm+1,0).getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
@@ -924,15 +1048,18 @@ function render(){
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋8';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
+    let pinTop=1;
     if(pS[key]){
       const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);
       if(arr.length){
         const allDone=arr.every(it=>it.done);
-        const pin=document.createElement('div');pin.className='plan-pin';pin.textContent=allDone?'✅':'📌';cell.appendChild(pin);
+        const pin=document.createElement('div');pin.className='plan-pin';pin.textContent=allDone?'✅':'📌';cell.appendChild(pin);pinTop+=12;
       }
     }
     // 📷 標記（同步讀 localStorage）
-    if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top='13px';pp.textContent='📷';cell.appendChild(pp);}
+    if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top=pinTop+'px';pp.textContent='📷';cell.appendChild(pp);pinTop+=12;}
+    // 🏋️ 重訓課標記
+    if(gS[key]&&gS[key].length){const gp=document.createElement('div');gp.className='plan-pin';gp.style.top=pinTop+'px';gp.textContent='🏋️';cell.appendChild(gp);}
     cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
   }
   // 補滿最後一排
@@ -958,6 +1085,7 @@ function quickAction(action){
   if(action==='week')openWeekSheet(key);
   else if(action==='day')openDaySheet(key);
   else if(action==='plan')openPlanSheet(key);
+  else if(action==='gym')openGymSheet(key);
   else if(action==='hours'){selKey=key;openHoursSheet();}
 }
 function openWeekSheet(key){
@@ -1035,7 +1163,7 @@ function confirmDayAction(){
   save();renderRecList();render();refreshAllow();closeDaySheet();
 }
 function closeAllSheets(){
-  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  ['weekOverlay','dayOverlay','planOverlay','gymOverlay','hoursOverlay','quickOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
   selKey=null;pendingKey=null;
 }
 function renderRecList(){
@@ -1070,11 +1198,17 @@ function renderRecList(){
     const summary=arr.map(it=>(it.done?'✓ ':'')+(it.text||'')).join('、');
     items.push({type:'plan',key,logIdx:undefined,isTail:true,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）',note:summary});
   });
+  Object.keys(gS).sort().forEach(key=>{
+    const date=kd(key);if(!inViewMonth(date))return;
+    const arr=gS[key]||[];if(!arr.length)return;
+    const summary=arr.map(it=>(it.done?'✓ ':'')+(it.t?it.t+' ':'')+(it.name||'')+' '+it.min+'分').join('、');
+    items.push({type:'gym',key,logIdx:undefined,isTail:true,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）',note:summary});
+  });
   const icon=document.getElementById('recToggleIcon'),isOpen=document.getElementById('recList').style.display!=='none';
   if(!items.length){el.innerHTML='<li class="empty-msg">尚無紀錄</li>';if(icon)icon.textContent='展開 ﹀';return;}
   el.innerHTML=items.map(({type,key,logIdx,isTail,desc,note})=>{
-    var lbl=type==='week'?'換號碼班':(type==='plan'?'📌 行程':'單日');
-    var ic=type==='plan'?'📌':'💬';
+    var lbl=type==='week'?'換號碼班':(type==='plan'?'📌 行程':(type==='gym'?'🏋️ 課':'單日'));
+    var ic=type==='plan'?'📌':(type==='gym'?'🏋️':'💬');
     var delBtn=type==='week'
       ?'<button class="rec-del" onclick="delRec(\'week\',\''+key+'\','+logIdx+')" title="'+(isTail?'刪除此筆':'刪除此筆及之後所有換班紀錄')+'">✕</button>'
       :'<button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button>';
@@ -1095,6 +1229,7 @@ function delRec(type,key,logIdx){
       else{wS[key]={final:newLog[newLog.length-1].to,log:newLog};}
     }else{delete wS[key];delete nS[key];}
   }else if(type==='plan'){delete pS[key];}
+  else if(type==='gym'){delete gS[key];}
   else{delete dS[key];delete nS[key];}
   save();renderRecList();render();
 }
@@ -1133,7 +1268,7 @@ autoClean();renderRecList();render();updateTodayBtn();
 document.getElementById('nianTotalInput').value=nianTotal;
 document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
-refreshBalance();refreshAllow();renderZoneRecList();
+refreshBalance();refreshAllow();refreshGym();renderZoneRecList();
 </script>
 <!-- 燈箱 -->
 <div class="lightbox" id="lightbox">
