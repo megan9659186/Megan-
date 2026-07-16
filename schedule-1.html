@@ -216,6 +216,10 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .allow12-toggle{width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
 .allow12-label{font-size:13px;font-weight:500;color:#1a4a2a;flex:1;cursor:pointer}
 .allow12-row.no-allow .allow12-label{color:var(--red)}
+/* 天災假 */
+.tz-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#fdf6e8;border:1px solid #e0cc90}
+.tz-label{color:#8a6800!important}
+.hb-tz{background:#fdeebc;color:#7a5a00}
 /* 追蹤同事班別 */
 .other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
 .other-row.show{display:flex}
@@ -413,10 +417,11 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="allow-cell-label">D班加班 $270</div>
       <div class="allow-cell-val" id="allowDotVal">$0</div>
       <div class="allow-cell-count" id="allowDotCount">0 班</div>
+      <input class="allow-manual" id="allowDotAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
       <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
-  <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270</div>
+  <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
 </div>
 
 <!-- 快速選單：點日期後先問要幹嘛 -->
@@ -561,6 +566,11 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
           </div>
         </div>
       </div>
+      <!-- 天災假出勤 -->
+      <div class="tz-row">
+        <input type="checkbox" class="allow12-toggle" id="tzCheck">
+        <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤（積休 ＋8 hr，不計加班費）</label>
+      </div>
       <!-- 12-8 津貼勾選 -->
       <div class="allow12-row" id="allow12Row">
         <input type="checkbox" class="allow12-toggle" id="allow12Check" checked onchange="updateAllow12Style()">
@@ -687,7 +697,7 @@ function saveSettings(){
   try{localStorage.setItem('megan_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
   refreshBalance();
 }
-function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);}return bal;}
+function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;}return bal;}
 function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
 function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
 function refreshBalance(){
@@ -714,6 +724,7 @@ function openHoursSheet(){
   setHM('jiji',e.jiji);
   setHM('nian',e.nian);
   setHM('yan',e.yan);
+  document.getElementById('tzCheck').checked=!!e.tz;
   updateHDir('jiji');
   const is128=s.startsWith('12-8');
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
@@ -741,20 +752,24 @@ function updateAllow12Style(){
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   setHM('jiji',0);setHM('nian',0);setHM('yan',0);
+  document.getElementById('tzCheck').checked=false;
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
+  const tz=document.getElementById('tzCheck').checked;
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   const prev=hD[selKey]||{};
-  if(jh===0&&nh===0&&yh===0&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  if(jh===0&&nh===0&&yh===0&&!tz&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{
     const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(tz)entry.tz=8;
     if(is128)entry.allow12=allow12Check.checked;
     if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
     if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
     if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
+    if(prev.tz===8&&tz&&prev.tzConfirmed)entry.tzConfirmed=true;
     hD[selKey]=entry;
   }
   saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
@@ -788,8 +803,9 @@ function saveAllowAdj(){
   const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
   const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
   const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
-  if(a12===0&&aE===0&&aN===0)delete allowAdj[ym];
-  else allowAdj[ym]={a12,aE,aN};
+  const aDot=parseFloat(document.getElementById('allowDotAdj').value)||0;
+  if(a12===0&&aE===0&&aN===0&&aDot===0)delete allowAdj[ym];
+  else allowAdj[ym]={a12,aE,aN,aDot};
   try{localStorage.setItem('megan_allow_adj',JSON.stringify(allowAdj));}catch(e){}
   refreshAllow();
 }
@@ -809,15 +825,15 @@ function calcAllow(){
 function refreshAllow(){
   const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
   const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
-  const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0;
-  const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270,total=a12+aE+aN+aDot;
+  const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0,adjDot=adj.aDot||0;
+  const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270+adjDot,total=a12+aE+aN+aDot;
   const labelE='E 班 $'+(cE>=15?'660（包班）':'560')+(cE>=15?' ✓':'');
   const labelN='N 班 $'+(cN>=15?'940（包班）':'770')+(cN>=15?' ✓':'');
   document.getElementById('allow12Val').textContent='$'+a12;document.getElementById('allow12Count').textContent=c12+' 班';
   document.getElementById('allowEVal').textContent='$'+aE;document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
   document.getElementById('allowNVal').textContent='$'+aN;document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
   document.getElementById('allowDotVal').textContent='$'+aDot;document.getElementById('allowDotCount').textContent=cDot+' 班';
-  document.getElementById('allow12Adj').value=adj12||'';document.getElementById('allowEAdj').value=adjE||'';document.getElementById('allowNAdj').value=adjN||'';
+  document.getElementById('allow12Adj').value=adj12||'';document.getElementById('allowEAdj').value=adjE||'';document.getElementById('allowNAdj').value=adjN||'';document.getElementById('allowDotAdj').value=adjDot||'';
   document.getElementById('allowTotal').textContent='本月 $'+total;
   renderAllowConfirmPill('allow12ConfirmPill','a12',a12);
   renderAllowConfirmPill('allowEConfirmPill','aE',aE);
@@ -1040,6 +1056,7 @@ function render(){
       if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
+      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';bot.appendChild(b);}
@@ -1246,6 +1263,7 @@ function renderZoneRecList(){
     if(d<start||d>end)return;
     const e=hD[key];
     if(e.jiji>0){if(e.jijiDir==='+')addTotal+=e.jiji;else takeTotal+=e.jiji;}
+    if(e.tz)addTotal+=e.tz;
   });
   const addEl=document.getElementById('zoneAddVal'),takeEl=document.getElementById('zoneTakeVal');
   if(addEl)addEl.textContent=r2(addTotal);
