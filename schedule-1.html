@@ -220,6 +220,10 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .tz-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#fdf6e8;border:1px solid #e0cc90}
 .tz-label{color:#8a6800!important}
 .hb-tz{background:#fdeebc;color:#7a5a00}
+/* 週末國定假日補時數 */
+.hw-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#faf0ee;border:1px solid #e0c8c4}
+.hw-label{color:#7a2018!important}
+.hb-hw{background:#f5d5c8;color:#7a2018}
 /* 追蹤同事班別 */
 .other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
 .other-row.show{display:flex}
@@ -571,6 +575,11 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
         <input type="checkbox" class="allow12-toggle" id="tzCheck">
         <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤（積休 ＋8 hr，不計加班費）</label>
       </div>
+      <!-- 週末國定假日補時數（僅六日假日顯示） -->
+      <div class="hw-row" id="hwRow">
+        <input type="checkbox" class="allow12-toggle" id="hwCheck">
+        <label class="allow12-label hw-label" for="hwCheck" id="hwCheckLabel">🎌 國定假日補時數（積休 ＋8 hr）</label>
+      </div>
       <!-- 12-8 津貼勾選 -->
       <div class="allow12-row" id="allow12Row">
         <input type="checkbox" class="allow12-toggle" id="allow12Check" checked onchange="updateAllow12Style()">
@@ -697,7 +706,7 @@ function saveSettings(){
   try{localStorage.setItem('megan_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
   refreshBalance();
 }
-function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;}return bal;}
+function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;if(e.hw)bal+=e.hw;}return bal;}
 function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
 function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
 function refreshBalance(){
@@ -725,6 +734,8 @@ function openHoursSheet(){
   setHM('nian',e.nian);
   setHM('yan',e.yan);
   document.getElementById('tzCheck').checked=!!e.tz;
+  // 國定假日補時數：跟天災假一樣永遠顯示，手動勾選
+  document.getElementById('hwCheck').checked=!!e.hw;
   updateHDir('jiji');
   const is128=s.startsWith('12-8');
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
@@ -753,23 +764,27 @@ function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   setHM('jiji',0);setHM('nian',0);setHM('yan',0);
   document.getElementById('tzCheck').checked=false;
+  document.getElementById('hwCheck').checked=false;
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
   const tz=document.getElementById('tzCheck').checked;
+  const hw=document.getElementById('hwCheck').checked;
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   const prev=hD[selKey]||{};
-  if(jh===0&&nh===0&&yh===0&&!tz&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  if(jh===0&&nh===0&&yh===0&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{
     const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
     if(tz)entry.tz=8;
+    if(hw)entry.hw=8;
     if(is128)entry.allow12=allow12Check.checked;
     if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
     if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
     if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
     if(prev.tz===8&&tz&&prev.tzConfirmed)entry.tzConfirmed=true;
+    if(prev.hw===8&&hw&&prev.hwConfirmed)entry.hwConfirmed=true;
     hD[selKey]=entry;
   }
   saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
@@ -1051,6 +1066,7 @@ function render(){
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
+      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'假＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';bot.appendChild(b);}
@@ -1258,6 +1274,7 @@ function renderZoneRecList(){
     const e=hD[key];
     if(e.jiji>0){if(e.jijiDir==='+')addTotal+=e.jiji;else takeTotal+=e.jiji;}
     if(e.tz)addTotal+=e.tz;
+    if(e.hw)addTotal+=e.hw;
   });
   const addEl=document.getElementById('zoneAddVal'),takeEl=document.getElementById('zoneTakeVal');
   if(addEl)addEl.textContent=r2(addTotal);
