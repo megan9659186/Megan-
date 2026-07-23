@@ -186,12 +186,15 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-row-label.j{color:#4a7a5a}
 .hs-row-label.n{color:#6a5a90}
 .hs-row-label.y{color:#8a6800}
+.hs-row-label.s{color:#5a4a78}
 .hs-selwrap{display:flex;gap:6px;flex:1}
 .hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hdir.ot{border-color:#c8a860;color:#6a4800;background:#fdf5e0}
 .hdir.jm{border-color:#d0a8a0;color:#7a2018;background:#faf0ee}
 .hdir.nm{border-color:#d0a8a0;color:#7a2018;background:#faf0ee}
 .hdir.ym{border-color:#e0cc90;color:#8a6800;background:#fdf6e0}
+.hhrs.sk{border-color:#c0b4d4;color:#463265;background:#f4f0fa;font-weight:500}
+.hhrs.sk.none{border-color:var(--border2);color:var(--ink3);background:var(--surface);font-weight:400}
 .hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hs-btns{display:flex;gap:8px;margin-top:6px}
 .hs-btn-clear{padding:11px 14px;border:1px solid #e0c8c4;border-radius:var(--radius-sm);background:#faf0ee;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
@@ -224,6 +227,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hw-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#faf0ee;border:1px solid #e0c8c4}
 .hw-label{color:#7a2018!important}
 .hb-hw{background:#f5d5c8;color:#7a2018}
+.hb-sick{background:#e2dcec;color:#463265}
 /* 追蹤同事班別 */
 .other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
 .other-row.show{display:flex}
@@ -579,6 +583,16 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
           </div>
         </div>
       </div>
+      <div class="hs-row">
+        <span class="hs-row-label s">事病</span>
+        <div class="hs-selwrap">
+          <select class="hhrs sk none" id="sickType" onchange="updateSickStyle()">
+            <option value="">無</option>
+            <option value="事">事假（整天）</option>
+            <option value="病">病假（整天）</option>
+          </select>
+        </div>
+      </div>
       <!-- 天災假出勤 -->
       <div class="tz-row">
         <input type="checkbox" class="allow12-toggle" id="tzCheck">
@@ -742,6 +756,8 @@ function openHoursSheet(){
   setHM('jiji',e.jiji);
   setHM('nian',e.nian);
   setHM('yan',e.yan);
+  document.getElementById('sickType').value=(typeof e.sick==='string'?e.sick:'');
+  updateSickStyle();
   document.getElementById('tzCheck').checked=!!e.tz;
   // 國定假日補時數：跟天災假一樣永遠顯示，手動勾選
   document.getElementById('hwCheck').checked=!!e.hw;
@@ -764,6 +780,10 @@ function setHM(type,v){
 }
 function getHoursVal(type){const h=parseFloat(document.getElementById(type+'Hrs').value)||0;const m=parseFloat(document.getElementById(type+'Min').value)||0;return h+m/60;}
 function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
+function updateSickStyle(){
+  const sel=document.getElementById('sickType');if(!sel)return;
+  sel.classList.toggle('none',!sel.value);
+}
 function updateAllow12Style(){
   const check=document.getElementById('allow12Check'),row=document.getElementById('allow12Row'),label=document.getElementById('allow12CheckLabel');
   if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
@@ -772,6 +792,7 @@ function updateAllow12Style(){
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   setHM('jiji',0);setHM('nian',0);setHM('yan',0);
+  document.getElementById('sickType').value='';updateSickStyle();
   document.getElementById('tzCheck').checked=false;
   document.getElementById('hwCheck').checked=false;
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
@@ -779,13 +800,15 @@ function clearHoursForm(){
 function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
+  const sk=document.getElementById('sickType').value;
   const tz=document.getElementById('tzCheck').checked;
   const hw=document.getElementById('hwCheck').checked;
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   const prev=hD[selKey]||{};
-  if(jh===0&&nh===0&&yh===0&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  if(jh===0&&nh===0&&yh===0&&!sk&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{
     const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(sk)entry.sick=sk;
     if(tz)entry.tz=8;
     if(hw)entry.hw=8;
     if(is128)entry.allow12=allow12Check.checked;
@@ -1109,6 +1132,7 @@ function render(){
       if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';bot.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
       if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'假＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
