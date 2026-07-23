@@ -288,6 +288,11 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 .allow-cell-label{font-size:12px;color:var(--ink3);margin-bottom:4px;letter-spacing:0.3px}
 .allow-cell-val{font-family:'Libre Baskerville',serif;font-size:19px;font-weight:400;color:var(--ink)}
 .allow-cell-count{font-size:12px;color:var(--ink3);margin-top:1px}
+.allow-cell-count.manual{color:#8a6800;cursor:pointer;font-weight:600}
+.allow-cnt-row{display:flex;align-items:center;gap:4px;margin-top:5px}
+.allow-cnt{flex:1;min-width:0;padding:4px 6px;border:1px solid var(--border2);border-radius:5px;font-size:13px;font-weight:600;text-align:center;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
+.allow-cnt.manual{border-color:#c8a860;background:#fdf5e0;color:#6a4800}
+.allow-cnt-unit{font-size:11px;color:var(--ink3);flex-shrink:0}
 .allow-confirm{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:99px;border:1px dashed var(--border2);color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif}
 .allow-confirm:active{opacity:0.6}
 .allow-confirm.confirmed{border:1px solid #4a7a90;background:#eaf2f5;color:#2a5a70;font-weight:600}
@@ -399,33 +404,37 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     <div class="allow-cell">
       <div class="allow-cell-label">12-8 班 $270</div>
       <div class="allow-cell-val" id="allow12Val">$0</div>
-      <div class="allow-cell-count" id="allow12Count">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allow12Cnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allow12Count" onclick="resetAllowCnt('12')">0 班</div>
       <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
       <div class="allow-confirm hidden" id="allow12ConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">E 班 $560／包班 $660</div>
       <div class="allow-cell-val" id="allowEVal">$0</div>
-      <div class="allow-cell-count" id="allowECount">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allowECnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allowECount" onclick="resetAllowCnt('E')">0 班</div>
       <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
       <div class="allow-confirm hidden" id="allowEConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">N 班 $770／包班 $940</div>
       <div class="allow-cell-val" id="allowNVal">$0</div>
-      <div class="allow-cell-count" id="allowNCount">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allowNCnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allowNCount" onclick="resetAllowCnt('N')">0 班</div>
       <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
       <div class="allow-confirm hidden" id="allowNConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">D班加班 $270</div>
       <div class="allow-cell-val" id="allowDotVal">$0</div>
-      <div class="allow-cell-count" id="allowDotCount">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allowDotCnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allowDotCount" onclick="resetAllowCnt('Dot')">0 班</div>
       <input class="allow-manual" id="allowDotAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
       <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
-  <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
+  <div class="allow-note" id="allowNote">＊ 班數依當月班別自動帶入，可直接於欄位改成實際班數（點下方「↺ 還原」回自動值）；D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
 </div>
 
 <!-- 快速選單：點日期後先問要幹嘛 -->
@@ -813,14 +822,34 @@ function renderAllowConfirmPill(elId,type,amt){
   el.classList.toggle('confirmed',isConfirmed);
   el.onclick=function(){toggleAllowConfirm(type,amt);};
 }
+function readAllowMoney(id){
+  const el=document.getElementById(id);if(!el)return 0;
+  const v=(el.value||'').trim();if(v==='')return 0;
+  const n=parseFloat(v);return isNaN(n)?0:n;
+}
+function readAllowCnt(id,autoV){
+  const el=document.getElementById(id);if(!el)return undefined;
+  const v=(el.value||'').trim();if(v==='')return undefined;
+  let n=parseInt(v,10);if(isNaN(n)||n<0)return undefined;
+  return n===autoV?undefined:n;
+}
 function saveAllowAdj(){
-  const ym=cy*100+(cm+1);
-  const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
-  const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
-  const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
-  const aDot=parseFloat(document.getElementById('allowDotAdj').value)||0;
-  if(a12===0&&aE===0&&aN===0&&aDot===0)delete allowAdj[ym];
-  else allowAdj[ym]={a12,aE,aN,aDot};
+  const ym=cy*100+(cm+1),auto=calcAllow();
+  const a12=readAllowMoney('allow12Adj'),aE=readAllowMoney('allowEAdj'),aN=readAllowMoney('allowNAdj'),aDot=readAllowMoney('allowDotAdj');
+  const n12=readAllowCnt('allow12Cnt',auto.c12),nE=readAllowCnt('allowECnt',auto.cE),nN=readAllowCnt('allowNCnt',auto.cN),nDot=readAllowCnt('allowDotCnt',auto.cDot);
+  const rec={};
+  if(a12)rec.a12=a12;if(aE)rec.aE=aE;if(aN)rec.aN=aN;if(aDot)rec.aDot=aDot;
+  if(n12!==undefined)rec.n12=n12;if(nE!==undefined)rec.nE=nE;if(nN!==undefined)rec.nN=nN;if(nDot!==undefined)rec.nDot=nDot;
+  if(Object.keys(rec).length)allowAdj[ym]=rec;else delete allowAdj[ym];
+  try{localStorage.setItem('megan_allow_adj',JSON.stringify(allowAdj));}catch(e){}
+  refreshAllow();
+}
+function resetAllowCnt(k){
+  const ym=cy*100+(cm+1),rec=allowAdj[ym];
+  const f={'12':'n12','E':'nE','N':'nN','Dot':'nDot'}[k];
+  if(!rec||rec[f]===undefined)return;
+  delete rec[f];
+  if(Object.keys(rec).length)allowAdj[ym]=rec;else delete allowAdj[ym];
   try{localStorage.setItem('megan_allow_adj',JSON.stringify(allowAdj));}catch(e){}
   refreshAllow();
 }
@@ -834,20 +863,35 @@ function calcAllow(){
     else if(s.startsWith('N'))cN++;
     if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){const he=hD[key];if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;}
   }
-  const rateE=cE>=15?660:560,rateN=cN>=15?940:770;
-  return{c12,cE,cN,cDot,rateE,rateN};
+  return{c12,cE,cN,cDot};
+}
+function setAllowCntBox(inputId,countId,val,autoVal,isManual,extra){
+  const inp=document.getElementById(inputId);
+  if(inp){inp.value=val;inp.classList.toggle('manual',isManual);}
+  const cnt=document.getElementById(countId);
+  if(cnt){
+    cnt.textContent='自動 '+autoVal+' 班'+(extra||'')+(isManual?'　↺ 還原':'');
+    cnt.classList.toggle('manual',isManual);
+  }
 }
 function refreshAllow(){
-  const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
+  const auto=calcAllow();
   const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
+  const m12=adj.n12!==undefined,mE=adj.nE!==undefined,mN=adj.nN!==undefined,mDot=adj.nDot!==undefined;
+  const c12=m12?adj.n12:auto.c12,cE=mE?adj.nE:auto.cE,cN=mN?adj.nN:auto.cN,cDot=mDot?adj.nDot:auto.cDot;
+  const rateE=cE>=15?660:560,rateN=cN>=15?940:770;
   const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0,adjDot=adj.aDot||0;
   const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270+adjDot,total=a12+aE+aN+aDot;
-  const labelE='E 班 $'+(cE>=15?'660（包班）':'560')+(cE>=15?' ✓':'');
-  const labelN='N 班 $'+(cN>=15?'940（包班）':'770')+(cN>=15?' ✓':'');
-  document.getElementById('allow12Val').textContent='$'+a12;document.getElementById('allow12Count').textContent=c12+' 班';
-  document.getElementById('allowEVal').textContent='$'+aE;document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
-  document.getElementById('allowNVal').textContent='$'+aN;document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
-  document.getElementById('allowDotVal').textContent='$'+aDot;document.getElementById('allowDotCount').textContent=cDot+' 班';
+  const labelE='　$'+(cE>=15?'660（包班）✓':'560');
+  const labelN='　$'+(cN>=15?'940（包班）✓':'770');
+  document.getElementById('allow12Val').textContent='$'+a12;
+  document.getElementById('allowEVal').textContent='$'+aE;
+  document.getElementById('allowNVal').textContent='$'+aN;
+  document.getElementById('allowDotVal').textContent='$'+aDot;
+  setAllowCntBox('allow12Cnt','allow12Count',c12,auto.c12,m12,'');
+  setAllowCntBox('allowECnt','allowECount',cE,auto.cE,mE,labelE);
+  setAllowCntBox('allowNCnt','allowNCount',cN,auto.cN,mN,labelN);
+  setAllowCntBox('allowDotCnt','allowDotCount',cDot,auto.cDot,mDot,'');
   document.getElementById('allow12Adj').value=adj12||'';document.getElementById('allowEAdj').value=adjE||'';document.getElementById('allowNAdj').value=adjN||'';document.getElementById('allowDotAdj').value=adjDot||'';
   document.getElementById('allowTotal').textContent='本月 $'+total;
   renderAllowConfirmPill('allow12ConfirmPill','a12',a12);
