@@ -55,11 +55,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-left{border-left:2px solid var(--zc)!important}
 .cell.z-right{border-right:2px solid var(--zc)!important}
 .badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--ink);color:var(--gold-pale);border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
-.top{background:transparent;flex:0 0 46%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:6px}
+.top{background:transparent;flex:0 0 38%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
 .hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
 .dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
-.bot{flex:0 0 54%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+.bot{flex:0 0 62%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
 .sD{background:#f0e0bc;color:#2a2018}
 .sDhol{background:#c87832;color:#fff8ee}
 .sE{background:#b89468;color:#2a2018}
@@ -156,6 +156,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hb-y-m{background:#5a3a18;color:#e8c888}
 .hb-tz{background:#7a5000;color:#f5edd0}
 .hb-hw{background:#a03020;color:#f5e6e0}
+.hb-sick{background:#8a7a5a;color:#f5ecd8}
 .hbadge.tappable{cursor:pointer}
 .hbadge.tappable:active{opacity:0.6}
 .hbadge.confirmed{box-shadow:inset 0 0 0 1px var(--gold);font-weight:700}
@@ -175,6 +176,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-row-label.j{color:#8a6a4a}
 .hs-row-label.n{color:#6a4e30}
 .hs-row-label.y{color:#a07030}
+.hs-row-label.s{color:#7a6840}
 .hs-selwrap{display:flex;gap:6px;flex:1}
 .hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hdir.ot{border-color:var(--gold);color:#6a3800;background:#fdf0d0}
@@ -182,6 +184,8 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hdir.nm{border-color:#b89468;color:#5a3800;background:#f4e8d0}
 .hdir.ym{border-color:#c8a040;color:#7a5000;background:#f5edd0}
 .hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hhrs.sk{border-color:#b8a878;color:#5a4a20;background:#f5efdc;font-weight:500}
+.hhrs.sk.none{border-color:var(--border2);color:var(--ink3);background:var(--surface);font-weight:400}
 .hs-btns{display:flex;gap:8px;margin-top:6px}
 .hs-btn-clear{padding:11px 14px;border:1px solid #d0a888;border-radius:var(--radius-sm);background:#f8e8d8;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .hs-btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
@@ -524,6 +528,16 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
           </div>
         </div>
       </div>
+      <div class="hs-row">
+        <span class="hs-row-label s">事病</span>
+        <div class="hs-selwrap">
+          <select class="hhrs sk none" id="sickType" onchange="updateSickStyle()">
+            <option value="">無</option>
+            <option value="事">事假</option>
+            <option value="病">病假</option>
+          </select>
+        </div>
+      </div>
       <!-- 天災假出勤 -->
       <div class="tz-row">
         <input type="checkbox" class="allow12-toggle" id="tzCheck">
@@ -624,6 +638,8 @@ function openHoursSheet(){
   setHM('jiji',e.jiji);
   setHM('nian',e.nian);
   setHM('yan',e.yan);
+  document.getElementById('sickType').value=(typeof e.sick==='string'?e.sick:'');
+  updateSickStyle();
   document.getElementById('tzCheck').checked=!!e.tz;
   // 國定假日補時數：跟天災假一樣永遠顯示，手動勾選
   document.getElementById('hwCheck').checked=!!e.hw;
@@ -646,6 +662,10 @@ function setHM(type,v){
 }
 function getHoursVal(type){const h=parseFloat(document.getElementById(type+'Hrs').value)||0;const m=parseFloat(document.getElementById(type+'Min').value)||0;return h+m/60;}
 function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
+function updateSickStyle(){
+  const sel=document.getElementById('sickType');if(!sel)return;
+  sel.classList.toggle('none',!sel.value);
+}
 function updateAllow12Style(){
   const check=document.getElementById('allow12Check'),row=document.getElementById('allow12Row'),label=document.getElementById('allow12CheckLabel');
   if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
@@ -654,6 +674,7 @@ function updateAllow12Style(){
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   setHM('jiji',0);setHM('nian',0);setHM('yan',0);
+  document.getElementById('sickType').value='';updateSickStyle();
   document.getElementById('tzCheck').checked=false;
   document.getElementById('hwCheck').checked=false;
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
@@ -661,13 +682,15 @@ function clearHoursForm(){
 function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
+  const sk=document.getElementById('sickType').value;
   const tz=document.getElementById('tzCheck').checked;
   const hw=document.getElementById('hwCheck').checked;
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   const prev=hD[selKey]||{};
-  if(jh===0&&nh===0&&yh===0&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  if(jh===0&&nh===0&&yh===0&&!sk&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{
     const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(sk)entry.sick=sk;
     if(tz)entry.tz=8;
     if(hw)entry.hw=8;
     if(is128)entry.allow12=allow12Check.checked;
@@ -989,6 +1012,7 @@ function render(){
       if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';bot.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
       if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'假＋'+fmtH(he.hw);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
