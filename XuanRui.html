@@ -58,11 +58,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-right{border-right:2px solid var(--zc)!important}
 /* BADGE */
 .badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
-.top{background:transparent;flex:0 0 38%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
+.top{background:transparent;flex:0 0 auto;min-height:30px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
 .hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
 .dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
-.bot{flex:0 0 62%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px;letter-spacing:0.2px}
+.bot{flex:1 1 auto;min-height:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px 3px;letter-spacing:0.2px}
 /* SHIFT COLOURS */
 .sD{background:#e5eaef;color:#2b3a47}
 .sDhol{background:#adbecc;color:#17242f}
@@ -183,15 +183,18 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-body{padding:16px 18px 18px}
 .hs-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .hs-row-label{font-size:12px;font-weight:600;width:28px;flex-shrink:0;letter-spacing:0.3px;text-transform:uppercase}
-.hs-row-label.j{color:#4a7a5a}
-.hs-row-label.n{color:#6a5a90}
-.hs-row-label.y{color:#8a6800}
+.hs-row-label.j{color:#3a6a86}
+.hs-row-label.n{color:#5a5f8e}
+.hs-row-label.y{color:#84681c}
+.hs-row-label.s{color:#54487a}
 .hs-selwrap{display:flex;gap:6px;flex:1}
 .hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hdir.ot{border-color:#c0a860;color:#6a5200;background:#faf3e0}
 .hdir.jm{border-color:#c9aca4;color:#7a2c20;background:#f7efec}
 .hdir.nm{border-color:#c9aca4;color:#7a2c20;background:#f7efec}
 .hdir.ym{border-color:#dccb95;color:#84681c;background:#faf5e2}
+.hhrs.sk{border-color:#bcb2d2;color:#463265;background:#f2eff9;font-weight:500}
+.hhrs.sk.none{border-color:var(--border2);color:var(--ink3);background:var(--surface);font-weight:400}
 .hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hs-btns{display:flex;gap:8px;margin-top:6px}
 .hs-btn-clear{padding:11px 14px;border:1px solid #e0c9c2;border-radius:var(--radius-sm);background:#f7efec;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
@@ -217,13 +220,24 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .allow12-label{font-size:13px;font-weight:500;color:#123b52;flex:1;cursor:pointer}
 .allow12-row.no-allow .allow12-label{color:var(--red)}
 /* 天災假 */
-.tz-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f8f4e9;border:1px solid #ded0ab}
+.tz-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f8f4e9;border:1px solid #ded0ab}
 .tz-label{color:#84681c!important}
+.chk-head{display:flex;align-items:center;gap:10px}
+.mode-btns{display:none;gap:6px;margin-top:10px}
+.mode-btns.show{display:flex}
+.mbtn{flex:1;padding:9px 8px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.mbtn.active{border-color:#84681c;background:#f6ecc6;color:#6d5510;font-weight:600;box-shadow:inset 0 0 0 1px #84681c}
+.mbtn.cash.active{border-color:#463265;background:#e5dcf3;color:#463265;box-shadow:inset 0 0 0 1px #463265}
+.hw-row .mbtn.active{border-color:#7a2c20;background:#f0d4c9;color:#7a2c20;box-shadow:inset 0 0 0 1px #7a2c20}
+.hw-row .mbtn.cash.active{border-color:#463265;background:#e5dcf3;color:#463265;box-shadow:inset 0 0 0 1px #463265}
+.hb-hwc{background:#e5dcf3;color:#463265}
 .hb-tz{background:#f7eecb;color:#7a5c10}
+.hb-tzc{background:#e5dcf3;color:#463265}
 /* 週末國定假日補時數 */
-.hw-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f7efec;border:1px solid #e0c9c2}
+.hw-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f7efec;border:1px solid #e0c9c2}
 .hw-label{color:#7a2c20!important}
 .hb-hw{background:#f0d4c9;color:#7a2c20}
+.hb-sick{background:#e0dbea;color:#463265}
 /* 追蹤同事班別 */
 .other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#e9eff3;border:1px solid #cfdbe4;border-radius:var(--radius-sm);margin-bottom:12px}
 .other-row.show{display:flex}
@@ -434,7 +448,7 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2c4964}
       <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
-  <div class="allow-note" id="allowNote">＊ 班數依當月班別自動帶入，可直接於欄位改成實際班數（點下方「↺ 還原」回自動值）；D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
+  <div class="allow-note" id="allowNote">＊ 班數依當月班別自動帶入，可直接於欄位改成實際班數（點下方「↺ 還原」回自動值）；D班加班≥1.5hr 計入 $270；天災假給時數＋8 只加積休、不計加班費；天災假代金另由醫院計算，與此區津貼分開</div>
 </div>
 
 <!-- 快速選單：點日期後先問要幹嘛 -->
@@ -579,15 +593,37 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2c4964}
           </div>
         </div>
       </div>
+      <div class="hs-row">
+        <span class="hs-row-label s">事病</span>
+        <div class="hs-selwrap">
+          <select class="hhrs sk none" id="sickType" onchange="updateSickStyle()">
+            <option value="">無</option>
+            <option value="事">事假</option>
+            <option value="病">病假</option>
+          </select>
+        </div>
+      </div>
       <!-- 天災假出勤 -->
       <div class="tz-row">
-        <input type="checkbox" class="allow12-toggle" id="tzCheck">
-        <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤（積休 ＋8 hr，不計加班費）</label>
+        <div class="chk-head">
+          <input type="checkbox" class="allow12-toggle" id="tzCheck" onchange="updateModeRow('tz')">
+          <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤</label>
+        </div>
+        <div class="mode-btns" id="tzModeBtns">
+          <button class="mbtn active" id="tzModeHr" onclick="setMode('tz','hr')">給時數 ＋8 hr</button>
+          <button class="mbtn cash" id="tzModeCash" onclick="setMode('tz','cash')">給代金</button>
+        </div>
       </div>
       <!-- 週末國定假日補時數（僅六日假日顯示） -->
       <div class="hw-row" id="hwRow">
-        <input type="checkbox" class="allow12-toggle" id="hwCheck">
-        <label class="allow12-label hw-label" for="hwCheck" id="hwCheckLabel">🎌 國定假日補時數（積休 ＋8 hr）</label>
+        <div class="chk-head">
+          <input type="checkbox" class="allow12-toggle" id="hwCheck" onchange="updateModeRow('hw')">
+          <label class="allow12-label hw-label" for="hwCheck" id="hwCheckLabel">🎌 國定假日出勤</label>
+        </div>
+        <div class="mode-btns" id="hwModeBtns">
+          <button class="mbtn active" id="hwModeHr" onclick="setMode('hw','hr')">給時數 ＋8 hr</button>
+          <button class="mbtn cash" id="hwModeCash" onclick="setMode('hw','cash')">給代金</button>
+        </div>
       </div>
       <!-- 12-8 津貼勾選 -->
       <div class="allow12-row" id="allow12Row">
@@ -608,7 +644,7 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2c4964}
 const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF'],36:['D','D','D','D','D','OFF','OFF']};
 const ANC=new Date(2026,5,8);
 const ZONE_ANC=new Date(2026,5,8);
-const ZONE_COLORS=['#42708c','#6d7fa6','#4f8a8a','#8a93a4','#5d7f9e','#7f96a8'];
+const ZONE_COLORS=['#8a9ea8','#a89bb0','#b8a878','#8fa68a','#b8a898','#9aabba'];
 const ME={w1:27};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
 const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','OFF'];
@@ -742,9 +778,13 @@ function openHoursSheet(){
   setHM('jiji',e.jiji);
   setHM('nian',e.nian);
   setHM('yan',e.yan);
-  document.getElementById('tzCheck').checked=!!e.tz;
+  document.getElementById('sickType').value=(typeof e.sick==='string'?e.sick:'');
+  updateSickStyle();
+  document.getElementById('tzCheck').checked=!!(e.tz||e.tzCash);
+  setMode('tz',e.tzCash?'cash':'hr');updateModeRow('tz');
   // 國定假日補時數：跟天災假一樣永遠顯示，手動勾選
-  document.getElementById('hwCheck').checked=!!e.hw;
+  document.getElementById('hwCheck').checked=!!(e.hw||e.hwCash);
+  setMode('hw',e.hwCash?'cash':'hr');updateModeRow('hw');
   updateHDir('jiji');
   const is128=s.startsWith('12-8');
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
@@ -764,36 +804,61 @@ function setHM(type,v){
 }
 function getHoursVal(type){const h=parseFloat(document.getElementById(type+'Hrs').value)||0;const m=parseFloat(document.getElementById(type+'Min').value)||0;return h+m/60;}
 function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
+function updateSickStyle(){
+  const sel=document.getElementById('sickType');if(!sel)return;
+  sel.classList.toggle('none',!sel.value);
+}
 function updateAllow12Style(){
   const check=document.getElementById('allow12Check'),row=document.getElementById('allow12Row'),label=document.getElementById('allow12CheckLabel');
   if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
   else{row.classList.add('no-allow');label.textContent='✕ 不計入 12-8 津貼';}
 }
+function setMode(kind,v){
+  document.getElementById(kind+'ModeHr').classList.toggle('active',v==='hr');
+  document.getElementById(kind+'ModeCash').classList.toggle('active',v==='cash');
+}
+function getMode(kind){
+  return document.getElementById(kind+'ModeCash').classList.contains('active')?'cash':'hr';
+}
+function updateModeRow(kind){
+  const on=document.getElementById(kind+'Check').checked;
+  document.getElementById(kind+'ModeBtns').classList.toggle('show',on);
+  if(!on)setMode(kind,'hr');
+}
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   setHM('jiji',0);setHM('nian',0);setHM('yan',0);
-  document.getElementById('tzCheck').checked=false;
-  document.getElementById('hwCheck').checked=false;
+  document.getElementById('sickType').value='';updateSickStyle();
+  document.getElementById('tzCheck').checked=false;updateModeRow('tz');
+  document.getElementById('hwCheck').checked=false;updateModeRow('hw');
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
-  const tz=document.getElementById('tzCheck').checked;
-  const hw=document.getElementById('hwCheck').checked;
+  const sk=document.getElementById('sickType').value;
+  const tzOn=document.getElementById('tzCheck').checked,tzM=getMode('tz');
+  const tz=tzOn&&tzM==='hr',tzCash=tzOn&&tzM==='cash';
+  const hwOn=document.getElementById('hwCheck').checked,hwM=getMode('hw');
+  const hw=hwOn&&hwM==='hr',hwCash=hwOn&&hwM==='cash';
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   const prev=hD[selKey]||{};
-  if(jh===0&&nh===0&&yh===0&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  if(jh===0&&nh===0&&yh===0&&!sk&&!tz&&!tzCash&&!hw&&!hwCash&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{
     const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(sk)entry.sick=sk;
     if(tz)entry.tz=8;
+    if(tzCash)entry.tzCash=true;
     if(hw)entry.hw=8;
+    if(hwCash)entry.hwCash=true;
     if(is128)entry.allow12=allow12Check.checked;
     if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
     if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
     if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
     if(prev.tz===8&&tz&&prev.tzConfirmed)entry.tzConfirmed=true;
     if(prev.hw===8&&hw&&prev.hwConfirmed)entry.hwConfirmed=true;
+    if(prev.tzCash&&tzCash&&prev.tzCashConfirmed)entry.tzCashConfirmed=true;
+    if(prev.hwCash&&hwCash&&prev.hwCashConfirmed)entry.hwCashConfirmed=true;
     hD[selKey]=entry;
   }
   saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
@@ -1109,8 +1174,11 @@ function render(){
       if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';bot.appendChild(b);}
+      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};bot.appendChild(b);}
+      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};bot.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
-      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'假＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
+      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';bot.appendChild(b);}
