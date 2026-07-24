@@ -207,10 +207,20 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .allow12-toggle{width:18px;height:18px;cursor:pointer;accent-color:var(--ink);flex-shrink:0}
 .allow12-label{font-size:13px;font-weight:500;color:#5a3800;flex:1;cursor:pointer}
 .allow12-row.no-allow .allow12-label{color:var(--red)}
-.tz-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f5edd8;border:1px solid #c8a040}
+.tz-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f5edd8;border:1px solid #c8a040}
 .tz-label{color:#7a5000!important}
-.hw-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f8e8d8;border:1px solid #d0a888}
+.hw-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f8e8d8;border:1px solid #d0a888}
 .hw-label{color:#a03020!important}
+.chk-head{display:flex;align-items:center;gap:10px}
+.mode-btns{display:none;gap:6px;margin-top:10px}
+.mode-btns.show{display:flex}
+.mbtn{flex:1;padding:9px 8px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.mbtn.active{border-color:#7a5000;background:#f0dca8;color:#5a3800;font-weight:600;box-shadow:inset 0 0 0 1px #7a5000}
+.mbtn.cash.active{border-color:#5a3e28;background:#e2d2ba;color:#3a2a18;box-shadow:inset 0 0 0 1px #5a3e28}
+.hw-row .mbtn.active{border-color:#a03020;background:#f5d8c8;color:#7a2418;box-shadow:inset 0 0 0 1px #a03020}
+.hw-row .mbtn.cash.active{border-color:#5a3e28;background:#e2d2ba;color:#3a2a18;box-shadow:inset 0 0 0 1px #5a3e28}
+.hb-tzc{background:#5a3e28;color:#f0dca8}
+.hb-hwc{background:#3d2e1e;color:#e8c888}
 .plan-list{list-style:none;margin-bottom:8px}
 .plan-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
 .plan-item:last-child{border:none}
@@ -390,7 +400,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
-  <div class="allow-note" id="allowNote">＊ 班數依當月班別自動帶入，可直接於欄位改成實際班數（點下方「↺ 還原」回自動值）；D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
+  <div class="allow-note" id="allowNote">＊ 班數依當月班別自動帶入，可直接於欄位改成實際班數（點下方「↺ 還原」回自動值）；D班加班≥1.5hr 計入 $270；天災假給時數＋8 只加積休、不計加班費；天災假代金另由醫院計算，與此區津貼分開</div>
 </div>
 
 <!-- 快速選單：點日期後先問要幹嘛 -->
@@ -540,13 +550,25 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       </div>
       <!-- 天災假出勤 -->
       <div class="tz-row">
-        <input type="checkbox" class="allow12-toggle" id="tzCheck">
-        <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤（積休 ＋8 hr，不計加班費）</label>
+        <div class="chk-head">
+          <input type="checkbox" class="allow12-toggle" id="tzCheck" onchange="updateModeRow('tz')">
+          <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤</label>
+        </div>
+        <div class="mode-btns" id="tzModeBtns">
+          <button class="mbtn active" id="tzModeHr" onclick="setMode('tz','hr')">給時數 ＋8 hr</button>
+          <button class="mbtn cash" id="tzModeCash" onclick="setMode('tz','cash')">給代金</button>
+        </div>
       </div>
       <!-- 週末國定假日補時數（僅六日假日顯示） -->
       <div class="hw-row" id="hwRow">
-        <input type="checkbox" class="allow12-toggle" id="hwCheck">
-        <label class="allow12-label hw-label" for="hwCheck" id="hwCheckLabel">🎌 國定假日補時數（積休 ＋8 hr）</label>
+        <div class="chk-head">
+          <input type="checkbox" class="allow12-toggle" id="hwCheck" onchange="updateModeRow('hw')">
+          <label class="allow12-label hw-label" for="hwCheck" id="hwCheckLabel">🎌 國定假日出勤</label>
+        </div>
+        <div class="mode-btns" id="hwModeBtns">
+          <button class="mbtn active" id="hwModeHr" onclick="setMode('hw','hr')">給時數 ＋8 hr</button>
+          <button class="mbtn cash" id="hwModeCash" onclick="setMode('hw','cash')">給代金</button>
+        </div>
       </div>
       <!-- 12-8 津貼勾選 -->
       <div class="allow12-row" id="allow12Row">
@@ -640,9 +662,11 @@ function openHoursSheet(){
   setHM('yan',e.yan);
   document.getElementById('sickType').value=(typeof e.sick==='string'?e.sick:'');
   updateSickStyle();
-  document.getElementById('tzCheck').checked=!!e.tz;
+  document.getElementById('tzCheck').checked=!!(e.tz||e.tzCash);
+  setMode('tz',e.tzCash?'cash':'hr');updateModeRow('tz');
   // 國定假日補時數：跟天災假一樣永遠顯示，手動勾選
-  document.getElementById('hwCheck').checked=!!e.hw;
+  document.getElementById('hwCheck').checked=!!(e.hw||e.hwCash);
+  setMode('hw',e.hwCash?'cash':'hr');updateModeRow('hw');
   updateHDir('jiji');
   const is128=s.startsWith('12-8');
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
@@ -671,34 +695,52 @@ function updateAllow12Style(){
   if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
   else{row.classList.add('no-allow');label.textContent='✕ 不計入 12-8 津貼';}
 }
+function setMode(kind,v){
+  document.getElementById(kind+'ModeHr').classList.toggle('active',v==='hr');
+  document.getElementById(kind+'ModeCash').classList.toggle('active',v==='cash');
+}
+function getMode(kind){
+  return document.getElementById(kind+'ModeCash').classList.contains('active')?'cash':'hr';
+}
+function updateModeRow(kind){
+  const on=document.getElementById(kind+'Check').checked;
+  document.getElementById(kind+'ModeBtns').classList.toggle('show',on);
+  if(!on)setMode(kind,'hr');
+}
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
   setHM('jiji',0);setHM('nian',0);setHM('yan',0);
   document.getElementById('sickType').value='';updateSickStyle();
-  document.getElementById('tzCheck').checked=false;
-  document.getElementById('hwCheck').checked=false;
+  document.getElementById('tzCheck').checked=false;updateModeRow('tz');
+  document.getElementById('hwCheck').checked=false;updateModeRow('hw');
   document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
   const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
   const nh=getHoursVal('nian'),yh=getHoursVal('yan');
   const sk=document.getElementById('sickType').value;
-  const tz=document.getElementById('tzCheck').checked;
-  const hw=document.getElementById('hwCheck').checked;
+  const tzOn=document.getElementById('tzCheck').checked,tzM=getMode('tz');
+  const tz=tzOn&&tzM==='hr',tzCash=tzOn&&tzM==='cash';
+  const hwOn=document.getElementById('hwCheck').checked,hwM=getMode('hw');
+  const hw=hwOn&&hwM==='hr',hwCash=hwOn&&hwM==='cash';
   const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
   const prev=hD[selKey]||{};
-  if(jh===0&&nh===0&&yh===0&&!sk&&!tz&&!hw&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  if(jh===0&&nh===0&&yh===0&&!sk&&!tz&&!tzCash&&!hw&&!hwCash&&(!is128||allow12Check.checked)){delete hD[selKey];}
   else{
     const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
     if(sk)entry.sick=sk;
     if(tz)entry.tz=8;
+    if(tzCash)entry.tzCash=true;
     if(hw)entry.hw=8;
+    if(hwCash)entry.hwCash=true;
     if(is128)entry.allow12=allow12Check.checked;
     if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
     if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
     if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
     if(prev.tz===8&&tz&&prev.tzConfirmed)entry.tzConfirmed=true;
     if(prev.hw===8&&hw&&prev.hwConfirmed)entry.hwConfirmed=true;
+    if(prev.tzCash&&tzCash&&prev.tzCashConfirmed)entry.tzCashConfirmed=true;
+    if(prev.hwCash&&hwCash&&prev.hwCashConfirmed)entry.hwCashConfirmed=true;
     hD[selKey]=entry;
   }
   saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
@@ -1013,8 +1055,10 @@ function render(){
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
       if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';bot.appendChild(b);}
+      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};bot.appendChild(b);}
+      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};bot.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
-      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'假＋'+fmtH(he.hw);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
+      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
     }
     if(pS[key]){
