@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<title>違建拆除・工頭洽談檢核表</title>
+<style>
+  :root{
+    color-scheme:light only;
+    --paper:#F4F3EF;
+    --ink:#1A1D21;
+    --ink-soft:#4A525C;
+    --rule:#C4C0B6;
+    --olive:#5A6650;
+    --ochre:#9A6B12;
+    --card:#FFFFFF;
+    --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+    --cjk: "Noto Sans TC","PingFang TC","Heiti TC","Microsoft JhengHei",sans-serif;
+  }
+  html{color-scheme:light only;background:#F4F3EF;forced-color-adjust:none}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:var(--cjk);
+    font-size:21px;line-height:1.8;font-weight:500;
+    padding:0 0 64px;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:0 16px}
+
+  header{
+    padding:28px 0 18px;border-bottom:2px solid var(--ink);
+    margin-bottom:22px;
+  }
+  .eyebrow{
+    font-family:var(--cjk);font-size:15px;font-weight:700;letter-spacing:.12em;
+    color:var(--ink-soft);margin-bottom:8px;
+  }
+  h1{font-size:33px;line-height:1.35;margin:0 0 12px;font-weight:900;letter-spacing:.01em}
+  .sub{font-size:19px;color:var(--ink-soft);margin:0;font-weight:500}
+
+  .prelude{
+    background:#FFF8E8;color:var(--ink);
+    border:1px solid var(--ochre);border-left:6px solid var(--ochre);
+    padding:16px 18px;border-radius:2px;margin-bottom:26px;
+  }
+  .prelude .t{font-size:17px;font-weight:800;letter-spacing:.06em;color:#7A5409;margin-bottom:8px}
+  .prelude p{margin:0;font-size:20px;line-height:1.75;font-weight:500}
+
+  section{margin-bottom:30px}
+  .sec-head{
+    display:flex;align-items:baseline;gap:10px;
+    border-bottom:1px solid var(--rule);padding-bottom:7px;margin-bottom:4px;
+  }
+  .sec-tag{
+    font-family:var(--cjk);font-size:15px;font-weight:800;letter-spacing:.08em;
+    color:#FFFFFF;background:var(--olive);border:1px solid var(--olive);
+    padding:4px 10px;border-radius:3px;white-space:nowrap;
+  }
+  .sec-head h2{font-size:25px;margin:0;font-weight:800}
+  .sec-note{font-size:18px;color:var(--ink-soft);margin:10px 0 16px;font-weight:500}
+
+  .item{
+    display:flex;gap:11px;align-items:flex-start;
+    padding:14px 14px;background:var(--card);
+    border:1px solid var(--rule);border-radius:2px;margin-bottom:9px;
+    cursor:pointer;transition:background .15s,border-color .15s;
+  }
+  .item:hover{border-color:var(--ink-soft)}
+  .item input{
+    appearance:none;-webkit-appearance:none;
+    width:30px;height:30px;flex:0 0 30px;margin:2px 0 0;
+    border:2.5px solid var(--ink-soft);border-radius:4px;
+    background:transparent;cursor:pointer;position:relative;
+  }
+  .item input:checked{background:var(--olive);border-color:var(--olive)}
+  .item input:checked::after{
+    content:"";position:absolute;left:9px;top:3px;
+    width:8px;height:16px;border:solid #fff;border-width:0 3px 3px 0;
+    transform:rotate(42deg);
+  }
+  .item input:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+  .item.done{background:#EEEDE8}
+  .item.done .txt{color:var(--ink-soft);text-decoration:line-through;text-decoration-thickness:1px}
+  .txt{font-size:21px;line-height:1.7;font-weight:600}
+  .must{
+    font-family:var(--cjk);font-size:16px;font-weight:800;letter-spacing:.06em;
+    color:#FFFFFF;background:var(--ochre);border:1px solid var(--ochre);border-radius:3px;
+    padding:2px 8px;margin-right:8px;vertical-align:2px;white-space:nowrap;
+  }
+  .hint{display:block;font-size:18px;color:var(--ink-soft);margin-top:6px;font-weight:500}
+
+  .compare{margin-top:34px;border-top:2px solid var(--ink);padding-top:20px}
+  .compare h2{font-size:25px;margin:0 0 4px;font-weight:800}
+  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;min-width:620px;border-collapse:collapse;margin-top:12px;font-size:19px}
+  th,td{border:1px solid var(--rule);padding:0;text-align:left}
+  th{
+    background:#E4E1D9;font-family:var(--cjk);font-size:18px;
+    letter-spacing:.04em;font-weight:800;padding:12px 11px;color:var(--ink);
+  }
+  th:first-child{width:30%}
+  td.lbl{padding:13px 11px;background:#F9F8F5;font-size:18px;line-height:1.45;font-weight:600}
+  td input{
+    width:100%;border:0;background:transparent;padding:13px 10px;
+    font-family:var(--cjk);font-size:19px;font-weight:600;color:var(--ink);
+  }
+  td input:focus{outline:2px solid var(--ochre);outline-offset:-2px;background:#FFFDF6}
+
+  .memo{margin-top:26px}
+  .memo label{font-family:var(--cjk);font-size:18px;font-weight:800;letter-spacing:.06em;color:var(--ink)}
+  textarea{
+    width:100%;min-height:160px;margin-top:8px;padding:14px;
+    border:1px solid var(--rule);border-radius:2px;background:var(--card);
+    font-family:var(--cjk);font-size:20px;line-height:1.75;font-weight:500;color:var(--ink);resize:vertical;
+  }
+  textarea:focus{outline:2px solid var(--ochre);outline-offset:-2px}
+
+  footer{
+    margin-top:30px;padding-top:14px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-family:var(--cjk);font-size:18px;font-weight:700;color:var(--ink-soft);letter-spacing:.04em;
+  }
+  button{
+    font-family:var(--cjk);font-size:18px;font-weight:700;letter-spacing:.04em;
+    background:transparent;border:1.5px solid var(--rule);color:var(--ink-soft);
+    padding:11px 18px;border-radius:3px;cursor:pointer;
+  }
+  button:hover{border-color:var(--ink-soft);color:var(--ink)}
+  @media print{
+    body{background:#fff}
+    .item,td,th,textarea{border-color:#999}
+    footer button{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">拆除前・現場洽談</div>
+  <h1>違建拆除與防火巷退縮<br>工頭洽談檢核表</h1>
+  <p class="sub">三組工班到場時逐項確認，勾掉已問到的。答案填在最下方比較表。</p>
+</header>
+
+<div class="prelude">
+  <div class="t">開口之前先做</div>
+  <p>把現況拍照存檔：增建的內外、二樓陽台底下、以及<strong>鄰房牆面既有的裂縫</strong>。日後爭議時這是唯一證據，事後補拍沒有效力。</p>
+</div>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">結構</span><h2>安全，先於一切</h2></div>
+  <p class="sec-note">拆一樓最怕動到上面。這幾題答不出來的工班就不要用。</p>
+
+  <label class="item"><input type="checkbox" data-k="s1"><span class="txt"><span class="must">必問</span>增建的樑柱、樓板有沒有和原始建築共構？拆掉會不會影響二樓以上的懸挑陽台？</span></label>
+  <label class="item"><input type="checkbox" data-k="s2"><span class="txt"><span class="must">必問</span>拆除期間怎麼做臨時支撐（假設工程）？<span class="hint">問法：「拆的時候上面靠什麼撐住？」</span></span></label>
+  <label class="item"><input type="checkbox" data-k="s3"><span class="txt">如果對方支吾其詞，要求先找結構技師或建築師看過再動工。</span></label>
+  <label class="item"><input type="checkbox" data-k="s4"><span class="txt">鄰房牆面共壁嗎？拆除面和鄰居的界線在哪裡？</span></label>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">防水</span><h2>新外牆與斷面</h2></div>
+  <p class="sec-note">這一項日後最容易出問題。漏水通常一兩年後才發作，所以保固要寫進合約。</p>
+
+  <label class="item"><input type="checkbox" data-k="w1"><span class="txt">新外牆用什麼做（磚牆／RC／輕隔間）？厚度多少、開窗開在哪？</span></label>
+  <label class="item"><input type="checkbox" data-k="w2"><span class="txt"><span class="must">必問</span>新舊牆交接面、樓板切斷處的防水怎麼做？</span></label>
+  <label class="item"><input type="checkbox" data-k="w3"><span class="txt">切斷後外露的鋼筋怎麼處理？有沒有除鏽、植筋？</span></label>
+  <label class="item"><input type="checkbox" data-k="w4"><span class="txt"><span class="must">必問</span>防水保固幾年？要求寫進合約，一般至少三到五年。</span></label>
+  <label class="item"><input type="checkbox" data-k="w5"><span class="txt">外牆的完成面：粉刷、磁磚、還是塗料？和現有立面要不要對齊？</span></label>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">水電</span><h2>藏在增建裡的管線</h2></div>
+  <p class="sec-note">一樓曬衣間裡通常塞了一堆設備，逐項確認「拆掉之後搬去哪」。</p>
+
+  <label class="item"><input type="checkbox" data-k="p1"><span class="txt"><span class="must">必問</span>洗衣機排水和地板落水頭：拆掉後水往哪排？會不會積水或倒灌？</span></label>
+  <label class="item"><input type="checkbox" data-k="p2"><span class="txt"><span class="must">必問</span>熱水器與瓦斯管線。<span class="hint">瓦斯必須由瓦斯公司或合格技術士處理，不能讓工頭自己接。</span></span></label>
+  <label class="item"><input type="checkbox" data-k="p3"><span class="txt">電線、插座、電表、水表的位置要不要移？誰負責向台電、自來水申請？</span></label>
+  <label class="item"><input type="checkbox" data-k="p4"><span class="txt">冷氣室外機、太陽能熱水器、抽風管的新位置。</span></label>
+  <label class="item"><input type="checkbox" data-k="p5"><span class="txt">復原後走明管還是重新配暗管？價差多少？</span></label>
+  <label class="item"><input type="checkbox" data-k="p6"><span class="txt">施工期間家裡的水電會停多久？曬衣、洗衣怎麼過渡？</span></label>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">施工</span><h2>工法、工期、清運</h2></div>
+  <p class="sec-note">巷子只能一個人走，機具進不去，這會直接決定價錢和天數。</p>
+
+  <label class="item"><input type="checkbox" data-k="c1"><span class="txt"><span class="must">必問</span>機械拆還是人工拆？巷子這麼窄，機具怎麼進場？</span></label>
+  <label class="item"><input type="checkbox" data-k="c2"><span class="txt">總工期幾天？從哪天開始？下雨怎麼算？</span></label>
+  <label class="item"><input type="checkbox" data-k="c3"><span class="txt">廢棄物清運含在報價裡嗎？有沒有合法的清運聯單？</span></label>
+  <label class="item"><input type="checkbox" data-k="c4"><span class="txt">施工期間的防塵、防噪、圍籬怎麼做？有沒有先知會鄰居？</span></label>
+  <label class="item"><input type="checkbox" data-k="c5"><span class="txt">拆除期間房子還能不能住？</span></label>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">合約</span><h2>責任與付款</h2></div>
+  <p class="sec-note">口頭承諾一律不算，全部要落在紙上。</p>
+
+  <label class="item"><input type="checkbox" data-k="k1"><span class="txt"><span class="must">必問</span>有沒有投保營造綜合保險或第三人責任險？鄰損誰負責？</span></label>
+  <label class="item"><input type="checkbox" data-k="k2"><span class="txt">工人有沒有勞保、職災險？工地出事誰擔？</span></label>
+  <label class="item"><input type="checkbox" data-k="k3"><span class="txt"><span class="must">必問</span>報價要分項列：拆除／支撐／清運／新外牆／防水／水電／門窗。<span class="hint">只給一個總價的話，三家沒辦法比較。</span></span></label>
+  <label class="item"><input type="checkbox" data-k="k4"><span class="txt">付款方式：訂金、期中款、尾款各多少？<span class="hint">尾款保留一到兩成，驗收合格後再付。</span></span></label>
+  <label class="item"><input type="checkbox" data-k="k5"><span class="txt">工期逾期有沒有罰則？要寫進合約。</span></label>
+  <label class="item"><input type="checkbox" data-k="k6"><span class="txt">索取名片、公司統編，確認有無土木包工業或營造業登記。</span></label>
+  <label class="item"><input type="checkbox" data-k="k7"><span class="txt">追加工程怎麼算？要求任何追加都要事先書面確認再施作。</span></label>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">行政</span><h2>和縣政府那一邊</h2></div>
+
+  <label class="item"><input type="checkbox" data-k="g1"><span class="txt"><span class="must">必問</span>確認縣府給的自拆期限。<span class="hint">逾期被強制拆除，費用照樣要你付，而且不會幫你復原。</span></span></label>
+  <label class="item"><input type="checkbox" data-k="g2"><span class="txt">拆除範圍以縣府勘測圖為準，最好請建管單位到場確認界線再動工。</span></label>
+  <label class="item"><input type="checkbox" data-k="g3"><span class="txt">復原的外牆會不會又踩到線？新的立面位置有沒有問題？</span></label>
+  <label class="item"><input type="checkbox" data-k="g4"><span class="txt">有沒有拆除或補助的相關申請要辦？工班能不能代辦？</span></label>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-tag">加分</span><h2>整排一起發包</h2></div>
+  <p class="sec-note">既然前後兩排都要拆，可以問問鄰居要不要合併發包。同一批工班連著做，議價空間大、施工動線順，防火巷共同的界面問題也比較不會互相卡。</p>
+  <label class="item"><input type="checkbox" data-k="n1"><span class="txt">問工頭：如果整排一起做，價格能到什麼程度？</span></label>
+</section>
+
+<div class="compare">
+  <h2>三組報價比較</h2>
+  <p class="sec-note">現場填，回來才不會記混。</p>
+  <div class="scroller">
+  <table>
+    <tr><th>項目</th><th>第一組</th><th>第二組</th><th>第三組</th></tr>
+    <tr><td class="lbl">公司／工頭姓名</td><td><input data-k="t1a"></td><td><input data-k="t1b"></td><td><input data-k="t1c"></td></tr>
+    <tr><td class="lbl">聯絡電話</td><td><input data-k="t2a"></td><td><input data-k="t2b"></td><td><input data-k="t2c"></td></tr>
+    <tr><td class="lbl">拆除費</td><td><input data-k="t3a"></td><td><input data-k="t3b"></td><td><input data-k="t3c"></td></tr>
+    <tr><td class="lbl">清運費（含否）</td><td><input data-k="t4a"></td><td><input data-k="t4b"></td><td><input data-k="t4c"></td></tr>
+    <tr><td class="lbl">新外牆＋防水</td><td><input data-k="t5a"></td><td><input data-k="t5b"></td><td><input data-k="t5c"></td></tr>
+    <tr><td class="lbl">水電遷移</td><td><input data-k="t6a"></td><td><input data-k="t6b"></td><td><input data-k="t6c"></td></tr>
+    <tr><td class="lbl">總價</td><td><input data-k="t7a"></td><td><input data-k="t7b"></td><td><input data-k="t7c"></td></tr>
+    <tr><td class="lbl">工期</td><td><input data-k="t8a"></td><td><input data-k="t8b"></td><td><input data-k="t8c"></td></tr>
+    <tr><td class="lbl">防水保固</td><td><input data-k="t9a"></td><td><input data-k="t9b"></td><td><input data-k="t9c"></td></tr>
+    <tr><td class="lbl">有無保險</td><td><input data-k="t10a"></td><td><input data-k="t10b"></td><td><input data-k="t10c"></td></tr>
+    <tr><td class="lbl">支撐工法說明</td><td><input data-k="t11a"></td><td><input data-k="t11b"></td><td><input data-k="t11c"></td></tr>
+  </table>
+  </div>
+
+  <div class="memo">
+    <label for="memo">現場筆記</label>
+    <textarea id="memo" data-k="memo" placeholder="工頭提到的細節、媽媽的疑慮、當場想到的問題…"></textarea>
+  </div>
+</div>
+
+<footer>
+  <span id="stat">進度 0／32</span>
+  <button id="reset">清除全部</button>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY='demolition-checklist-v1';
+  var fields=[].slice.call(document.querySelectorAll('[data-k]'));
+  var stat=document.getElementById('stat');
+  var boxes=fields.filter(function(f){return f.type==='checkbox';});
+
+  function paint(){
+    boxes.forEach(function(b){
+      b.closest('.item').classList.toggle('done', b.checked);
+    });
+    var n=boxes.filter(function(b){return b.checked;}).length;
+    stat.textContent='進度 '+n+'／'+boxes.length;
+  }
+
+  function collect(){
+    var o={};
+    fields.forEach(function(f){
+      o[f.dataset.k] = (f.type==='checkbox') ? f.checked : f.value;
+    });
+    return o;
+  }
+
+  var pending=null;
+  function save(){
+    clearTimeout(pending);
+    pending=setTimeout(function(){
+      try{ window.storage.set(KEY, JSON.stringify(collect())); }
+      catch(e){ /* 無法儲存時仍可正常使用 */ }
+    },350);
+  }
+
+  async function load(){
+    try{
+      var r=await window.storage.get(KEY);
+      if(r && r.value){
+        var o=JSON.parse(r.value);
+        fields.forEach(function(f){
+          if(!(f.dataset.k in o)) return;
+          if(f.type==='checkbox') f.checked=!!o[f.dataset.k];
+          else f.value=o[f.dataset.k];
+        });
+      }
+    }catch(e){ /* 尚無儲存資料 */ }
+    paint();
+  }
+
+  fields.forEach(function(f){
+    f.addEventListener('change',function(){ paint(); save(); });
+    if(f.type!=='checkbox') f.addEventListener('input', save);
+  });
+
+  document.getElementById('reset').addEventListener('click',function(){
+    if(!confirm('清除所有勾選與填寫的內容？')) return;
+    fields.forEach(function(f){
+      if(f.type==='checkbox') f.checked=false; else f.value='';
+    });
+    paint();
+    try{ window.storage.delete(KEY); }catch(e){}
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
