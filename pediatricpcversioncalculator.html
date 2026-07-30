@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小兒麻醉快速參考計算機</title>
+<link rel="apple-touch-icon" sizes="180x180" href="erma-icon-180.png">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="兒麻">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    /* ---- Morandi 莫蘭迪：暖中性、低彩度、灰調 ---- */
+    --bg:#faf8f3;
+    --panel:#ffffff;
+    --panel2:#f4f0e8;
+    --line:#e5ddd0;
+    --hr:#899a76;      /* HR - 莫蘭迪 sage 綠 */
+    --spo2:#7e96a0;    /* SpO2 - 莫蘭迪 dusty 藍 */
+    --bp:#b58c85;      /* BP - 莫蘭迪 dusty 玫瑰 */
+    --rr:#bda469;      /* RR - 莫蘭迪 muted 芥末黃 */
+    --text:#45413a;
+    --muted:#8d8677;
+    --mono:'IBM Plex Mono','SF Mono','Consolas','Roboto Mono',monospace;
+    --sans:'Inter',-apple-system,'Segoe UI','PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif;
+
+    /* ISO 26825 syringe label colors, used as category identity（莫蘭迪化，保留色相辨識） */
+    --c-hypnotic:#d6c477;   /* yellow - induction agents */
+    --c-relaxant:#c78d86;   /* red/fluorescent - muscle relaxants */
+    --c-opioid:#7f9bb8;     /* blue - opioids */
+    --c-adjunct:#d3a06f;    /* orange - tranquilizer/sedative adjuncts */
+    --c-reversal:#a9a595;   /* grey/white - reversal/anticholinergic */
+    --c-antiemetic:#b39fc4; /* violet - antiemetics */
+    --c-fluid:#7fc0b6;      /* teal - fluids */
+    --c-local:#95c2ac;      /* soft teal-green - local anesthetics */
+
+    /* solid sticker-style backgrounds — 莫蘭迪化，仍保留各色標色相辨識 */
+    --bg-induction:#dccd8e;       /* 麻醉誘導藥物 - 黃 */
+    --bg-benzo:#d7ac83;           /* 鎮定安眠類 - 橙 */
+    --bg-relaxant:#cd968d;        /* 肌肉鬆弛劑 - 暖紅 */
+    --bg-relaxant2:#d9a493;       /* 肌肉鬆弛劑 - 螢光紅（去極化） */
+    --bg-opioid:#a4b7c1;          /* 止痛劑 - 藍 */
+    --bg-vasopressor:#bfb0c4;     /* 升壓劑 - 紫 */
+    --bg-local:#c6bdac;           /* 局部麻醉劑 - 灰 */
+    --bg-anticholinergic:#b0bf93; /* 抗膽鹼藥 - 綠 */
+    --bg-antiemetic:#ddba9c;      /* 止吐劑 - salmon */
+    --bg-other:#f6f4ee;           /* 其他 - 莫蘭迪白（維持白色標示） */
+    --bg-skin:#c3a487;            /* Ondansetron - 深膚色 */
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-tap-highlight-color:transparent;font-size:19px;}
+  @media(min-width:600px){ html{font-size:21px;} }
+  @media(min-width:900px){ html{font-size:23px;} }
+  @media(min-width:1300px){ html{font-size:24.5px;} }
+
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(137,154,118,0.10), transparent),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    min-height:100vh;
+    padding:20px 14px 60px;
+  }
+
+  .wrap{max-width:1200px;margin:0 auto;}
+
+  /* ---- header : monitor bezel ---- */
+  header{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    box-shadow:0 1px 3px rgba(69,65,58,0.06);
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--hr);
+    box-shadow:0 0 10px var(--hr);
+    animation:pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  header h1{font-size:1.12rem;font-weight:700;letter-spacing:-0.01em;}
+  header p{font-size:.72rem;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+  .legend{
+    font-family:var(--mono);font-size:.66rem;color:var(--muted);
+    display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .legend span{display:flex;align-items:center;gap:5px;}
+  .legend i{width:8px;height:8px;border-radius:2px;display:inline-block;}
+
+  /* ---- waveform divider (signature element) ---- */
+  .wave{height:34px;margin:22px 0;opacity:.7;}
+  .wave svg{width:100%;height:100%;display:block;}
+
+  /* ---- input panel ---- */
+  .input-panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:8px;
+    box-shadow:0 1px 3px rgba(69,65,58,0.06);
+  }
+  .input-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:7px;flex:1;min-width:130px;}
+  .field label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+  .field input, .field select{
+    background:var(--panel2);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:11px 12px;
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:.98rem;
+    outline:none;
+    transition:border-color .15s;
+  }
+  .field input:focus, .field select:focus{border-color:var(--hr);}
+  .field input::placeholder{color:#b3ab9c;}
+
+  .calc-btn{
+    background:linear-gradient(135deg,#8c9c79,#6f7d5c);
+    color:#f6f3ec;
+    font-weight:700;
+    font-size:.92rem;
+    border:none;
+    border-radius:9px;
+    padding:12px 26px;
+    cursor:pointer;
+    font-family:var(--sans);
+    transition:transform .1s, opacity .15s;
+    white-space:nowrap;
+  }
+  .calc-btn:active{transform:scale(.97);}
+  .calc-btn:hover{opacity:.9;}
+
+  .preterm-toggle{
+    margin-top:16px;padding-top:16px;border-top:1px dashed var(--line);
+  }
+  .check-row{
+    display:flex;align-items:center;gap:9px;
+    font-size:.86rem;font-weight:600;color:var(--text);
+    cursor:pointer;user-select:none;
+  }
+  .check-row input[type="checkbox"]{
+    width:17px;height:17px;accent-color:var(--bp);cursor:pointer;
+  }
+
+  .weight-note{
+    font-family:var(--mono);
+    font-size:.74rem;
+    color:var(--muted);
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+  .weight-note b{color:var(--hr);}
+
+  /* ---- results ---- */
+  .results{display:none;}
+  .results.visible{display:block;animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .section-title{
+    display:flex;align-items:center;gap:9px;
+    font-size:.84rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--muted);
+    margin:26px 0 12px;
+  }
+  .section-title .dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+  /* monitor readout grid */
+  .monitor-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:14px;
+  }
+  .readout{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(69,65,58,0.05);
+  }
+  .readout::before{
+    content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+    background:var(--rc,var(--hr));
+  }
+  .readout .rlabel{font-size:.84rem;color:var(--muted);letter-spacing:.02em;font-weight:600;}
+  .readout .rvalue{
+    font-family:var(--mono);font-size:1.55rem;font-weight:700;
+    color:color-mix(in srgb, var(--rc,var(--hr)) 60%, #201d17);
+    margin-top:4px;
+    line-height:1.1;
+  }
+  .readout .runit{font-size:.72rem;color:var(--muted);font-weight:400;}
+  .readout .rsub{font-size:.7rem;color:var(--muted);margin-top:5px;font-family:var(--mono);}
+
+  /* drug table — first column tinted per official anesthesia drug color standard */
+  .drug-table-wrap{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(69,65,58,0.06);
+  }
+  .drug-table{width:100%;border-collapse:collapse;font-size:1rem;}
+  .drug-table thead tr{background:var(--panel2);}
+  .drug-table th{
+    text-align:left;padding:11px 14px;
+    font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--muted);font-weight:700;
+    border-bottom:1px solid var(--line);
+  }
+  .drug-table td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  .drug-table tbody tr:last-child td{border-bottom:none;}
+  .cat-row td{
+    background:var(--panel2);
+    font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
+    color:var(--muted);padding:7px 14px;
+  }
+  .dname-cell{
+    font-weight:800;color:#2c2823;font-size:1.25rem;
+  }
+  .dname-cell.striped-cell{
+    padding:8px;
+    background:repeating-linear-gradient(135deg,#d3a06f 0 9px,#f6f4ee 9px 18px);
+  }
+  .stripe-badge{
+    display:block;
+    background:#f6f4ee;border:2px solid #2c2823;border-radius:6px;
+    padding:6px 10px;text-align:center;font-weight:800;color:#2c2823;
+  }
+  .dose-cell{font-family:var(--mono);font-weight:700;color:var(--text);font-size:1.15rem;line-height:1.4;}
+  .warn-cell{font-size:1.02rem;color:var(--muted);line-height:1.6;}
+  .warn-cell .flag{
+    display:block;
+    font-size:1.02rem;font-weight:500;
+    color:#8a6a2e;background:rgba(189,164,105,0.16);
+    border-left:3px solid rgba(189,164,105,0.55);
+    border-radius:4px;padding:7px 11px;
+    line-height:1.55;
+  }
+  .warn-cell .flag.danger{color:#985952;background:rgba(181,140,133,0.16);border-left-color:rgba(181,140,133,0.6);}
+
+  .info-box{
+    background:var(--panel2);
+    border:1px solid var(--line);
+    border-left:3px solid var(--spo2);
+    border-radius:9px;
+    padding:12px 14px;
+    font-size:.9rem;
+    color:var(--muted);
+    margin-top:12px;
+    line-height:1.55;
+  }
+  .info-box b{color:var(--text);}
+
+  /* ---- drug category selector : 浮動（sticky）分類選單 ---- */
+  .drug-tabs{
+    position:sticky;
+    top:8px;
+    z-index:20;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    padding:8px;
+    margin-bottom:14px;
+    background:rgba(255,255,255,0.94);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(69,65,58,0.10);
+  }
+  .drug-tabs button{
+    flex:1 1 auto;
+    min-width:96px;
+    font-family:var(--sans);
+    font-size:.9rem;
+    font-weight:700;
+    color:var(--muted);
+    background:var(--panel2);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:10px 12px;
+    cursor:pointer;
+    transition:all .15s;
+    white-space:nowrap;
+  }
+  .drug-tabs button:hover{color:var(--text);border-color:var(--hr);}
+  .drug-tabs button.active{
+    color:#f6f3ec;
+    background:linear-gradient(135deg,#8c9c79,#6f7d5c);
+    border-color:#6f7d5c;
+    box-shadow:0 1px 4px rgba(111,125,92,0.35);
+  }
+  .drug-prompt{
+    text-align:center;
+    font-size:.9rem;
+    color:var(--muted);
+    padding:26px 14px;
+    border:1px dashed var(--line);
+    border-radius:12px;
+    background:var(--panel);
+  }
+
+  footer{
+    text-align:center;
+    font-size:.7rem;
+    color:#a89f90;
+    font-family:var(--mono);
+    margin-top:36px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+  }
+
+  /* ---- 網頁版（桌機/大螢幕）：整體放大、加寬留白 ---- */
+  @media(min-width:1000px){
+    body{padding:36px 30px 90px;}
+    header{padding:24px 30px;}
+    .input-panel{padding:30px;}
+    .input-row{gap:18px;}
+    .field input, .field select{padding:13px 15px;}
+    .calc-btn{padding:14px 34px;}
+    .readout{padding:20px 22px;}
+    .monitor-grid{gap:18px;}
+    .section-title{margin:34px 0 16px;}
+    .drug-table th{padding:14px 18px;}
+    .drug-table td{padding:16px 18px;}
+    .drug-tabs{gap:10px;padding:10px;top:12px;}
+    .drug-tabs button{padding:14px 18px;min-width:130px;}
+    .info-box{padding:16px 18px;}
+  }
+
+  @media(max-width:640px){
+    body{padding:14px 10px 40px;}
+    header{padding:14px 16px;gap:10px;}
+    header h1{font-size:1rem;}
+    header p{font-size:.66rem;}
+    .legend{width:100%;justify-content:flex-start;gap:8px;font-size:.62rem;}
+    .input-panel{padding:16px;}
+    .input-row{flex-direction:column;align-items:stretch;gap:12px;}
+    .calc-btn{width:100%;padding:13px;}
+    .field{min-width:0;}
+    .weight-note{font-size:.68rem;}
+
+    .monitor-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+    .readout{padding:11px 12px;}
+    .readout .rvalue{font-size:1.3rem;}
+    .readout .rlabel{font-size:.78rem;}
+
+    .section-title{font-size:.76rem;margin:20px 0 10px;}
+
+    /* Tables become stacked cards on mobile */
+    .drug-table-wrap{background:transparent;border:none;border-radius:0;overflow:visible;box-shadow:none;}
+    .drug-table, .drug-table tbody{display:block;width:100%;}
+    .drug-table thead{display:none;}
+    .drug-table tr{display:block;}
+    .drug-table tr:not(.cat-row){
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:12px;
+      margin-bottom:10px;
+      overflow:hidden;
+      box-shadow:0 1px 2px rgba(69,65,58,0.05);
+    }
+    .cat-row{margin:14px 0 8px;}
+    .cat-row td{display:block;padding:6px 4px;border-radius:0;background:transparent;}
+    .drug-table td{display:block;width:auto;border-bottom:1px solid var(--line);}
+    .drug-table tr:not(.cat-row) td:last-child{border-bottom:none;}
+    .dname-cell{font-size:1.15rem;padding:13px 14px;}
+    .dose-cell, .warn-cell{padding:10px 14px;}
+    .dose-cell::before, .warn-cell::before{
+      content:attr(data-label);
+      display:block;
+      font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+      color:var(--muted);margin-bottom:4px;
+    }
+    .warn-cell .flag{font-size:.88rem;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div>
+        <h1>小兒麻醉快速參考計算機</h1>
+        <p>PEDIATRIC ANESTHESIA QUICK REFERENCE</p>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--hr)"></i>HR</span>
+      <span><i style="background:var(--spo2)"></i>SpO₂</span>
+      <span><i style="background:var(--bp)"></i>BP</span>
+      <span><i style="background:var(--rr)"></i>RR</span>
+    </div>
+  </header>
+
+  <div class="input-panel">
+    <div class="input-row">
+      <div class="field">
+        <label>年齡數值</label>
+        <input type="number" id="ageVal" placeholder="例如 18" min="0" step="0.1">
+      </div>
+      <div class="field">
+        <label>單位</label>
+        <select id="ageUnit">
+          <option value="days">天（新生兒）</option>
+          <option value="months" selected>月</option>
+          <option value="years">歲</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>實際體重（可選，kg）</label>
+        <input type="number" id="actualWeight" placeholder="留空則自動估算" min="0" step="0.1">
+      </div>
+      <button class="calc-btn" onclick="calculate()">計算 →</button>
+    </div>
+
+    <div class="preterm-toggle">
+      <label class="check-row">
+        <input type="checkbox" id="isPreterm" onchange="togglePreterm()">
+        <span>早產兒（出生胎齡 &lt; 37 週）</span>
+      </label>
+      <div class="field" id="gaField" style="display:none;max-width:220px;margin-top:10px;">
+        <label>出生胎齡（週數，Gestational Age）</label>
+        <input type="number" id="gaWeeks" placeholder="例如 32" min="20" max="42" step="0.1">
+      </div>
+    </div>
+
+    <div class="weight-note">體重估算公式（無實際體重時使用）：0–12個月 <b>(月齡×0.5)+4</b>　·　1–5歲 <b>(歲×2)+8</b>　·　6–12歲 <b>(歲×3)+7</b>　·　建議 &gt;12歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b></div>
+  </div>
+
+  <div class="wave">
+    <svg viewBox="0 0 400 34" preserveAspectRatio="none">
+      <polyline points="0,17 40,17 48,17 54,4 60,30 66,10 72,17 110,17 118,17 124,4 130,30 136,10 142,17 400,17"
+        fill="none" stroke="#899a76" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div id="results" class="results">
+
+    <div class="section-title"><span class="dot" style="background:var(--spo2)"></span>小兒術前禁食（NPO）規則</div>
+    <div class="monitor-grid" id="npoGrid"></div>
+    <div class="info-box" id="npoNote"></div>
+
+    <div class="section-title"><span class="dot" style="background:var(--hr)"></span>基本參數</div>
+    <div class="monitor-grid" id="basicGrid"></div>
+
+    <div id="pretermSection" style="display:none;">
+      <div class="section-title"><span class="dot" style="background:var(--bp)"></span>早產兒特別考量</div>
+      <div class="monitor-grid" id="pretermGrid"></div>
+      <div class="info-box" id="pretermNote"></div>
+    </div>
+
+    <!-- ===== 第一畫面：生命徵象 & 氣道管理 ===== -->
+    <div class="section-title"><span class="dot" style="background:var(--bp)"></span>生命徵象正常範圍</div>
+    <div class="monitor-grid" id="vitalsGrid"></div>
+
+    <div class="section-title"><span class="dot" style="background:var(--spo2)"></span>呼吸器設定參考</div>
+    <div class="monitor-grid" id="ventGrid"></div>
+    <div class="info-box" id="ventNote"></div>
+
+    <div class="section-title"><span class="dot" style="background:#a9a595"></span>氣道器材選擇</div>
+    <div class="monitor-grid" id="airwayGrid"></div>
+    <div class="info-box" id="lmaNote"></div>
+
+    <div class="section-title"><span class="dot" style="background:#7fc0b6"></span>輸液</div>
+    <div class="drug-table-wrap">
+      <table class="drug-table">
+        <thead><tr><th style="width:20%">項目</th><th style="width:28%">劑量（依體重計算）</th><th>警語／禁忌症</th></tr></thead>
+        <tbody id="fluidTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- ===== 第二畫面：藥物分類（浮動選單）→ 點選後顯示對應藥物 ===== -->
+    <div class="section-title"><span class="dot" style="background:var(--rr)"></span>藥物劑量（依體重計算）</div>
+    <div class="drug-tabs" id="drugTabs">
+      <button data-cat="induction" onclick="selectDrugCat('induction')">誘導</button>
+      <button data-cat="relaxant" onclick="selectDrugCat('relaxant')">肌肉鬆弛劑</button>
+      <button data-cat="opioid" onclick="selectDrugCat('opioid')">鴉片止痛藥</button>
+      <button data-cat="reversal" onclick="selectDrugCat('reversal')">逆轉藥 Reverse</button>
+      <button data-cat="other" onclick="selectDrugCat('other')">其他</button>
+    </div>
+    <div class="drug-prompt" id="drugPrompt">↑ 點選上方分類以顯示對應藥物劑量</div>
+    <div class="drug-table-wrap" id="drugTableWrap" style="display:none;">
+      <table class="drug-table">
+        <thead><tr><th style="width:20%">藥物</th><th style="width:28%">劑量（依體重計算）</th><th>警語／禁忌症</th></tr></thead>
+        <tbody id="drugTableBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box" id="drugReminder" style="display:none;"><b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。</div>
+
+  </div>
+
+  <footer>FOR CLINICAL REFERENCE ONLY · 僅供臨床參考，不取代專業判斷</footer>
+</div>
+
+<script>
+function togglePreterm(){
+  const checked = document.getElementById('isPreterm').checked;
+  document.getElementById('gaField').style.display = checked ? 'block' : 'none';
+}
+
+function calculate(){
+  const ageValRaw = parseFloat(document.getElementById('ageVal').value);
+  const unit = document.getElementById('ageUnit').value;
+  const actualWtRaw = parseFloat(document.getElementById('actualWeight').value);
+  if(isNaN(ageValRaw) || ageValRaw < 0){ alert('請輸入有效的年齡數值'); return; }
+
+  // normalize to months (float) and years
+  let ageMonths;
+  if(unit==='days') ageMonths = ageValRaw/30.4375;
+  else if(unit==='months') ageMonths = ageValRaw;
+  else ageMonths = ageValRaw*12;
+  const ageYears = ageMonths/12;
+  const isNeonate = ageMonths <= 1;
+
+  // ---- weight estimate ----
+  let estWeight;
+  if(ageMonths<=12) estWeight = (ageMonths*0.5)+4;
+  else if(ageYears<=5) estWeight = (ageYears*2)+8;
+  else if(ageYears<=12) estWeight = (ageYears*3)+7;
+  else estWeight = (ageYears*3)+7; // rough extrapolation, flagged below
+  const weight = (!isNaN(actualWtRaw) && actualWtRaw>0) ? actualWtRaw : estWeight;
+  const usingEstimate = isNaN(actualWtRaw) || actualWtRaw<=0;
+
+  const ageLabel = ageMonths<12 ? (Math.round(ageMonths*10)/10)+' 個月' : (Math.round(ageYears*10)/10)+' 歲';
+
+  // ---- basic grid ----
+  const maint421 = maintFluid(weight);
+  document.getElementById('basicGrid').innerHTML = `
+    ${readout('年齡', ageLabel, '', 'var(--hr)')}
+    ${readout('體重'+(usingEstimate?'（估算）':'（實際輸入）'), weight.toFixed(1), 'kg', usingEstimate?'var(--rr)':'var(--hr)')}
+    ${readout('維持輸液速率 (4-2-1)', maint421, 'mL/hr', '#7fc0b6')}
+    ${readout('禁食後補充建議', Math.round(maint421*4), 'mL（第1hr起兩hr內分次補NPO缺量）', '#7fc0b6')}
+  `;
+  if(ageYears>12 && usingEstimate){
+    document.getElementById('basicGrid').innerHTML += `<div class="flag" style="margin-top:2px">⚠ &gt;12歲體重估算誤差大，強烈建議輸入實際體重</div>`;
+  }
+
+  // ---- preterm ----
+  const isPreterm = document.getElementById('isPreterm').checked;
+  const gaWeeksRaw = parseFloat(document.getElementById('gaWeeks').value);
+  const pretermSection = document.getElementById('pretermSection');
+  if(isPreterm && !isNaN(gaWeeksRaw) && gaWeeksRaw>0){
+    pretermSection.style.display='block';
+    const ageDays = ageMonths*30.4375;
+    const ageWeeks = ageDays/7;
+    const pma = gaWeeksRaw + ageWeeks;
+    const correctedAgeWeeks = ageWeeks - (40 - gaWeeksRaw);
+    let correctedLabel;
+    if(correctedAgeWeeks < 0){
+      correctedLabel = '尚未達足月（矯正年齡為負值，屬新生兒期前）';
+    } else {
+      const correctedMonths = correctedAgeWeeks/4.345;
+      correctedLabel = correctedMonths<1 ? (Math.round(correctedAgeWeeks*10)/10)+' 週' : (Math.round(correctedMonths*10)/10)+' 個月';
+    }
+    let apneaRisk, apneaColor;
+    if(pma < 56){ apneaRisk='高風險 — 建議術後監測 ≥24hr'; apneaColor='var(--bp)'; }
+    else if(pma < 60){ apneaRisk='中高風險 — 建議術後監測 ≥12–24hr'; apneaColor='var(--rr)'; }
+    else { apneaRisk='仍建議評估個別病史（貧血/慢性肺病/過去呼吸暫停史）'; apneaColor='var(--spo2)'; }
+
+    document.getElementById('pretermGrid').innerHTML = `
+      ${readout('出生胎齡 GA', gaWeeksRaw, '週', 'var(--bp)')}
+      ${readout('目前矯正年齡', correctedLabel, '', 'var(--rr)')}
+      ${readout('目前 Postmenstrual Age', pma.toFixed(1), '週', 'var(--spo2)')}
+      ${readout('術後呼吸暫停風險', apneaRisk, '', apneaColor)}
+    `;
+    document.getElementById('pretermNote').innerHTML = `
+      <b>⚕ 早產兒麻醉重點提醒：</b><br>
+      • <b>呼吸暫停監測：</b>PMA &lt; 60 週者，非緊急手術建議延後至PMA≥60週；若必須手術，術後需連續呼吸/心跳監測，尤其PMA&lt;56週、有貧血、慢性肺病或過去呼吸暫停病史者風險更高。<br>
+      • <b>氧氣治療目標：</b>避免高血氧，SpO₂目標建議維持在約 <b>88–94%</b>（尤其GA&lt;32週或出生體重&lt;1500g者），降低早產兒視網膜病變（ROP）風險。<br>
+      • <b>體溫調控：</b>體表面積比大、皮下脂肪少，極易失溫，務必主動保溫（暖風毯、提高室溫、加溫輸液）。<br>
+      • <b>血糖：</b>肝醣儲備不足，術中/術後需密切監測血糖，避免低血糖。<br>
+      • <b>藥物代謝：</b>肝腎功能未成熟，藥物清除率降低、敏感性增加，鴉片類/鎮靜劑劑量宜保守並密切監測，必要時降低劑量或延長給藥間隔。<br>
+      • <b>顱內出血(IVH)風險：</b>避免血壓/血流動力學劇烈波動、避免快速輸液或高滲透壓液體推注。<br>
+      • <b>體重估算：</b>上方年齡對應體重公式僅適用於足月兒，早產兒務必使用實際測量體重進行藥物劑量計算。
+    `;
+  } else {
+    pretermSection.style.display='none';
+  }
+
+  // ---- vitals ----
+  const v = vitalsFor(ageMonths);
+  document.getElementById('vitalsGrid').innerHTML = `
+    ${readout('心率 HR', v.hr, 'bpm', 'var(--hr)')}
+    ${readout('收縮壓 SBP', v.sbp, 'mmHg', 'var(--bp)')}
+    ${readout('呼吸速率 RR', v.rr, '次/分', 'var(--rr)')}
+  `;
+
+  // ---- ventilator ----
+  const vt = ventFor(ageMonths, weight);
+  document.getElementById('ventGrid').innerHTML = `
+    ${readout('Tidal Volume', vt.vt, 'mL (6–8 mL/kg)', 'var(--spo2)')}
+    ${readout('建議 RR', vt.rr, '次/分', 'var(--rr)')}
+    ${readout('術中 EtCO₂ 目標', '35–45', 'mmHg', 'var(--hr)')}
+    ${readout('PEEP', '3–5', 'cmH₂O', 'var(--spo2)')}
+    ${readout('FiO₂ 起始', '40–60', '%（依SpO₂titrate）', 'var(--spo2)')}
+    ${readout('I:E ratio', vt.ie, '', 'var(--spo2)')}
+    ${readout('Peak Pressure 上限', vt.pip, 'cmH₂O', 'var(--bp)')}
+  `;
+  document.getElementById('ventNote').innerHTML = `<b>ℹ 提醒：</b>未插管cuffed ETT者須注意漏氣量,若漏氣>閾值影響潮氣量估算;PIP持續偏高需排除管路阻塞、支氣管內插管過深或胸廓順應性問題。<br><b>EtCO₂：</b>一般術中維持 <b>35–45 mmHg</b>；神經外科需降低顱內壓時可控制在 30–35 mmHg，但應避免過度換氣（&lt;30 mmHg）導致腦血流下降。<b>突然下降</b>需排除心輸出量驟降、空氣栓塞、管路脫落或阻塞；<b>持續上升</b>需排除通氣不足、腹腔充氣(氣腹)、發燒或惡性高熱。新生兒/小嬰兒因無效腔比例高，EtCO₂ 與 PaCO₂ 落差較大，必要時以動脈血氣校正。`;
+
+  // ---- airway ----
+  const ett = ettFor(ageMonths, weight);
+  const lma = lmaFor(weight);
+  const blade = bladeFor(ageMonths);
+  document.getElementById('airwayGrid').innerHTML = `
+    ${readout('Uncuffed ETT', ett.uncuffed, 'mm ID', '#a9a595')}
+    ${readout('Cuffed ETT', ett.cuffed, 'mm ID', '#a9a595')}
+    ${readout('插管深度（唇端）', ett.depth, 'cm', 'var(--rr)')}
+    ${readout('建議喉鏡片', blade, '', 'var(--hr)')}
+    ${readout('LMA 建議尺寸', lma, '', 'var(--spo2)')}
+  `;
+  document.getElementById('lmaNote').innerHTML = `<b>ℹ LMA 適應症：</b>自主呼吸或短程正壓通氣手術。<b>禁忌：</b>飽胃、嚴重GER、氣道異物梗阻風險、需長時間維持絕對制動之手術（如雷射、眼科手術）建議首選插管。`;
+
+  // ---- NPO (小兒術前禁食) ----
+  document.getElementById('npoGrid').innerHTML = buildNpoCards();
+  document.getElementById('npoNote').innerHTML = `<b>ℹ 說明：</b>禁食時間以「攝取後至麻醉誘導」計算。<b>清澈液體</b>＝開水、無渣果汁、清茶、電解質液；<b>奶類（含配方奶）視為固體處理</b>。上述為健康、擇期手術之一般建議，應鼓勵清澈液體/母乳至禁食界線前給予，避免不必要的長時間禁食造成脫水、低血糖、躁動。急診、腸胃道蠕動遲緩、肥胖、胃食道逆流、糖尿病或困難氣道者須個別評估並視為飽胃處置。<br><span style="font-size:.92em;">依據：ASA 2023 術前禁食指引；ESAIC/ESPA 小兒術前禁食共識（清澈液體多數已放寬至 1 小時）。</span>`;
+
+  // ---- 輸液 ----
+  document.getElementById('fluidTableBody').innerHTML = buildFluidTable(weight, ageMonths);
+
+  // ---- 藥物：儲存目前體重/年齡，重設分類選單（點選分類後才顯示對應藥物） ----
+  currentWeight = weight;
+  currentAgeMonths = ageMonths;
+  resetDrugSelector();
+
+  document.getElementById('results').className='results visible';
+  document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* 目前計算所用的體重/年齡，供分類選單即時渲染 */
+let currentWeight = null;
+let currentAgeMonths = null;
+
+function resetDrugSelector(){
+  document.querySelectorAll('#drugTabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('drugPrompt').style.display='block';
+  document.getElementById('drugTableWrap').style.display='none';
+  document.getElementById('drugReminder').style.display='none';
+  document.getElementById('drugTableBody').innerHTML='';
+}
+
+function selectDrugCat(cat){
+  if(currentWeight===null){ return; }
+  document.querySelectorAll('#drugTabs button').forEach(b=>{
+    b.classList.toggle('active', b.getAttribute('data-cat')===cat);
+  });
+  document.getElementById('drugPrompt').style.display='none';
+  document.getElementById('drugTableWrap').style.display='block';
+  const rem = document.getElementById('drugReminder');
+  rem.style.display='block';
+  if(cat==='opioid'){
+    rem.innerHTML = '<b>⚕ 鴉片類「上限」說明：</b>鴉片類<b>無器官毒性劑量閾值</b>，真正的限制因子是<b>呼吸抑制</b>，因此安全上限取決於<b>是否計畫術後拔管</b>。<br>'
+      + '• <b>計畫拔管</b>（多數小兒手術）：表中累積上限為實務天花板，超過易致甦醒/拔管延遲與術後呼吸抑制。<br>'
+      + '• <b>術後續留插管／送ICU</b>：上限大幅放寬（fentanyl 可達 10–50 mcg/kg，心臟手術更高），此時限制因子為血行動力學而非呼吸。<br>'
+      + '• 上述為<b>術中累積總量</b>參考，非單次劑量、亦非每日總量；務必依手術刺激、併用藥物與個別反應滴定。<br>'
+      + '<span style="font-size:.92em;">參考：Brown KA, et al. <i>Anesthesiology</i>. 2006;105(4):665–669（反覆缺氧與鴉片類敏感性）；Coté CJ, Lerman J, Anderson BJ. <i>A Practice of Anesthesia for Infants and Children</i>, 6th ed.</span>';
+  } else {
+    rem.innerHTML = '<b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。';
+  }
+  document.getElementById('drugTableBody').innerHTML = buildDrugTable(cat, currentWeight, currentAgeMonths);
+}
+
+function readout(label, value, unit, color){
+  return `<div class="readout" style="--rc:${color}">
+    <div class="rlabel">${label}</div>
+    <div class="rvalue">${value}<span class="runit"> ${unit}</span></div>
+  </div>`;
+}
+
+function maintFluid(w){
+  let rate;
+  if(w<=10) rate = w*4;
+  else if(w<=20) rate = 40 + (w-10)*2;
+  else rate = 60 + (w-20)*1;
+  return Math.round(rate);
+}
+
+function vitalsFor(ageMonths){
+  const ay = ageMonths/12;
+  if(ageMonths<=1) return {group:'新生兒 (0–1mo)', hr:'100–180', sbp:'60–90', rr:'30–60'};
+  if(ageMonths<=12) return {group:'嬰兒 (1–12mo)', hr:'100–160', sbp:'70–100', rr:'24–38'};
+  if(ay<=3) return {group:'幼兒 (1–3y)', hr:'90–150', sbp:'80–110', rr:'22–30'};
+  if(ay<=6) return {group:'學齡前 (3–6y)', hr:'80–140', sbp:'80–110', rr:'20–24'};
+  if(ay<=12) return {group:'學齡兒童 (6–12y)', hr:'70–120', sbp:'90–120', rr:'18–24'};
+  return {group:'青少年 (>12y)', hr:'60–100', sbp:'100–120', rr:'12–20'};
+}
+
+function ventFor(ageMonths, weight){
+  const ay = ageMonths/12;
+  let rr, ie;
+  if(ageMonths<=1){rr='30–40'; ie='1:1.5';}
+  else if(ageMonths<=12){rr='25–35'; ie='1:1.5';}
+  else if(ay<=6){rr='20–25'; ie='1:2';}
+  else if(ay<=12){rr='16–20'; ie='1:2';}
+  else {rr='12–16'; ie='1:2';}
+  const vtLow = Math.round(weight*6);
+  const vtHigh = Math.round(weight*8);
+  return {vt:`${vtLow}–${vtHigh}`, rr, ie, pip: ageMonths<=12 ? '<25' : '<30'};
+}
+
+function ettFor(ageMonths, weight){
+  if(ageMonths<=1){
+    // neonatal weight-based table
+    let uncuffed;
+    if(weight<1) uncuffed='2.5';
+    else if(weight<2) uncuffed='3.0';
+    else if(weight<3) uncuffed='3.0–3.5';
+    else uncuffed='3.5';
+    return {uncuffed, cuffed:'一般不建議 <2.5kg 使用', depth:(weight+6).toFixed(1)+'（體重+6公式）'};
+  }
+  const ageYears = ageMonths/12;
+  const uncuffed = (ageYears/4 + 4).toFixed(1);
+  const cuffed = (ageYears/4 + 3.5).toFixed(1);
+  const depth = (ageYears/2 + 12).toFixed(1);
+  return {uncuffed, cuffed, depth};
+}
+
+function bladeFor(ageMonths){
+  if(ageMonths<6) return 'Miller 0（直片）';
+  if(ageMonths<12) return 'Miller 1（直片）';
+  if(ageMonths<36) return 'Miller 1–2';
+  if(ageMonths<72) return 'Macintosh 2 / Miller 2';
+  return 'Macintosh 2–3';
+}
+
+function lmaFor(w){
+  if(w<5) return 'Size 1';
+  if(w<10) return 'Size 1.5';
+  if(w<20) return 'Size 2';
+  if(w<30) return 'Size 2.5';
+  if(w<50) return 'Size 3';
+  if(w<70) return 'Size 4';
+  return 'Size 5';
+}
+
+/* 依選取的分類渲染對應藥物。分類：induction 誘導 / relaxant 肌肉鬆弛劑 /
+   opioid 鴉片止痛藥 / reversal 逆轉藥 / other 其他 */
+function buildDrugTable(cat, weight, ageMonths){
+  const rows = [];
+
+  function row(bg,name,dose,calcFn,flag,flagDanger,striped){
+    const calc = calcFn(weight);
+    const nameCell = striped
+      ? `<td class="dname-cell striped-cell"><span class="stripe-badge">${name}</span></td>`
+      : `<td class="dname-cell" style="background:${bg}">${name}</td>`;
+    rows.push(`<tr>
+      ${nameCell}
+      <td class="dose-cell" data-label="劑量"><span style="color:var(--muted);font-weight:400;font-size:.72rem;display:block;margin-bottom:2px;">${dose}</span>${calc}</td>
+      <td class="warn-cell" data-label="警語">${flag?`<span class="flag${flagDanger?' danger':''}">${flag}</span>`:'—'}</td>
+    </tr>`);
+  }
+
+  if(cat==='induction'){
+    row('var(--bg-induction)','Propofol','2.5–3.5 mg/kg IV', w=>rangeCalc(w,2.5,3.5)+' mg',
+        '蛋/大豆過敏禁用・小兒避免長時間輸注(PRIS丙泊酚輸注症候群風險)', true);
+    row('var(--bg-induction)','Ketamine (IV)','1–2 mg/kg IV', w=>rangeCalc(w,1,2)+' mg',
+        '顱內壓升高慎用・分泌物增多易誘發喉痙攣(可併用抗涎劑)', false);
+    row('var(--bg-benzo)','Midazolam','0.05–0.1 mg/kg IV', w=>rangeCalc(w,0.05,0.1)+' mg',
+        (ageMonths<6 ? '<6個月慎用(呼吸抑制風險高)・' : '') + '嚴重呼吸功能不全慎用・小兒偶見矛盾反應(躁動不安)', ageMonths<6);
+    row('var(--bg-other)','Dexmedetomidine','0.5–1 mcg/kg', w=>rangeCalc(w,0.5,1)+' mcg',
+        '嚴重心搏過緩、房室傳導阻滯、血容不足時慎用', false);
+    row('var(--bg-local)','Lidocaine IV（減緩插管反應）','1–1.5 mg/kg IV', w=>rangeCalc(w,1,1.5)+' mg',
+        '注意單位體重最大劑量,避免局麻全身毒性(LAST)・amide類過敏禁用', false);
+  }
+  else if(cat==='relaxant'){
+    row('var(--bg-relaxant)','Rocuronium','插管 0.6–1.2 mg/kg ／ 維持 追加 0.1–0.2 mg/kg・點滴 5–15 mcg/kg/min',
+        w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">插管</span> '+rangeCalc(w,0.6,1.2)+' mg'
+          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">維持</span> 追加 '+rangeCalc(w,0.1,0.2)+' mg'
+          +'<br><span style="font-size:.92rem;">點滴 '+rangeCalc(w,0.005,0.015)+' mg/min</span></div>',
+        'NMBA過敏史禁用・重症肌無力(含幼年型)需大幅減量・依TOF監測追加,小兒作用時間較成人短', true);
+    row('var(--bg-relaxant)','Cisatracurium','插管 0.1–0.2 mg/kg ／ 維持 追加 0.02–0.03 mg/kg・點滴 1–3 mcg/kg/min',
+        w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">插管</span> '+rangeCalc(w,0.1,0.2)+' mg'
+          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">維持</span> 追加 '+rangeCalc(w,0.02,0.03)+' mg'
+          +'<br><span style="font-size:.92rem;">點滴 '+rangeCalc(w,0.001,0.003)+' mg/min</span></div>',
+        'NMBA過敏史禁用・Hofmann清除，小兒肝腎不全相對安全、長時間手術蓄積少・依TOF監測調整', false);
+    row('var(--bg-relaxant2)','Succinylcholine (SCC)','插管 1–2 mg/kg（不作術中維持）', w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">插管</span> '+rangeCalc(w,1,2)+' mg',
+        '惡性高熱、肌肉失養症/肌病變、燒燙傷、高血鉀禁用・幼童(尤其男童)未診斷肌病變恐致高血鉀心跳停止(黑框警示)', true);
+  }
+  else if(cat==='opioid'){
+    const infant6 = ageMonths < 6;
+    // 高風險族群自動減量提示（<6個月自動標紅；OSA/扁桃腺、早產兒提醒需人工判斷）
+    const hiRiskNote = (infant6 ? '⚠ 目前年齡 &lt;6 個月：清除率低、呼吸驅動未成熟，建議由上述劑量之<b>一半</b>起始並延長給藥間隔。<br>' : '')
+      + '⚠ 下列族群需<b>減量</b>並延長術後監測：OSA/打鼾/扁桃腺手術（μ受體敏感性上升，morphine 建議 ≤0.05 mg/kg 起始）、早產兒 PMA&lt;60週、併用 benzodiazepine/propofol（呼吸抑制為協同作用）。';
+
+    row('var(--bg-opioid)','Fentanyl','誘導 1–2 mcg/kg ／ 計畫拔管術中累積上限 3–5 mcg/kg',
+        w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">誘導</span> '+rangeCalc(w,1,2)+' mcg'
+          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">計畫拔管累積上限</span><br>'+rangeCalc(w,3,5)+' mcg</div>',
+        '超過約5 mcg/kg 拔管延遲、術後呼吸抑制風險上升（術後續留插管者上限放寬）・快速大劑量注射可能致胸壁僵硬<br>'+hiRiskNote, infant6);
+    row('var(--bg-opioid)','Morphine','誘導 0.05–0.1 mg/kg ／ 計畫拔管術中累積上限 0.1–0.2 mg/kg',
+        w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">誘導</span> '+rangeCalc(w,0.05,0.1)+' mg'
+          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">計畫拔管累積上限</span><br>'+rangeCalc(w,0.1,0.2)+' mg</div>',
+        '超過約0.2 mg/kg 需準備術後延長監測・腎功能不全代謝物(M6G)蓄積<br>'+hiRiskNote, infant6);
+    row('var(--bg-opioid)','Demerol (Meperidine)','0.5–1 mg/kg IV/IM（單次上限約50–100mg）', w=>rangeCalc(w,0.5,1)+' mg',
+        '腎功能不全/重複給藥時normeperidine蓄積→癲癇風險,小兒不建議常規使用', true);
+  }
+  else if(cat==='reversal'){
+    row(null,'Neostigmine','0.05–0.07 mg/kg（併用Glycopyrrolate）', w=>rangeCalc(w,0.05,0.07)+' mg',
+        '務必併用抗膽鹼藥(嬰幼兒心搏徐緩風險更高)・腸阻塞/腹膜炎禁用', true, true);
+    row(null,'Sugammadex','2–4 mg/kg', w=>rangeCalc(w,2,4)+' mg',
+        '僅能逆轉roc/vec・監測心搏徐緩・重度腎功能不全避免・建議2歲以上使用', true, true);
+    row('var(--bg-anticholinergic)','Atropine<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.02 mg/kg（最低劑量0.1mg）', w=>Math.max(w*0.02,0.1).toFixed(2)+' mg',
+        '劑量低於0.1mg可能致反常性心搏徐緩(嬰幼兒)・心搏過速時慎用', false);
+    row('var(--bg-anticholinergic)','Glycopyrrolate<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.01 mg/kg', w=>(w*0.01).toFixed(2)+' mg',
+        '不易通過血腦障壁,小兒中樞副作用較少・心搏過速時慎用', false);
+  }
+  else if(cat==='other'){
+    row('var(--bg-other)','Acetamol (Acetaminophen)','10–15 mg/kg IV/PO（依年齡調整）', w=>rangeCalc(w,10,15)+' mg',
+        '嚴重肝功能不全禁用・每日總量(含各途徑)依體重年齡設上限,過量致肝衰竭・新生兒嬰兒清除率低需減量', true);
+    row('var(--bg-other)','Dynastat (Parecoxib)','成人劑量40 mg IV；兒科尚無公定劑量', w=>'兒科劑量未確立',
+        '18歲以下安全性與劑量未確立,不建議常規使用・磺胺過敏禁用', true);
+    row('var(--bg-vasopressor)','Ephedrine','0.1–0.2 mg/kg IV bolus', w=>rangeCalc(w,0.1,0.2)+' mg',
+        '心律不整時慎用・重複給藥易產生耐受性(tachyphylaxis)', false);
+    row('var(--bg-skin)','Ondansetron','0.1–0.15 mg/kg（上限4mg）', w=>Math.min(rangeHigh(w,0.1,0.15),4).toFixed(2)+' mg',
+        'QT延長/電解質不平衡時慎用(TdP風險)・依體重給藥,單次上限4mg', true);
+    row('var(--bg-other)','Dexamethasone','0.15 mg/kg IV（上限5mg，PONV預防／抗發炎）', w=>Math.min(w*0.15,5).toFixed(2)+' mg',
+        '全身性黴菌感染禁用・免疫抑制/化療病童感染風險慎用', false);
+    row('var(--bg-other)','Hydrocortisone','1–2 mg/kg IV（壓力劑量/腎上腺功能不足覆蓋）', w=>rangeCalc(w,1,2)+' mg',
+        '感染時可能掩蓋徵象・長期使用注意腎上腺抑制', false);
+  }
+
+  return rows.join('');
+}
+
+/* 小兒術前禁食（NPO）規則 — 與年齡體重無關，固定建議；以與基本參數相同的小格子呈現 */
+function buildNpoCards(){
+  return [
+    readout('清澈液體','2','小時','var(--spo2)'),
+    readout('母乳','4','小時','var(--spo2)'),
+    readout('配方奶 / 奶類','6','小時','var(--spo2)'),
+    readout('清淡固體 / 副食品','6','小時','var(--spo2)'),
+    readout('油炸 / 高脂 / 肉類','8','小時','var(--spo2)')
+  ].join('');
+}
+
+function buildFluidTable(weight, ageMonths){
+  const rows = [];
+  function row(name,dose,calcFn,flag,flagDanger){
+    const calc = calcFn(weight);
+    rows.push(`<tr>
+      <td class="dname-cell" style="background:#7fc0b6">${name}</td>
+      <td class="dose-cell" data-label="劑量"><span style="color:var(--muted);font-weight:400;font-size:.72rem;display:block;margin-bottom:2px;">${dose}</span>${calc}</td>
+      <td class="warn-cell" data-label="警語">${flag?`<span class="flag${flagDanger?' danger':''}">${flag}</span>`:'—'}</td>
+    </tr>`);
+  }
+  row('維持輸液（4-2-1法則）','見上方計算', w=>maintFluid(w)+' mL/hr',
+      '心臟/腎臟功能不全者慎防輸液過量', false);
+  row('急救輸液 Bolus','10–20 mL/kg', w=>rangeCalc(w,10,20)+' mL',
+      '心功能不全/慢性腎病者需減量並每次給予後重新評估', false);
+  return rows.join('');
+}
+
+function rangeCalc(w, lo, hi){
+  return (w*lo).toFixed(2)+'–'+(w*hi).toFixed(2);
+}
+function rangeHigh(w, lo, hi){
+  return w*hi;
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Enter') calculate(); });
+</script>
+</body>
+</html>
