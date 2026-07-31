@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="麻醉速查">
+<meta name="theme-color" content="#FBF8F1">
+<title>各科手術全身麻醉快速查詢</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF8F1;         /* 淺米白底 */
+  --surface:#F4F1EB;    /* 卡片乳白 */
+  --surface-2:#EDE9E1;
+  --ink:#423E39;        /* 暖深灰褐 主文字 */
+  --ink-soft:#726B62;   /* 次文字 */
+  --line:#D6CFC3;       /* 細分隔線 */
+  --sage:#8B9A8B;       /* 主色 灰綠 */
+  --sage-tint:#DDE3D9;
+  --clay:#B8968C;       /* 副色 灰玫 */
+  --clay-tint:#EBDDD7;
+  --flag:#A87E76;       /* 警示 灰陶紅 */
+  --flag-tint:#EAD9D3;
+  --warn:#C0392B;       /* 警示紅字 */
+  --slate:#8892A0;      /* 監測 灰藍 */
+  --slate-tint:#DCE0E5;
+  --ochre:#B7A177;      /* 用藥 灰赭 */
+  --ochre-tint:#E9E1D0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Noto Sans TC",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.6;font-size:16.5px;
+}
+.app{max-width:1180px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* ---------- Header ---------- */
+header{padding:22px 22px 16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.5px}
+.brand .sub{font-size:13.5px;color:var(--ink-soft);letter-spacing:.5px}
+.search{margin-top:14px;position:relative}
+.search input{
+  width:100%;padding:11px 14px 11px 40px;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface);color:var(--ink);
+  font-family:inherit;font-size:16.5px;outline:none;transition:border-color .15s;
+}
+.search input:focus{border-color:var(--sage)}
+.search input::placeholder{color:#A69E92}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#A69E92}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{
+  padding:6px 13px;border-radius:20px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-soft);font-size:14px;cursor:pointer;
+  transition:all .15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--sage)}
+.chip[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+
+/* ---------- Body layout ---------- */
+.body{display:flex;flex:1;min-height:0}
+.list{
+  width:340px;flex-shrink:0;border-right:1px solid var(--line);
+  overflow-y:auto;padding:12px;
+}
+.detail{flex:1;overflow-y:auto;padding:26px 30px 60px}
+
+/* ---------- List cards ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:11px;
+  padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s;
+}
+.card:hover{border-color:var(--sage);transform:translateY(-1px)}
+.card.active{border-color:var(--sage);background:var(--sage-tint)}
+.card .name{font-weight:500;font-size:16.5px}
+.card .en{font-size:13px;color:var(--ink-soft);margin-top:1px}
+.card .meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.tag{font-size:12.5px;padding:2px 8px;border-radius:6px;background:var(--surface-2);color:var(--ink-soft)}
+.tag.spec{background:var(--clay-tint);color:#8a6a60}
+.empty{padding:40px 20px;text-align:center;color:var(--ink-soft);font-size:15px}
+
+/* ---------- Detail view ---------- */
+.detail .placeholder{
+  height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#A69E92;text-align:center;gap:10px;
+}
+.detail .placeholder svg{opacity:.5}
+.d-head{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:4px}
+.back{display:none;align-items:center;gap:6px;background:none;border:none;color:var(--sage);
+  font-family:inherit;font-size:15px;cursor:pointer;padding:0;margin-bottom:14px}
+.d-title{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.3px}
+.d-title-zh{font-size:16.5px;color:var(--ink-soft);margin-top:2px}
+.d-en{color:var(--ink-soft);font-size:13.5px;margin-top:6px;letter-spacing:.4px}
+.d-summary{
+  display:flex;gap:22px;flex-wrap:wrap;margin-top:14px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 16px;
+}
+.d-summary .item{font-size:14px}
+.d-summary .item .k{color:var(--ink-soft);font-size:12.5px;letter-spacing:.5px}
+.d-summary .item .v{font-weight:500;margin-top:1px}
+.d-summary .item.pos .v{display:flex;align-items:center;gap:7px}
+.posico{width:30px;height:14px;flex-shrink:0;color:var(--ink)}
+
+.section{margin-top:22px;padding-left:15px;border-left:3px solid var(--sage);position:relative}
+.section h3{font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.section .dot{width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0}
+.section ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.section li{position:relative;padding-left:16px;font-size:16px;color:var(--ink)}
+.section li::before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--line)}
+.section li b{font-weight:600;color:var(--ink)}
+.section li b.w{font-weight:700;color:var(--warn)}
+
+/* section color variants */
+.s-airway{border-left-color:var(--slate)}   .s-airway .dot{background:var(--slate)}
+.s-monitor{border-left-color:var(--slate)}  .s-monitor .dot{background:var(--slate)}
+.s-drug{border-left-color:var(--ochre)}     .s-drug .dot{background:var(--ochre)}
+.s-hemo{border-left-color:var(--clay)}      .s-hemo .dot{background:var(--clay)}
+
+/* red flag block */
+.flag-box{margin-top:24px;background:var(--flag-tint);border:1px solid #DDBEB4;
+  border-radius:11px;padding:15px 17px}
+.flag-box h3{color:var(--warn);font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.flag-box ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.flag-box li{position:relative;padding-left:18px;font-size:16px;color:var(--warn);font-weight:700}
+.flag-box li b{font-weight:700;color:var(--warn)}
+.flag-box li::before{content:"▲";position:absolute;left:0;top:1px;font-size:11px;color:var(--warn)}
+
+.asa-btn{margin-left:auto;font-family:inherit;font-size:12.5px;color:var(--slate);
+  background:var(--slate-tint);border:1px solid #C9D0D8;border-radius:20px;
+  padding:3px 10px;cursor:pointer;font-weight:500;transition:all .15s;white-space:nowrap}
+.asa-btn:hover{background:#CED6DE}
+.asa-btn[aria-expanded="true"]{background:var(--slate);color:#fff;border-color:var(--slate)}
+.asa-panel{margin-top:10px;background:var(--slate-tint);border:1px solid #D2D8DF;
+  border-radius:10px;padding:13px 15px;line-height:1.6;color:var(--ink)}
+.asa-panel[hidden]{display:none}
+.asa-panel h4{font-size:13.5px;font-weight:700;color:#5a6470;margin-bottom:8px;letter-spacing:.3px}
+.asa-panel .std{margin-bottom:6px;font-size:13.8px}
+.asa-panel .std b{color:var(--ink);font-weight:700}
+.asa-panel ul{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.asa-panel li{position:relative;padding-left:15px;font-size:13.5px;color:var(--ink-soft)}
+.asa-panel li::before{content:"";position:absolute;left:3px;top:8px;width:4px;height:4px;border-radius:50%;background:var(--slate)}
+.asa-panel li b{color:var(--ink);font-weight:600}
+.asa-panel .src{margin-top:9px;padding-top:8px;border-top:1px solid #D2D8DF;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+
+.d-figure{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 12px 10px}
+.d-figure svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+.d-figure figcaption{margin-top:8px;font-size:13px;color:var(--ink-soft);line-height:1.55;text-align:center}
+
+/* 通用「點擊展開說明」按鈕與面板 */
+.info-btn{display:inline-flex;align-items:center;margin-left:6px;font-family:inherit;font-size:12.5px;
+  color:var(--sage);background:var(--sage-tint);border:1px solid #C7D0C4;border-radius:20px;
+  padding:1px 8px;cursor:pointer;font-weight:500;vertical-align:middle;line-height:1.6;transition:all .15s}
+.info-btn:hover{background:#CED6C9}
+.info-btn[aria-expanded="true"]{background:var(--sage);color:#fff;border-color:var(--sage)}
+.info-panel{display:block;margin-top:8px;background:var(--surface-2);border:1px solid var(--line);
+  border-left:3px solid var(--sage);border-radius:8px;padding:10px 13px;
+  font-size:15px;line-height:1.65;color:var(--ink-soft);font-weight:400}
+.info-panel[hidden]{display:none}
+.info-panel b{color:var(--ink);font-weight:600}
+
+.refs-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:15px 17px}
+.refs-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.refs-box ol{list-style:none;counter-reset:r;display:flex;flex-direction:column;gap:8px}
+.refs-box li{counter-increment:r;position:relative;padding-left:24px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.refs-box li::before{content:counter(r);position:absolute;left:0;top:0;width:17px;height:17px;
+  background:var(--sage-tint);color:#5a6a5a;border-radius:5px;font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;justify-content:center}
+
+.disclaimer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--ink-soft);line-height:1.7}
+
+footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color:#A69E92;text-align:center}
+
+/* ---------- Mobile two-stage ---------- */
+@media(max-width:760px){
+  .body{position:relative}
+  .list{width:100%;border-right:none}
+  .detail{display:none;position:absolute;inset:0;background:var(--bg);z-index:5}
+  .app.stage-detail .list{display:none}
+  .app.stage-detail .detail{display:block}
+  .back{display:inline-flex}
+  .d-summary{gap:16px}
+  /* 手機閱讀強化:字再放大、行距加寬、觸控目標加大 */
+  body{font-size:16.5px}
+  h1{font-size:23px}
+  .brand .sub{font-size:13px}
+  .search input{font-size:17px;padding:13px 14px 13px 40px}
+  .chip{font-size:14.5px;padding:8px 14px}
+  .card .name{font-size:17px}
+  .card .en{font-size:13px}
+  .section h3{font-size:17px}
+  .section li{font-size:16.5px;line-height:1.8}
+  .flag-box h3{font-size:17px}
+  .flag-box li{font-size:16.5px;line-height:1.8}
+  .info-btn{font-size:13px;padding:3px 9px}
+  .info-panel{font-size:15.5px;line-height:1.75}
+  .d-title{font-size:24px}
+  .d-title-zh{font-size:17px}
+  .d-summary .item{font-size:15px}
+  .refs-box li{font-size:14px;line-height:1.6}
+  .disclaimer{font-size:13.5px;line-height:1.75}
+}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-thumb{background:#CFC7B9;border-radius:6px}
+.upd{display:none;align-items:center;justify-content:center;gap:8px;
+  background:var(--sage);color:#fff;font-weight:600;font-size:15px;
+  padding:11px 14px;border-radius:9px;margin-bottom:12px;cursor:pointer;
+  text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.upd:active{opacity:.85}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div id="upd" class="upd" onclick="applyUpdate()">🔄 已有新版本 · 點擊立即更新</div>
+    <div class="brand">
+      <h1>各科手術全身麻醉快速查詢</h1>
+      <span class="sub">Surgical GA Quick Reference</span>
+    </div>
+    <div class="search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="搜尋手術名稱、科別或關鍵字…" autocomplete="off">
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="body">
+    <div class="list" id="list"></div>
+    <div class="detail" id="detail">
+      <div class="placeholder">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M12 9v6"/><circle cx="12" cy="12" r="9"/></svg>
+        <div>從左側選擇一台手術<br>查看全身麻醉注意事項</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>臨床輔助工具 · 使用前請對照所屬機構protocol與最新指引</footer>
+</div>
+
+<script>
+/* ============================================================
+   資料在這裡 —— 要新增一台手術,就複製一個 { } 物件貼進陣列即可。
+   每個欄位都對應詳情頁的一個區塊,不需要的欄位可留空陣列 []。
+   ============================================================ */
+const SURGERIES = [
+  {
+    specialty:"一般外科",
+    name:"腹腔鏡膽囊/闌尾切除術",
+    en:"Laparoscopic Cholecystectomy / Appendectomy",
+    summary:{ position:"Supine · LC rev Trendelenburg / Appy Trendelenburg + left tilt", posType:"revtrend", time:"0.5–2 hr", blood:"少", airway:"GA / ETT" },
+    preop:[
+      "一般評估;注意膽道疾病、黃疸、可能中轉開腹",
+      "評估是否合併急性膽囊炎(飽胃→可能需要 RSI、感染狀態)",
+      "<b>闌尾切除</b>:多為急診刀 → <b class='w'>視為飽胃</b>;穿孔/腹膜炎者評估敗血、脫水、電解質與容積狀態"
+    ],
+    airway:[
+      "<b>首選 ETT</b>:氣腹 + 體位變化風險高,不宜LMA為主",
+      "氣腹→橫膈上移、FRC↓、肺順應性↓,氣道壓上升",
+      "CO₂吸收→高碳酸血症,需提高分鐘通氣量,密切監測 EtCO₂",
+      "闌尾炎(急診/飽胃)→ <b class='w'>RSI + cricoid pressure</b>、備吸引;擇期膽囊則常規誘導"
+    ],
+    monitor:[
+      "標準ASA監測 + <b>EtCO₂</b>",
+      "一般口徑靜脈管路即可;放置OG管減壓胃"
+    ],
+    hemo:[
+      "氣腹↑腹內壓→靜脈回流↓、SVR↑;反向頭高位進一步↓前負荷",
+      "因氣腹導致腹膜拉扯→迷走反射性心搏過緩,需警覺",
+      "穿孔性闌尾炎/腹膜炎 → 可能敗血性低血壓,需積極輸液復甦、必要時升壓劑"
+    ],
+    intraop:[
+      "維持足夠肌肉鬆弛以利術野與氣腹",
+      "預防低體溫;肩痛與殘餘CO₂/橫膈刺激有關"
+    ],
+    drug:[
+      "標準誘導;肌鬆需維持穩定深度",
+      "sugammadex便於快速、完全逆轉",
+      "闌尾炎:依飽胃給 RSI 劑量(rocuronium 1.2 mg/kg 或 succinylcholine);及時給予涵蓋腸道菌之抗生素"
+    ],
+    emergence:[
+      "拔管前確保肌力恢復",
+      "smooth extubation"
+    ],
+    postop:[
+      "Multimodal止痛 + NB (自費)",
+      "<b>PONV高風險</b>(女性、腹腔鏡)→積極預防",
+      "多為當日或隔日出院",
+      "闌尾切除:多模式止痛;穿孔/膿瘍者延長抗生素,觀察術後腸阻塞與腹腔膿瘍"
+    ],
+    flags:[
+      "CO₂氣體栓塞(罕見但致命)",
+      "皮下氣腫、氣胸、縱膈氣腫",
+      "大血管或膽道損傷→大出血",
+      "氣腹誘發之嚴重心搏過緩",
+      "穿孔性闌尾炎 → 敗血症/敗血性休克"
+    ],
+    refs:[
+      "Hayden, P., & Cowman, S. (2011). Anaesthesia for laparoscopic surgery. Continuing Education in Anaesthesia Critical Care & Pain, 11(5), 177–180.",
+      "Istvan, J., Belliveau, M., & Donati, F. (2010). Rapid sequence induction for appendectomies: A retrospective case-review analysis. Canadian Journal of Anesthesia, 57(4), 330–336."
+    ]
+  },
+  {
+    specialty:"一般外科",
+    name:"甲狀腺切除術",
+    en:"Thyroidectomy",
+    summary:{ position:"Supine · neck extended", posType:"supine", time:"1–3 hr", blood:"中", airway:"GA / ETT(常用IONM tube)" },
+    preop:[
+      "<b class='w'>確認甲狀腺功能為euthyroid</b>,避免thyroid storm",
+      "術前若甲亢:抗甲狀腺藥/β-blocker 避免風暴;Lugol's/SSKI 降低腺體血流與出血;術前 Ca/維生素 D 降低術後低血鈣",
+      "<b class='w'>避免頸部過度後仰</b>(→術後疼痛、眩暈、頭痛、PONV);頸椎疾病者術前評估",
+      "氣道評估:甲狀腺腫大/氣管偏移或壓迫→潛在困難插管",
+      "檢視術前影像(氣管受壓、胸骨後延伸)、頸部活動度"
+    ],
+    airway:[
+      "備用 UE scope check IONM 位置",
+      "<b class='w'>可能困難插管</b>(氣管移位/受壓)→備妥困難氣道器材",
+      "使用<b>IONM ETT(喉返神經監測)</b>時須減少肌鬆使用,劑量要斟酌",
+      "手術需墊肩(頸部後仰);<b>誘導完成後先墊肩再插管</b>,ET 管位置才不會跑掉",
+      "拔管後仍需嚴密觀察氣道"
+    ],
+    monitor:[
+      "標準監測",
+      "IONM神經監測→肌鬆策略特殊(見用藥)",
+      "<b class='w'>連續迷走神經 IONM 可能致心搏過緩/心律不整</b>(迷走張力↑)"
+    ],
+    hemo:[
+      "多數穩定;巨大甲狀腺腫或胸骨後腫瘤需留意"
+    ],
+    intraop:[
+      "頭頸遠離麻醉端,ETT固定務必牢靠",
+      "止血重要;避免術中肢體/頭部移位"
+    ],
+    drug:[
+      "用IONM時:<b class='w'>維持期避免深度肌鬆</b>,誘導用短效或減量,必要時sugammadex早期逆轉",
+      "IONM:誘導僅用短效肌鬆(如 succinylcholine),<b class='w'>誘導後不再追加肌鬆</b>以維持 EMG 訊號",
+      "目標smooth extubation,避免嗆咳致頸部出血"
+    ],
+    emergence:[
+      "<b class='w'>平順拔管</b>(嗆咳→血腫風險)",
+      "拔管前後評估聲帶/喉返神經功能",
+      "沙啞多為插管相關聲帶水腫(24–48hr 緩解);警覺杓狀軟骨脫位"
+    ],
+    postop:[
+      "監測頸部血腫、聲音變化、低血鈣",
+      "床邊備拆線包",
+      "疼痛多輕微:以非鴉片 multimodal(paracetamol/NSAID)為主;VTE 採機械性預防(SCD)、早期下床"
+    ],
+    flags:[
+      "<b>術後頸部血腫→氣道急症</b>:病人保持清醒、床邊拆線減壓(SCOOP);大血腫壓迫喉部使插管困難,插管前先減壓;可能需留管待喉水腫消退",
+      "雙側喉返神經麻痺→拔管後喘鳴/上呼吸道阻塞,需立即重新插管,必要時氣切",
+      "低血鈣(副甲狀腺損傷,24–48hr)→抽搐",
+      "甲狀腺風暴、氣管軟化"
+    ],
+    refs:[
+      "Malhotra, S., & Sodhi, V. (2007). Anaesthesia for thyroid and parathyroid surgery. Continuing Education in Anaesthesia Critical Care & Pain, 7(2), 55–58.",
+      "Jung, J. Y. (2025). Intraoperative nerve monitoring in thyroid surgery: Technical principles, anesthetic considerations, and clinical applications. Journal of Clinical Medicine, 14(9), 3259.",
+      "Wang, T. S., Lyden, M. L., & Sosa, J. A. (2026). Thyroidectomy. In UpToDate. Wolters Kluwer. (Topic last updated July 23, 2025)."
+    ]
+  },
+  {
+    specialty:"一般外科",
+    name:"腹腔鏡肝切除術",
+    en:"Laparoscopic Liver Resection",
+    summary:{ position:"Supine · reverse Trendelenburg (± French/split-leg)", posType:"revtrend", time:"2–5 hr", blood:"中～多(離斷期可能大量)", airway:"GA / ETT" },
+    preop:[
+      "評估肝功能與肝儲備(Child-Pugh、MELD、ICG 清除率)、門脈高壓、食道靜脈曲張、凝血與血小板",
+      "肝病(肝硬化、化療後肝、脂肪肝)影響藥物代謝與出血風險",
+      "新輔助化療 → 化療相關脂肪肝炎(↑周術期併發症)及心毒性(心律不整、心肌病、心衰、MI);建議化療結束後 4–6 週再手術",
+      "<b>備血</b>:預期可能大出血 → 確認血品可近性與大量輸血流程",
+      "評估心肺功能(肺功能檢查及 cardiac echo 報告):<b class='w'>低 CVP 策略對前負荷依賴者(如主動脈瓣狹窄)風險高</b>"
+    ],
+    airway:[
+      "ETT;氣腹 + 反向頭高 → FRC↓、氣道壓↑,採肺保護通氣",
+      "CO₂ 吸收 → 高碳酸血症,提高分鐘通氣量並監測 EtCO₂"
+    ],
+    monitor:[
+      "標準 ASA 監測 + Flowtrac(連續血壓、心輸出量/SVV 導向、頻繁抽血氣/Hb/乳酸)",
+      "<b>大口徑靜脈管路 ×2</b> ± 中央靜脈導管;備快速輸液與加溫裝置",
+      "考慮心輸出量/SVV 導向輸液(較 CVP 更能兼顧低 CVP 與容積管理)",
+      "<b>氣腹經傳導干擾 CVP 讀值 → 腹腔鏡下 CVP 監測不可靠</b>,多改以動態/心輸出量指標取代常規 CVP 導管",
+      "<b class='w'>警覺氣體栓塞</b>:EtCO₂ 驟降、SpO₂↓、低血壓;TEE 最敏感",
+      "<b class='w'>CUSA 使用時失血易低估</b>:血液積於分離吸引罐、常被 drape 遮蔽 → 主動核對實際失血量"
+    ],
+    hemo:[
+      "<b>低 CVP 麻醉(目標 CVP < 5 mmHg)</b> → 減少肝靜脈回血、降低肝實質離斷出血",
+      "RCT 證實離斷期以麻醉手段壓低 CVP 可顯著減少術中失血;<b>低 CVP 僅維持到肝實質離斷完成,止血後即與外科團隊確認回補至 euvolemia</b>(結束低 CVP 期)",
+      "機轉:離斷期主要出血源為<b>無瓣膜的肝靜脈回血</b> → 壓低 CVP/肝靜脈壓使術野趨近「無血」;meta-analysis 顯示可減少失血與輸血,但臨床預後未見改善",
+      "目標:限制輸液、反向頭高、避免高 PEEP、必要時低劑量血管擴張(furosemide、GTN、remifentanil 等);維持灌流與尿量的平衡",
+      "<b class='w'>低 CVP 需與器官灌流權衡</b>:過度低血壓 → 腦/腎/肝低灌流(文獻死因含低血壓相關腦梗塞、術後肝腎衰竭);常需血管收縮劑維持灌流壓,注意尿量、乳酸、動脈壓變化",
+      "可佐 <b>tranexamic acid</b> 減少失血",
+      "<b class='w'>低 CVP + 氣腹使 PP–CVP 梯度↑ → CO₂ 栓塞風險升高</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>PP</b> 是氣腹壓(pneumoperitoneum pressure),<b>CVP</b> 這裡代表中央/肝靜脈端壓力。氣體會不會跑進血管,取決於腹腔內 CO₂ 壓力與開放肝靜脈內壓力的<b>落差(梯度)</b>。氣腹把腹腔打到正壓(如 12–14 mmHg),低 CVP 又把靜脈端壓得很低 → 兩者相加使落差變大。當離斷時肝靜脈被切開、靜脈內壓低於周圍 CO₂ 壓,CO₂ 就被這個壓力差灌進開放靜脈 → 氣體栓塞。也就是說:低 CVP 一方面減少出血(好),另一方面卻加大了把 CO₂ 推進血管的驅動壓(壞)。這正是切肝比一般腹腔鏡更需警覺氣栓、有人主張把氣腹壓降到 10–12 mmHg 的原因。</span>",
+      "<b>氣腹壓權衡</b>:降至 10–12 mmHg 可減少氣體栓塞(RCT);但止血 tamponade 常需 ≥10–14 mmHg → 與外科團隊依出血/栓塞風險即時調整",
+      "Pringle maneuver 阻斷肝門 → 放開時再灌流性低血壓與代謝變化;大血管(肝靜脈/IVC)損傷 → 瞬間大出血",
+      "Pringle 多採<b>間歇阻斷</b>(常規肝連續 >1 hr、病理肝 >30 min 易致缺血/再灌流傷害)→ 10–20 min 阻斷 + 5 min 再灌流;夾閉時靜脈回流↓、SVR↑ → 血行動力學波動,需與外科團隊密切溝通",
+      "<b class='w'>TVE(全肝血流阻斷,含 IVC 上下夾)</b>:無血術野最佳但 FLR 缺血風險高、劇烈容積位移與血行動力學波動;保留給肝靜脈頑固大出血或 IVC 侵犯"
+    ],
+    intraop:[
+      "維持體溫",
+      "維持足夠肌肉鬆弛,利於氣腹與手術視野;肝實質離斷階段隨時與外科醫師溝通出血狀況",
+      "手術床可能大幅傾斜(steep Trendelenburg ↔ reverse Trendelenburg)→ 事先固定 ETT 與管路,每次變位後重確認氣管內管深度與血行動力學",
+      "肝臟後上段(VII/VIII)病灶常採左半側臥、右側朝上約 45° → 加強壓點保護、變位後重評通氣與血壓",
+      "Pringle 放開前預告 → 準備處理再灌流低血壓"
+    ],
+    drug:[
+      "肝功能不良 → 首選不依賴肝代謝之藥(如 cisatracurium 之 Hofmann 降解);謹慎 morphine、benzodiazepine",
+      "維持適當麻醉深度但避免過度輸液以配合低 CVP"
+    ],
+    emergence:[
+      "確認血行動力學穩定、無活動性出血再甦醒",
+      "大範圍切除/肝硬化者評估是否延遲拔管或送 ICU"
+    ],
+    postop:[
+      "多模式止痛:NB 減少鴉片;硬脊膜外於凝血/血小板疑慮者需權衡",
+      "止痛策略:ERAS 已不建議常規胸椎硬脊膜外(低血壓、液體過負荷、失敗率、術後凝血病下硬膜外血腫風險)→ 替代 intrathecal morphine、傷口持續浸潤導管(CWI)、TAP/ESP block;paracetamol 除極大範圍切除外多屬安全,NSAID 無禁忌時可用",
+      "監測術後出血、膽漏、肝功能與凝血、低血糖",
+      "<b>PHLF</b> 多於 POD5 後浮現(INR↑、膽紅素↑);術後仍常對輸液有反應 → goal-directed,循環容積足即停 IV fluid<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>這條其實壓縮了兩個重點。<b>一、PHLF 辨識時機</b>:PHLF(post-hepatectomy liver failure,術後肝衰竭)典型在 POD5(術後第 5 天)之後才浮現,指標是 INR 上升 + 膽紅素上升(即 50–50 criteria 概念)→ 所以術後凝血與膽紅素追蹤的關鍵時間點在 POD5 前後。<b>二、術後輸液</b>:大範圍切除後,病人術後早期通常仍對輸液有反應(fluid-responsive),故短期採目標導向輸液(goal-directed);但一旦水化與循環容積足夠就停掉靜脈輸液,避免液體過負荷。</span>",
+      "早期活動、目標導向輸液(ERAS 肝手術)"
+    ],
+    flags:[
+      "CO₂ 氣體栓塞(肝靜脈開放 + 低 CVP → 風險高於一般腹腔鏡)",
+      "大血管損傷 → 瞬間大量失血",
+      "Pringle 放開後再灌流性低血壓;術後出血/膽漏",
+      "肝衰竭(切除量過大/肝儲備不足)、術後凝血病"
+    ],
+    refs:[
+      "Joliat, G. R., Kobayashi, K., Hasegawa, K., et al. (2023). Guidelines for perioperative care for liver surgery: Enhanced Recovery After Surgery (ERAS) Society recommendations 2022. World Journal of Surgery, 47(1), 11–34.",
+      "Luo, W., Jin, D., Huang, J., et al. (2024). Low pneumoperitoneum pressure reduces gas embolism during laparoscopic liver resection: A randomized controlled trial. Annals of Surgery, 279(4), 588.",
+      "Egger, M. E., Gottumukkala, V., Wilks, J. A., et al. (2017). Anesthetic and operative considerations for laparoscopic liver resection. Surgery, 161(5), 1191–1202.",
+      "Patel, J., Jones, C. N., & Amoako, D. (2022). Perioperative management for hepatic resection surgery. BJA Education, 22(9), 357–363.",
+      "Pawlik, T. M., Schmidt, C. R., & Lewis, H. L. (2026). Minimally invasive liver resection (MILR). In UpToDate. Wolters Kluwer. (Topic last updated June 06, 2024)."
+    ],
+    diagram:{ section:"hemo", caption:"Pringle maneuver:夾閉肝門(HA + PV)阻斷入肝血流;肝靜脈 → IVC 回流不受阻斷,故離斷期肝靜脈回血仍是主要出血源(原創示意圖)", svg:`<svg viewBox="0 0 680 400" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>Pringle maneuver 肝臟前面觀示意圖</title><desc>肝臟前面觀:肝門(肝動脈、門靜脈、總膽管)由血管夾夾閉以阻斷入肝血流;肝靜脈匯入下腔靜脈的回流不受阻斷。</desc><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs><rect x="8" y="8" width="664" height="384" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><rect x="384" y="30" width="20" height="70" rx="7" fill="#6E7E90"/><path d="M326 108 C348 99 372 97 390 96" fill="none" stroke="#6E7E90" stroke-width="3" stroke-linecap="round" opacity="0.8"/><path d="M356 118 C372 109 384 103 393 99" fill="none" stroke="#6E7E90" stroke-width="2.4" stroke-linecap="round" opacity="0.65"/><path d="M64 150 C60 104 120 80 210 77 C300 74 372 85 412 101 C440 113 430 157 398 183 C356 217 296 227 220 223 C150 219 92 203 64 150 Z" fill="#E4D4CD" stroke="#B8968C" stroke-width="1"/><path d="M250 79 C249 96 250 106 251 118" fill="none" stroke="#C4A89E" stroke-width="1.4"/><path d="M244 84 L250 94 L256 84" fill="none" stroke="#C4A89E" stroke-width="1.2" stroke-linejoin="round"/><path d="M300 96 C340 92 372 96 402 106" fill="none" stroke="#D3BDB4" stroke-width="1" opacity="0.8"/><path d="M168 214 C159 227 168 246 181 246 C194 246 200 229 191 214 C185 205 174 205 168 214 Z" fill="#C7D2C0" stroke="#8B9A8B" stroke-width="1"/><rect x="228" y="210" width="52" height="124" rx="14" fill="#EBDDD7" stroke="#CDBBB2" stroke-width="0.6" opacity="0.75"/><rect x="238" y="214" width="6" height="120" rx="3" fill="#B5645C"/><rect x="247" y="214" width="13" height="120" rx="4" fill="#8892A0"/><rect x="263" y="214" width="6" height="120" rx="3" fill="#97A98A"/><ellipse cx="253" cy="278" rx="54" ry="25" fill="none" stroke="#C0392B" stroke-width="2" opacity="0.5" stroke-dasharray="5 5"/><path d="M210 271 C190 262 184 267 189 279" fill="none" stroke="#5E5952" stroke-width="3.4" stroke-linecap="round"/><path d="M210 285 C190 293 184 288 189 277" fill="none" stroke="#5E5952" stroke-width="3.4" stroke-linecap="round"/><circle cx="212" cy="278" r="4.5" fill="#443F39"/><rect x="214" y="270" width="76" height="15" rx="6" fill="#5E5952" stroke="#443F39" stroke-width="0.6"/><rect x="220" y="273" width="64" height="3.5" rx="1.5" fill="#7A756D"/><rect x="24" y="300" width="178" height="52" rx="11" fill="#EAD9D3" stroke="#C0392B" stroke-width="1.2"/><text x="38" y="323" font-family="sans-serif" font-size="14.5" font-weight="600" fill="#8F2B20">Pringle maneuver</text><text x="38" y="342" font-family="sans-serif" font-size="12" fill="#6E5F5A">夾閉肝門,阻斷入肝血流</text><path d="M150 300 C185 292 210 292 236 284" fill="none" stroke="#C0392B" stroke-width="2.6" marker-end="url(#ah)"/><line x1="300" y1="122" x2="466" y2="114" stroke="#B4AEA4" stroke-width="0.6" stroke-dasharray="3 3"/><circle cx="300" cy="122" r="2" fill="#8B837A"/><text x="472" y="118" font-family="sans-serif" font-size="14" font-weight="500" fill="#423E39">肝臟</text><line x1="402" y1="52" x2="466" y2="58" stroke="#B4AEA4" stroke-width="0.6" stroke-dasharray="3 3"/><circle cx="402" cy="52" r="2" fill="#8B837A"/><text x="472" y="56" font-family="sans-serif" font-size="14" font-weight="500" fill="#423E39">肝靜脈 → IVC</text><text x="472" y="74" font-family="sans-serif" font-size="12" fill="#726B62">未阻斷,回血仍在</text><line x1="280" y1="238" x2="466" y2="238" stroke="#B4AEA4" stroke-width="0.6" stroke-dasharray="3 3"/><circle cx="280" cy="238" r="2" fill="#8B837A"/><text x="472" y="234" font-family="sans-serif" font-size="14" font-weight="500" fill="#423E39">肝門 portal triad</text><text x="472" y="252" font-family="sans-serif" font-size="12" fill="#726B62">HA + PV + 總膽管</text><line x1="184" y1="240" x2="150" y2="272" stroke="#B4AEA4" stroke-width="0.6" stroke-dasharray="3 3"/><circle cx="184" cy="240" r="2" fill="#8B837A"/><rect x="232" y="360" width="12" height="12" rx="3" fill="#B5645C"/><text x="250" y="370" font-family="sans-serif" font-size="12" fill="#726B62">肝動脈 HA</text><rect x="338" y="360" width="12" height="12" rx="3" fill="#8892A0"/><text x="356" y="370" font-family="sans-serif" font-size="12" fill="#726B62">門靜脈 PV</text><rect x="444" y="360" width="12" height="12" rx="3" fill="#97A98A"/><text x="462" y="370" font-family="sans-serif" font-size="12" fill="#726B62">總膽管</text></svg>` }
+  },
+  {
+    specialty:"一般外科",
+    name:"腹腔鏡胃切除術(腫瘤)",
+    en:"Laparoscopic Gastrectomy (Oncologic)",
+    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"3–5 hr", blood:"中", airway:"GA / ETT" },
+    preop:[
+      "胃癌病人常見營養不良、貧血、體重減輕 → 術前營養與貧血優化",
+      "評估幽門阻塞/胃滯留 → <b class='w'>飽胃誤吸風險,考慮 RSI</b>",
+      "化療病史(心臟毒性、骨髓抑制)與合併症評估"
+    ],
+    airway:[
+      "ETT;胃出口阻塞或大量胃滯留 → <b class='w'>視為飽胃、RSI</b>,術前放置並抽吸鼻胃管",
+      "氣腹 + 反向頭高 → 肺保護通氣、監測 EtCO₂"
+    ],
+    monitor:[
+      "標準監測 + 動脈導管(長時間手術、體液變動)",
+      "大口徑靜脈管路;鼻胃管由外科團隊引導擺位(避免夾入吻合處)",
+      "長時間手術 → 體溫監測與主動保溫;split-leg/反向頭高易滑動 → 防壓瘡與神經壓迫"
+    ],
+    hemo:[
+      "氣腹 + 反向頭高 → 前負荷↓、SVR↑;目標導向輸液,避免過度輸液影響吻合",
+      "失血一般中等;脾/大血管損傷可致出血"
+    ],
+    intraop:[
+      "維持穩定肌鬆以利術野;長時間手術注意體位滑動與肢體固定",
+      "與外科團隊確認鼻胃管深度"
+    ],
+    drug:[
+      "多模式麻醉、減少鴉片以利腸蠕動恢復(ERAS 胃切除)",
+      "<b>PONV 高風險</b> → 多重止吐預防"
+    ],
+    emergence:[
+      "smooth extubation;確認保溫與血行動力學穩定"
+    ],
+    postop:[
+      "ERAS:早期進食/下床、限制性輸液、避免常規腹腔引流與長期鼻胃管",
+      "多模式止痛(腹橫肌平面阻斷等);監測吻合口漏、出血",
+      "PONV 積極處理;VTE 預防"
+    ],
+    flags:[
+      "吻合口漏、術後出血、脾損傷",
+      "誤吸(胃出口阻塞/飽胃)",
+      "長時間手術 → 低體溫、體位相關神經/壓瘡傷害"
+    ],
+    refs:[
+      "Mortensen, K., Nilsson, M., Slim, K., et al. (2014). Consensus guidelines for enhanced recovery after gastrectomy: Enhanced Recovery After Surgery (ERAS) Society recommendations. British Journal of Surgery, 101(10), 1209–1229."
+    ]
+  },
+  {
+    specialty:"一般外科",
+    name:"減重手術(袖狀胃/繞道)",
+    en:"Bariatric Surgery (Sleeve / Gastric Bypass)",
+    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"1.5–3 hr", blood:"少", airway:"GA / ETT(困難氣道準備)" },
+    preop:[
+      "常見 OSA/OHS(以 STOP-Bang 篩檢)、困難氣道、GERD、糖尿病、脂肪肝、肺高壓/右心負荷",
+      "<b class='w'>預期困難插管與快速去飽和</b> → 完善氣道計畫、備困難氣道器材與影像喉鏡",
+      "藥物依理想/校正體重計算(見用藥);VTE 高風險 → 預防計畫"
+    ],
+    airway:[
+      "<b class='w'>斜坡(ramped)擺位</b>使外耳道與胸骨切跡水平 → 改善喉鏡視野與預充氧",
+      "充分預充氧 + 頭高位,考慮 apnoeic oxygenation;FRC↓ → 去飽和快",
+      "備影像喉鏡與二線氣道計畫;GERD 明顯者考慮 RSI"
+    ],
+    monitor:[
+      "標準監測;袖帶尺寸需適配上臂,量測不準/重症者用動脈導管",
+      "<b>定量 TOF 監測</b>:肥胖者殘餘阻滯風險高",
+      "壓點保護、體位固定(反向頭高 + split-leg 易滑動)"
+    ],
+    hemo:[
+      "多數穩定;反向頭高 + 氣腹 → 前負荷↓",
+      "藥物分佈受體脂影響 → 劑量策略見用藥"
+    ],
+    intraop:[
+      "肺保護通氣;肥胖者易肺塌陷 → 適度 PEEP、肺復張(依血行動力學)",
+      "常溫維持;止血一般不多"
+    ],
+    drug:[
+      "<b>親脂性藥(fentanyl、propofol 維持)依校正體重</b>;<b>親水性藥與非去極化肌鬆(rocuronium/vecuronium)依理想體重</b>,succinylcholine 依總體重",
+      "多模式減鴉片止痛(區域阻滯、ketamine、dexmedetomidine、NSAID/paracetamol);<b class='w'>鴉片敏感 + OSA → 呼吸抑制風險</b>,謹慎滴定",
+      "sugammadex 依實際體重逆轉,確保完全恢復"
+    ],
+    emergence:[
+      "<b class='w'>完全逆轉肌鬆、清醒且頭高位拔管</b>(降低阻塞與去飽和)",
+      "OSA 者術後續用自備 CPAP;避免殘餘鎮靜"
+    ],
+    postop:[
+      "多模式減鴉片止痛;OSA 監測與 CPAP",
+      "早期下床、VTE 預防(機械 + 藥物)",
+      "監測吻合口/縫合線漏(<b>持續心搏過速可能是早期徵象</b>)"
+    ],
+    flags:[
+      "困難氣道/插管失敗、快速去飽和",
+      "殘餘神經肌肉阻滯 → 術後呼吸衰竭",
+      "鴉片誘發呼吸抑制(尤其 OSA)",
+      "吻合口/袖狀縫合線漏、VTE/肺栓塞、橫紋肌溶解(長時間受壓)"
+    ],
+    refs:[
+      "Members of the Working Party, Nightingale, C. E., Margarson, M. P., Shearer, E., et al. (2015). Peri-operative management of the obese surgical patient 2015: Association of Anaesthetists of Great Britain and Ireland Society for Obesity and Bariatric Anaesthesia. Anaesthesia, 70(7), 859–876.",
+      "Stenberg, E., dos Reis Falcão, L. F., O'Kane, M., et al. (2022). Guidelines for perioperative care in bariatric surgery: Enhanced Recovery After Surgery (ERAS) Society recommendations: A 2021 update. World Journal of Surgery, 46(4), 729–751."
+    ]
+  },
+  {
+    specialty:"一般外科",
+    name:"腹腔鏡胰十二指腸切除術(Whipple)",
+    en:"Laparoscopic Pancreaticoduodenectomy (Whipple)",
+    summary:{ position:"Supine · reverse Trendelenburg (± split-leg)", posType:"revtrend", time:"6–10 hr", blood:"中～多", airway:"GA / ETT" },
+    preop:[
+      "常見<b>阻塞性黃疸</b>(膽紅素↑ → 維生素 K 依賴因子↓致凝血異常、腎前氮質血症);黃疸另有全身效應:心肌抑制、急性腎損傷、免疫抑制、傷口癒合不良<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>阻塞性黃疸全身效應與膽鹽缺乏、內毒素血症、腸道屏障受損有關,可致<b>心肌抑制</b>、腎前性<b>急性腎損傷</b>與凝血異常;例行內視鏡膽道支架並不降低死亡率,且增加感染/敗血等操作併發症。</span>",
+      "<b>惡病質與營養不良</b>:胰癌為所有癌症中惡病質發生率最高,診斷時可達八成;以 MUST / NRS-2002 篩檢,高蛋白(1.5 g/kg/day)、補充胰酶(PERT)",
+      "<b>缺鐵性貧血</b>常見且與較差術後預後相關;六週內手術者靜脈鐵劑為第一線(ferritin <100、TSAT <20% 提示缺鐵);圍術期輸血與胰癌術後存活較差相關 → 減少不必要輸血",
+      "<b>風險分層</b>:高齡(>74)、男性、BMI >40、術前敗血、功能依賴、ASA >2、冠心病、中度活動即喘、出血傾向、近端/全胰切除 → 死亡與併發症風險↑<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>源自 ACS-NSQIP 7571 例胰切除資料所識別之十項危險因子;<b>近端與全胰切除</b>本身即為獨立危險因子。Heidelberg score 與 MSKCC nomogram 提供較佳風險分層。</span>",
+      "<b>CPET(心肺運動測試)</b>評估心肺儲備、輔助風險分層<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>CPET(心肺運動測試,cardiopulmonary exercise testing):讓病人踩腳踏車運動,同時量測攝氧量與二氧化碳排出,看心肺在負荷下的儲備夠不夠,用來預測能否承受大手術。<b>無氧閾(AT)</b>是運動到身體開始動用無氧代謝、血中乳酸上升的臨界點,數值越高代表體能越好;胰手術中 <b>AT <10 mL/kg/min</b>(每公斤體重每分鐘攝氧量偏低)代表儲備差 → 住院拉長、胰漏與併發症變多。<b>VE/VCO₂</b>反映呼吸效率(每排掉固定量 CO₂ 需要換氣多少),數字越高越沒效率;>41 者長期存活較差。</span>",
+      "戒菸(≥4 週)、戒酒:降低術後肺部併發症與譫妄/戒斷風險(必要時 thiamine 預防 Wernicke)",
+      "血糖:HbA1c 篩檢;需胰島素者圍術期改<b>可變速率靜脈胰島素輸注(VRIII)</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>VRIII(可變速率靜脈胰島素輸注,variable-rate intravenous insulin infusion):以靜脈連續輸注胰島素,依定時測得的血糖隨時<b>調整輸注速率</b>,通常同時併葡萄糖輸注,讓禁食、無法正常進食或血糖不穩的病人在圍術期把血糖維持在目標範圍;即過去俗稱『滑動式胰島素』的靜脈連續版本。</span>",
+      "術前膽道引流:<b>可切除者勿為引流延遲手術</b>(NCCN);ERAS 建議除非膽紅素 >250 µmol/L 否則避免例行引流",
+      "<b class='w'>胃出口阻塞 → 視為飽胃、採快速誘導(RSI)</b>",
+      "<b>分泌型神經內分泌腫瘤</b>術前準備依 ENETS 共識<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>神經內分泌腫瘤僅約 10–30% 為分泌型。Gastrinoma → 高劑量 PPI 控制胃酸;Insulinoma → diazoxide,因致水鈉滯留須<b>術前 24h 停用</b>,術中備 dextrose 輸注並密切監測血糖;Glucagonoma → 血栓風險高,加強 VTE 預防;VIPoma → 術前矯正腹瀉與電解質。</span>"
+    ],
+    airway:[
+      "ETT;腹腔鏡氣腹 + 反向頭高、超長時間 → 肺保護通氣、密切監測 EtCO₂",
+      "術後呼吸衰竭常見(疼痛、吸入、腸阻、腹腔積液)→ 拔管與甦醒計畫需考量"
+    ],
+    monitor:[
+      "標準監測 + <b>動脈導管</b>(超長時間、體液大變動、頻抽血氣/血糖)",
+      "<b>大口徑靜脈 ± 中央靜脈導管</b>;備快速輸液與加溫",
+      "超長手術 → 主動保溫、壓瘡/周邊神經壓迫預防、定量 TOF",
+      "<b>血糖監測</b>(胰臟切除或術中剝離 → 血糖劇烈波動);近端/全胰切除者尤然",
+      "心輸出量監測(如食道 Doppler)可導引輸液,但於 Whipple <b>未證實</b>能縮短住院或減少併發症(OPTIMISE II 於大型腸胃手術亦為陰性)"
+    ],
+    hemo:[
+      "開腹吻合傾向<b>限制性輸液</b>:避免組織水腫影響吻合(尤其胰腸吻合 pancreaticojejunostomy)癒合",
+      "術後<b>液體正平衡過高</b>(累積輸入明顯大於輸出)與併發症增加相關<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>回溯研究(drowning Whipple)顯示術後液體正平衡 <b>48h >6795 mL、72h >6999 mL</b> 與輸血、心肺事件、整體併發症及住院延長相關;惟高度正平衡也可能反映較重之全身發炎反應。</span>",
+      "目標 <b>MAP >65 mmHg</b>(文獻中心經驗值;最佳血壓標的尚未確立)",
+      "門脈/SMV、IVC、肝臟周邊操作 → 靜脈回流↓、<b class='w'>短暫血流動力學不穩</b>;與外科團隊即時溝通,<b>出血點未必立即明顯</b>",
+      "胰臟周圍大血管緊鄰 → <b class='w'>突發大出血</b>風險;必要時門脈/SMV 切除重建(→ 出血、靜脈回流↓、肝缺血/術後肝功能異常)"
+    ],
+    intraop:[
+      "維持常溫與穩定肌鬆;超長手術注意<b>體位相關傷害</b>與壓點保護",
+      "預防性抗生素(常需術中重複給藥)、VTE 預防(機械 + 藥物)",
+      "<b>腹腔鏡術式須慎選中心</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>LEOPARD-2 隨機試驗因腹腔鏡組 90 天併發症相關死亡率達開腹組五倍(10% vs 2%)而提前中止;技術成熟後腹腔鏡可減少失血、輸血、術後疼痛與感染,惟應集中於<b>高流量、高經驗中心</b>。</span>",
+      "<b>Somatostatin 類似物(octreotide)</b>非例行使用,但外科團隊可能要求<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>octreotide 抑制胰外分泌;統合分析可降低生化性胰漏率,但<b>臨床顯著胰漏、併發症與死亡率均無改善</b>,故不建議例行使用。副作用:血糖擾動、罕見竇性心搏過緩;另延遲胃排空、降門脈壓、抗利尿。</span>"
+    ],
+    drug:[
+      "阻塞性黃疸/肝功能異常 → 選對肝腎依賴低之藥物;謹慎鴉片與 benzodiazepine",
+      "開腹術式:<b>胸段硬脊膜外</b>為傳統止痛黃金標準(↓肺/心/腎/VTE 併發症),但有失敗率且與較高胰漏率相關<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>PAKMAN 試驗長期追蹤:硬脊膜外相較<b>病人自控靜脈止痛(PCIA)</b>在存活、復發與疼痛嚴重度無差異;硬脊膜外另與較長 ICU、升壓藥需求及較高胰漏率相關。替代方案含鞘內鴉片、傷口/腹壁局麻輸注。黃疸致凝血異常者置放硬脊膜外需權衡。</span>",
+      "多模式、opioid-sparing;paracetamol + 單劑 gabapentinoid 前給藥;避免抗焦慮藥;腎功能許可下術後可用 NSAID"
+    ],
+    emergence:[
+      "確認穩定、常溫、無活動性出血;超長手術/重症者考慮延遲拔管",
+      "胰十二指腸切除/全胰切除後<b>常規入 ICU/HDU</b>:持續監測止痛、體液、血糖電解質,並觀察早期併發症"
+    ],
+    postop:[
+      "ERAS 胰十二指腸(2019):<b>不留置鼻胃管</b>、避免液體過載、早期進食與下床(POD 0)、嚼口香糖助腸蠕動、尿管 POD 1 移除",
+      "引流:若 POD 1 引流 amylase <5000 U/L,則 72h 早期移除;癌症病人 VTE 預防延長至 4 週;全數給 PONV 預防",
+      "監測<b class='w'>術後胰漏(POPF)</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>ISGPS 2016 定義:術後第 3 天(含)以後,引流液 amylase >機構<b>血清正常上限三倍</b>,且伴臨床相關處置改變者,方為臨床相關胰漏;多數輕微滲漏可保守處理。</span>",
+      "<b class='w'>延遲性胃排空</b>:為胰十二指腸切除術後 procedure-related 併發症之首;IV erythromycin 可降低發生率,持續胃滯留須排除吻合口漏",
+      "出血:早期(24–48h)多為止血不全/線結鬆脫,<b>黃疸為危險因子</b>;晚期(1–3 週)常因吻合口漏侵蝕血管或假性動脈瘤",
+      "<b>術後呼吸衰竭</b>常於 POD 3–7 出現;血糖儘量維持接近正常,全胰切除者為胰源性糖尿病需 VRIII"
+    ],
+    flags:[
+      "術後胰漏(POPF)→ 腹腔膿瘍/敗血、續發性出血",
+      "早/晚期大出血(門脈/SMV/肝動脈、假性動脈瘤);黃疸增加出血風險",
+      "延遲性胃排空(術後併發症之首)、膽漏、血糖劇烈波動",
+      "術後呼吸衰竭(POD 3–7)",
+      "超長手術 → 低體溫、體位相關神經/壓瘡傷害"
+    ],
+    refs:[
+      "Jarvis, M. S., Laing, R. W., & James, A. (2025). Anaesthesia for pancreatic resection surgery: part 2. BJA Education, 25(7), 257–264. https://doi.org/10.1016/j.bjae.2025.04.003",
+      "Jarvis, M. S., Laing, R. W., & James, A. (2025). Anaesthesia for pancreatic resection surgery: part 1. BJA Education, 25(2), 57–64. https://doi.org/10.1016/j.bjae.2024.10.001",
+      "van Hilst, J., de Rooij, T., Bosscha, K., et al. (2019). Laparoscopic versus open pancreatoduodenectomy for pancreatic or periampullary tumours (LEOPARD-2): a multicentre, patient-blinded, randomised controlled phase 2/3 trial. The Lancet Gastroenterology & Hepatology, 4(3), 199–207.",
+      "Klotz, R., Ahmed, A., Tremmel, A., et al. (2024). Thoracic epidural analgesia is not associated with improved survival after pancreatic surgery: long-term follow-up of the randomized controlled PAKMAN trial. Anesthesia & Analgesia, 140(4), 798–810.",
+      "Bassi, C., Marchegiani, G., Dervenis, C., et al. (2017). The 2016 update of the International Study Group (ISGPS) definition and grading of postoperative pancreatic fistula: 11 years after. Surgery, 161(3), 584–591.",
+      "Melloul, E., Lassen, K., Roulin, D., et al. (2020). Guidelines for perioperative care for pancreatoduodenectomy: Enhanced Recovery After Surgery (ERAS) recommendations 2019. World Journal of Surgery, 44(7), 2056–2084."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"全膝關節置換術",
+    en:"Total Knee Arthroplasty (TKA)",
+    summary:{ position:"Supine", posType:"supine", time:"1–2 hr", blood:"中(止血帶)", airway:"GA 或 半身麻醉/區域" },
+    preop:[
+      "老年共病評估:心肺功能、糖尿病、OSA",
+      "抗凝/抗血小板藥物、活動度、跌倒風險"
+    ],
+    airway:[
+      "全麻採標準氣道;半身麻醉則清醒或輕鎮靜"
+    ],
+    monitor:[
+      "標準監測;失血較多時可考慮動脈管"
+    ],
+    hemo:[
+      "<b class='w'>止血帶放氣→再灌流</b>:代謝性酸、鉀↑、暫時性低血壓",
+      "TXA可減少失血"
+    ],
+    intraop:[
+      "止血帶壓力與時間管理(>2hr風險升高)",
+      "<b class='w'>骨水泥植入症候群(BCIS)</b>:低血壓、低氧、心律不整、甚至心跳停止",
+      "積極保溫"
+    ],
+    drug:[
+      "Multimodal + 區域(收肌管阻滯、股神經、關節周圍浸潤)",
+      "注意局部麻醉藥總量以防LAST"
+    ],
+    emergence:[
+      "一般平順"
+    ],
+    postop:[
+      "積極multimodal止痛以利早期復健",
+      "VTE預防、PONV預防"
+    ],
+    flags:[
+      "骨水泥植入症候群、脂肪栓塞",
+      "VTE / 肺栓塞",
+      "止血帶放氣後血流動力學波動",
+      "局部麻醉藥全身毒性(LAST)"
+    ],
+    refs:[
+      "Donaldson, A. J., Thomson, H. E., Harper, N. J., & Kenny, N. W. (2009). Bone cement implantation syndrome. British Journal of Anaesthesia, 102(1), 12–22."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"腰椎手術(減壓／短節融合)",
+    en:"Lumbar Spine Surgery (Decompression / Short-segment Fusion)",
+    summary:{ position:"Prone (Wilson frame / bolsters)", posType:"prone", time:"可長可短(參考排程預估時間)", blood:"中(融合較多)", airway:"GA / ETT(Non-kinking ETT)" },
+    preop:[
+      "紀錄神經功能基準值(肌力、感覺)→ 供術後比對",
+      "共病與出血風險:抗凝／抗血小板藥物、狹窄程度、肥胖、OSA(阻塞性睡眠呼吸中止)",
+      "退化性狹窄多屬高齡族群;心肺功能與衰弱(frailty)評估"
+    ],
+    airway:[
+      "<b class='w'>俯臥後氣管內管(ETT)固定與位置確認極重要</b>(翻身後易移位／脫出)",
+      "俯臥使氣道壓上升、功能餘量下降;臉部與眼睛受壓保護",
+      "翻身前後聽診雙側呼吸音、確認 ETCO₂ 波形"
+    ],
+    monitor:[
+      "標準監測;短節減壓失血少,長節或融合加<b>動脈導管</b>",
+      "置放內固定或有神經風險時採<b>神經監測(MEP／SSEP)</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>MEP(運動誘發電位,motor evoked potential)</b>刺激運動皮質、記錄肢體肌肉反應,監測皮質脊髓運動路徑;<b>SSEP(體感誘發電位,somatosensory evoked potential)</b>刺激周邊神經、記錄至皮質,監測後索感覺路徑。兩者可即時偵測脊髓／神經根受牽拉或缺血。重點:<b>鹵素類吸入麻醉與肌肉鬆弛劑會壓抑訊號(尤其 MEP)</b>,故監測期間常改用全靜脈麻醉並避免持續肌鬆。</span>",
+      "肌鬆與神經監測協調:<b>MEP／EMG 監測期間不可使用肌鬆劑</b>;本院脊椎手術<b>不使用 succinylcholine(SCC)</b>——困難插管時採 <b>awake intubation(清醒插管)</b>,或以<b>高劑量 rocuronium 插管、再用 sugammadex 逆轉</b>以恢復可監測狀態<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>為什麼這樣安排:MEP／EMG 靠肌肉電位判讀,肌鬆劑會壓掉訊號,所以監測期間不給肌鬆。傳統會用短效的 succinylcholine 插管(插完很快退、可儘早開始監測),但本院脊椎手術不使用。遇到困難插管時,可選<b>清醒插管(awake intubation)</b>,或先給<b>高劑量 rocuronium</b> 取得良好插管條件、插管後立刻以 <b>sugammadex</b> 快速逆轉,讓肌力恢復而不影響後續神經監測。</span>",
+      "脊髓在約 L1／L2 高度結束於<b>脊髓圓錐(conus medullaris)</b>,再往下只剩馬尾(cauda equina)神經根;<b>多數腰椎手術正落在這個只有神經根、沒有脊髓的區段</b> → 可用 <b>free EMG(自由肌電圖)</b> 即時監測個別神經根是否受刺激<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>為什麼腰椎特別會用到 free EMG:MEP／SSEP 監測的是脊髓由上到下的長傳導路徑,但腰椎手術常在脊髓已經結束、只剩神經根(馬尾)的高度進行,長徑路訊號在這裡幫助有限。<b>free EMG(自由肌電圖)</b>作法不同——把針電極放在特定神經根所支配的肌肉上,持續聽這些肌肉有沒有自發放電(不是主動給刺激再看反應,那叫誘發電位)。一旦手術器械牽拉或壓到某條神經根,對應肌肉就會突然放電、機器即時示警,提醒術者該神經根有受傷風險。</span>",
+      "俯臥時 NIBP／動脈壓感測器歸零於心臟高度"
+    ],
+    hemo:[
+      "俯臥使腹部懸空(Wilson frame／墊塊)→ 降腹內壓、減少硬脊膜外靜脈叢充血與出血<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>俯臥時若腹部受壓,腹內壓(IAP)上升會壓迫下腔靜脈,血液改經硬脊膜外靜脈叢回流 → 該叢充血、術野出血增加。使用 Wilson frame 或胸／髂骨墊(bolster)讓腹部懸空,可降低腹內壓、減少靜脈叢充血與失血,同時利於通氣。</span>",
+      "<b>膀胱一脹,術中出血就會變多</b>——腹壓會透過沒有瓣膜的硬脊膜外靜脈叢傳到手術部位;所以預計開超過 2 小時的刀,先放導尿管、順便盯著尿量",
+      "融合手術:<b>抗纖溶劑(TXA 10 mg/kg bolus → 2 mg/kg/hr,腎功能不全減量)＋術中血液回收(cell salvage)</b>減少失血與異體輸血;限制性輸血目標 Hb 7–8 g/dL<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>失血嚴重度隨融合節數、年齡 >50、肥胖、腫瘤手術、俯臥腹內壓上升與經椎弓截骨而增加。<b>腫瘤(尤其轉移)手術須留意:惡性細胞播散疑慮使血液回收受限,且部分病人處於高凝狀態 → 抗纖溶劑使用需權衡。</b></span>",
+      "維持平均動脈壓(MAP)接近術前基準以保脊髓與視神經灌流;<b class='w'>不再建議以控制性降壓(induced hypotension)減少失血</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>硬脊膜外靜脈叢壓與骨內壓是脊椎手術失血的主要決定因素,而兩者<b>與動脈血壓無關</b> → 刻意降壓對減少失血助益有限,卻增加脊髓缺血(尤其嚴重狹窄或置入器械／撐開時)、POVL、急性腎損傷與心肌／神經損傷風險。需要時以 phenylephrine 等升壓藥維持 MAP。</span>"
+    ],
+    intraop:[
+      "<b class='w'>前位腰椎入路(ALIF／人工椎間盤)鄰近大血管:髂血管／下腔靜脈損傷可致大出血</b> → 需血管外科即時支援;後位 PLIF／TLIF 失血通常較少,但硬脊膜外靜脈出血可能難以止血<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>PLIF(後位腰椎椎體間融合)</b>經後方椎板切除減壓、移除椎間盤置入植入物,再以椎弓根螺釘與連桿固定;<b>TLIF</b>採較外側入路、肌肉損傷較少。<b>前位入路(ALIF、人工椎間盤置換)</b>用於退化性椎間盤病變,但須經腹部／腹膜後、鄰近髂血管與下腔靜脈 → 血管損傷可能大量出血,應預先安排血管外科支援,極端情況曾需主動脈夾閉。</span>",
+      "俯臥擺位:手臂外展 ≤90°、置於身體平面前並輕度內旋以降低臂神經叢傷害;保護肘部尺神經與所有受壓點;MEP 監測時於臼齒間放置 bite block 防咬傷舌／唇",
+      "俯臥並發症:眼壓上升／術後視力喪失(POVL)、周邊神經壓迫、壓瘡",
+      "<b>長時間俯臥腹部受壓 → 罕見肝／胰缺血</b>:不明原因代謝性酸中毒、乳酸上升、低血糖、ALT 上升、血小板消耗 → 儘早改回仰臥並加護監測<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>俯臥時腹部持續受壓可能損及內臟血流。文獻有俯臥脊椎手術後肝或胰功能障礙的零星報告(含致命個案),典型於手術約 2 小時後出現心血管不穩、代謝性酸中毒、乳酸上升、血糖下降、ALT 上升與消耗性血小板低下。處置為支持療法並儘早恢復仰臥、轉加護照護;預防重點是讓腹部懸空、避免局部受壓。</span>",
+      "積極保溫、定期檢查受壓點與眼睛"
+    ],
+    drug:[
+      "有神經監測時偏好 <b>TIVA(全靜脈麻醉,propofol±remifentanil)</b>,限制吸入麻醉與肌鬆以保留訊號<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>神經監測(尤其 MEP)對麻醉深度敏感:鹵素類吸入麻醉與肌鬆會壓抑波幅。改以 propofol 為主的全靜脈麻醉(TIVA)搭配 remifentanil,可在維持足夠麻醉深度下保留可判讀訊號;肌鬆僅於插管時使用或全程避免。</span>",
+      "Multimodal 止痛:術前 <b>gabapentin／pregabalin</b> 可降圍術期與慢性疼痛(pregabalin 生體可用率較穩定)、ketamine 為有用輔劑;搭配 acetaminophen、必要時鴉片",
+      "區域技術:後位手術之<b>豎脊肌平面阻滯(ESP block)</b>證據不一;<b>前位腰椎</b>手術可考慮雙側 TAP／腰方肌(QL)阻滯、傷口局部浸潤"
+    ],
+    emergence:[
+      "甦醒後評估神經功能;smooth extubation、避免嗆咳致內固定張力",
+      "<b>拔管分級</b>:1–2 節俯臥減壓通常可常規拔管;<b class='w'>俯臥 >4 小時者翻仰臥後評估顏面水腫</b>,顯著者延遲拔管、頭高 30°、必要時經換管器(tube changer)拔管;失血 >2000 mL、大量輸液或前後聯合入路 → 保留插管入 ICU<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>長時間俯臥加上大量輸液會造成氣道與顏面水腫,拔管後阻塞風險升高。拔管決策須綜合手術時長、失血與輸液量、術式與病人因素(肥胖、睡眠呼吸中止)。即使短期術後機械通氣也與術後肺炎風險上升相關,故在安全前提下仍盡量爭取拔管。</span>"
+    ],
+    postop:[
+      "Multimodal 止痛;<b>NSAID</b> 對骨癒合影響之證據尚無定論,術後 48 小時內於無不癒合風險因子(抽菸、長期 NSAID)且與外科討論下可使用;<b class='w'>即刻術後大劑量／長期使用須謹慎(硬脊膜外血腫壓迫脊髓之顧慮)</b>",
+      "早期活動(ERAS 脊椎路徑);監測傷口血腫與新出現之神經功能缺損"
+    ],
+    flags:[
+      "術後視力喪失(POVL／缺血性視神經病變)",
+      "前位入路大血管(髂血管／下腔靜脈)損傷致大出血",
+      "硬脊膜撕裂／腦脊髓液漏、神經根損傷",
+      "俯臥壓傷、周邊神經病變、腹部受壓致肝／胰缺血(罕見)",
+      "長時間俯臥＋大量輸液致氣道／顏面水腫、拔管後阻塞",
+      "傷口血腫壓迫馬尾／神經"
+    ],
+    refs:[
+      "Feix, B., & Sturgess, J. (2014). Anaesthesia in the prone position. Continuing Education in Anaesthesia Critical Care & Pain, 14(6), 291–297.",
+      "Kwee, M. M., Ho, Y.-H., & Rozen, W. M. (2015). The prone position during surgery and its complications: A systematic review and evidence-based guidelines. International Surgery, 100(2), 292–303.",
+      "Apfelbaum, J. L., Roth, S., Connis, R. T., et al. (2019). Practice advisory for perioperative visual loss associated with spine surgery 2019: An updated report by the American Society of Anesthesiologists Task Force on Perioperative Visual Loss. Anesthesiology, 130(1), 12–30.",
+      "Nowicki, R. W. A. (2014). Anaesthesia for major spinal surgery. Continuing Education in Anaesthesia, Critical Care & Pain, 14(4), 147–152.",
+      "Brown, M. J. (2026). Anesthesia for elective spine surgery in adults. In UpToDate. Wolters Kluwer. (Topic last updated June 19, 2026)."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"頸椎手術(前位 ACDF／後位)",
+    en:"Cervical Spine Surgery (ACDF / Posterior)",
+    summary:{ position:"Supine · neck slightly extended (ACDF) / Prone (posterior)", posType:"supine", time:"1.5–3 hr", blood:"少～中", airway:"GA / ETT(Non-kinking ETT・困難氣道準備)" },
+    preop:[
+      "<b class='w'>頸椎不穩定／脊髓壓迫 → 插管時頸部活動須最小化</b>,評估是否需 Awake 插管(Fiber 或其他影像式插管工具備用,call help)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>頸椎不穩定或嚴重脊髓壓迫時,插管過程的頸部後仰或過度活動可能使脊髓進一步受損。此時常選擇<b>清醒纖維支氣管鏡插管</b>(病人保留自主呼吸與肌張力,插管後可即時確認神經功能),或在維持頸部中立(手動軸線固定,manual in-line stabilisation)下使用影像式喉鏡,盡量減少頸椎位移。</span>",
+      "神經功能基準值(含脊髓病變 myelopathy 徵象)、活動範圍與症狀誘發姿勢",
+      "前位手術評估吞嚥與聲音;後位為俯臥,俯臥風險同脊椎手術"
+    ],
+    airway:[
+      "困難氣道準備依 <b>ASA 困難氣道指引</b>(2022)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>ASA 困難氣道指引(2022)重點:預期困難時傾向<b>誘導前先建立氣道(清醒插管)</b>,而非誘導後才發現插不上;事前備妥影像式喉鏡、纖維支氣管鏡、上聲門氣道(SGA)與<b>前頸外科氣道</b>器材並找人手支援。演算法分兩臂——清醒插管臂 vs 麻醉誘導後臂;後者若插管與面罩／SGA 通氣皆失敗,即進入緊急『無法插管、無法通氣(CICO)』路徑,須立即前頸氣道。限制嘗試次數以免組織水腫惡化;高風險者採<b>分段拔管</b>、確認漏氣後再拔,並可留置換管導引管(airway exchange catheter)備快速再插管。</span>",
+      "<b>不穩定或脊髓壓迫頸椎:插管時維持頸部中立、以手動軸線固定(MILI)</b>限制頸椎活動;穩定病人首選<b>清醒纖維支氣管鏡插管</b>,影像式喉鏡較 direct 插管減少頸椎位移<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>手動軸線固定(MILI,manual in-line stabilisation):由助手雙手固定頭頸於中立位、限制插管時頸椎的屈伸與旋轉,是已知或疑似頸椎不穩者的標準做法。代價是會使喉部視野變差、降低首次插管成功率,故常搭配影像式喉鏡或探條(bougie)。位移比較:基本氣道操作中<b>面罩通氣</b>造成的頸椎位移最大,直接喉鏡在寰枕與 C1–C2 位移較多,<b>影像式喉鏡與纖維支氣管鏡位移較小</b>。</span>",
+      "<b class='w'>前位 ACDF 常用加強型(Non-kinking)氣管內管</b>——外科牽開器易壓扁一般 ETT 致管路扭折／阻塞",
+      "前位牽開器可壓迫氣管與喉返神經;長時間牽開與術後咽部水腫相關",
+      "後位(俯臥)→ 氣管內管固定與眼睛保護同俯臥脊椎手術"
+    ],
+    monitor:[
+      "標準監測;脊髓病變或複雜矯正採 <b>MEP／SSEP</b> 神經監測",
+      "俯臥後位需<b>動脈導管</b>;前位一般標準監測即可"
+    ],
+    hemo:[
+      "維持足夠平均動脈壓以保脊髓灌流(尤其既有脊髓病變者)",
+      "前位失血通常少;後位多節可能較多"
+    ],
+    intraop:[
+      "擺位:雙臂收於身側 → 週邊 IV line 完全被包住,所以包完雙手後務必重新確認 IV full run 有沒有通順?管路有沒有折到?雙手上的 NMT、a-line、NIBP 導線有沒有壓在病人身上?包完收手之後的 a-line 波形有沒有 damping 需要調整?;前位頭置軟墊頭圈、頸部略伸展並以下頜膠帶或顱骨牽引;後位以 Mayfield 顱骨釘俯臥;<b>坐姿(少見)靜脈空氣栓塞(VAE)風險高</b>",
+      "前位入路會經過許多重要構造,牽拉或直接損傷都可能發生——<b>喉返/喉上神經(→ 聲音沙啞、嗆咳)、食道(穿孔)、氣管、椎動脈(出血),以及頸部交感神經鏈(→ Horner 症候群)</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Horner 症候群:一側頸部交感神經鏈受損 → 該側出現<b>眼瞼下垂(ptosis)、瞳孔縮小(miosis)、臉部無汗(anhidrosis)</b>三徵,有時合併眼球略內陷。前位頸椎手術牽拉或傷及交感鏈時可能發生,多為暫時性。</span>",
+      "適時放鬆牽開器可降低喉返神經與氣管之缺血壓迫"
+    ],
+    drug:[
+      "神經監測期間<b>不使用肌鬆劑</b>、<b>TIVA</b>;multimodal 止痛<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>脊髓損傷或去神經病變者對去極化肌鬆劑 succinylcholine 特別危險——約傷後 3 天至 9 個月,肌肉膜上乙醯膽鹼受體上調,給 SCC 可引發致命性高血鉀,故偏好非去極化肌鬆劑。此外神經監測(MEP／EMG)期間肌鬆會壓掉訊號,故監測時不使用肌鬆;本院採 TIVA,困難插管時以清醒插管或高劑量 rocuronium 後 sugammadex 逆轉。</span>",
+      "類固醇減輕術後氣道／咽部水腫之效益尚有爭議,依團隊決定"
+    ],
+    emergence:[
+      "<b class='w'>拔管前評估氣道水腫</b>:可先做漏氣試驗(cuff leak),必要時延遲拔管<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>漏氣試驗(cuff leak test):將氣管內管氣囊放氣,若氣體能繞管漏出、且潮氣量下降幅度足夠,提示喉部周圍尚有空間、水腫較不嚴重;漏氣量過小則提示喉／咽水腫明顯,拔管後上呼吸道阻塞風險升高 → 考慮延遲拔管或備妥再插管與外科氣道。</span>",
+      "<b class='w'>前＋後聯合頸椎手術術後氣道水腫風險最高</b>(常 >8 小時、俯臥為主、失血可 >1000 mL、氣道周圍組織剝離)→ 傾向保留插管入 ICU;高風險者分段拔管、可留置換管導引管(airway exchange catheter)",
+      "甦醒後評估神經功能、聲音與吞嚥"
+    ],
+    postop:[
+      "<b class='w'>警覺頸部血腫致急性氣道阻塞</b>(多在術後 36 小時內、可數分鐘內惡化)→ 頸圍變化、喘鳴、吞嚥困難即需外科評估與床邊減壓<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>前位頸椎手術後出血形成血腫,可壓迫氣管並阻礙靜脈回流 → 咽喉與舌根腫脹,使再插管更困難。徵象包括頸圍快速增大、喘鳴、吞嚥困難、焦躁與呼吸窘迫;一旦出現且無改善,應立即通知外科<b>床邊拆線引流減壓</b>並準備困難氣道處置,不可拖延等待影像。</span>",
+      "監測吞嚥困難與聲音沙啞"
+    ],
+    flags:[
+      "頸部血腫／咽後血腫 → 急性氣道阻塞(可致命)",
+      "術後氣道／咽部水腫致拔管後阻塞(前＋後聯合風險最高)",
+      "脊髓／神經根損傷、脊髓病變惡化",
+      "喉返神經麻痺、食道穿孔、椎動脈損傷",
+      "困難／失敗插管(不穩定頸椎)",
+      "坐姿術式之靜脈空氣栓塞(VAE)"
+    ],
+    refs:[
+      "Bovonratwet, P., Fu, M. C., Tyagi, V., Bohl, D. D., Ondeck, N. T., et al. (2019). Incidence, risk factors, and clinical implications of postoperative hematoma requiring reoperation following anterior cervical discectomy and fusion. Spine, 44(8), 543–549.",
+      "Apfelbaum, J. L., Hagberg, C. A., Connis, R. T., et al. (2022). 2022 American Society of Anesthesiologists practice guidelines for management of the difficult airway. Anesthesiology, 136(1), 31–81.",
+      "Apfelbaum, J. L., Roth, S., Connis, R. T., et al. (2019). Practice advisory for perioperative visual loss associated with spine surgery 2019: An updated report by the American Society of Anesthesiologists Task Force on Perioperative Visual Loss. Anesthesiology, 130(1), 12–30.",
+      "Brown, M. J. (2026). Anesthesia for elective spine surgery in adults. In UpToDate. Wolters Kluwer. (Topic last updated June 19, 2026)."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"經皮內視鏡腰椎椎間盤切除術",
+    en:"Percutaneous Endoscopic Lumbar Discectomy (PELD)",
+    summary:{ position:"Prone", posType:"prone", time:"3–4 小時或以上", blood:"少", airway:"GA / ETT(Non-kinking)" },
+    preop:[
+      "紀錄神經功能基準值(肌力、感覺)→ 供術後比對",
+      "共病與出血風險:抗凝／抗血小板藥物、狹窄程度、肥胖、OSA(阻塞性睡眠呼吸中止)",
+      "退化性狹窄多屬高齡族群;心肺功能與衰弱(frailty)評估"
+    ],
+    airway:[
+      "<b>全身麻醉俯臥:標準氣道、加強型(Non-kinking)ETT 穩妥固定</b>(翻身後易移位／脫出)",
+      "翻身前後聽診雙側呼吸音、確認 ETCO₂ 波形;臉部與眼睛受壓保護"
+    ],
+    monitor:[
+      "標準監測",
+      "加上<b>動脈監測(FloTrac)</b>——經動脈導管做微創心輸出/每搏量變異(SVV)監測,輔助俯臥下血流動力學與輸液評估<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>FloTrac 接在動脈導管上做微創心輸出監測:分析動脈壓波形推算每搏量(SV)、心輸出(CO)與<b>每搏量變異(SVV)</b>。在控制通氣、無明顯心律不整下,SVV 可反映『輸液反應性』——數值偏高提示給液可能增加心輸出,協助俯臥手術的目標導向輸液與血壓管理。</span>"
+    ],
+    hemo:[
+      "失血通常少、體液波動小;俯臥下可依動脈壓與 SVV 做目標導向輸液,維持足夠灌流"
+    ],
+    intraop:[
+      "<b class='w'>全身麻醉失去病人即時回饋 → 神經根損傷風險相對升高</b>(對經驗較少之內視鏡術者尤然)→ 可用術中神經監測(EMG／SSEP／MEP)輔助偵測<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>清醒手術時病人能在神經根被刺激時即時喊痛、讓術者立即避讓;全身麻醉下病人無意識、失去這個即時回饋,一旦髓核鉗、電燒或器械牽拉傷到神經根不易即時察覺 → 神經損傷風險相對較高。可藉<b>術中神經監測</b>(自由/誘發 EMG、SSEP、MEP)監看神經根與脊髓功能、及早示警;惟此術式的神經監測證據仍有限。</span>",
+      "手術鄰近神經根;髓核鉗、電燒等操作有神經根損傷風險 → 疼痛被完全阻斷下更需小心",
+      "維持俯臥舒適擺位與保暖"
+    ],
+    drug:[
+      "全身麻醉:短效藥物;有神經監測時採 <b>TIVA</b>、期間不使用肌鬆劑",
+      "Multimodal 止痛;可考慮<b>豎脊肌平面阻滯(ESP block)</b> → 減少鴉片、改善術後鎮痛"
+    ],
+    emergence:[
+      "甦醒後評估下肢神經功能(肌力、感覺);smooth extubation、避免嗆咳"
+    ],
+    postop:[
+      "疼痛輕、早期下床;監測新發神經症狀",
+      "相較開放手術:傷口小、失血少、住院短"
+    ],
+    flags:[
+      "神經根損傷、硬脊膜撕裂／腦脊髓液漏",
+      "全身麻醉下失去即時回饋 → 神經根損傷不易即時察覺",
+      "俯臥壓傷、氣道／顏面受壓",
+      "復發性椎間盤突出、術中轉術式"
+    ],
+    refs:[
+      "Mooney, J., Laskay, N., Erickson, N., Salehani, A., Mahavadi, A., Ilyas, A., Mainali, B., Nowak, B., & Godzik, J. (2023). General vs local anesthesia for percutaneous endoscopic lumbar discectomy (PELD): A systematic review and meta-analysis. Global Spine Journal, 13(6), 1671.",
+      "Reddy, A., Barik, A. K., Bhatia, N., & Jain, K. (2024). Ultrasound-guided erector spinae plane block for awake spine surgery: A case report and review of the literature. Saudi Journal of Anaesthesia, 18(1), 126.",
+      "Feix, B., & Sturgess, J. (2014). Anaesthesia in the prone position. Continuing Education in Anaesthesia Critical Care & Pain, 14(6), 291–297."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"半髖關節置換術(股骨頸骨折)",
+    en:"Bipolar Hemiarthroplasty (Femoral Neck Fracture)",
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"1–2 hr", blood:"中", airway:"半身麻醉 / GA(兩者皆可)" },
+    preop:[
+      "高齡脆弱族群:心肺共病、譫妄風險、多重用藥、營養與衰弱評估",
+      "<b>手術時機:入院後 24–48 小時內手術與較佳預後相關</b>;避免不必要延遲<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>多項研究顯示髖部骨折延遲手術與較高併發症及死亡率相關,指引建議在病人生理狀態允許下<b>盡早手術(常以入院後 24–48 小時為目標)</b>。延遲也可能增加<b>脂肪栓塞</b>(骨折斷端未固定、持續活動使骨髓脂肪不斷進入循環)與<b>靜脈血栓/肺栓塞</b>(臥床不動)——是脂肪與血栓性栓塞,而非空氣栓塞。合理延遲僅限可矯正且影響預後的狀況(如嚴重貧血、電解質異常、可逆的凝血問題);單純為等待抗凝藥代謝或行政因素而延遲並不理想。</span>",
+      "抗凝／抗血小板藥物盤點 → 影響半身麻醉可行性與時機(依區域麻醉抗凝指引)",
+      "術前鎮痛:<b>髂筋膜間隙阻滯(fascia iliaca block)、髖囊周圍神經阻滯(PENG,較不影響運動)</b>等區域鎮痛,減少鴉片與譫妄"
+    ],
+    airway:[
+      "半身麻醉:病人清醒或輕鎮靜;全身麻醉:側臥常用氣管內管(ETT)——<b>高齡氧氣儲備少(功能肺餘量下降),誘導呼吸暫停後血氧很快下降</b> → 充分預充氧、操作要快",
+      "半身麻醉注意:阻斷後交感抑制 → 低血壓/心搏過緩(高齡尤敏感),先備輸液與升壓藥;確認阻斷高度、留意噁心(腦部低灌流早期徵象)",
+      "<b class='w'>半身麻醉高位阻斷/全脊髓麻醉:低血壓、心搏過緩、呼吸困難甚至呼吸停止、意識喪失</b> → 立即支持處理<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>高位/全脊髓阻斷(high/total spinal):局麻藥在鞘內擴散過高,阻斷到胸段甚至頸段的交感與運動神經。表現:嚴重<b>低血壓、心搏過緩</b>、呼吸肌無力致<b>呼吸困難或呼吸停止</b>、講話無力、噁心、意識喪失。緊急處理以 <b>ABC 為先</b>:確保氣道與通氣(必要時面罩正壓或插管、給 100% 氧);快速輸液＋升壓藥(ephedrine、phenylephrine,嚴重循環衰竭用 epinephrine);心搏過緩給 atropine;抬高下肢維持回心血量,監測至阻斷消退;已插管者維持鎮靜與通氣。</span>",
+    ],
+    monitor:[
+      "標準監測(ASA 基本監測通常已足夠);心肺共病重者加動脈導管",
+      "<b class='w'>骨水泥植入前後密切監測血壓、血氧、ETCO₂ 與心律</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>骨水泥植入症候群(BCIS)的辨識與緊急處理。<b>辨識</b>:多在置入骨水泥、假體或復位後數分鐘內出現血壓驟降、血氧下降、<b>ETCO₂ 突降</b>(反映心輸出與肺灌流下降)、心律不整,嚴重時心跳停止;可分級(輕:低血氧或低血壓;重:意識喪失或心血管崩潰)。<b>緊急處理</b>:立即告知外科、給 <b>100% 氧</b>並確保通氣;<b>積極輸液＋升壓藥</b>(phenylephrine、ephedrine,或 noradrenaline);心搏過緩給 atropine;嚴重循環衰竭或停跳 → <b>epinephrine、必要時 CPR/ACLS</b>;當作栓塞或類過敏事件處理並排除其他病因。</span>"
+    ],
+    hemo:[
+      "<b>半身麻醉與全麻對主要預後(存活、行走恢復、譫妄)無顯著差異</b>(REGAIN 試驗)→ 依病人與團隊選擇<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>REGAIN 為大型多中心隨機試驗,比較股骨骨折手術採<b>半身麻醉</b>與<b>全身麻醉</b>的結果,發現兩組在存活、60 天行走恢復與術後譫妄發生率上<b>無顯著差異</b>。臨床意涵:兩種麻醉皆屬合理選擇,應依病人共病(如嚴重主動脈狹窄、抗凝狀態)、氣道、病人意願與團隊經驗個別化,而非一概認定半身麻醉較優。</span>",
+      "高齡對容積與交感阻斷敏感 → 半身麻醉劑量謹慎、避免低血壓",
+      "<b>TXA(tranexamic acid,傳明酸)減少失血與輸血</b>(如 1 g IV 切皮前＋1 g 縫合時);常規使用下多數初次手術可免輸血",
+      "不常規使用控制性降壓(器官缺血風險大於減少失血之益處)"
+    ],
+    intraop:[
+      "<b class='w'>骨水泥植入症候群(BCIS)</b>:置入骨水泥／假體時低血壓、低氧、心律不整,甚至心跳停止 → 事前告知、提高吸氧、確保容積、備升壓藥<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>骨水泥植入症候群(BCIS,bone cement implantation syndrome):置入骨水泥、插入假體或關節復位時,可能因髓腔內壓升高將骨髓脂肪、骨水泥單體等推入循環,引發<b>低血壓、低血氧、肺血管阻力上升、心律不整,嚴重時心跳停止</b>。高風險為高齡、心肺儲備差、病理性/轉子間骨折者。處置:置入前告知外科、提高吸入氧濃度、確保血容量充足、備好升壓藥,置入前後密切監測。</span>",
+      "側臥擺位保護受壓點與臂神經叢;積極保溫",
+      "手術相關神經損傷(初次髖置換約 1–2%,多與切口／剝離有關)"
+    ],
+    drug:[
+      "Multimodal 止痛:acetaminophen＋NSAID＋單劑 dexamethasone(兼 PONV 預防);盡量減少鴉片以降譫妄",
+      "區域鎮痛:關節周圍浸潤(PAI)、<b>運動保留型阻滯(PENG)</b>優先以利早期下床;fascia iliaca 有運動阻斷、可能延遲復健",
+      "<b>神經阻滯致運動無力 → 注意跌倒風險</b>,加強防跌與衛教",
+      "全麻族群可用麻醉深度監測、避免過深以減少術後譫妄"
+    ],
+    emergence:[
+      "smooth extubation;警覺術後譫妄、低體溫與疼痛控制"
+    ],
+    postop:[
+      "早期活動與復健(常於 PACU 即開始)、VTE 預防、譫妄防治、骨鬆與跌倒後續處理",
+      "<b>半身麻醉後尿滯留常見</b> → 注意排尿、必要時導尿;PONV 預防、避免術後低血壓以利復健",
+      "多專科骨折照護(orthogeriatric)路徑"
+    ],
+    flags:[
+      "骨水泥植入症候群、脂肪栓塞",
+      "術後譫妄、心肺併發症",
+      "VTE／肺栓塞",
+      "圍術期低血壓致器官低灌流",
+      "手術相關神經損傷(約 1–2%)、神經阻滯後跌倒",
+      "半身麻醉後尿滯留"
+    ],
+    refs:[
+      "Griffiths, R., Babu, S., Dixon, P., Freeman, N., Hurford, D., Kelleher, E., Moppett, I., Ray, D., Sahota, O., Shields, M., & White, S. (2021). Guideline for the management of hip fractures 2020: Guideline by the Association of Anaesthetists. Anaesthesia, 76(2), 225–237.",
+      "Neuman, M. D., Feng, R., Carson, J. L., et al. (2021). Spinal anesthesia or general anesthesia for hip surgery in older adults. New England Journal of Medicine, 385(22), 2025–2035.",
+      "Donaldson, A. J., Thomson, H. E., Harper, N. J., & Kenny, N. W. (2009). Bone cement implantation syndrome. British Journal of Anaesthesia, 102(1), 12–22.",
+      "Amundson, A. W., & Johnson, R. L. (2026). Anesthesia for hip arthroplasty. In UpToDate. Wolters Kluwer. (Topic last updated July 1, 2026)."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"股骨轉子間骨折固定術",
+    en:"Intertrochanteric Fracture Fixation (ITC)",
+    summary:{ position:"Supine on fracture (traction) table", posType:"supine", time:"1–2 hr", blood:"中(可隱性失血)", airway:"半身麻醉 / GA(兩者皆可)、a-line(可能)＋粗 line" },
+    preop:[
+      "高齡脆弱族群評估同股骨頸骨折;<b>及早手術(常以入院後 24–48 小時為目標)</b>、避免不必要延遲<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>髖部骨折延遲手術與較高死亡及併發症相關:登錄資料顯示入院逾 24 小時才手術,30 天死亡相對風險上升約一成;輕中度認知障礙者延遲逾一天,譫妄風險約增為兩倍。大型隨機試驗(HIP ATTACK)比較『加速手術』(自診斷起中位 6 小時)與『常規照護』(中位 24 小時),兩組 90 天死亡與主要併發症無差異,但加速組的<b>譫妄、下床時間與住院天數皆較低</b>。臨床意涵:延遲僅在能<b>有效且限時矯正</b>可逆問題(如嚴重貧血、電解質或可逆凝血異常)時才合理;為等待抗凝藥代謝或行政因素而延遲並不理想。手術本身即提供有效止痛,即使屬緩和性質,除非病人瀕臨死亡通常仍宜進行。</span>",
+      "<b>ITC 隱性失血可觀</b>(骨折斷面與軟組織滲血)→ 術前血紅素恐低估、宜備血<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>轉子間骨折屬囊外骨折(extracapsular),骨折斷面與周圍軟組織可持續滲血並積存於大腿肌間隙,形成<b>隱性失血</b>——外觀與引流量看不到,但血紅素會逐步下降。囊外骨折與較複雜的固定手術失血量高於囊內的股骨頸骨折,故術前單次血紅素可能高估實際血容,術後也須連續追蹤。實務上應預期較多總失血、及早備血並評估輸血需求。</span>",
+      "<b>輸血門檻依衰弱與共病個別化</b>:虛弱者多以血紅素 9 g/dL 為目標,合併缺血性心臟病、或術後第一天因疲倦／頭暈無法下床者提高至 10 g/dL;<b>較高出血風險者可考慮 tranexamic acid(TXA,傳明酸)</b>減少失血與輸血需求",
+      "抗凝／抗血小板藥物盤點 → 影響半身麻醉可行性與時機<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>髖部骨折指引對抗凝下的半身麻醉採較務實的取捨(延遲手術之害 vs 椎管內血腫之罕見風險):<b>單一抗血小板藥(含 clopidogrel)並非半身麻醉禁忌</b>;服用維生素 K 拮抗劑(warfarin)者,國際標準化比值(INR)≦1.5 即可施行,過高者及早給維生素 K 校正;直接口服抗凝劑(DOAC)在腎功能尚可(肌酸酐清除率 >30 mL/min)時,通常於<b>停藥兩個半衰期(Xa 抑制劑約末次劑量後 24 小時)</b>後可行——確認末次服藥時間再決定。實際仍須依機構區域麻醉抗凝指引。</span>",
+      "術前鎮痛:<b>髂筋膜間隙阻滯(fascia iliaca block)</b>減少鴉片與譫妄<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>髖關節由腰叢與薦叢共同支配,故髂筋膜間隙阻滯、股神經或 3-in-1 阻滯提供<b>有效但不完整</b>的鎮痛,宜搭配多模式止痛(高齡者鴉片與 NSAID 傷害風險較大,腎功能不佳時尤須謹慎)。切開之皮膚由大腿外側皮神經(LCNT)支配,手術需一併阻斷(可經髂筋膜阻滯達成)。神經阻滯可於 6 小時後重複施打,故術前已打過者,圍術期仍常再給一次以<b>緩解股四頭肌痙攣、便於擺位並提供術後鎮痛</b>。</span>",
+      "約四分之一髖部骨折病人聽診有心雜音、且常無瓣膜評估紀錄 → <b>可疑者若能快速安排術前心臟超音波則有助麻醉決策,需考量是否因此延後手術</b>;逕以侵入性血壓監測、低劑量麻醉並積極維持循環穩定進行"
+    ],
+    airway:[
+      "<b>半身麻醉:清醒或輕鎮靜</b>;採低劑量脊髓麻醉(如 bupivacaine 10 mg,或 mini-dose bupivacaine 加 fentanyl),鞘內鴉片以 fentanyl 為限,以減少低血壓、譫妄與尿滯留<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>低劑量脊髓麻醉在髖部骨折手術已足夠且更安全:研究顯示 mini-dose(bupivacaine 4 mg 加 fentanyl 20 µg)或 10 mg 純 bupivacaine 皆可涵蓋約 110 分鐘的手術,且<b>mini-dose 組需處理低血壓的次數較少</b>,搭配髂筋膜阻滯可在手術延長時補足鎮痛。搭配鎮靜時須留意:髖部骨折病人<b>過度鎮靜常見且會加重術後譫妄</b>(共病較少者風險約加倍),故鎮靜宜謹慎、限用短效可滴定藥物(如 propofol 標的控制輸注);多數病人在脊髓麻醉建立後即入睡、未必需要鎮靜。</span>",
+      "<b>全身麻醉:目標與半身麻醉一致——避免低血壓與致譫妄藥物</b>;善用麻醉深度監測、年齡校正最低肺泡濃度(age-adjusted MAC),小心滴定誘導劑量<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>全身麻醉宜體恤高齡生理儲備:以麻醉深度監測與<b>年齡校正 MAC</b> 避免過深;維持自主呼吸可減少肺塌陷、氣壓傷與正壓通氣造成的低血壓。因病人常無法提供吸入風險病史、創傷與鴉片延遲胃排空、且擺位使氣道不易接近,對<b>氣管插管門檻宜放低</b>;若不插管,選用 LMA GA。周邊神經阻滯於誘導前後施行,可減少術中傷害刺激與所需麻醉／鴉片劑量。</span>"
+    ],
+    monitor:[
+      "標準監測;<b>考慮持續動脈血壓監測</b>——心肺共病重、失血多、可疑瓣膜病變或採高風險麻醉劑量時尤然",
+      "牽引床復位與股骨擴髓(reaming)期間,血流動力學可能明顯波動,須密切監測並及時處理低血壓"
+    ],
+    hemo:[
+      "<b>半身麻醉與全麻主要預後無顯著差異(REGAIN)</b>;依病人與團隊選擇(區域麻醉主要優點為未用藥物性血栓預防時靜脈血栓較少)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>REGAIN(Regional versus General Anesthesia for Promoting Independence after Hip Fracture)是一項大型多中心隨機試驗(Neuman 等,NEJM 2021),比較髖部骨折手術採<b>半身麻醉</b>與<b>全身麻醉</b>的結果,發現兩組在存活、術後 60 天行走恢復與譫妄發生率上<b>無顯著差異</b>。臨床意涵:兩種麻醉皆屬合理選擇,應依病人共病、氣道、意願與團隊經驗個別化,而非一概認定半身麻醉較優。</span>",
+      "<b class='w'>避免低血壓:術中最低平均動脈壓(MAP)愈低,5 天與 30 天死亡率愈高</b>;MAP <80 mmHg 持續逾 10 分鐘與不良預後相關 → 用最低有效麻醉劑量、主動處理低血壓<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>髖部骨折登錄資料(ASAP-2)顯示:半身麻醉與全麻雖無死亡率差異,但術中<b>最低 MAP 每下降一階,5 天與 30 天死亡率隨之上升</b>;較低 MAP 也與較高的鞘內 bupivacaine 劑量相關。更廣的系統性回顧指出 MAP <80 mmHg 持續逾 10 分鐘即與術後不良預後相關。實務上:視病況採<b>最低有效麻醉劑量</b>、積極動脈血壓監測,並主動以輸液或升壓藥處理低血壓;避免腦部低灌流也可能降低譫妄。</span>",
+      "留意隱性與顯性失血累積 → 適時輸液／輸血、避免低灌流"
+    ],
+    intraop:[
+      "牽引床擺位:<b class='w'>會陰柱壓迫致陰部神經／生殖器損傷</b>、健側肢體與臂神經叢受壓 → 妥善墊護、定時檢查<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>牽引床(fracture table)以牽引與旋轉協助骨折復位,但擺位有其風險:<b>會陰柱(perineal post)</b>對抗牽引力時壓迫會陰,可能傷及陰部神經或生殖器(感覺異常、勃起功能障礙);過度或長時間牽引也可能造成下肢缺血或神經牽拉。健側肢體、臂神經叢與所有受壓點需妥善墊護,並限制牽引力與時間、定時檢查。</span>",
+      "<b>擴髓(reaming)／髓內釘置入 → 脂肪栓塞、骨髓內容物入血風險</b>;股骨髓腔器械操作亦可能引發程度較輕的骨水泥植入症候群(BCIS)樣循環／呼吸反應 → 監測血氧與 ETCO₂、事前告知外科<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>轉子間骨折固定多不使用骨水泥,但<b>擴髓與髓內釘置入會升高髓腔內壓</b>,將骨髓脂肪與內容物推入循環,可能出現血氧下降、ETCO₂ 突降、低血壓或心律不整——與骨水泥植入症候群(BCIS)機轉相近但程度通常較輕。高風險為高齡、心肺儲備差者。處置同栓塞事件:置入前告知外科、提高吸入氧濃度、確保血容量並備妥升壓藥,置入前後密切監測。</span>",
+      "積極保溫"
+    ],
+    drug:[
+      "Multimodal 止痛＋區域阻滯(髂筋膜阻滯兼利擺位與術後鎮痛);盡量減少鴉片以降譫妄",
+      "<b>留意藥物的抗膽鹼負荷、避免致譫妄藥物</b>:長效鴉片、抗組織胺、抗精神病藥與具中樞抗膽鹼作用者(如 cyclizine、prochlorperazine、atropine)宜審慎<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>譫妄影響約四分之一的髖部骨折病人,與較高死亡及入住機構風險相關,病人也常留下不快記憶。多種麻醉相關藥物可能誘發或加重譫妄,包括長效鴉片與具中樞抗膽鹼作用者(如 cyclizine、prochlorperazine、atropine),故應注意整體<b>抗膽鹼負荷</b>。以區域阻滯為核心、避免長效鴉片與抗膽鹼／抗組織胺／抗精神病藥的多專科『照護組合』(care bundle)已證實可降低術後譫妄。</span>"
+    ],
+    emergence:[
+      "smooth extubation;注意譫妄與疼痛控制、維持體溫"
+    ],
+    postop:[
+      "早期活動與復健、VTE 預防、譫妄防治、骨鬆與跌倒後續處理;<b>術後常規譫妄評估</b>",
+      "由骨科與老年醫學團隊共同照護(orthogeriatric);術後連續追蹤血紅素以偵測隱性失血;是否入住加護／高照護病房應個別評估、不需一律收治;重點在及早復健,協助病人恢復並維持原有的認知與行動功能"
+    ],
+    flags:[
+      "脂肪栓塞症候群、髓腔器械操作相關栓塞",
+      "隱性失血致貧血／低血容",
+      "牽引床相關壓迫傷(陰部神經、臂神經叢、健側肢)",
+      "圍術期低血壓致器官低灌流",
+      "未診斷之瓣膜病變(約四分之一有心雜音)",
+      "術後譫妄(過度鎮靜／致譫妄藥物加重)、VTE、心肺併發症"
+    ],
+    refs:[
+      "Shelton, C., & White, S. (2020). Anaesthesia for hip fracture repair. BJA Education, 20(5), 142–149.",
+      "Griffiths, R., Babu, S., Dixon, P., Freeman, N., Hurford, D., Kelleher, E., Moppett, I., Ray, D., Sahota, O., Shields, M., & White, S. (2021). Guideline for the management of hip fractures 2020: Guideline by the Association of Anaesthetists. Anaesthesia, 76(2), 225–237.",
+      "Neuman, M. D., Feng, R., Carson, J. L., et al. (2021). Spinal anesthesia or general anesthesia for hip surgery in older adults. New England Journal of Medicine, 385(22), 2025–2035.",
+      "American Academy of Orthopaedic Surgeons. (2021). Management of hip fractures in older adults: Evidence-based clinical practice guideline. AAOS."
+    ]
+  },
+  {
+    specialty:"胸腔外科",
+    name:"肺葉切除術",
+    en:"Lobectomy (VATS / Thoracotomy)",
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"2–4 hr", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
+    preop:[
+      "肺功能(PFT、DLCO)、運動耐受度、預測術後肺功能",
+      "戒菸、心臟評估",
+      "VATS 創傷小、術後併發症少,對<b>心肺功能儲備差</b>者常為首選術式"
+    ],
+    airway:[
+      "<b>肺隔離</b>:雙腔管(DLT, double-lumen tube)或 Blocker",
+      "DLT 與 Blocker 在肺塌陷品質上實務差異不大,依麻醫醫囑選擇使用",
+      "<b class='w'>以 Fiber 確認位置,擺好側臥姿勢後再次使用 Fiber 確認最終位置</b>;DLT 易向近端(bronchial cuff above carina)或遠端(tracheal lumen in bronchus)移位",
+      "促進患側塌陷:隔離後先用 100% 純氧通氣患側,把肺泡內氮氣換成純氧(氧氣易被血流吸收 → 肺塌得更快更完全);必要時以 Fiber 抽吸患側大氣道分泌物,避免堵塞妨礙排氣",
+      "患側肺要等外科切開胸膜、空氣進入胸膜腔後才會真正塌陷;在『已隔離但還沒塌陷』的空檔,患側仍有血流卻沒有換氣,分流增加、易低血氧 → 盡量縮短單肺通氣(OLV, one-lung ventilation)時間<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>肺被<b>隔離</b>(該側停止通氣)不等於<b>塌陷</b>(整片肺塌下去)。胸膜腔平時是負壓,把肺撐開貼著胸壁;只要胸膜還完整,患側肺即使不再通氣也被殘餘氣體與負壓維持在半膨脹狀態,而不會立刻塌下去。此時患側肺仍有血流經過卻沒有換氣 → 形成<b>肺內分流(shunt)</b>,未氧合的血混入體循環 → 動脈血氧下降。等外科切開胸膜、空氣進入胸膜腔使負壓消失,肺才真正塌陷,低血氧通常隨之改善。因此『隔離到胸膜切開』這段空窗是 OLV 最容易缺氧的時段之一;若手術尚未就緒而預期延遲,可先回復雙肺通氣。</span>",
+      "OLV 低血氧處理:提高 FiO₂;優先把通氣集中並最佳化到位於下方、仍在換氣的健側肺(dependent lung);患側加 CPAP(會干擾術野,列為最後手段並先與外科溝通);必要時回復雙肺並做再擴張(recruitment)"
+    ],
+    monitor:[
+      "標準 + <b>動脈管</b>(血壓與血氣、OLV低氧)",
+      "<b class='w'>高出血風險 → 兩條大口徑靜脈導管</b>視為必要"
+    ],
+    hemo:[
+      "側臥 + OLV→V/Q不匹配、低氧",
+      "<b class='w'>限制性輸液</b>以降低術後肺水腫/ARDS風險"
+    ],
+    intraop:[
+      "保護性肺通氣:低潮氣量、允許性高碳酸",
+      "微創體位常採<b>極度側屈</b>手術床以撐開肋間、改善視野 → 病人須確實固定、壓點確實墊護,並警覺氣道裝置/血管導管/監測移位",
+      "縱膈與大血管(主動脈、肺動脈)操作鄰近,警覺出血;<b class='w'>難控制之大出血 → 緊急轉開胸</b>"
+    ],
+    drug:[
+      "TIVA 與吸入麻醉對 OLV 預後無明確優劣;回溯資料顯示 TIVA 可能減少非計畫性 ICU 住院",
+      "區域止痛:椎旁阻滯(PVB, paravertebral block)在 VATS 不劣於胸段硬膜外,且輕微副作用較少;筋膜平面阻滯(前鋸肌、豎脊肌)為較新選項,大型證據待補",
+      "偏好短效藥利早拔管",
+      "<b>非插管/清醒 VATS(NI-VATS / awake VATS)</b>為替代技術:區域麻醉(硬膜外或椎旁)加自主呼吸,免全身麻醉、免肌鬆、免雙腔管,靠外科製造人工氣胸使患側肺塌陷;多用於篩選過的診斷性或較小手術<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>清醒/非插管 VATS 的想法是:既然全身麻醉、單肺通氣、肌鬆與其殘餘作用本身都會帶來風險,對某些病人乾脆不插管——用硬膜外或椎旁阻滯止痛、讓病人自主呼吸,由外科打開胸膜造成<b>人工氣胸</b>使患側肺自然塌陷。好處是避開全麻與 OLV 的併發症、恢復快、住院短,特別適合<b>高齡、共病多、對全麻耐受差</b>者。限制也明確:難插管、易吸入、肥胖(BMI 超過 30)、頑固咳嗽、靜息低氧或高碳酸、緻密沾黏者不適合;術中若大出血、嚴重低氧或高碳酸、劇烈咳嗽或縱膈擺動,仍須轉為插管全麻。須留意:目前 ESTS / ERAS 指引<b>尚不常規建議</b>非插管麻醉用於肺切除,證據仍在累積,病人篩選是關鍵。</span>"
+    ],
+    emergence:[
+      "目標早期拔管;回復雙肺並recruitment"
+    ],
+    postop:[
+      "<b>良好止痛(硬膜外/椎旁)</b>以利深呼吸、咳嗽",
+      "即使微創,取檢體仍需較大傷口與撐開 → 疼痛仍屬<b>中至重度</b>;良好急性止痛有助早期動員、預防肺部併發症,並可能減少慢性疼痛(VATS 後約 25%)",
+      "胸管照護、肺復張、呼吸治療"
+    ],
+    flags:[
+      "OLV頑固性低氧",
+      "DLT / Blocker 移位",
+      "支氣管殘端漏氣、術後急性肺損傷",
+      "心律不整(AF常見)、大出血"
+    ],
+    refs:[
+      "Ferrando, C., Carramiñana, A., Piñeiro, P., et al. (2024). Individualised, perioperative open-lung ventilation strategy during one-lung ventilation (iPROVE-OLV): A multicentre, randomised, controlled clinical trial. The Lancet Respiratory Medicine, 12(3), 195–206.",
+      "McCall, P., Steven, M., & Shelley, B. (2019). Anaesthesia for video-assisted and robotic thoracic surgery. BJA Education, 19(12), 405–411.",
+      "Batchelor, T. J. P., Rasburn, N. J., Abdelnour-Berchtold, E., et al. (2019). Guidelines for enhanced recovery after lung surgery: Recommendations of the Enhanced Recovery After Surgery (ERAS) Society and the European Society of Thoracic Surgeons (ESTS). European Journal of Cardio-Thoracic Surgery, 55, 91–115.",
+      "Yanik, F. (2023). Current overview of awake, non-intubated, video-assisted thoracic surgery. Videosurgery and Other Miniinvasive Techniques, 18(3), 445–452."
+    ]
+  },
+  {
+    specialty:"胸腔外科",
+    name:"達文西機器人胸腔手術",
+    en:"Robotic-Assisted Thoracic Surgery (RATS / da Vinci)",
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考電子排程預估", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
+    preop:[
+      "病人選擇同肺葉切除:肺功能(PFT、DLCO)、運動耐受度、預測術後肺功能;戒菸、心臟評估",
+      "相較傳統 VATS,機器人器械自由度高、傷口小;但常需 CO₂ 灌注建立<b>capnothorax</b>(人工二氧化碳氣胸)、手術與 docking(機器對接)時間較長 → 對<b class='w'>心肺儲備差</b>者仍須審慎評估",
+      "術前與外科團隊確認 docking 方位、port(器械孔)配置與<b class='w'>緊急轉開胸(conversion)動線</b>"
+    ],
+    airway:[
+      "<b>肺隔離</b>:左側雙腔管(DLT)為首選;或以 Fiber 精準置放之支氣管阻塞器(blocker)",
+      "<b class='w'>docking 後病人幾乎無法接近,任何氣道處理都困難</b> → 擺好側臥、docking 前務必以 Fiber 再次確認 DLT 最終位置並牢固固定;採<b>透明頭部覆單(clear head drape)</b>可於術中直視病人臉部<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>機器人手臂與器械塔在 docking(對接到病人身上)後,會把病人團團圍住,麻醉團隊常被推到病人腳側或側邊,離氣道很遠。這代表一旦 DLT 移位或需要重新抽痰、調整,處理起來非常不便,甚至得先請外科<b>undock(退出對接)</b>才能靠近。因此所有『擺位後才會發生的移位』都要在 docking 前先解決:擺成側臥、把手術床調到定位後,用 Fiber 再看一次 DLT,確認深度、確認兩側都能通氣,再確實固定管路。</span>",
+      "<b class='w'>需足夠肌鬆(深度神經肌肉阻斷)以確保病人完全不動</b>:器械在胸腔內時,病人若體動或咳嗽,鄰近大血管與肺可能被撕裂<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>一般手術病人稍微動一下多半無妨,但機器人手術不同:剛性的器械被鎖定在固定支點上,深入胸腔操作。此時病人若因肌鬆不足而<b>橫膈抽動、咳嗽或體動</b>,器械與病人之間會產生相對位移,可能劃傷肺動脈、主動脈或肺實質 → 大出血。所以要維持<b>深度神經肌肉阻斷</b>並以定量 TOF 監測,確保整段手術病人紋風不動;直到 undock、器械完全退出胸腔後才考慮讓肌力回復。</span>",
+      "CO₂ 灌注使患側肺塌陷更完全、視野更好;但同時帶來血流動力學影響(見 hemo)"
+    ],
+    monitor:[
+      "標準 + <b>動脈管</b>(連續血壓、OLV 低氧與高碳酸之血氣追蹤)",
+      "<b class='w'>兩條大口徑靜脈導管</b>:大血管鄰近操作,警覺難以壓迫止血之出血",
+      "<b>置放 CVC</b>:利於給藥、輸注血管活性藥,並協助評估 capnothorax 對循環的影響"
+    ],
+    hemo:[
+      "<b class='w'>CO₂ 灌注(capnothorax)→ 胸內壓上升、靜脈回流下降 → 低血壓、心輸出下降</b>;<b>右胸灌注時影響更明顯</b>(易壓迫右心房與腔靜脈)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>為了把塌陷的肺推離術野、看得更清楚,外科會把 CO₂ 打進胸膜腔,形成人工氣胸(capnothorax)。胸膜腔平時是負壓,灌氣後變成正壓,會像從外面壓迫一樣把<b>心臟與大靜脈(腔靜脈)</b>壓扁 → 回到心臟的血變少(靜脈回流下降)→ 心輸出與血壓跟著掉。右胸的縱膈構造(右心房、上下腔靜脈)更貼近,所以<b>右側灌注時血壓掉得更兇</b>。處理原則:請外科<b>降低灌注壓與流速</b>、補充輸液、必要時給升壓劑;若嚴重,先暫停灌注讓壓力釋放。</span>",
+      "<b>CO₂ 要由外科緩慢、逐步灌注,不要一口氣大量打入</b>:一般在胸腔內建立約 5–10 cmH₂O 的正壓,壓迫肺、壓低橫膈以改善視野;<b class='w'>壓力越高,心臟與大靜脈被壓得越扁、靜脈回流掉得越多,就越容易低血壓與心搏過緩</b>,對心室功能差或血容不足者影響更明顯",
+      "<b class='w'>張力性 capnothorax(tension capnothorax)</b>:突發或過快灌注 → 縱膈血管受壓致嚴重低血壓、胸膜牽張引發迷走性心搏過緩 → <b>首要處置為立即停灌並解除氣胸</b>,再以輸液、升壓劑、atropine 支持<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>把 capnothorax 想成腹腔鏡的『氣腹』搬到胸腔:壓力若失控累積,就成了<b>張力性氣胸的二氧化碳版</b>。典型畫面是灌注開始或加壓時,血壓驟降(收縮壓可掉到很低)、心跳可能因迷走反射而過慢、末梢 CO₂ 先升後因心輸出崩跌而驟降、患側呼吸音變小。處置順序要果斷:①請外科<b>立刻停止灌注、打開閥門洩壓</b>(解除氣胸是根本);②輸液擴容;③低血壓給升壓劑、心搏過緩給抗膽鹼藥(如 atropine);④必要時退出對接(undock)。穩定前不要糾結於找其他原因。</span>",
+      "CO₂ 吸收 → 高碳酸血症與酸中毒,長時間手術更明顯 → 增加分鐘通氣量代償(受 OLV 限制,常採允許性高碳酸)"
+    ],
+    intraop:[
+      "保護性肺通氣:低潮氣量(約 5–6 mL/kg 理想體重)、氣道壓限制約 30 cmH₂O、允許性高碳酸(可容忍至 pH 約 7.25;<b class='w'>顱內壓升高者不宜</b>——高碳酸使腦血管擴張,恐惡化顱內壓)",
+      "<b class='w'>docking 後失去接近病人的機會、機器手臂又無順應性</b>:導管、監測、氣道皆於 docking 前完成並確認;<b class='w'>手術床鎖定後不可再移動</b>(病人或床面移動而手臂不動 → 器械傷及肺與大血管);預先與團隊約定<b>緊急 undock 流程</b>",
+      "擺位與機器手臂:患側手臂常需大幅後伸以讓出空間 → <b class='w'>臂神經叢(brachial plexus)牽張受傷風險</b>;警覺機器手臂壓迫頭頸/上肢之壓砸傷,受壓處確實皮膚保護貼保護",
+      "縱膈與大血管(主動脈、肺動脈)鄰近操作;<b class='w'>難控制之大出血 → 緊急 undock、轉開胸</b>",
+      "<b>RATS 是全團隊手術</b>:主刀在遠端 console 操作,術前 briefing 須明確分配各角色(含專責 docking / undocking 者)與緊急分工;<b class='w'>主刀不在檯邊 → 緊急止血有兩段內建延遲</b>,務必事先演練<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>傳統手術遇到大出血,主刀當下就能出手;但 RATS 的主刀坐在遠端 console、沒有刷手上檯,器械又是機器手臂。一旦發生機器器械壓不住的大出血,搶救路徑會多出兩段延遲:①要先把機器<b>安全 undock、移離病人</b>才能靠近;②主刀還要<b>刷手、走到檯邊</b>才能開胸止血。這兩段在災難性出血時分秒關鍵,所以團隊必須<b>事先演練、模擬</b>整套 undock 與轉開胸流程,並在術前 briefing 就把誰負責 undock、誰遞器械、誰幫主刀著袍分配清楚;中途換人要完整交班。</span>",
+      "<b>長時間手術的常規設置</b>:置放導尿管(短小 VATS 常不需);<b>間歇性氣動加壓靴(IPC)列為必要</b>,預防靜脈栓塞並促進靜脈回流",
+      "<b>主動保溫</b>:長時間手術加上 CO₂ 灌注易失溫 → 保溫毯、輸液加溫,維持正常體溫"
+    ],
+    drug:[
+      "TIVA 與吸入麻醉對 OLV 預後無明確優劣;偏好短效藥利早拔管",
+      "<b>維持深度神經肌肉阻斷</b>並以定量 TOF 監測;術後以 sugammadex 逆轉、確認完全回復,避免殘餘肌鬆致術後肺部併發症",
+      "區域止痛:<b>椎旁阻滯(PVB, paravertebral block)</b>可於置入 port 時即施行,提供全程止痛、降低麻醉需求,長時間手術尤其有利;或用筋膜平面阻滯(前鋸肌、豎脊肌)為 opioid-sparing 選項"
+    ],
+    emergence:[
+      "目標早期拔管;undock 後再處理氣道",
+      "回復雙肺並 recruitment(再擴張);拔管前確認<b>肌鬆完全逆轉(定量 TOF)</b>與殘餘 CO₂ 已代償"
+    ],
+    postop:[
+      "微創但取檢體仍需撐開 → 仍建議<b>良好急性止痛(PVB/筋膜平面)</b>以利深呼吸、咳嗽、早期動員",
+      "胸管照護、肺復張、呼吸治療",
+      "監測<b>皮下氣腫</b>(CO₂ 灌注後可能出現)與殘餘氣胸"
+    ],
+    flags:[
+      "張力性 capnothorax → 循環衰竭",
+      "OLV 頑固性低氧、高碳酸血症",
+      "DLT / blocker 移位(docking 後難處理)",
+      "臂神經叢損傷、機器手臂壓砸傷",
+      "大血管出血 → 緊急 undock、轉開胸",
+      "心律不整(AF 常見)"
+    ],
+    refs:[
+      "McCall, P., Steven, M., & Shelley, B. (2019). Anaesthesia for video-assisted and robotic thoracic surgery. BJA Education, 19(12), 405–411.",
+      "Pauli, H., Eladawy, M., & Park, J. (2019). Anaesthesia for robotic thoracic surgery. Annals of Cardiothoracic Surgery, 8(2), 263–268.",
+      "Batchelor, T. J. P., Rasburn, N. J., Abdelnour-Berchtold, E., et al. (2019). Guidelines for enhanced recovery after lung surgery: Recommendations of the Enhanced Recovery After Surgery (ERAS) Society and the European Society of Thoracic Surgeons (ESTS). European Journal of Cardio-Thoracic Surgery, 55, 91–115."
+    ]
+  },
+  {
+    specialty:"胸腔外科",
+    name:"楔形切除術",
+    en:"Wedge Resection (VATS)",
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"1–2 hr", blood:"少", airway:"GA / DLT 或 Blocker・單肺通氣(OLV)・粗 line + FloTrac 或 a-line" },
+    preop:[
+      "適應症:周邊小結節之<b>診斷性切除</b>、原發性小型(≤2 cm)周邊 NSCLC 之治癒性 sublobar resection、或肺轉移瘤切除",
+      "<b>非解剖式(non-anatomic)切除</b>:僅楔形移除病灶與其邊緣,保留最多肺實質 → 常用於<b class='w'>心肺儲備差、無法耐受肺葉切除</b>之病人<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>肺葉切除是<b>解剖式</b>切除:沿著肺葉的血管、支氣管界線,整葉拿掉。楔形切除則是<b>非解剖式</b>:不管肺葉邊界,直接用縫合切割器把含病灶的一小塊肺實質『咬』下來,像切一角蛋糕。好處是切得少、保留最多會換氣的肺 → 對本來就喘、肺功能差的病人負擔小。代價是切除範圍與淋巴清除較有限,腫瘤學上需嚴格篩選病人;若冰凍病理顯示邊緣(margin)不夠,可能得當場改做範圍更大的切除。</span>",
+      "近年 RCT(CALGB 140503、JCOG0802)支持:嚴格篩選之周邊小型 NSCLC,sublobar resection 存活率不劣於肺葉切除 → 接受此術式者往往較年長、心肺功能較差<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>過去肺癌手術的黃金標準是肺葉切除。但隨著影像進步、越來越多<b>周邊、早期、小型</b>的肺癌被發現,學界開始問:能不能切少一點、保留更多肺?兩個大型隨機試驗給了答案——北美的 CALGB 140503 與日本的 JCOG0802 都顯示,對<b>≤2 cm、周邊、淋巴結陰性</b>的非小細胞肺癌,sublobar resection(含楔形切除與 segmentectomy)在存活率上不劣於肺葉切除。臨床上的意義是:被安排做楔形切除的病人,常常正是那些<b>年紀較大、肺功能較差、共病較多</b>的族群,麻醉評估要據此提高警覺。</span>",
+      "肺功能評估仍需,但門檻通常較肺葉切除寬",
+      "<b>VATS 絕對禁忌少</b>;需權衡的因素:既往手術或放療所致<b>沾黏</b>、廣泛肋膜疾病、中央或支氣管內病灶、腫瘤過大(>6 cm)。無法耐受單肺通氣(OLV, one-lung ventilation)對<b>長時間</b>術式屬絕對禁忌,但楔形切除、切片、肺大泡切除等<b>短時程</b>術式,即使 OLV 耐受在邊緣仍可能以 VATS 完成<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>為什麼同樣是胸腔鏡手術,楔形切除對『能不能撐過單肺通氣』的要求比肺葉切除寬鬆?關鍵在<b>時間</b>。OLV 時間越長,術後肺部併發症風險越高;肺葉切除動輒一兩小時以上,對只有一邊肺在換氣的病人是嚴苛考驗。楔形切除、診斷性切片或肺大泡切除通常很快,患側肺塌陷與 OLV 的時間都短 → 即使病人平時肺功能差、OLV 耐受在邊緣,短時間內往往仍撐得住。這也是為什麼儲備差的病人常被安排做範圍小、時間短的術式。</span>"
+    ],
+    airway:[
+      "<b>肺隔離(lung isolation)</b>:左側 DLT 或 Blocker;OLV 提供肺塌陷視野。DLT 常被視為 VATS 首選(塌陷較快),惟臨床上 Blocker 亦廣泛使用、兩者無臨床顯著差異",
+      "手術時間較短 → OLV 時間通常較短、低氧風險相對低;<b class='w'>務必以 Fiberscope 確認側躺後 DLT 位置</b> —— 微創胸腔手術常將手術床調至<b>極度側屈</b>以撐開肋間、改善視野,此動作易使 DLT 上移(支氣管套囊滑過氣管隆突)或下移(氣管開口進入支氣管)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>雙腔管的位置對單肺通氣成敗很關鍵,但它其實很容易跑掉。VATS 為了讓器械好操作,會把手術床折成<b>誇張的側屈</b>角度、把上方肋間撐開;擺位、頸部彎曲、床面折彎,任一步都可能讓管子相對氣管隆突(carina)移位。往上滑,支氣管套囊跑到隆突之上 → 兩肺都被通氣、患側塌不下來;往下滑,氣管側開口整個進到支氣管 → 對側肺換不到氣。所以原則是:擺好<b>最終手術體位後</b>一定要再用纖維支氣管鏡確認一次,不能只信誘導時仰臥位的那一次。</span>",
+      "<b>肺塌陷</b>:胸膜未打開前肺不會真正塌陷,但可於切開前先行 OLV 促使肺容積下降、增加胸膜回縮壓,理論上降低置入胸腔鏡時直接傷肺之風險;此階段肺已隔離但未塌陷,可能因肺內分流(shunt)而<b>在切開胸膜前即出現低氧</b>,須待胸膜切開、肺塌陷後才改善 → 避免無謂延長 OLV(OLV 時間與術後肺部併發症正相關)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>很多人以為『開始單肺通氣、患側肺就會塌』,其實不然。胸膜(壁層與臟層之間)還沒被外科打開前,患側肺被大氣與胸壁包著,只是<b>不通氣</b>而已,不會真的縮小。這段『已隔離、尚未塌陷』的空窗,患側仍有血流卻沒換氣 → 形成<b>肺內分流</b>,病人可能還沒動刀就開始掉血氧。促進塌陷的技巧:isolation 前先用<b>100% 氧氣</b>把患側肺內的氮氣洗掉(純氧比氮氣容易被吸收,肺縮得快);必要時以纖維支氣管鏡對患側大氣道<b>抽吸</b>、清除分泌物幫助排氣。原則是別讓 OLV 拖太久 —— 時間越長,術後肺部併發症越多。</span>",
+      "<b>OLV 低氧處理</b>(SpO₂ 目標 ≥90%):提高 FiO₂、最佳化健側(下側)通氣、以輸液或血管活性藥維持循環;<b>患側 CPAP 為最後手段</b>(會干擾手術視野,須先與外科溝通,自低壓開始緩慢增加);上述皆無效則回復雙肺通氣"
+    ],
+    monitor:[
+      "標準監測;多數穩定",
+      "<b>周邊動脈導管</b>視心肺共病與預期 OLV 時間決定:短小術式常僅需非侵入性血壓監測與短效藥;較長/較大術式,或需頻繁動脈血氣取樣者則置放動脈導管",
+      "至少一條順暢周邊 IV;<b>若出血風險高</b>(既往手術、廣泛肺門操作)應視兩條大口徑靜脈導管為必要。中央靜脈導管於 VATS 少用,僅在靜脈取得困難或心功能差需升壓/強心時個別考慮;警覺楔形切除偶轉為更大範圍切除"
+    ],
+    hemo:[
+      "多數血流動力學穩定、失血少",
+      "側臥 + OLV → V/Q 不匹配、可能低氧",
+      "沿用<b>限制性輸液</b>以降低術後肺水腫風險"
+    ],
+    intraop:[
+      "保護性肺通氣:低潮氣量、允許性高碳酸",
+      "<b>主動保溫</b>:胸腔暴露與長時間 OLV 易散熱失溫,以溫毯、輸液加溫維持正常體溫,避免低體溫影響凝血、增加傷口感染與延遲甦醒",
+      "<b class='w'>務必與外科確認切除範圍與 margin</b>:診斷性楔形切除若冰凍病理為惡性且 margin 不足,可能術中轉為 segmentectomy 或肺葉切除 → 麻醉計畫需預留彈性(藥量、時間、輸液)",
+      "以縫合切割器(stapler)封閉肺實質;警覺<b class='w'>術中/術後漏氣(air leak)</b>",
+      "<b class='w'>大血管(主動脈、肺動脈)損傷併大量出血</b>為微創胸腔手術最凶險併發症,且不易立即控制 → 緊急轉開胸最常見原因即為出血;實務上多能先於胸腔鏡下暫時壓迫控制、再從容執行開胸止血 → 麻醉須隨時備妥大量輸液/輸血與轉開胸之準備"
+    ],
+    drug:[
+      "偏好短效麻醉藥利早拔管;<b>OLV 下 TIVA 與吸入麻醉無孰優之定論</b>,惟近年大型回溯研究提示肺切除採 TIVA 者<b>非計畫性入住加護病房</b>較少",
+      "區域止痛:<b>椎旁阻滯(PVB, paravertebral block)在 VATS 不劣於胸段硬膜外</b>、輕微副作用較少,常搭配鴉片類使用;筋膜平面阻滯(前鋸肌、豎脊肌)為較新選項,大型證據待補。楔形切除疼痛通常較肺葉切除輕,仍建議多模式止痛",
+      "肌鬆確保術終完全逆轉,避免殘餘肌鬆致肺部併發症"
+    ],
+    emergence:[
+      "目標早期拔管;回復雙肺並 recruitment",
+      "確認無明顯漏氣、肺復張良好"
+    ],
+    postop:[
+      "疼痛通常<b>輕至中度</b>(取檢體仍需一定傷口,強行縮小切口可能因牽張力增加致肋骨骨折;MITS 疼痛整體仍可達中至重度);良好止痛利深呼吸、咳嗽、早期動員,並可能減少慢性疼痛(VATS 後約 25%,胸廓切開術約 33%)",
+      "<b class='w'>持續性漏氣(prolonged air leak)為最常見併發症</b> → 胸管照護、觀察氣胸",
+      "呼吸治療、肺復張"
+    ],
+    flags:[
+      "持續性漏氣、術後氣胸",
+      "OLV 低氧",
+      "術中轉為更大範圍切除(margin / 病灶因素)",
+      "大血管損傷、大量出血致緊急轉開胸",
+      "診斷不明結節之病理結果影響後續處置"
+    ],
+    refs:[
+      "Altorki, N., Wang, X., Kozono, D., et al. (2023). Lobar or sublobar resection for peripheral stage IA non-small-cell lung cancer. New England Journal of Medicine, 388(6), 489–498.",
+      "Saji, H., Okada, M., Tsuboi, M., et al. (2022). Segmentectomy versus lobectomy in small-sized peripheral non-small-cell lung cancer (JCOG0802/WJOG4607L): A multicentre, open-label, phase 3, randomised, controlled, non-inferiority trial. The Lancet, 399(10335), 1607–1617.",
+      "McCall, P., Steven, M., & Shelley, B. (2019). Anaesthesia for video-assisted and robotic thoracic surgery. BJA Education, 19(12), 405–411.",
+      "Batchelor, T. J. P., Rasburn, N. J., Abdelnour-Berchtold, E., et al. (2019). Guidelines for enhanced recovery after lung surgery: Recommendations of the Enhanced Recovery After Surgery (ERAS) Society and the European Society of Thoracic Surgeons (ESTS). European Journal of Cardio-Thoracic Surgery, 55, 91–115."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"扁桃腺切除術",
+    en:"Tonsillectomy",
+    summary:{ position:"Supine · head extended", posType:"supine", time:"<1 hr", blood:"少–中", airway:"GA / RAE・共用氣道" },
+    preop:[
+      "<b class='w'>OSA評估</b>(打鼾/小兒)→對阿片敏感",
+      "近期上呼吸道感染→氣道反應性升高",
+      "出血傾向、飽胃(急診出血)"
+    ],
+    airway:[
+      "<b class='w'>共用氣道</b>(與耳鼻喉共用術野)",
+      "RAE管牢固固定;口張器可能壓迫或阻塞ETT",
+      "<b class='w'>拔管期風險高</b>:喉痙攣、血液/分泌物刺激"
+    ],
+    monitor:[
+      "標準監測;失血因吞入而不易估計"
+    ],
+    hemo:[
+      "多數穩定;注意隱性失血"
+    ],
+    intraop:[
+      "與外科團隊協調共用氣道;確認口張器未壓管",
+      "止血;OG抽吸胃內血液"
+    ],
+    drug:[
+      "OSA者謹慎用阿片→multimodal、dexmedetomidine、減量",
+      "<b>dexamethasone</b>(消腫 + 減PONV)"
+    ],
+    emergence:[
+      "<b class='w'>甦醒為高風險期</b>:喉痙攣、血液刺激",
+      "採深麻醉或完全清醒拔管;恢復採側臥「扁桃腺姿」"
+    ],
+    postop:[
+      "疼痛、PONV(高);監測出血",
+      "OSA→監測呼吸暫停"
+    ],
+    flags:[
+      "<b>術後出血</b>(原發<24hr / 續發5–10天)→飽胃、低血容、視野困難之急診麻醉",
+      "喉痙攣",
+      "OSA阿片致呼吸抑制",
+      "負壓性肺水腫"
+    ],
+    refs:[
+      "Mitchell, R. B., Archer, S. M., Ishman, S. L., et al. (2019). Clinical practice guideline: Tonsillectomy in children (update). Otolaryngology–Head and Neck Surgery, 160(1_suppl), S1–S42."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"鼻部手術(鼻竇/鼻中膈/鼻整形)",
+    en:"Nasal Surgery (FESS / Septoplasty / Septorhinoplasty)",
+    summary:{ position:"Supine · reverse Trendelenburg 10–15° (head-up)", posType:"revtrend", time:"0.5–2 hr", blood:"少–中", airway:"GA / oral RAE 或 flexible LMA・共用氣道・throat pack" },
+    preop:[
+      "常見<b>慢性鼻竇炎(chronic rhinosinusitis)</b>合併<b class='w'>下呼吸道發炎</b>:高達三分之二病人併氣喘/COPD/支氣管擴張 → 評估並優化氣道反應性<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>上下呼吸道為連續一體(『同一氣道』概念),鼻竇黏膜慢性發炎常伴支氣管高反應性。術前若氣喘控制不佳,誘導與拔管期較易支氣管痙攣;宜延續吸入型類固醇/支氣管擴張劑,並評估近期發作與用藥。</span>",
+      "<b class='w'>阿斯匹靈加重呼吸道疾病(AERD;鼻息肉 + 氣喘 + NSAID 敏感)</b> → 避免非類固醇消炎止痛藥(NSAID)",
+      "評估出血傾向與抗凝/抗血小板用藥;鼻息肉、青少年血管纖維瘤(juvenile angiofibroma)等血管性病灶術前備血"
+    ],
+    airway:[
+      "<b class='w'>共用氣道</b>:與外科團隊共用鼻/口術野,麻醉端遠離病人頭側",
+      "鼻塞可能使面罩通氣困難 → 備口咽通氣道;依術式與偏好選 <b>oral RAE 氣管內管</b>或 <b>flexible LMA(可彎式喉罩)</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>oral RAE(south-facing 加強型導管)固定牢靠、遠離鼻部術野,適合須正壓通氣或氣道保護需求高者;flexible LMA 可減少嗆咳、利平順甦醒,填塞良好時亦能保護下呼吸道,惟正壓與氣道保護程度較氣管內管低。選擇宜與外科團隊事先溝通。</span>",
+      "<b class='w'>喉囊填塞(throat pack)攔截血液與沖洗液</b>;<b class='w'>務必記錄置入並於拔管前確實移除</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>throat pack 是塞在咽部的紗布,攔截往下流的血液與沖洗液,減少喉痙攣與術後吞血致噁心。最大風險是『遺留』——拔管後仍留置會造成致命氣道阻塞。安全作法:置入與移除都明確記錄、白板標示,並列入 team time-out 與拔管前檢查清單。</span>"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;採控制性降壓者加強血壓監測(必要時動脈導管)"
+    ],
+    hemo:[
+      "<b>術野出血直接決定內視鏡能見度</b>:出血源自鼻竇黏膜微血管,受<b>平均動脈壓(MAP)與中心靜脈壓</b>共同影響",
+      "<b>減少出血三要素</b>:頭高位(↓靜脈壓)、局部血管收縮劑、<b>控制性降壓</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>控制性降壓(controlled/deliberate hypotension)指刻意把 MAP 降到約 50–65 mmHg,或較基準降低 30%,以減少黏膜滲血、改善能見度。須慎選病人:腦血管、冠狀動脈或腎功能不良者風險高,降壓與器官灌流間須權衡。</span>",
+      "<b class='w'>局部血管收縮劑全身吸收 → 高血壓、心律不整</b>:cocaine 心臟毒性風險高,建議改用 phenylephrine/adrenaline/oxymetazoline,並與外科團隊確認總劑量<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>鼻黏膜局部血管收縮劑經黏膜快速吸收入循環,可致高血壓、心搏過速與心律不整。cocaine 因心臟毒性已較少用;使用任何血管收縮劑前與外科團隊確認種類與『累積總劑量』,避免過量,合併冠心/高血壓者尤須警覺。</span>"
+    ],
+    intraop:[
+      "<b>全靜脈麻醉(TIVA,propofol–remifentanil)相較吸入麻醉可改善術野品質</b>;remifentanil 亦利控制性降壓與平順",
+      "維持正常體溫;<b class='w'>FESS 鄰近眼眶</b> → 注意眼睛保護,術中警覺眼周瘀腫等眼眶併發症徵象"
+    ],
+    drug:[
+      "<b>dexamethasone</b>(消腫 + 減 PONV);多模式止痛(paracetamol;AERD 者避免 NSAID)",
+      "PONV 中高風險(吞血)→ 常規多重止吐預防"
+    ],
+    emergence:[
+      "<b class='w'>拔管前確認移除 throat pack、抽吸咽部積血</b>",
+      "以 flexible LMA、深麻醉或完全清醒下拔管以減少嗆咳與再出血;採頭高、側臥恢復姿"
+    ],
+    postop:[
+      "PONV;鼻腔填塞致<b>強制經口呼吸</b>不適;監測後鼻孔滲血與吞血",
+      "OSA 或鼻填塞者注意夜間血氧下降"
+    ],
+    flags:[
+      "術後出血/後鼻孔大出血(尤以鼻整形、血管性病灶)",
+      "throat pack 遺留致氣道阻塞",
+      "FESS 罕見重大併發症:眼眶血腫/視力喪失、腦脊髓液漏、顱底或頸內動脈損傷",
+      "局部血管收縮劑或控制性降壓相關心血管事件"
+    ],
+    refs:[
+      "Murdoch, I., Surda, P., & Nguyen-Lu, N. (2021). Anaesthesia for rhinological surgery. BJA Education, 21(6), 225–231.",
+      "Boonmak, P., Boonmak, S., & Laopaiboon, M. (2016). Deliberate hypotension with propofol under anaesthesia for functional endoscopic sinus surgery (FESS). Cochrane Database of Systematic Reviews, 2016(10), CD006623.",
+      "Quijada-Manuitt, M. Á., Escamilla, Y., & Vallano, A. (2018). Use of α2-adrenergic agonists to improve surgical field visibility in endoscopic sinus surgery: A systematic review of randomized controlled trials. Clinical Therapeutics, 40(1), 136–149."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"耳部手術(鼓室成形/乳突/聽小骨)",
+    en:"Middle Ear Surgery (Tympanoplasty / Mastoidectomy / Ossiculoplasty)",
+    summary:{ position:"Supine · head turned, 10–15° head-up", posType:"revtrend", time:"1–3 hr(乳突較長)", blood:"少(需 bloodless field)", airway:"GA / reinforced ETT 或 LMA・顏面神經監測→肌鬆受限" },
+    preop:[
+      "多為日間手術;評估共病、聽力障礙溝通;<b class='w'>近期上呼吸道感染</b>使氣道反應性升高,擇期宜延後",
+      "小兒感音性聽損者留意合併症候群(如 Jervell–Lange-Nielsen 之長 QT)→ 術前心電圖",
+      "PONV 高風險族群評估(年輕、暈動症病史)"
+    ],
+    airway:[
+      "<b class='w'>共用氣道、病人頭轉向對側、麻醉端遠離</b> → 確保導管牢固、迴路不受牽拉",
+      "選 reinforced(加強型)氣管內管避免打折;若採喉罩須留意頭部轉動致移位",
+      "<b class='w'>顏面神經監測時肌鬆受限</b>:插管僅用單次短效肌鬆或不用,之後避免持續肌鬆<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>顏面神經走行於中耳腔,術中易受傷。顏面神經監測(facial nerve monitoring)以肌電圖偵測神經受刺激來辨識與保護神經;因判讀依賴肌肉反應,誘導後應避免持續肌肉鬆弛,或改短效並確認恢復,以免壓抑訊號。</span>"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;採控制性降壓者加強血壓監測",
+      "顏面神經監測(肌電圖)訊號 → 與神經肌肉阻斷狀態相互影響,需協調"
+    ],
+    hemo:[
+      "<b>顯微手術需 bloodless field</b>:數滴血即遮蔽術野 → 頭高位、外科局部注射腎上腺素、輕度控制性降壓",
+      "維持適當灌流,避免過度降壓致腦/器官缺血"
+    ],
+    intraop:[
+      "<b class='w'>避免使用笑氣(N₂O)</b>:擴散入中耳致壓力變化,可能頂起移植片或聽小骨重建<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>中耳是相對密閉含氣腔。笑氣進入此腔速度快於氮氣排出,使中耳正壓上升;一旦停用,笑氣又快速回吸入血,造成中耳負壓。這些壓力變化可能頂起或移位鼓膜移植片或聽小骨重建;若使用笑氣,應在放置移植片前至少 30 分鐘停用。</span>",
+      "<b>TIVA(propofol–remifentanil)</b>常用:術野品質佳、利平順甦醒;維持正常體溫"
+    ],
+    drug:[
+      "<b>止吐多重預防</b>(如 dexamethasone + ondansetron);多模式止痛,疼痛通常輕–中度",
+      "顏面神經監測期避免長效肌鬆(若用 rocuronium 可備 sugammadex)"
+    ],
+    emergence:[
+      "<b class='w'>平順甦醒是手術成敗關鍵</b>:嗆咳/用力可致移植片移位、靜脈壓上升出血 → 深麻醉拔管或 LMA、可加 lidocaine/remifentanil 抑制嗆咳"
+    ],
+    postop:[
+      "<b class='w'>PONV 極高</b>(前庭刺激)→ 積極預防與治療;避免頭部劇烈活動",
+      "監測眩暈、顏面神經功能;多為當日或短期出院"
+    ],
+    flags:[
+      "PONV 與術後眩暈",
+      "顏面神經損傷/暫時性顏面麻痺(局麻浸潤過量亦可致暫時無力)",
+      "聽小骨鏈移位、移植片失敗(甦醒嗆咳相關)",
+      "罕見:腦脊髓液漏、腦膜炎、永久性顏面神經麻痺"
+    ],
+    refs:[
+      "Pairaudeau, C., & Mendonca, C. (2019). Anaesthesia for major middle ear surgery. BJA Education, 19(5), 136–143.",
+      "Liang, S., & Irwin, M. G. (2010). Review of anesthesia for middle ear surgery. Anesthesiology Clinics, 28(3), 519–528.",
+      "Gan, T. J., Belani, K. G., Bergese, S., et al. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"腮腺切除術",
+    en:"Parotidectomy",
+    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"2–4 hr", blood:"中", airway:"GA / reinforced 或 south-facing RAE ETT・顏面神經監測→誘導後不維持肌鬆" },
+    preop:[
+      "評估腫瘤良惡性與範圍;深葉/惡性腫瘤手術較廣、時間較長",
+      "<b class='w'>術前記錄基準顏面神經功能(House–Brackmann 分級)</b>",
+      "確認外科團隊是否使用術中顏面神經監測 → 影響肌鬆策略"
+    ],
+    airway:[
+      "<b class='w'>術野鄰近氣道、病人頭轉向對側、麻醉端遠離</b> → reinforced 或 south-facing RAE 導管,牢固固定、避免打折",
+      "留意插管後不再有機會調整導管(鋪單後術野覆蓋)"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;失血中等 → 適當靜脈通路",
+      "<b class='w'>顏面神經監測(肌電圖)貫穿全程</b> → 神經解離期須維持可監測狀態<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>顏面神經穿行於腮腺實質,是腮腺手術最重要的保護對象;術中顏面神經監測靠肌電圖,肌肉鬆弛劑會壓掉訊號,故神經解離期不維持肌鬆。常見兩種作法:一是插管僅用單次短效肌鬆(如 succinylcholine)或不用肌鬆(深麻醉/remifentanil 維持不動);二是以 rocuronium 插管、切皮前給 sugammadex 逆轉,恢復可監測狀態。插管後可做 tap test 確認電極/導管位置正確。統合分析顯示監測可降低『暫時性』顏面無力,但對『永久性』麻痺的影響證據不一。</span>"
+    ],
+    hemo:[
+      "多數穩定;止血確實以降低術後血腫風險"
+    ],
+    intraop:[
+      "<b class='w'>神經解離期不維持肌鬆</b> → 以 remifentanil 為主的 TIVA 提供不動與穩定深度,兼利甦醒",
+      "維持正常體溫;輕度頭高位減少靜脈滲血"
+    ],
+    drug:[
+      "誘導肌鬆採單次短效或以 rocuronium + sugammadex 策略;維持避免持續肌鬆",
+      "多模式止痛;PONV 預防"
+    ],
+    emergence:[
+      "平順甦醒;確認顏面神經功能評估交班"
+    ],
+    postop:[
+      "監測<b class='w'>頸部血腫</b>(可壓迫氣道)、顏面神經功能、傷口引流",
+      "衛教遲發之 Frey syndrome<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Frey syndrome(耳顳神經症候群/味覺性出汗)是腮腺手術後常見的遲發併發症:再生的副交感分泌纖維錯接到皮膚汗腺與血管,進食時患側臉頰潮紅與出汗。多於術後數月出現,屬術後衛教與外科追蹤範疇,非麻醉急性問題。</span>"
+    ],
+    flags:[
+      "顏面神經損傷(暫時或永久性)",
+      "術後頸部血腫壓迫氣道",
+      "遲發 Frey syndrome、耳垂麻木(耳大神經)",
+      "涎瘻(salivary fistula)、感染"
+    ],
+    refs:[
+      "Sood, A. J., Houlton, J. J., Nguyen, S. A., & Gillespie, M. B. (2015). Facial nerve monitoring during parotidectomy: A systematic review and meta-analysis. Otolaryngology–Head and Neck Surgery, 152(4), 631–637.",
+      "Chiesa-Estomba, C. M., Larruscain-Sarasola, E., Lechien, J. R., et al. (2021). Facial nerve monitoring during parotid gland surgery: A systematic review and meta-analysis. European Archives of Oto-Rhino-Laryngology, 278(4), 933–943.",
+      "Thilen, S. R., Weigel, W. A., Todd, M. M., et al. (2023). 2023 American Society of Anesthesiologists practice guidelines for monitoring and antagonism of neuromuscular blockade. Anesthesiology, 138(1), 13–41."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"顯微喉手術(支撐喉鏡)",
+    en:"Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)",
+    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"<0.5–1 hr(常短而強刺激)", blood:"少", airway:"GA / microlaryngeal tube(MLT 小號)或 tubeless(jet/THRIVE)・共用+困難氣道・雷射防護" },
+    preop:[
+      "<b class='w'>術前氣道評估至關重要</b>:聲帶/喉部病灶、腫瘤、放療後纖維化可致<b>氣道阻塞與插管困難</b> → 影像與內視鏡評估、與外科團隊共擬計畫(NAP4 教訓)",
+      "評估發聲改變、喘鳴、平躺呼吸困難等阻塞徵象",
+      "禁食狀態、共病與心肺儲備"
+    ],
+    airway:[
+      "<b class='w'>共用氣道 + 潛在困難氣道</b>:麻醉與外科團隊須共享氣道並備妥困難氣道與外科氣道器材、call help",
+      "選項:<b>microlaryngeal tube(MLT,小號長導管)</b>提供術野同時保通氣;或 <b>tubeless(無管)技術</b>爭取乾淨術野<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>為給外科團隊乾淨無管術野,可採無管技術(tubeless):包括間歇性拔插小號導管、噴射通氣(jet ventilation,聲門上或聲門下)、以及經鼻高流量濕化氧(THRIVE)提供窒息式氧合。各法皆須全靜脈麻醉維持穩定深度與不動;噴射通氣須熟悉氣壓傷與 CO₂ 蓄積風險,THRIVE 則須留意 CO₂ 隨時間上升。</span>",
+      "<b class='w'>雷射手術須防氣道起火</b>:雷射專用抗燃導管、氣囊以生理食鹽水(可加亞甲藍)充填、FiO₂ 降至最低、避免笑氣<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>雷射氣道手術最需防範『氣道起火』。起火需三要素同時存在:助燃劑(高濃度氧氣/笑氣)、可燃物(氣管內管、棉片、組織)、與點火源(雷射)。降低風險:使用雷射專用抗燃導管、氣囊以生理食鹽水(可加亞甲藍指示破損)充填、把吸入氧濃度(FiO₂)降到能維持安全血氧的最低值(常 <30%)、避免笑氣、雷射擊發前先告知團隊暫停高濃度氧。起火時立即停雷射、移除導管、停氧並以生理食鹽水滅火。</span>"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;<b>tubeless/jet 技術須密切追蹤氧合與 CO₂ 蓄積</b>(必要時間歇血氣)"
+    ],
+    hemo:[
+      "<b class='w'>支撐喉鏡懸吊為強烈刺激</b>:置入與懸吊瞬間常引發血壓、心跳飆升 → 麻醉須深且可快速調節<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>支撐喉鏡懸吊(suspension laryngoscopy)對咽喉是強烈刺激,置入與懸吊瞬間血壓、心跳常飆升;但手術本身短、刺激時強時無 → 麻醉須『深且可快速調節』。remifentanil 併 propofol 的全靜脈麻醉便於即時加深以壓制反應、停藥後又能快速甦醒。必要時以短效 β 阻斷劑或血管活性藥處理血壓波動。</span>"
+    ],
+    intraop:[
+      "<b>全靜脈麻醉(propofol–remifentanil)</b>為主:提供不動、穩定深度與快速甦醒;確保<b class='w'>完全不動</b>以防精細操作/雷射誤傷",
+      "牙齒與口唇保護(喉鏡置入);短促手術須警覺刺激的『開/關』落差"
+    ],
+    drug:[
+      "propofol + remifentanil TCI;肌鬆視技術而定(短效或以 sugammadex 逆轉的 rocuronium)",
+      "dexamethasone 減喉水腫與 PONV;局部 lidocaine 抑制喉反射"
+    ],
+    emergence:[
+      "<b class='w'>拔管期高風險</b>:喉痙攣、喉水腫、血液/分泌物刺激 → 抽吸乾淨、完全清醒且氣道反射恢復後拔管;備再插管與外科氣道"
+    ],
+    postop:[
+      "<b class='w'>監測喉水腫/喘鳴與氣道阻塞</b>;必要時類固醇、濕化氧、觀察",
+      "聲音休息衛教;疼痛通常輕度"
+    ],
+    flags:[
+      "氣道起火(雷射)",
+      "喉痙攣、喉水腫致術後氣道阻塞",
+      "tubeless/jet 相關:低血氧、CO₂ 蓄積、氣壓傷(氣胸/縱膈氣腫)",
+      "懸吊刺激致血壓/心律劇烈波動;牙齒/口咽軟組織損傷"
+    ],
+    refs:[
+      "Pearson, K. L., & McGuire, B. E. (2017). Anaesthesia for laryngo-tracheal surgery, including tubeless field techniques. BJA Education, 17(7), 242–248.",
+      "Patel, A., & Nouraei, S. A. R. (2015). Transnasal humidified rapid-insufflation ventilatory exchange (THRIVE): A physiological method of increasing apnoea time in patients with difficult airways. Anaesthesia, 70(3), 323–329.",
+      "Jaquet, Y., Monnier, P., Van Melle, G., et al. (2006). Complications of different ventilation strategies in endoscopic laryngeal surgery: A 10-year review. Anesthesiology, 104(1), 52–59.",
+      "Apfelbaum, J. L., Caplan, R. A., Barker, S. J., et al. (2013). Practice advisory for the prevention and management of operating room fires: An updated report by the American Society of Anesthesiologists Task Force on Operating Room Fires. Anesthesiology, 118(2), 271–290."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"剖腹產(全身麻醉)",
+    en:"Cesarean Section (GA)",
+    summary:{ position:"Supine · left tilt (LUD)", posType:"supine", time:"<1 hr", blood:"中–多", airway:"GA / RSI・ETT" },
+    preop:[
+      "首選區域麻醉;全麻多用於緊急、區域禁忌或失敗",
+      "<b class='w'>視同飽胃(full stomach)→誤吸風險高</b>;制酸劑/H2 blocker、citrate",
+      "孕婦氣道水腫、Mallampati↑→<b class='w'>困難插管風險增加</b>,備小號 ETT 與困難氣道器材"
+    ],
+    airway:[
+      "<b class='w'>RSI + cricoid pressure</b>;預充氧要足(FRC↓、耗氧↑→去飽和快)",
+      "頭高位誘導利喉鏡;備 videolaryngoscope",
+      "左側子宮移位(LUD)減少主動脈腔靜脈壓迫"
+    ],
+    monitor:[
+      "標準監測;預估失血→大口徑靜脈、備血",
+      "子宮收縮不良/大出血時考慮動脈管"
+    ],
+    hemo:[
+      "<b class='w'>仰臥主動脈腔靜脈壓迫→低血壓</b>,務必左傾",
+      "娩出後子宮收縮劑:oxytocin 緩慢給(快速→低血壓/心搏過速);產後出血風險"
+    ],
+    intraop:[
+      "娩出前麻醉宜淺以免胎兒抑制,但需防<b class='w'>術中知曉</b>→建議 BIS/呼氣末麻醉濃度監測",
+      "娩出後加深麻醉、給鴉片;積極保溫"
+    ],
+    drug:[
+      "誘導 propofol + rocuronium(RSI);維持吸入或 TIVA;娩出前避免長效鴉片",
+      "oxytocin;必要時 carbetocin/麥角/前列腺素(氣喘者慎用 carboprost)"
+    ],
+    emergence:[
+      "飽胃→<b class='w'>清醒、氣道保護反射恢復後才拔管</b>"
+    ],
+    postop:[
+      "multimodal(TAP block、paracetamol、NSAID)減鴉片利哺乳;PONV 預防",
+      "子宮收縮與出血監測"
+    ],
+    flags:[
+      "誤吸(Mendelson syndrome)",
+      "困難/失敗插管(產科氣道)",
+      "產後大出血、子宮收縮乏力",
+      "主動脈腔靜脈壓迫低血壓、術中知曉、羊水栓塞"
+    ],
+    refs:[
+      "Mushambi, M. C., Kinsella, S. M., Popat, M., et al. (2015). Obstetric Anaesthetists' Association and Difficult Airway Society guidelines for the management of difficult and failed tracheal intubation in obstetrics. Anaesthesia, 70(11), 1286–1306."
+    ]
+  },
+  {
+    specialty:"神經外科",
+    name:"開顱腫瘤切除",
+    en:"Craniotomy (Supratentorial Tumour)",
+    summary:{ position:"Supine · head-up, head pins", posType:"supine", time:"數小時", blood:"中(可能多)", airway:"GA / 加強型ETT" },
+    preop:[
+      "評估 ICP、神經功能基準、腫瘤位置與水腫;類固醇、抗癲癇藥續用",
+      "避免術前重鎮靜(意識↓/CO₂↑→ICP↑)"
+    ],
+    airway:[
+      "<b class='w'>頭釘固定後氣道難接近</b>→加強型 ETT 牢固固定",
+      "平順插管、控制喉鏡反應(避免嗆咳與高血壓→ICP↑)"
+    ],
+    monitor:[
+      "標準 + <b>動脈管</b>(逐搏血壓、CPP、血氣);大口徑靜脈,必要時 CVC",
+      "神經監測(視術式 MEP/SSEP)、BIS"
+    ],
+    hemo:[
+      "<b class='w'>維持腦灌流壓(CPP),避免高血壓與低血壓</b>;失血準備",
+      "頭高位→靜脈空氣栓塞風險"
+    ],
+    intraop:[
+      "<b class='w'>腦鬆弛</b>:適度過度換氣(PaCO₂ ~30–35)、mannitol/高張鹽、頭高、維持靜脈回流通暢",
+      "避免高血糖、維持正常體溫;神經監測時配合麻醉深度與肌鬆"
+    ],
+    drug:[
+      "常用 <b>TIVA(propofol±remifentanil)</b>利 MEP 與腦鬆弛;避免長效肌鬆干擾監測",
+      "remifentanil 利smooth extubation"
+    ],
+    emergence:[
+      "<b class='w'>smooth extubation、避免嗆咳與高血壓</b>(顱內出血風險);快速甦醒以利神經評估"
+    ],
+    postop:[
+      "神經功能監測、血壓管理、疼痛控制(避免過度鎮靜);多轉 ICU"
+    ],
+    flags:[
+      "顱內高壓 / 腦膨出(tight brain)",
+      "術中或術後顱內出血",
+      "靜脈空氣栓塞(VAE)",
+      "甦醒延遲、癲癇、電解質異常(尿崩/SIADH)"
+    ],
+    refs:[
+      "Li, J., Gelb, A. W., Flexman, A. M., Ji, F., & Meng, L. (2016). Definition, evaluation, and management of brain relaxation during craniotomy. British Journal of Anaesthesia, 116(6), 759–769."
+    ]
+  },
+  {
+    specialty:"大腸直腸外",
+    name:"腹腔鏡大腸切除",
+    en:"Laparoscopic Colectomy",
+    summary:{ position:"Lithotomy · Trendelenburg", posType:"trend", time:"2–4 hr", blood:"中", airway:"GA / ETT" },
+    preop:[
+      "ERAS:避免長時間禁食、術前碳水飲品;矯正貧血;戒菸",
+      "老年與心肺共病評估"
+    ],
+    airway:[
+      "氣腹 + 陡頭低位→<b class='w'>面部/氣道水腫、ETT 易移位</b>,確認深度",
+      "氣腹→氣道壓↑,需調整通氣"
+    ],
+    monitor:[
+      "標準 + EtCO₂;較長/失血→動脈管;體溫、尿量"
+    ],
+    hemo:[
+      "氣腹↑腹內壓 + 陡頭低位→靜脈回流與血流動力學變化、眼壓/顱內壓↑",
+      "ERAS:目標導向輸液,避免過量"
+    ],
+    intraop:[
+      "保護性肺通氣;<b class='w'>陡頭低 + 氣腹→通氣困難、眼壓上升</b>;保溫;OG 減壓",
+      "避免長效鴉片(ERAS)"
+    ],
+    drug:[
+      "短效藥利早期恢復;multimodal(TAP、靜脈 lidocaine)減少鴉片依賴"
+    ],
+    emergence:[
+      "smooth extubation;頭低位回復後確認血流動力學"
+    ],
+    postop:[
+      "ERAS:早期進食活動、multimodal 止痛、PONV 預防;吻合口監測"
+    ],
+    flags:[
+      "氣腹相關(CO₂ 栓塞、皮下氣腫)",
+      "陡頭低位:眼壓↑/視力風險、氣道水腫",
+      "吻合口漏、腸道損傷",
+      "VTE、低體溫"
+    ],
+    refs:[
+      "Gustafsson, U. O., Scott, M. J., Hübner, M., et al. (2019). Guidelines for perioperative care in elective colorectal surgery: Enhanced Recovery After Surgery (ERAS) Society recommendations: 2018. World Journal of Surgery, 43(3), 659–695."
+    ]
+  },
+  {
+    specialty:"泌尿科",
+    name:"經尿道攝護腺切除",
+    en:"Transurethral Resection of Prostate (TURP)",
+    summary:{ position:"Lithotomy", posType:"supine", time:"<1.5 hr", blood:"中(不易估計)", airway:"半身麻醉常見 / GA・ETT或LMA" },
+    preop:[
+      "老年、心肺共病;抗凝藥;基準血鈉 Na⁺"
+    ],
+    airway:[
+      "<b class='w'>半身麻醉有利清醒偵測 TURP 症候群早期神經症狀</b>;全麻會掩蓋症狀"
+    ],
+    monitor:[
+      "標準;<b class='w'>監測體溫(大量灌洗液→低體溫)</b>、血鈉/意識;失血估計困難"
+    ],
+    hemo:[
+      "灌洗液吸收→<b class='w'>容量過載(高血壓/心搏過緩),續而低血壓</b>"
+    ],
+    intraop:[
+      "<b class='w'>TURP 症候群</b>:低滲/低鈉血症 + glycine 毒性(視覺障礙、抽搐、腦病)、容量變化",
+      "限制切除時間與灌洗液吊高;留意膀胱穿孔;保溫"
+    ],
+    drug:[
+      "全麻採短效;抽搐處理(benzodiazepine、鎂)"
+    ],
+    emergence:[
+      "全麻甦醒後評估神經與電解質狀態"
+    ],
+    postop:[
+      "監測血鈉/意識/容量、體溫;膀胱沖洗與出血"
+    ],
+    flags:[
+      "TURP 症候群(低鈉/低滲、glycine 毒性、視覺障礙、抽搐、肺水腫、心臟停止)",
+      "膀胱/攝護腺囊穿孔",
+      "低體溫、菌血症/敗血症",
+      "過快矯正低鈉→滲透性脫髓鞘(不宜 >1 mmol/L/hr)"
+    ],
+    refs:[
+      "O'Donnell, A. M., & Foo, I. T. H. (2009). Anaesthesia for transurethral resection of the prostate. Continuing Education in Anaesthesia Critical Care & Pain, 9(3), 92–96."
+    ]
+  },
+  {
+    specialty:"整形外科",
+    name:"游離皮瓣重建",
+    en:"Free Flap Reconstruction",
+    summary:{ position:"Supine (視皮瓣部位)", posType:"supine", time:"長(數小時)", blood:"中", airway:"GA / ETT(頭頸皮瓣常鼻插管)" },
+    preop:[
+      "長時間手術;共病(頭頸癌常合併吸菸/心肺);氣道評估(頭頸→可能困難、鼻插管)"
+    ],
+    airway:[
+      "頭頸皮瓣:<b class='w'>常鼻氣管插管以利術野</b>;預期困難時考慮清醒插管"
+    ],
+    monitor:[
+      "標準 + <b>動脈管</b>(逐搏血壓、血氣);尿管;<b class='w'>核心體溫(維持正常體溫利皮瓣灌流)</b>",
+      "考慮 CO/SVV 目標導向;TIVA + 肌鬆時建議 BIS"
+    ],
+    hemo:[
+      "<b class='w'>維持正常體溫、正常血容、寬脈壓、Hct ~30%</b>以最大化皮瓣灌流",
+      "血管收縮劑爭議:優先維持麻醉深度與容量,避免過度血管收縮"
+    ],
+    intraop:[
+      "目標導向輸液,避免過量或不足;暖氣毯保溫",
+      "長時間→壓瘡、周邊神經與眼睛保護"
+    ],
+    drug:[
+      "常 TIVA;避免過度血管收縮;multimodal"
+    ],
+    emergence:[
+      "smooth extubation、避免血壓劇烈波動影響吻合;開始皮瓣監測"
+    ],
+    postop:[
+      "<b class='w'>維持正常血壓、體溫、容量,規律監測皮瓣</b>(顏色/都卜勒);避免血管收縮與低體溫;VTE 預防"
+    ],
+    flags:[
+      "皮瓣灌流不足 / 吻合栓塞(需早期偵測搶救)",
+      "低體溫、低血容",
+      "長時間手術:壓瘡、周邊神經損傷、視力風險",
+      "(頭頸)困難氣道"
+    ],
+    refs:[
+      "Nimalan, N., Branford, O. A., & Stocks, G. (2016). Anaesthesia for free flap breast reconstruction. BJA Education, 16(5), 162–166."
+    ]
+  },
+  {
+    specialty:"心臟外科",
+    name:"冠狀動脈繞道(on-pump)",
+    en:"Coronary Artery Bypass Graft (CABG)",
+    summary:{ position:"Supine", posType:"supine", time:"3–5 hr", blood:"多", airway:"GA / ETT" },
+    preop:[
+      "心功能/EF、冠狀解剖、共病(DM、腎、頸動脈);抗血小板/抗凝停用時機;STS 風險分層"
+    ],
+    airway:[
+      "標準;<b class='w'>平順誘導避免血流動力學劇烈波動</b>(心肌缺血)"
+    ],
+    monitor:[
+      "<b>動脈管、CVC、常用肺動脈導管、TEE</b>;大口徑靜脈;多點體溫;腦氧",
+      "<b class='w'>ACT 監測(heparin 抗凝,CPB 前 ACT >400–480)</b>"
+    ],
+    hemo:[
+      "<b class='w'>維持心肌氧供需平衡</b>:避免心搏過速與極端血壓;誘導與上/下機前後求穩",
+      "CPB:抗凝 heparin、cardioplegia;停機後 protamine 逆轉"
+    ],
+    intraop:[
+      "CPB 上/下機管理、心臟保護、體溫調控與再升溫(<b class='w'>避免高溫</b>);凝血/輸血、TXA",
+      "停機後心律與心輸出支持(強心/升壓/IABP 視需)"
+    ],
+    drug:[
+      "依血流動力學選誘導藥;吸入劑心肌保護;heparin/protamine;TXA;血管活性藥備妥"
+    ],
+    emergence:[
+      "多不當場拔管→<b class='w'>帶管轉 ICU</b>;fast-track 符合條件者早拔"
+    ],
+    postop:[
+      "ICU:血流動力學/出血/心律(AF)監測、鎮痛鎮靜、體溫、血糖"
+    ],
+    flags:[
+      "圍術期心肌缺血/梗塞、低心輸出症候群",
+      "CPB 相關:凝血病/出血、發炎反應、腦中風、急性腎損傷",
+      "protamine 反應、心律不整(AF)",
+      "heparin 抗凝不足 / HIT"
+    ],
+    refs:[
+      "Wahba, A., Kunst, G., De Somer, F., et al. (2025). 2024 EACTS/EACTAIC/EBCP guidelines on cardiopulmonary bypass in adult cardiac surgery. European Journal of Cardio-Thoracic Surgery, 67(2), ezae354."
+    ]
+  },
+  {
+    specialty:"心臟外科",
+    name:"保留瓣膜主動脈根部置換(David)",
+    en:"Valve-Sparing Aortic Root Replacement (David)",
+    summary:{ position:"Supine", posType:"supine", time:"4–6 hr", blood:"多", airway:"GA / ETT" },
+    preop:[
+      "主動脈根部動脈瘤 ± 主動脈閉鎖不全(AR);常見年輕、結締組織疾病(Marfan/Loeys-Dietz)",
+      "<b class='w'>結締組織病:注意合併二尖瓣脫垂、主動脈剝離風險、自發性氣胸、硬脊膜膨出(影響神經麻醉)、關節過動(擺位)</b>",
+      "影像:根部尺寸、瓣膜可修復性、是否延伸至主動脈弓"
+    ],
+    airway:[
+      "標準;<b class='w'>平順誘導、嚴控血壓避免主動脈壁剪應力(dP/dt)</b>→剝離/破裂",
+      "結締組織病者注意顳顎/頸椎與氣道"
+    ],
+    monitor:[
+      "<b>動脈管、CVC、常用肺動脈導管、TEE</b>;多點體溫、腦氧;ACT",
+      "<b class='w'>TEE 是關鍵:上機前評估 AR 與根部,下機後確認殘餘 AR(明顯→改瓣膜置換)</b>"
+    ],
+    hemo:[
+      "術前若 AR:<b class='w'>維持「快、飽、前向」——避免心搏過慢、維持前負荷、降低後負荷、勿使 SVR 過高</b>",
+      "誘導與上/下機前後嚴控血壓(避免高血壓→主動脈壁應力)"
+    ],
+    intraop:[
+      "CPB + 主動脈鉗夾、cardioplegia(可能逆行);涉弓部→<b class='w'>深低溫循環暫停(DHCA)與腦保護</b>",
+      "<b class='w'>冠狀動脈鈕扣再植入→注意冠脈開口問題/心肌缺血</b>",
+      "長 CPB/鉗夾時間;凝血、TXA、血品準備(結締組織→易出血)"
+    ],
+    drug:[
+      "依血流動力學選藥;heparin/protamine;TXA;血管活性藥備妥"
+    ],
+    emergence:[
+      "<b class='w'>帶管轉 ICU</b>;fast-track 符合條件者早拔"
+    ],
+    postop:[
+      "ICU:血流動力學、出血、心律、殘餘 AR、神經狀態(若 DHCA);血壓嚴控"
+    ],
+    flags:[
+      "修復後殘餘/復發主動脈閉鎖不全(→可能需再置換瓣膜)",
+      "冠狀動脈鈕扣相關心肌缺血、傳導阻滯(完全性心阻滯/需節律器)",
+      "大出血(結締組織、長吻合線)",
+      "(涉弓部)DHCA 相關腦損傷/中風;主動脈剝離",
+      "CPB 相關:凝血病、AKI、發炎反應"
+    ],
+    refs:[
+      "David, T. E., & Feindel, C. M. (1992). An aortic valve-sparing operation for patients with aortic incompetence and aneurysm of the ascending aorta. The Journal of Thoracic and Cardiovascular Surgery, 103(4), 617–621.",
+      "Mastrobuoni, S., Govers, P. J., Veen, K. M., et al. (2023). Valve-sparing aortic root replacement using the reimplantation (David) technique: A systematic review and meta-analysis. Annals of Cardiothoracic Surgery, 12(3)."
+    ]
+  }
+];
+
+/* ============================================================
+   以下為介面邏輯,通常不需更動。
+   ============================================================ */
+const SECTION_DEFS = [
+  { key:"preop",     label:"術前評估重點",   cls:"" },
+  { key:"airway",    label:"氣道與呼吸",     cls:"s-airway" },
+  { key:"monitor",   label:"監測與管路",     cls:"s-monitor" },
+  { key:"hemo",      label:"血流動力學與體液", cls:"s-hemo" },
+  { key:"intraop",   label:"術中關鍵事項",   cls:"" },
+  { key:"drug",      label:"用藥考量",       cls:"s-drug" },
+  { key:"emergence", label:"甦醒與拔管",     cls:"" },
+  { key:"postop",    label:"術後照護",       cls:"" }
+];
+
+/* ASA 基本監測參考內容(監測區塊的 ⓘ 展開面板) */
+const ASA_INFO = `
+  <h4>ASA 基本麻醉監測標準　Standards for Basic Anesthetic Monitoring</h4>
+  <div class="std"><b>Standard I</b>　全程需有合格麻醉人員在場。</div>
+  <div class="std"><b>Standard II</b>　所有麻醉期間,持續評估以下四項:</div>
+  <ul>
+    <li><b>氧合 Oxygenation</b>：O₂ 分析儀(附低氧警報)、脈搏血氧 SpO₂、膚色觀察</li>
+    <li><b>通氣 Ventilation</b>：capnography(EtCO₂)、以吐氣 CO₂ 確認 ETT／喉罩位置、呼吸器斷路警報</li>
+    <li><b>循環 Circulation</b>：連續 ECG、NIBP＋HR 至少每 5 分鐘;全身麻醉另加一項連續循環評估(觸診／聽診／動脈波形／血氧)</li>
+    <li><b>體溫 Temperature</b>：預期或懷疑有臨床上顯著變化時監測</li>
+  </ul>
+  <div class="src">首次採用 1986;2010 修訂將 EtCO₂ 納入中／深度鎮靜之必要監測。來源:American Society of Anesthesiologists, Standards for Basic Anesthetic Monitoring.</div>
+`;
+
+const el = id => document.getElementById(id);
+let activeSpec = "全部";
+let activeId = null;
+
+const specialties = ["全部", ...[...new Set(SURGERIES.map(s=>s.specialty))]];
+
+function renderChips(){
+  el("chips").innerHTML = specialties.map(sp =>
+    `<button class="chip" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}</button>`
+  ).join("");
+  el("chips").querySelectorAll(".chip").forEach(c=>{
+    c.onclick = () => { activeSpec = c.dataset.sp; renderChips(); renderList(); };
+  });
+}
+
+function matches(s, q){
+  if(!q) return true;
+  const hay = (s.name+s.en+s.specialty+JSON.stringify(s)).toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+
+function renderList(){
+  const q = el("search").value.trim();
+  const items = SURGERIES.filter(s =>
+    (activeSpec==="全部" || s.specialty===activeSpec) && matches(s,q)
+  );
+  if(!items.length){
+    el("list").innerHTML = `<div class="empty">找不到符合的手術<br>試試其他關鍵字</div>`;
+    return;
+  }
+  el("list").innerHTML = items.map(s=>{
+    const id = SURGERIES.indexOf(s);
+    return `<div class="card ${id===activeId?'active':''}" data-id="${id}">
+      <div class="name">${s.en}</div>
+      <div class="en">${s.name}</div>
+      <div class="meta">
+        <span class="tag spec">${s.specialty}</span>
+        <span class="tag">${s.summary.airway}</span>
+      </div>
+    </div>`;
+  }).join("");
+  el("list").querySelectorAll(".card").forEach(c=>{
+    c.onclick = () => showDetail(+c.dataset.id);
+  });
+}
+
+function li(arr){ return arr && arr.length ? arr.map(x=>`<li>${x}</li>`).join("") : `<li style="color:var(--ink-soft)">—</li>`; }
+
+function toggleAsa(){
+  const p = el("asaPanel"); if(!p) return;
+  const btn = document.querySelector(".asa-btn");
+  const show = p.hasAttribute("hidden");
+  if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
+  if(btn) btn.setAttribute("aria-expanded", show ? "true" : "false");
+}
+
+/* 通用「點擊展開說明」:切換按鈕緊鄰的 .info-panel(平時收縮) */
+function toggleInfo(btn){
+  const p = btn.nextElementSibling; if(!p) return;
+  const show = p.hasAttribute("hidden");
+  if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
+  btn.setAttribute("aria-expanded", show ? "true" : "false");
+}
+
+/* 體位小圖示 —— 依醫院手術床遙控器(Skytron 3503)風格:實心圓點=頭(固定左側)、粗線=身體/床面、側面平躺視角。
+   type: 'supine'(LEVEL平躺) | 'revtrend'(頭高) | 'trend'(頭低) | 'prone'(俯臥) | 'lateral'(側臥) */
+function posIcon(type){
+  const icons = {
+    supine:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="7" cy="9.4" r="3"/><rect x="10" y="8" width="26" height="2.8" rx="1.4"/></svg>`,
+    revtrend:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="6.5" cy="6.6" r="3"/><rect x="10" y="8.6" width="26" height="2.8" rx="1.4" transform="rotate(7 23 10)"/></svg>`,
+    trend:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="6.5" cy="12.4" r="3"/><rect x="10" y="8.6" width="26" height="2.8" rx="1.4" transform="rotate(-7 23 10)"/></svg>`,
+    prone:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="7" cy="7.4" r="3"/><rect x="5.6" y="9.9" width="2.8" height="3.3" rx="1.3"/><rect x="10" y="8.1" width="26" height="2.8" rx="1.4"/></svg>`,
+    lateral:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="7" cy="8.4" r="3"/><path d="M10 9 q7 0 11 5 q3 3.5 8 1.2" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  };
+  return icons[type] || icons.supine;
+}
+
+function showDetail(id){
+  activeId = id;
+  const s = SURGERIES[id];
+  const sum = s.summary;
+  const sections = SECTION_DEFS.filter(d=>s[d.key] && s[d.key].length).map(d=>{
+    const isMon = d.key==="monitor";
+    const btn = isMon ? `<button class="asa-btn" type="button" aria-expanded="false" onclick="toggleAsa()">ⓘ ASA 基本監測</button>` : "";
+    const panel = isMon ? `<div class="asa-panel" id="asaPanel" hidden>${ASA_INFO}</div>` : "";
+    const dia = (s.diagram && s.diagram.section===d.key)
+      ? `<figure class="d-figure">${s.diagram.svg}${s.diagram.caption?`<figcaption>${s.diagram.caption}</figcaption>`:""}</figure>` : "";
+    return `
+    <div class="section ${d.cls}">
+      <h3><span class="dot"></span>${d.label}${btn}</h3>
+      <ul>${li(s[d.key])}</ul>
+      ${dia}
+      ${panel}
+    </div>`;
+  }).join("");
+
+  el("detail").innerHTML = `
+    <button class="back" id="backBtn">← 返回清單</button>
+    <div class="d-head">
+      <div class="d-title">${s.en}</div>
+      <div class="d-title-zh">${s.name}</div>
+      <div class="d-en">${s.specialty}</div>
+      <div class="d-summary">
+        <div class="item pos"><div class="k">Position</div><div class="v">${posIcon(sum.posType)}<span>${sum.position||"—"}</span></div></div>
+        <div class="item"><div class="k">預估時間</div><div class="v">${sum.time||"—"}</div></div>
+        <div class="item"><div class="k">預估失血</div><div class="v">${sum.blood||"—"}</div></div>
+        <div class="item"><div class="k">麻醉方式</div><div class="v">${sum.airway||"—"}</div></div>
+      </div>
+    </div>
+    ${sections}
+    ${s.flags && s.flags.length ? `
+      <div class="flag-box">
+        <h3>⚠ 重要併發症</h3>
+        <ul>${s.flags.map(x=>`<li>${x}</li>`).join("")}</ul>
+      </div>` : ""}
+    ${s.refs && s.refs.length ? `
+      <div class="refs-box">
+        <h3>文獻出處　References</h3>
+        <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
+      </div>` : ""}
+    <div class="disclaimer">
+      本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
+    </div>`;
+  el("backBtn").onclick = () => { el("app").classList.remove("stage-detail"); };
+  el("app").classList.add("stage-detail");
+  renderList();
+  el("detail").scrollTop = 0;
+}
+
+el("search").addEventListener("input", renderList);
+renderChips();
+renderList();
+
+/* ============================================================
+   自動更新:檔案推上 GitHub 後,手機回到 app 或每隔一段時間
+   會自動偵測伺服器上的新版並更新,不必重開連結。
+   原理:以 no-store 抓自身網址,比對 ETag / Last-Modified
+   (取不到時退而比對內容雜湊)。只在 GitHub Pages 等 http(s)
+   環境有效;本機 file:// 開啟會靜默略過。
+   ============================================================ */
+(function(){
+  var SELF = location.href.split('#')[0].split('?')[0];
+  var baseline = null;
+  function hash(t){var h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0;}return t.length+':'+h;}
+  function getSig(){
+    return fetch(SELF,{cache:'no-store'}).then(function(res){
+      if(!res.ok) throw 0;
+      var e=res.headers.get('etag'), m=res.headers.get('last-modified');
+      if(e) return 'e:'+e;
+      if(m) return 'm:'+m;
+      return res.text().then(function(t){return 'h:'+hash(t);});
+    });
+  }
+  window.applyUpdate=function(){ location.reload(); };
+  function onNew(){
+    var app=document.getElementById('app');
+    if(app && app.classList.contains('stage-detail')){
+      var b=document.getElementById('upd'); if(b) b.style.display='flex';
+    } else { location.reload(); }
+  }
+  function check(){
+    getSig().then(function(sig){
+      if(baseline===null){ baseline=sig; return; }
+      if(sig!==baseline){ onNew(); }
+    }).catch(function(){});
+  }
+  check();
+  setInterval(check, 60000);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible') check(); });
+  window.addEventListener('focus', check);
+})();
+</script>
+</body>
+</html>
