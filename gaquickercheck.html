@@ -178,6 +178,65 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
   background:var(--sage-tint);color:#5a6a5a;border-radius:5px;font-size:12.5px;font-weight:600;
   display:flex;align-items:center;justify-content:center}
 
+/* ---------- 個人筆記 / 照片(存在本機瀏覽器) ---------- */
+.note-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--clay);border-radius:11px;padding:15px 17px 16px}
+.note-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.note-local{font-size:12px;font-weight:500;color:#8a6a60;background:var(--clay-tint);
+  border-radius:20px;padding:2px 9px}
+.note-sub{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.note-ta{display:block;width:100%;min-height:110px;resize:vertical;font-family:inherit;
+  font-size:15.5px;line-height:1.7;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+.note-ta:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 2px var(--clay-tint)}
+.note-row{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+.note-status{font-size:12.5px;color:var(--ink-soft)}
+.note-btn{font-family:inherit;font-size:13px;font-weight:500;color:#8a6a60;
+  background:var(--clay-tint);border:1px solid #DCC7BF;border-radius:20px;
+  padding:5px 13px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.note-btn:hover{background:#E2CFC8}
+.note-btn.ghost{background:transparent;border-color:var(--line);color:var(--ink-soft)}
+.note-btn.ghost:hover{background:var(--surface-2)}
+
+.note-backup{margin:8px 0 12px;background:var(--ochre-tint);border:1px solid #DCCFAE;
+  border-radius:9px;padding:11px 13px}
+.note-backup .bk-msg{font-size:13.5px;line-height:1.65;color:#6b5d3c}
+.note-backup .bk-row{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+
+.ph-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.ph-wrap h4{font-size:14px;font-weight:700;color:var(--ink-soft);margin-bottom:7px}
+.ph-warn{font-size:12.5px;line-height:1.6;color:#8a5a50;background:var(--flag-tint);
+  border-radius:8px;padding:8px 11px;margin-bottom:10px}
+.ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:9px;margin-bottom:10px}
+.ph-grid:empty{display:none}
+.ph-item{position:relative;aspect-ratio:1/1;border-radius:9px;overflow:hidden;
+  border:1px solid var(--line);background:var(--surface-2);cursor:pointer}
+.ph-item img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-item .cap{position:absolute;left:0;right:0;bottom:0;background:rgba(66,62,57,.72);
+  color:#fff;font-size:11.5px;line-height:1.35;padding:4px 6px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph-empty{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
+
+.lb{position:fixed;inset:0;z-index:99;background:rgba(40,37,33,.88);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;gap:12px}
+.lb img{max-width:100%;max-height:66vh;border-radius:10px;object-fit:contain;background:#000}
+.lb-bar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:center;width:100%;max-width:520px}
+.lb-cap{flex:1 1 200px;min-width:0;font-family:inherit;font-size:14.5px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 11px}
+.lb-cap:focus{outline:none;border-color:var(--clay)}
+.lb-btn{font-family:inherit;font-size:13.5px;font-weight:500;border-radius:20px;
+  padding:7px 14px;cursor:pointer;border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.12);color:#fff;white-space:nowrap}
+.lb-btn.del{background:rgba(192,57,43,.75);border-color:rgba(192,57,43,.9)}
+
+.tag.note-tag{background:var(--clay-tint);color:#8a6a60}
+
+footer .foot-tools{display:inline-flex;gap:8px;margin-left:10px;vertical-align:middle}
+.foot-btn{font-family:inherit;font-size:12px;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:20px;padding:3px 10px;cursor:pointer}
+.foot-btn:hover{background:var(--surface)}
+
 .disclaimer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
   font-size:13px;color:var(--ink-soft);line-height:1.7}
 
@@ -218,6 +277,11 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .d-summary .item{font-size:15px}
   .refs-box li{font-size:14px;line-height:1.6}
   .disclaimer{font-size:13.5px;line-height:1.75}
+  .note-ta{font-size:16.5px;min-height:130px}
+  .note-btn{font-size:14px;padding:7px 15px}
+  .ph-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+  .ph-warn{font-size:13px}
+  .note-backup .bk-msg{font-size:14px}
 }
 ::-webkit-scrollbar{width:9px}
 ::-webkit-scrollbar-thumb{background:#CFC7B9;border-radius:6px}
@@ -253,7 +317,14 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
     </div>
   </div>
 
-  <footer>臨床輔助工具 · 使用前請對照所屬機構protocol與最新指引</footer>
+  <footer>
+    <span>臨床輔助工具 · 使用前請對照所屬機構protocol與最新指引</span>
+    <span class="foot-tools">
+      <button class="foot-btn" type="button" onclick="exportNotes()">匯出筆記</button>
+      <button class="foot-btn" type="button" onclick="pickImportFile()">匯入筆記</button>
+      <input id="impFile" type="file" accept="application/json,.json" hidden>
+    </span>
+  </footer>
 </div>
 
 <script>
@@ -1732,6 +1803,383 @@ let activeId = null;
 
 const specialties = ["全部", ...[...new Set(SURGERIES.map(s=>s.specialty))]];
 
+/* ============================================================
+   個人筆記 / 擺位照片
+   ------------------------------------------------------------
+   資料只存在「使用者自己這台裝置的這個瀏覽器」裡(IndexedDB;
+   不支援時退回 localStorage,僅存文字)。GitHub Pages 是純靜態
+   網站、沒有後端,所以筆記不會上傳、不會同步、也不會被其他人
+   看到。要分享或備份,用頁尾的「匯出筆記 / 匯入筆記」。
+
+   索引鍵 = 手術英文名(en)正規化後的字串。
+   ⚠ 若日後修改某台手術的 en 欄位,舊筆記會對不上該卡(資料仍在,
+     可用匯出檔找回)。要改 en 時請一併提醒使用者。
+   ============================================================ */
+const NOTE_DB = "ga-quickref-notes", NOTE_STORE = "notes", LS_KEY = "ga-quickref-notes-fallback";
+let NOTES = {};            /* key -> {text, photos:[{id,src,cap,ts}], ts} */
+let noteTimer = null, lbState = null;
+
+/* 備份提醒:META 與筆記存在同一個 store,用保留鍵區隔(手術 en 不可能等於此字串) */
+const META_KEY = "__meta__", META_LS = "ga-quickref-meta";
+const BACKUP_DUE_MS = 30 * 24 * 60 * 60 * 1000;   /* 距上次匯出超過 30 天才提醒 */
+const BACKUP_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000; /* 按「之後再說」暫停 7 天 */
+let META = { lastExport: 0, snoozeUntil: 0 };
+
+function noteKey(s){ return String(s.en || s.name || "").trim().toLowerCase().replace(/\s+/g," "); }
+function blankNote(){ return { text:"", photos:[], ts:0 }; }
+function getNote(s){ return NOTES[noteKey(s)] || blankNote(); }
+function hasNote(s){ const n = NOTES[noteKey(s)]; return !!(n && (n.text.trim() || n.photos.length)); }
+
+/* ---------- 儲存層 ---------- */
+let idbFailed = false;
+function idb(){
+  return new Promise((res, rej)=>{
+    if(idbFailed || !window.indexedDB) return rej(new Error("no-idb"));
+    const r = indexedDB.open(NOTE_DB, 1);
+    r.onupgradeneeded = e => {
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(NOTE_STORE)) db.createObjectStore(NOTE_STORE);
+    };
+    r.onsuccess = e => res(e.target.result);
+    r.onerror   = () => { idbFailed = true; rej(r.error || new Error("idb-open")); };
+  });
+}
+function lsRead(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }catch(e){ return {}; } }
+function lsWrite(obj){
+  try{
+    /* localStorage 容量小(約 5MB),備援模式只保留文字,照片不寫入 */
+    const slim = {};
+    Object.keys(obj).forEach(k => {
+      if(k === META_KEY) return;
+      slim[k] = { text: obj[k].text, photos: [], ts: obj[k].ts };
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify(slim));
+  }catch(e){}
+}
+
+async function storeLoad(){
+  try{
+    const db = await idb();
+    const out = await new Promise((res, rej)=>{
+      const tx = db.transaction(NOTE_STORE, "readonly").objectStore(NOTE_STORE);
+      const acc = {};
+      const cur = tx.openCursor();
+      cur.onsuccess = e => {
+        const c = e.target.result;
+        if(c){ acc[c.key] = c.value; c.continue(); } else res(acc);
+      };
+      cur.onerror = () => rej(cur.error);
+    });
+    return out;
+  }catch(e){ return lsRead(); }
+}
+async function storePut(key, val){
+  try{
+    const db = await idb();
+    await new Promise((res, rej)=>{
+      const tx = db.transaction(NOTE_STORE, "readwrite");
+      tx.objectStore(NOTE_STORE).put(val, key);
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
+    });
+  }catch(e){ lsWrite(NOTES); throw e; }
+}
+async function storeDel(key){
+  try{
+    const db = await idb();
+    await new Promise((res, rej)=>{
+      const tx = db.transaction(NOTE_STORE, "readwrite");
+      tx.objectStore(NOTE_STORE).delete(key);
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+    });
+  }catch(e){ lsWrite(NOTES); }
+}
+
+async function saveMeta(){
+  try{ localStorage.setItem(META_LS, JSON.stringify(META)); }catch(e){}
+  try{ await storePut(META_KEY, META); }catch(e){}
+}
+function loadMetaFallback(){
+  try{ return JSON.parse(localStorage.getItem(META_LS) || "null"); }catch(e){ return null; }
+}
+
+/* 是否該提醒備份:有「上次匯出之後才改動過」的筆記,且距離參考時點超過 30 天。
+   從未匯出過的人,以最早一筆筆記的時間當參考時點,不會一寫完就跳提醒。 */
+function backupDue(){
+  const keys = Object.keys(NOTES);
+  if(!keys.length) return false;
+  if(Date.now() < (META.snoozeUntil || 0)) return false;
+  const stamps = keys.map(k => NOTES[k].ts || 0);
+  const newest = Math.max.apply(null, stamps);
+  if(newest <= (META.lastExport || 0)) return false;   /* 匯出後沒再改過,不用吵 */
+  const ref = META.lastExport || Math.min.apply(null, stamps);
+  return (Date.now() - ref) > BACKUP_DUE_MS;
+}
+function daysSince(ts){ return Math.floor((Date.now() - ts) / 86400000); }
+function backupBannerHtml(){
+  if(!backupDue()) return "";
+  const msg = META.lastExport
+    ? `距離上次匯出已經 ${daysSince(META.lastExport)} 天,期間筆記有新增或修改。`
+    : `這裡的筆記已經累積 ${daysSince(Math.min.apply(null, Object.keys(NOTES).map(k => NOTES[k].ts || Date.now())))} 天,還沒備份過。`;
+  return `
+      <div class="note-backup" id="backupBanner">
+        <div class="bk-msg">💾 ${msg}筆記只存在這台裝置,清除瀏覽器資料或換裝置就會消失,建議匯出一份留存。</div>
+        <div class="bk-row">
+          <button class="note-btn" type="button" onclick="exportNotes()">立即匯出備份</button>
+          <button class="note-btn ghost" type="button" onclick="snoozeBackup()">之後再說</button>
+        </div>
+      </div>`;
+}
+function snoozeBackup(){
+  META.snoozeUntil = Date.now() + BACKUP_SNOOZE_MS;
+  saveMeta();
+  const b = el("backupBanner"); if(b) b.remove();
+}
+function refreshBackupBanner(){
+  const b = el("backupBanner");
+  if(!backupDue()){ if(b) b.remove(); return; }
+  if(!b && activeId != null) showDetail(activeId);
+}
+
+/* 要求瀏覽器不要在空間不足時自動清掉這些資料(iOS 建議另存到主畫面) */
+function askPersist(){
+  try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+}
+
+async function saveNote(key, note, statusMsg){
+  note.ts = Date.now();
+  if(!note.text.trim() && !note.photos.length){
+    delete NOTES[key];
+    await storeDel(key);
+  }else{
+    NOTES[key] = note;
+    try{ await storePut(key, note); }
+    catch(e){
+      setNoteStatus("儲存失敗(裝置空間不足或瀏覽器限制)", true);
+      return false;
+    }
+  }
+  setNoteStatus(statusMsg || ("已儲存 · " + new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"})));
+  renderList();
+  return true;
+}
+function setNoteStatus(msg, isErr){
+  const st = el("noteStatus"); if(!st) return;
+  st.textContent = msg;
+  st.style.color = isErr ? "var(--warn)" : "var(--ink-soft)";
+}
+
+/* ---------- 照片處理:上傳前縮圖壓縮,避免佔滿裝置空間 ---------- */
+const PH_MAX_EDGE = 1600, PH_QUALITY = 0.72;
+async function compressImage(file){
+  let w, h, draw;
+  if(window.createImageBitmap){
+    const bmp = await createImageBitmap(file, { imageOrientation:"from-image" });
+    w = bmp.width; h = bmp.height; draw = bmp;
+  }else{
+    draw = await new Promise((res, rej)=>{
+      const fr = new FileReader();
+      fr.onload = () => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = fr.result; };
+      fr.onerror = rej; fr.readAsDataURL(file);
+    });
+    w = draw.naturalWidth; h = draw.naturalHeight;
+  }
+  const sc = Math.min(1, PH_MAX_EDGE / Math.max(w, h));
+  const cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+  const cv = document.createElement("canvas");
+  cv.width = cw; cv.height = ch;
+  cv.getContext("2d").drawImage(draw, 0, 0, cw, ch);
+  if(draw.close) draw.close();
+  return cv.toDataURL("image/jpeg", PH_QUALITY);
+}
+
+async function addPhotos(input){
+  const files = Array.from(input.files || []).filter(f => /^image\//.test(f.type));
+  input.value = "";
+  if(!files.length || activeId == null) return;
+  const s = SURGERIES[activeId], key = noteKey(s), note = getNote(s);
+  note.photos = note.photos.slice();
+  setNoteStatus("處理照片中…");
+  for(const f of files){
+    try{
+      const src = await compressImage(f);
+      note.photos.push({ id: "p" + Date.now() + Math.random().toString(36).slice(2,7), src, cap:"", ts: Date.now() });
+    }catch(e){ setNoteStatus("有照片無法讀取,已略過", true); }
+  }
+  askPersist();
+  const ok = await saveNote(key, note, "照片已儲存");
+  if(ok) renderPhotos();
+}
+
+function renderPhotos(){
+  const g = el("phGrid"); if(g == null || activeId == null) return;
+  const photos = getNote(SURGERIES[activeId]).photos;
+  const empty = el("phEmpty");
+  if(empty) empty.style.display = photos.length ? "none" : "block";
+  g.innerHTML = photos.map((p, i) =>
+    `<div class="ph-item" data-i="${i}"><img src="${p.src}" alt="擺位照片 ${i+1}" loading="lazy">${
+      p.cap ? `<div class="cap">${escHtml(p.cap)}</div>` : ""}</div>`
+  ).join("");
+  g.querySelectorAll(".ph-item").forEach(d => { d.onclick = () => openLightbox(+d.dataset.i); });
+}
+function escHtml(t){ return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+
+/* ---------- 照片放大檢視:可加圖說、刪除 ---------- */
+function openLightbox(i){
+  if(activeId == null) return;
+  const note = getNote(SURGERIES[activeId]);
+  const p = note.photos[i]; if(!p) return;
+  closeLightbox();
+  const d = document.createElement("div");
+  d.className = "lb"; d.id = "lightbox";
+  d.innerHTML =
+    `<img src="${p.src}" alt="擺位照片">
+     <div class="lb-bar">
+       <input class="lb-cap" id="lbCap" type="text" maxlength="60" placeholder="圖說(例:頭低 30 度 + 肩托)" value="${escHtml(p.cap)}">
+       <button class="lb-btn" type="button" id="lbSave">儲存圖說</button>
+       <button class="lb-btn del" type="button" id="lbDel">刪除照片</button>
+       <button class="lb-btn" type="button" id="lbClose">關閉</button>
+     </div>`;
+  document.body.appendChild(d);
+  lbState = i;
+  d.addEventListener("click", e => { if(e.target === d) closeLightbox(); });
+  el("lbClose").onclick = closeLightbox;
+  el("lbSave").onclick = async () => {
+    const s = SURGERIES[activeId], n = getNote(s);
+    n.photos = n.photos.slice();
+    n.photos[i] = Object.assign({}, n.photos[i], { cap: el("lbCap").value.trim() });
+    await saveNote(noteKey(s), n, "圖說已儲存");
+    renderPhotos(); closeLightbox();
+  };
+  el("lbDel").onclick = async () => {
+    if(!confirm("確定刪除這張照片?此動作無法復原。")) return;
+    const s = SURGERIES[activeId], n = getNote(s);
+    n.photos = n.photos.filter((_, k) => k !== i);
+    await saveNote(noteKey(s), n, "照片已刪除");
+    renderPhotos(); closeLightbox();
+  };
+}
+function closeLightbox(){
+  const d = el("lightbox"); if(d) d.remove();
+  lbState = null;
+}
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeLightbox(); });
+
+/* ---------- 筆記區塊 HTML ---------- */
+function noteBoxHtml(s){
+  const n = getNote(s);
+  return `
+    <div class="note-box">
+      <h3>📝 個人筆記<span class="note-local">只存在這台裝置</span></h3>${backupBannerHtml()}
+      <div class="note-sub">自動儲存。此處內容不會上傳、不會同步給其他人;換裝置或清除瀏覽器資料就會消失,請定期用頁尾「匯出筆記」備份。</div>
+      <textarea class="note-ta" id="noteTa" placeholder="這台刀自己的心得:主刀習慣、擺位細節、藥物反應、器械準備、交班要點…">${escHtml(n.text)}</textarea>
+      <div class="note-row">
+        <span class="note-status" id="noteStatus"></span>
+      </div>
+
+      <div class="ph-wrap">
+        <h4>擺位／設備照片</h4>
+        <div class="ph-warn">⚠ 上傳前請先確認畫面中沒有病人臉部、手圈、病歷號,以及監視器或白板上的個資;院內拍攝與影像保存請依所屬機構規定辦理。</div>
+        <div class="ph-grid" id="phGrid"></div>
+        <div class="ph-empty" id="phEmpty">尚未加入照片。</div>
+        <div class="note-row">
+          <button class="note-btn" type="button" onclick="el('phInput').click()">＋ 新增照片</button>
+          <input id="phInput" type="file" accept="image/*" multiple hidden>
+          <button class="note-btn ghost" type="button" id="noteClear">清除本台筆記</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindNoteBox(s){
+  const ta = el("noteTa"); if(!ta) return;
+  const key = noteKey(s);
+  ta.addEventListener("input", () => {
+    setNoteStatus("編輯中…");
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => {
+      const n = getNote(s); n.text = ta.value; askPersist(); saveNote(key, n);
+    }, 700);
+  });
+  ta.addEventListener("blur", () => {
+    clearTimeout(noteTimer);
+    const n = getNote(s);
+    if(n.text !== ta.value){ n.text = ta.value; askPersist(); saveNote(key, n); }
+  });
+  el("phInput").addEventListener("change", function(){ addPhotos(this); });
+  el("noteClear").onclick = async () => {
+    if(!confirm("確定清除這台手術的所有筆記與照片?此動作無法復原。")) return;
+    delete NOTES[key];
+    await storeDel(key);
+    ta.value = "";
+    renderPhotos(); renderList();
+    setNoteStatus("已清除");
+  };
+  renderPhotos();
+  if(hasNote(s)) setNoteStatus("已儲存");
+}
+
+/* ---------- 匯出 / 匯入(備份與同事分享) ---------- */
+function exportNotes(){
+  const keys = Object.keys(NOTES);
+  if(!keys.length){ alert("目前沒有任何筆記可以匯出。"); return; }
+  const payload = { app:"surgical-ga-quickref", type:"notes-backup", version:1, exportedAt:new Date().toISOString(), notes:NOTES };
+  const blob = new Blob([JSON.stringify(payload)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "ga-quickref-notes-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  META.lastExport = Date.now();
+  META.snoozeUntil = 0;
+  saveMeta();
+  const b = el("backupBanner"); if(b) b.remove();
+  setNoteStatus("已匯出備份 · " + new Date().toLocaleDateString("zh-TW"));
+}
+function pickImportFile(){ el("impFile").click(); }
+async function importNotes(file){
+  try{
+    const txt = await file.text();
+    const data = JSON.parse(txt);
+    const incoming = (data && data.notes && typeof data.notes === "object") ? data.notes : null;
+    if(!incoming) throw new Error("format");
+    const n = Object.keys(incoming).length;
+    if(!n){ alert("這個檔案裡沒有筆記。"); return; }
+    if(!confirm("將匯入 " + n + " 台手術的筆記。\n\n同一台手術若已有筆記,匯入的內容會接在後面、照片會合併,不會覆蓋既有內容。要繼續嗎?")) return;
+    for(const key of Object.keys(incoming)){
+      const inc = incoming[key] || {};
+      const cur = NOTES[key] || blankNote();
+      const incText = String(inc.text || "").trim();
+      const merged = blankNote();
+      merged.text = cur.text.trim() && incText
+        ? cur.text.trim() + "\n\n— 匯入的筆記 —\n" + incText
+        : (cur.text.trim() || incText);
+      const seen = new Set(cur.photos.map(p => p.src));
+      merged.photos = cur.photos.concat((inc.photos || []).filter(p => p && p.src && !seen.has(p.src)));
+      NOTES[key] = merged;
+      await saveNote(key, merged, "");
+    }
+    alert("匯入完成。");
+    if(activeId != null) showDetail(activeId); else renderList();
+  }catch(e){
+    alert("匯入失敗:這不是本工具匯出的筆記檔,或檔案已損毀。");
+  }
+}
+
+async function initNotes(){
+  const all = await storeLoad();
+  const meta = all[META_KEY] || loadMetaFallback();
+  if(meta) META = { lastExport: meta.lastExport || 0, snoozeUntil: meta.snoozeUntil || 0 };
+  delete all[META_KEY];
+  NOTES = all;
+  Object.keys(NOTES).forEach(k => {
+    const n = NOTES[k] || {};
+    NOTES[k] = { text: String(n.text || ""), photos: Array.isArray(n.photos) ? n.photos : [], ts: n.ts || 0 };
+  });
+  renderList();
+  if(activeId != null) showDetail(activeId);
+}
+
 function renderChips(){
   el("chips").innerHTML = specialties.map(sp =>
     `<button class="chip" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}</button>`
@@ -1743,7 +2191,8 @@ function renderChips(){
 
 function matches(s, q){
   if(!q) return true;
-  const hay = (s.name+s.en+s.specialty+JSON.stringify(s)).toLowerCase();
+  const n = NOTES[noteKey(s)];
+  const hay = (s.name+s.en+s.specialty+JSON.stringify(s)+(n?n.text:"")).toLowerCase();
   return hay.includes(q.toLowerCase());
 }
 
@@ -1768,6 +2217,7 @@ function renderList(){
       <div class="meta">
         <span class="tag spec">${s.specialty}</span>
         <span class="tag">${s.summary.airway}</span>
+        ${hasNote(s) ? `<span class="tag note-tag" title="已有個人筆記">📝 筆記</span>` : ""}
       </div>
     </div>`;
   }).join("");
@@ -1855,12 +2305,14 @@ function showDetail(id){
         <h3>文獻出處　References</h3>
         <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
       </div>` : ""}
+    ${noteBoxHtml(s)}
     <div class="disclaimer">
       本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
     </div>
     <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
   el("backBtn").onclick = goBack;
   el("backBtnBottom").onclick = goBack;
+  bindNoteBox(s);
   el("app").classList.add("stage-detail");
   renderList();
   el("detail").scrollTop = 0;
@@ -1875,8 +2327,14 @@ function goBack(){
 }
 
 el("search").addEventListener("input", renderList);
+el("impFile").addEventListener("change", function(){
+  const f = this.files && this.files[0];
+  this.value = "";
+  if(f) importNotes(f);
+});
 renderChips();
 renderList();
+initNotes();
 
 /* ============================================================
    自動更新:檔案推上 GitHub 後,手機回到 app 或每隔一段時間
