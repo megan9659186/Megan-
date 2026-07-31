@@ -201,8 +201,9 @@ const EXAMS = [...new Set(BANK.map(examKey))]
     return ay===by ? sessOrd(bs)-sessOrd(as) : by-ay;})
   .map(k=>{const[y,s]=k.split('-'); return {key:k, year:y, session:s, label:y+' '+s};});
 const SKEY='nrsQuiz_v2';
-const BUILD='2026-07-30c';
+const BUILD='2026-07-31a';
 const LETTERS=['A','B','C','D'];
+const BANK_BY_ID = Object.fromEntries(BANK.map(i=>[i.id,i]));
 
 function load(){ try{return JSON.parse(localStorage.getItem(SKEY))||{}}catch(e){return {}} }
 function save(){ localStorage.setItem(SKEY, JSON.stringify(store)); }
@@ -231,6 +232,71 @@ let view='home';
 let session=null;   // {list, idx, mode, title, color, timed, startTime, answers:{}, endTime}
 let clockTimer=null;
 
+/* ── 續作進度（存進 localStorage 的 store.session）───────────────
+   只存題目 id 陣列而非整包題目物件，避免 localStorage 爆量；
+   計時模式存累計 elapsed，續作時再回推 startTime。               */
+function persistSession(){
+  if(!session || session.endTime) return;
+  store.session = {
+    ids:      session.list.map(i=>i.id),
+    idx:      session.idx,
+    mode:     session.mode,
+    title:    session.title,
+    color:    session.color,
+    timed:    !!session.timed,
+    elapsed:  Date.now() - session.startTime,
+    answers:  session.answers,
+    showExpl: session.showExpl,
+    savedAt:  Date.now()
+  };
+}
+function clearSavedSession(){ if(store.session){ delete store.session; save(); } }
+function dropSavedSession(){
+  if(confirm('要放棄上次未完成的練習嗎？（已作答的紀錄與統計不會消失）')){
+    clearSavedSession(); render();
+  }
+}
+/* 讀回上次的練習，題庫更新後找不到的題目自動略過 */
+function savedSessionInfo(){
+  const s = store.session;
+  if(!s || !Array.isArray(s.ids) || !s.ids.length) return null;
+  const list = s.ids.map(id=>BANK_BY_ID[id]).filter(Boolean);
+  if(list.length < 2) return null;
+  const idx = Math.min(Math.max(0, s.idx|0), list.length-1);
+  return {raw:s, list, idx};
+}
+function resumeSession(){
+  const info = savedSessionInfo();
+  if(!info){ clearSavedSession(); render(); return; }
+  const s = info.raw;
+  session = {
+    list:info.list, idx:info.idx, mode:s.mode, title:s.title,
+    color:s.color || 'var(--accent)', timed:!!s.timed,
+    startTime: Date.now() - (s.elapsed||0),
+    answers:  s.answers  || {},
+    showExpl: s.showExpl || {},
+    endTime:null
+  };
+  view='quiz';
+  persistSession(); save();
+  render();
+}
+function fmtAgo(ts){
+  if(!ts) return '';
+  const m = Math.floor((Date.now()-ts)/60000);
+  if(m < 1)    return '剛剛';
+  if(m < 60)   return m+' 分鐘前';
+  const h = Math.floor(m/60);
+  if(h < 24)   return h+' 小時前';
+  const d = Math.floor(h/24);
+  return d < 30 ? d+' 天前' : '很久以前';
+}
+/* 循序模式：從第一題還沒作答的題目開始（store.session 遺失時的第二層保險） */
+function firstUnansweredIdx(list){
+  const i = list.findIndex(it => !rec(it.id));
+  return i < 0 ? 0 : i;
+}
+
 const screen=document.getElementById('screen');
 function render(){
   if(view!=='quiz') stopClock();
@@ -258,7 +324,23 @@ function scrollTop(){
 /* HOME */
 function renderHome(){
   const total=BANK.length, ans=answeredCount(BANK), r=rate(BANK), w=wrongList().length, st=starredList().length;
-  let h=`<div class="eyebrow">學習概況</div>
+  let h='';
+  const rs = savedSessionInfo();
+  if(rs){
+    const cur = rs.list[rs.idx];
+    const pct = (rs.idx+1)/rs.list.length*100;
+    h += `<div class="eyebrow">繼續上次練習</div>
+    <div class="card" style="border-left:4px solid ${rs.raw.color||'var(--accent)'}">
+      <div style="font-size:18px;font-weight:700;color:var(--ink)">${esc(rs.raw.title||'上次的練習')}</div>
+      <div class="tiny" style="margin-top:3px">做到第 ${rs.idx+1} / ${rs.list.length} 題（原卷第 ${cur.num} 題・${esc(cur.subject)}）・${fmtAgo(rs.raw.savedAt)}</div>
+      <div class="progress" style="margin-top:9px"><i style="width:${pct}%;background:${rs.raw.color||'var(--accent)'}"></i></div>
+      <div style="display:flex;gap:10px;margin-top:13px">
+        <button class="btn sm" style="flex:1.7;background:${rs.raw.color||'var(--accent)'}" onclick="resumeSession()">繼續作答</button>
+        <button class="btn ghost sm" style="flex:1" onclick="dropSavedSession()">放棄</button>
+      </div>
+    </div>`;
+  }
+  h += `<div class="eyebrow">學習概況</div>
   <div class="stat-row">
     <div class="stat"><div class="n">${ans}<span style="font-size:16.5px;color:var(--muted)">/${total}</span></div><div class="l">已作答</div></div>
     <div class="stat"><div class="n">${r}<span style="font-size:16.5px;color:var(--muted)">%</span></div><div class="l">答對率</div></div>
@@ -364,8 +446,11 @@ function startSession(subjectName, mode, exam){
   beginSession(list, mode, ex? ex+' '+s.short : subjectName, s.color, store.settings.timed);
 }
 function beginSession(list, mode, title, color, timed){
-  session={list, idx:0, mode, title, color, timed:!!timed, startTime:Date.now(), answers:{}, showExpl:{}, endTime:null};
-  view='quiz'; render();
+  const start = mode==='seq' ? firstUnansweredIdx(list) : 0;
+  session={list, idx:start, mode, title, color, timed:!!timed, startTime:Date.now(), answers:{}, showExpl:{}, endTime:null};
+  view='quiz';
+  persistSession(); save();
+  render();
 }
 
 /* QUIZ */
@@ -432,10 +517,10 @@ function pick(L){
   const ok=isCorrect(item,L);
   const prev=rec(item.id);
   store.records[item.id]={picked:L, correct:ok, attempts:(prev?prev.attempts:0)+1};
-  save();
+  persistSession(); save();
   renderQuiz();
 }
-function toggleExpl(id){ session.showExpl[id]=!session.showExpl[id]; renderQuiz(); }
+function toggleExpl(id){ session.showExpl[id]=!session.showExpl[id]; persistSession(); save(); renderQuiz(); }
 function toggleStar(id){
   if(store.starred[id]) delete store.starred[id]; else store.starred[id]=1;
   save();
@@ -446,11 +531,13 @@ function skipNext(){ if(session.idx>=session.list.length-1){ renderSessionEnd();
 function prevQ(){ if(session.idx>0) gotoIdx(session.idx-1); }
 function gotoIdx(i){
   session.idx=Math.max(0,Math.min(i, session.list.length));
+  persistSession(); save();
   if(session.idx>=session.list.length) renderSessionEnd(); else renderQuiz();
   renderNav();
   scrollTop();
 }
-function quitQuiz(){ stopClock(); session=null; view='home'; render(); }
+/* 退出練習不清除續作點，回首頁仍可「繼續作答」 */
+function quitQuiz(){ stopClock(); persistSession(); save(); session=null; view='home'; render(); }
 
 function startClock(){
   if(clockTimer) return;
@@ -488,6 +575,7 @@ function renderSessionEnd(){
   </div>`;
   let f=document.getElementById('fabs'); if(f) f.remove();
   session=null;
+  clearSavedSession();
 }
 
 /* JUMP SHEET */
@@ -620,7 +708,7 @@ function renderNav(){
        ${t[3]?`<span class="badge">${t[3]>99?'99+':t[3]}</span>`:''}
      </button>`).join('');
 }
-function go(v){ if(v==='quiz')return; stopClock(); view=v; session=null; document.getElementById('modal').innerHTML=''; let f=document.getElementById('fabs'); if(f)f.remove(); render(); }
+function go(v){ if(v==='quiz')return; stopClock(); if(session){persistSession(); save();} view=v; session=null; document.getElementById('modal').innerHTML=''; let f=document.getElementById('fabs'); if(f)f.remove(); render(); }
 
 function esc(s){ return (s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
 function iconHome(){return svg('<path d="M4 12l8-7 8 7M6 10v9h12v-9"/>')}
@@ -639,6 +727,15 @@ function svg(inner){return `<svg viewBox="0 0 24 24" fill="none" stroke="current
     const l=document.createElement('link'); l.rel='manifest'; l.href=url; document.head.appendChild(l);
   }catch(e){}
 })();
+
+/* iOS 把 PWA 丟到背景時常直接回收分頁、不觸發 unload，
+   故在 pagehide / visibilitychange 時強制把進度寫入 localStorage。 */
+function flushSession(){ if(session && !session.endTime){ persistSession(); save(); } }
+window.addEventListener('pagehide', flushSession);
+window.addEventListener('beforeunload', flushSession);
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState==='hidden') flushSession();
+});
 
 // Service Worker：網路優先，有網路時每次抓最新題庫，離線時用快取
 if('serviceWorker' in navigator){
