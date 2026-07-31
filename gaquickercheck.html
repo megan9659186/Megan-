@@ -95,6 +95,10 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .d-head{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:4px}
 .back{display:none;align-items:center;gap:6px;background:none;border:none;color:var(--sage);
   font-family:inherit;font-size:15px;cursor:pointer;padding:0;margin-bottom:14px}
+.back-bottom{width:100%;justify-content:center;margin:26px 0 4px;padding:13px 16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  color:var(--sage);font-size:15.5px;font-weight:500}
+.back-bottom:hover{border-color:var(--sage);background:var(--sage-tint)}
 .d-title{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.3px}
 .d-title-zh{font-size:16.5px;color:var(--ink-soft);margin-top:2px}
 .d-en{color:var(--ink-soft);font-size:13.5px;margin-top:6px;letter-spacing:.4px}
@@ -186,7 +190,14 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .detail{display:none;position:absolute;inset:0;background:var(--bg);z-index:5}
   .app.stage-detail .list{display:none}
   .app.stage-detail .detail{display:block}
+  /* 進入手術詳情時收起標題／搜尋／科別列,讓內容佔滿螢幕(更新提示仍保留) */
+  .app.stage-detail header{padding:0;border-bottom:none}
+  .app.stage-detail header .brand,
+  .app.stage-detail header .search,
+  .app.stage-detail header .chips{display:none}
+  .app.stage-detail .upd{margin:0}
   .back{display:inline-flex}
+  .back-bottom{display:flex}
   .d-summary{gap:16px}
   /* 手機閱讀強化:字再放大、行距加寬、觸控目標加大 */
   body{font-size:16.5px}
@@ -1716,7 +1727,7 @@ const ASA_INFO = `
 `;
 
 const el = id => document.getElementById(id);
-let activeSpec = "全部";
+let activeSpec = null;   /* 初始不選科別 → 開啟時只顯示科別列,不列出手術 */
 let activeId = null;
 
 const specialties = ["全部", ...[...new Set(SURGERIES.map(s=>s.specialty))]];
@@ -1738,8 +1749,12 @@ function matches(s, q){
 
 function renderList(){
   const q = el("search").value.trim();
+  if(!activeSpec && !q){
+    el("list").innerHTML = `<div class="empty">請先選擇上方科別<br>或直接輸入手術名稱、關鍵字搜尋</div>`;
+    return;
+  }
   const items = SURGERIES.filter(s =>
-    (activeSpec==="全部" || s.specialty===activeSpec) && matches(s,q)
+    (!activeSpec || activeSpec==="全部" || s.specialty===activeSpec) && matches(s,q)
   );
   if(!items.length){
     el("list").innerHTML = `<div class="empty">找不到符合的手術<br>試試其他關鍵字</div>`;
@@ -1842,11 +1857,21 @@ function showDetail(id){
       </div>` : ""}
     <div class="disclaimer">
       本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
-    </div>`;
-  el("backBtn").onclick = () => { el("app").classList.remove("stage-detail"); };
+    </div>
+    <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
+  el("backBtn").onclick = goBack;
+  el("backBtnBottom").onclick = goBack;
   el("app").classList.add("stage-detail");
   renderList();
   el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+/* 返回清單:收起詳情、回到頁面頂端 */
+function goBack(){
+  el("app").classList.remove("stage-detail");
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
 }
 
 el("search").addEventListener("input", renderList);
