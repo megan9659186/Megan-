@@ -63,6 +63,53 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 }
 .chip:hover{border-color:var(--sage)}
 .chip[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+/* 學習區 chip(歷屆考古題複習 / AI 練習題):莫蘭迪淺藍,與科別 chip 區隔 */
+.chip.study{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:500}
+.chip.study:hover{border-color:var(--slate)}
+.chip.study[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+
+/* ---------- 題庫 Quiz(歷屆考古題複習 / AI 練習題) ---------- */
+.set-card{background:var(--slate-tint);border:1px solid #C6CCD4;border-radius:11px;
+  padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s}
+.set-card:hover{border-color:var(--slate);transform:translateY(-1px)}
+.set-card .name{font-weight:600;font-size:15.5px;color:#4A525E}
+.set-card .sub{font-size:13px;color:#6E7684;margin-top:3px;line-height:1.5}
+.set-card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.set-card .meta span{font-size:11.5px;padding:2px 8px;border-radius:11px;
+  background:#fff;color:#5C6573;border:1px solid #C6CCD4}
+.set-empty{padding:18px;border:1px dashed #C6CCD4;border-radius:11px;
+  background:var(--slate-tint);color:#5C6573;font-size:14.5px;line-height:1.8}
+.set-empty b{display:block;font-size:15.5px;color:#4A525E;margin-bottom:6px}
+.quiz-head{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+.quiz-meta{font-size:13.5px;color:var(--ink-soft);margin-top:8px}
+.quiz-score{background:var(--slate);color:#fff;border-radius:10px;padding:12px 16px;
+  font-weight:600;font-size:17px;margin-bottom:18px;text-align:center}
+.q-item{border:1px solid var(--line);border-radius:11px;background:var(--surface);
+  padding:15px 17px;margin-bottom:13px}
+.q-stem{font-weight:500;line-height:1.75;margin-bottom:11px}
+.q-no{display:inline-block;min-width:26px;height:22px;line-height:22px;text-align:center;
+  background:var(--slate);color:#fff;border-radius:11px;font-size:12.5px;
+  margin-right:9px;vertical-align:1px}
+.q-opts{display:flex;flex-direction:column;gap:7px}
+.q-opt{display:flex;align-items:flex-start;gap:9px;text-align:left;width:100%;
+  padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);
+  color:var(--ink);font-family:inherit;font-size:15.5px;line-height:1.6;cursor:pointer;
+  transition:all .12s}
+.q-opt:hover{border-color:var(--slate)}
+.q-lab{flex-shrink:0;font-weight:700;color:var(--ink-soft)}
+.q-opt.sel{background:var(--slate-tint);border-color:var(--slate)}
+.q-opt.right{background:var(--sage-tint);border-color:var(--sage)}
+.q-opt.right .q-lab{color:#5F7060}
+.q-opt.wrong{background:var(--flag-tint);border-color:var(--flag)}
+.q-opt.wrong .q-lab{color:var(--flag)}
+.q-exp{margin-top:11px;padding:11px 13px;border-left:3px solid var(--slate);
+  background:var(--surface-2);border-radius:0 8px 8px 0;font-size:14.5px;line-height:1.8}
+.quiz-bar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 8px}
+.quiz-btn{padding:11px 20px;border-radius:9px;border:1px solid var(--slate);
+  background:var(--slate);color:#fff;font-family:inherit;font-size:15.5px;
+  font-weight:600;cursor:pointer}
+.quiz-btn.ghost{background:var(--bg);color:#5C6573}
+.quiz-btn:active{opacity:.85}
 
 /* ---------- Body layout ---------- */
 .body{display:flex;flex:1;min-height:0}
@@ -298,6 +345,14 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .ph-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
   .ph-warn{font-size:13px}
   .note-backup .bk-msg{font-size:14px}
+  .set-card .name{font-size:16.5px}
+  .set-card .sub{font-size:13.5px}
+  .set-empty{font-size:15.5px}
+  .q-stem{font-size:16.5px;line-height:1.8}
+  .q-opt{font-size:16px;padding:11px 13px}
+  .q-exp{font-size:15px}
+  .quiz-btn{font-size:16px;padding:13px 22px;width:100%}
+  .quiz-score{font-size:18px}
 }
 ::-webkit-scrollbar{width:9px}
 ::-webkit-scrollbar-thumb{background:#CFC7B9;border-radius:6px}
@@ -1918,6 +1973,160 @@ const UPDATES = [
   }
 ];
 
+/* ============================================================
+   題庫 QUESTION BANKS
+   ------------------------------------------------------------
+   兩個題庫共用同一格式,新增題組 = 複製一個物件:
+     { id, title, sub, questions:[ { q, opts:[4個選項], ans:正解索引(0起算), exp:詳解 } ] }
+   EXAM_SETS = 「歷屆考古題複習」(依年度分題組)
+   QUIZ_SETS = 「AI 練習題」(模擬題組)
+   注意:字串用雙引號,內文不可再出現雙引號;需要強調用 <b>…</b>,
+        class 一律單引號(同本工具其他資料欄位慣例)。
+   ============================================================ */
+const EXAM_SETS = [];
+
+const QUIZ_SETS = [
+  {
+    id: "ai-demo-01",
+    title: "示範題組 · 綜合複習",
+    sub: "取材自本工具現有手術卡內容,用來測試作答與對答案介面。",
+    questions: [
+      {
+        q: "關於經尿道攝護腺切除術(TURP)的麻醉選擇,下列敘述何者最正確?",
+        opts: [
+          "全身麻醉較佳,因可避免病人術中焦慮",
+          "半身麻醉較有利,因病人清醒可早期偵測 TURP 症候群的神經症狀",
+          "兩者皆不宜,應採監測麻醉照護",
+          "半身麻醉禁忌,因會加重灌洗液吸收"
+        ],
+        ans: 1,
+        exp: "TURP 症候群早期常以意識改變、躁動、視覺障礙表現。半身麻醉下病人清醒,這些神經症狀可被即時察覺;全身麻醉則會掩蓋這些線索。"
+      },
+      {
+        q: "TURP 術後發現血鈉 112 mmol/L,矯正速度上限的主要考量為何?",
+        opts: [
+          "過慢矯正會導致腦水腫",
+          "過快矯正會導致滲透性脫髓鞘,一般不宜超過 1 mmol/L/hr",
+          "血鈉可以自由快速矯正,無速度限制",
+          "只要使用等張食鹽水就無速度限制"
+        ],
+        ans: 1,
+        exp: "慢性或矯正過快的低鈉血症會造成滲透性脫髓鞘症候群(osmotic demyelination)。臨床上以每小時不超過 1 mmol/L、24 小時內總矯正幅度受限為原則。"
+      },
+      {
+        q: "雷射喉部手術中,下列何項措施對降低氣道起火風險最直接?",
+        opts: [
+          "提高吸入氧濃度以增加安全邊際",
+          "使用笑氣以減少揮發性麻醉劑用量",
+          "將 FiO₂ 降到能維持安全血氧的最低值,並避免笑氣",
+          "改用一般聚氯乙烯氣管內管"
+        ],
+        ans: 2,
+        exp: "氣道起火需助燃劑、可燃物、點火源三要素同時存在。雷射是點火源、導管是可燃物,唯一能由麻醉端直接調降的是助燃劑 → 降低 FiO₂(常 <30%)並避免同樣助燃的笑氣。另配合雷射專用抗燃導管、氣囊以生理食鹽水加亞甲藍充填。"
+      },
+      {
+        q: "REGAIN 試驗(NEJM 2021)比較髖部骨折手術的半身麻醉與全身麻醉,主要結論為何?",
+        opts: [
+          "半身麻醉顯著降低死亡率",
+          "全身麻醉顯著降低譫妄發生率",
+          "兩組在存活、術後 60 天行走恢復與譫妄上無顯著差異",
+          "半身麻醉顯著縮短住院天數"
+        ],
+        ans: 2,
+        exp: "REGAIN 為大型多中心隨機試驗,結果顯示兩種麻醉方式在主要預後無顯著差異。臨床意涵是應依病人共病、氣道、意願與團隊經驗個別化,而非一律認定半身麻醉較優。"
+      },
+      {
+        q: "高齡髖部骨折病人的術中血流動力學管理,下列何者最符合現有證據?",
+        opts: [
+          "維持較低血壓以減少出血最為有利",
+          "術中最低平均動脈壓愈低,短期死亡率愈高,應主動處理低血壓",
+          "血壓高低與預後無關,重點僅在麻醉深度",
+          "只有全身麻醉需要注意低血壓,半身麻醉不必"
+        ],
+        ans: 1,
+        exp: "登錄資料顯示術中最低 MAP 每下降一階,5 天與 30 天死亡率隨之上升;MAP 低於 80 mmHg 持續逾 10 分鐘即與不良預後相關。應採最低有效麻醉劑量,並積極以輸液或升壓藥維持灌流。半身麻醉同樣會因交感阻斷造成低血壓。"
+      },
+      {
+        q: "骨水泥植入症候群(BCIS)最典型的發生時機為何?",
+        opts: [
+          "麻醉誘導後立即發生",
+          "骨水泥與人工關節柄置入、股骨髓腔加壓的當下與其後數分鐘",
+          "手術結束拔管時",
+          "術後返回病房 24 小時後"
+        ],
+        ans: 1,
+        exp: "BCIS 與髓腔加壓造成脂肪、骨髓、水泥單體進入循環有關,表現為低血氧、低血壓、心律不整甚至心臟停止,好發於水泥置入與義肢柄插入當下。此時應提高 FiO₂、確保血容充足並與外科團隊即時溝通。"
+      },
+      {
+        q: "肥胖病人插管困難的最強單一預測因子為何?",
+        opts: [
+          "身體質量指數(BMI)",
+          "體重",
+          "頸圍",
+          "腹圍"
+        ],
+        ans: 2,
+        exp: "多項研究顯示頸圍(neck circumference)較 BMI 更能預測喉頭鏡置入困難,反映的是頸部軟組織堆積而非全身脂肪量。仍須合併 Mallampati、張口度、頸部活動度整體評估。"
+      },
+      {
+        q: "減重手術中,succinylcholine 與 rocuronium 的給藥體重依據,下列何者正確?",
+        opts: [
+          "兩者皆依實際總體重",
+          "兩者皆依理想體重",
+          "succinylcholine 依總體重,rocuronium 依理想或去脂體重",
+          "succinylcholine 依理想體重,rocuronium 依總體重"
+        ],
+        ans: 2,
+        exp: "succinylcholine 的分布容積與血漿膽鹼酯酶活性隨體重增加,依總體重給藥才能達到可靠的插管條件;非去極化肌鬆劑如 rocuronium 為水溶性、分布於去脂組織,依總體重給藥會顯著延長作用時間,故採理想或去脂體重。"
+      },
+      {
+        q: "Pringle maneuver 阻斷的是下列何者?",
+        opts: [
+          "肝靜脈與下腔靜脈",
+          "肝十二指腸韌帶內的肝動脈與門靜脈",
+          "腹腔動脈幹",
+          "肝上與肝下的下腔靜脈"
+        ],
+        ans: 1,
+        exp: "Pringle maneuver 夾住肝十二指腸韌帶,阻斷入肝血流(肝動脈與門靜脈)以減少切肝面出血,但不阻斷肝靜脈回流。麻醉端須留意夾閉後靜脈回流下降、放開後再灌流造成的血流動力學與代謝變化,並注意缺血時間。"
+      },
+      {
+        q: "腹腔鏡肝切除採低中心靜脈壓策略的主要目的與主要風險組合,何者正確?",
+        opts: [
+          "減少肝靜脈出血;風險為氣體栓塞與腎灌流不足",
+          "增加肝動脈血流;風險為肝衰竭",
+          "降低氣腹壓力需求;風險為高碳酸血症",
+          "減少膽汁滲漏;風險為低體溫"
+        ],
+        ans: 0,
+        exp: "低中心靜脈壓可降低肝靜脈與竇狀隙壓力,使切肝面出血減少。代價是靜脈回流與心輸出下降,增加靜脈開放時 CO₂ 或空氣栓塞風險,並可能影響腎灌流,故須密切監測並在切肝完成後回補容量。"
+      },
+      {
+        q: "游離皮瓣重建術中,為最大化皮瓣灌流,下列組合何者最恰當?",
+        opts: [
+          "低體溫、限制輸液、Hct 45%",
+          "正常體溫、正常血容、寬脈壓、Hct 約 30%",
+          "允許性低血壓、大量使用血管收縮劑",
+          "維持高血比容以增加攜氧量,不需管體溫"
+        ],
+        ans: 1,
+        exp: "皮瓣為去神經組織,灌流完全依賴全身血流動力學。維持正常體溫可避免血管收縮,適度血液稀釋(Hct 約 30%)可改善微循環流變學,寬脈壓與充足血容則確保吻合口血流。應優先以麻醉深度與容量處理低血壓,避免過度依賴血管收縮劑。"
+      },
+      {
+        q: "顯微喉手術(支撐喉鏡)常採 propofol 併 remifentanil 全靜脈麻醉,主要理由為何?",
+        opts: [
+          "可省略肌肉鬆弛劑的使用",
+          "刺激強度落差大且手術短,需要深且可快速調節的麻醉並快速甦醒",
+          "可降低氣道起火風險至零",
+          "能避免術後聲音沙啞"
+        ],
+        ans: 1,
+        exp: "支撐喉鏡懸吊瞬間刺激極強,但手術本身短、刺激時強時無。remifentanil 併 propofol 可即時加深麻醉壓制反應、停藥後又能快速甦醒,並確保精細操作期間完全不動。全靜脈麻醉也便於配合無管技術維持穩定深度。"
+      }
+    ]
+  }
+];
+
 /* ASA 基本監測參考內容(監測區塊的 ⓘ 展開面板) */
 const ASA_INFO = `
   <h4>ASA 基本麻醉監測標準　Standards for Basic Anesthetic Monitoring</h4>
@@ -1937,7 +2146,14 @@ const HOME_CHIP = "首頁";   /* 按「首頁」→ 顯示更新紀錄;按「全
 let activeSpec = HOME_CHIP;   /* 開啟時停在首頁(更新紀錄) */
 let activeId = null;
 
-const specialties = [HOME_CHIP, "全部", ...[...new Set(SURGERIES.map(s=>s.specialty))]];
+const NORA_SPEC = "外區麻醉";      /* 手術室外麻醉;內容建置中,先開好科別 chip */
+const EXAM_CHIP = "歷屆考古題複習";
+const QUIZ_CHIP = "AI 練習題";
+const specialties = [
+  HOME_CHIP, "全部",
+  ...[...new Set([...SURGERIES.map(s=>s.specialty), NORA_SPEC])],
+  EXAM_CHIP, QUIZ_CHIP
+];
 
 /* ============================================================
    個人筆記 / 擺位照片
@@ -2317,12 +2533,126 @@ async function initNotes(){
 }
 
 function renderChips(){
-  el("chips").innerHTML = specialties.map(sp =>
-    `<button class="chip" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}</button>`
-  ).join("");
+  el("chips").innerHTML = specialties.map(sp =>{
+    const cls = (sp===EXAM_CHIP || sp===QUIZ_CHIP) ? "chip study" : "chip";
+    return `<button class="${cls}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}</button>`;
+  }).join("");
   el("chips").querySelectorAll(".chip").forEach(c=>{
     c.onclick = () => { activeSpec = c.dataset.sp; renderChips(); renderList(); };
   });
+}
+
+/* ============================================================
+   題庫介面:左欄列題組 → 右欄作答;全部作答後按「對答案」
+   ============================================================ */
+let QUIZ_STATE = null;
+
+function bankOf(chip){ return chip===EXAM_CHIP ? EXAM_SETS : QUIZ_SETS; }
+
+function renderSetList(chip){
+  const sets = bankOf(chip);
+  if(!sets.length){
+    el("list").innerHTML = `<div class="set-empty"><b>${chip}</b>
+      尚未匯入題組。<br>提供歷屆考古題後,會依年度整理成題組放在這裡,
+      作答方式與「AI 練習題」相同。</div>`;
+    return;
+  }
+  el("list").innerHTML = sets.map((s,i)=>`
+    <div class="set-card" data-i="${i}">
+      <div class="name">${s.title}</div>
+      ${s.sub ? `<div class="sub">${s.sub}</div>` : ""}
+      <div class="meta"><span>單選 ${s.questions.length} 題</span><span>先作答再對答案</span></div>
+    </div>`).join("");
+  el("list").querySelectorAll(".set-card").forEach(c=>{
+    c.onclick = () => showQuiz(chip, +c.dataset.i);
+  });
+}
+
+function showQuiz(chip, idx){
+  const set = bankOf(chip)[idx];
+  if(!set) return;
+  activeId = null;
+  QUIZ_STATE = { set, pick: new Array(set.questions.length).fill(-1), done:false };
+  renderQuiz();
+  el("app").classList.add("stage-detail");
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+function quizAnswered(){
+  return QUIZ_STATE ? QUIZ_STATE.pick.filter(x=>x>=0).length : 0;
+}
+
+function renderQuiz(){
+  const st = QUIZ_STATE;
+  if(!st) return;
+  const qs = st.set.questions;
+  const LAB = ["A","B","C","D","E"];
+  const body = qs.map((qq,i)=>{
+    const opts = qq.opts.map((o,j)=>{
+      let cls = "q-opt";
+      if(st.done){
+        if(j===qq.ans) cls += " right";
+        else if(st.pick[i]===j) cls += " wrong";
+      }else if(st.pick[i]===j){ cls += " sel"; }
+      return `<button class="${cls}" type="button" data-q="${i}" data-o="${j}">
+        <span class="q-lab">${LAB[j]||(j+1)}</span><span>${o}</span></button>`;
+    }).join("");
+    const exp = st.done
+      ? `<div class="q-exp"><b>正解 ${LAB[qq.ans]}</b>　${qq.exp}</div>` : "";
+    return `<div class="q-item">
+      <div class="q-stem"><span class="q-no">${i+1}</span>${qq.q}</div>
+      <div class="q-opts">${opts}</div>${exp}</div>`;
+  }).join("");
+  const score = st.done ? st.pick.filter((p,i)=>p===qs[i].ans).length : 0;
+  el("detail").innerHTML = `
+    <button class="back" id="backBtn">← 返回清單</button>
+    <div class="quiz-head">
+      <div class="d-title">${st.set.title}</div>
+      ${st.set.sub ? `<div class="d-title-zh">${st.set.sub}</div>` : ""}
+      <div class="quiz-meta">單選題共 ${qs.length} 題 · 全部作答後按下方「對答案」一次揭曉答案與詳解</div>
+    </div>
+    ${st.done ? `<div class="quiz-score">得分 ${score} / ${qs.length}　(${Math.round(score/qs.length*100)} 分)</div>` : ""}
+    ${body}
+    <div class="quiz-bar">
+      ${st.done
+        ? `<button class="quiz-btn" type="button" id="quizReset">重做一次</button>`
+        : `<button class="quiz-btn" type="button" id="quizCheck">對答案　<span id="quizCount">(已作答 ${quizAnswered()}/${qs.length})</span></button>`}
+    </div>
+    <div class="disclaimer">
+      練習題僅供教學與自我檢核,答案與解析仍請對照最新指引與所屬機構protocol。
+    </div>
+    <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
+  el("backBtn").onclick = goBack;
+  el("backBtnBottom").onclick = goBack;
+  el("detail").querySelectorAll(".q-opt").forEach(b=>{
+    b.onclick = () => {
+      if(st.done) return;
+      const qi = +b.dataset.q;
+      st.pick[qi] = +b.dataset.o;
+      el("detail").querySelectorAll(`.q-opt[data-q="${qi}"]`).forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      const cnt = el("quizCount");
+      if(cnt) cnt.textContent = `(已作答 ${quizAnswered()}/${qs.length})`;
+    };
+  });
+  const chk = el("quizCheck");
+  if(chk) chk.onclick = () => {
+    const left = qs.length - quizAnswered();
+    if(left > 0 && !confirm(`還有 ${left} 題未作答,確定要對答案嗎?`)) return;
+    st.done = true;
+    renderQuiz();
+    el("detail").scrollTop = 0;
+    window.scrollTo(0,0);
+  };
+  const rst = el("quizReset");
+  if(rst) rst.onclick = () => {
+    st.pick = st.pick.map(()=>-1);
+    st.done = false;
+    renderQuiz();
+    el("detail").scrollTop = 0;
+    window.scrollTo(0,0);
+  };
 }
 
 function matches(s, q){
@@ -2363,6 +2693,7 @@ function updatesHtml(){
 
 function renderList(){
   const q = el("search").value.trim();
+  if(activeSpec===EXAM_CHIP || activeSpec===QUIZ_CHIP){ renderSetList(activeSpec); return; }
   if((!activeSpec || activeSpec===HOME_CHIP) && !q){
     el("list").innerHTML = updatesHtml();
     el("list").querySelectorAll(".upd-link").forEach(b=>{
@@ -2375,7 +2706,11 @@ function renderList(){
     (allSpec || s.specialty===activeSpec) && matches(s,q)
   );
   if(!items.length){
-    el("list").innerHTML = `<div class="empty">找不到符合的手術<br>試試其他關鍵字</div>`;
+    el("list").innerHTML = (activeSpec===NORA_SPEC && !q)
+      ? `<div class="set-empty"><b>${NORA_SPEC}(手術室外麻醉)</b>
+          內容建置中。預計涵蓋內視鏡、支氣管鏡、心導管與電生理、
+          CT／MRI 影像檢查、介入性放射線、電氣痙攣治療等。</div>`
+      : `<div class="empty">找不到符合的手術<br>試試其他關鍵字</div>`;
     return;
   }
   el("list").innerHTML = items.map(s=>{
