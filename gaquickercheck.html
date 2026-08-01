@@ -135,6 +135,12 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 /* 更新紀錄(首頁預設畫面) */
 .upd{padding:20px 20px 28px}
 .upd-h{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.upd-notice{border:1px solid var(--clay-tint);border-left:5px solid var(--clay);border-radius:11px;
+  background:var(--clay-tint);color:#8a6a60;font-size:14px;line-height:1.85;
+  padding:13px 16px;margin-bottom:16px;font-weight:600}
+.upd-notice b{color:#8a6a60}
+.upd-ver{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.03em;color:#5E6B5E;
+  background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 10px;margin-bottom:10px}
 .upd-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6}
 .upd-block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
 .upd-date{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;color:#5E6B5E;
@@ -317,7 +323,7 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .app.stage-detail header .brand,
   .app.stage-detail header .search,
   .app.stage-detail header .chips{display:none}
-  .app.stage-detail .upd{margin:0}
+  .app.stage-detail .updbar{margin:0}
   .back{display:inline-flex}
   .back-bottom{display:flex}
   .d-summary{gap:16px}
@@ -356,17 +362,17 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
 }
 ::-webkit-scrollbar{width:9px}
 ::-webkit-scrollbar-thumb{background:#CFC7B9;border-radius:6px}
-.upd{display:none;align-items:center;justify-content:center;gap:8px;
+.updbar{display:none;align-items:center;justify-content:center;gap:8px;
   background:var(--sage);color:#fff;font-weight:600;font-size:15px;
   padding:11px 14px;border-radius:9px;margin-bottom:12px;cursor:pointer;
   text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.upd:active{opacity:.85}
+.updbar:active{opacity:.85}
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <header>
-    <div id="upd" class="upd" onclick="applyUpdate()">🔄 已有新版本 · 點擊立即更新</div>
+    <div id="upd" class="updbar" onclick="applyUpdate()">🔄 已有新版本 · 點擊立即更新</div>
     <div class="brand">
       <h1>各科手術全身麻醉快速查詢</h1>
       <span class="sub">Surgical GA Quick Reference</span>
@@ -1960,7 +1966,20 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
+const APP_VERSION = "v1.3";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-08-01";    /* 本版更新日期,顯示在首頁標題下 */
+
 const UPDATES = [
+  {
+    date: "2026-08-01",
+    note: "新增題庫功能;首頁更新紀錄修正為正常顯示。",
+    items: [
+      "新增「歷屆考古題複習」與「AI 練習題」兩個學習區 chip,點入後左欄列題組、右欄作答,全部作答後按對答案顯示正解與詳解",
+      "「AI 練習題」已放入示範題組;「歷屆考古題複習」待匯入歷屆試題後依年度分題組",
+      "修正首頁更新紀錄與版本更新橫幅共用同一個 class 造成整區被隱藏的問題",
+      "首頁標題下方新增版本號與更新日期"
+    ]
+  },
   {
     date: "2026-07-31",
     note: "本次以近年英文期刊與指引改寫,補上可展開說明與示意圖。",
@@ -2684,7 +2703,13 @@ function updatesHtml(){
     </div>`;
   }).join("");
   return `<div class="upd">
+    <div class="upd-notice">
+      本工具為花蓮慈濟麻醉科醫師與麻醉專科護理師的<b>共筆分享</b>,非官方文件。<br>
+      臨床麻醉流程一律以<b>所屬單位 ISO 標準作業程序</b>為準。<br>
+      <b>僅供花蓮慈濟麻醉學員參考使用。</b>
+    </div>
     <div class="upd-h">最近更新</div>
+    <div class="upd-ver">${typeof APP_VERSION !== "undefined" ? APP_VERSION : ""} · 更新日期 ${typeof APP_UPDATED !== "undefined" ? APP_UPDATED : ""}</div>
     <div class="upd-sub">以下為本次更新項目;要查手術請按上方「全部」或各科別,亦可直接輸入手術名稱、關鍵字搜尋。</div>
     ${blocks || `<div class="empty">尚無更新紀錄</div>`}
     <div class="upd-tip">上線前請對照所屬機構 protocol 逐台校過。</div>
@@ -2829,6 +2854,44 @@ function goBack(){
   el("detail").scrollTop = 0;
   window.scrollTo(0,0);
 }
+
+/* ============================================================
+   手勢:在手術詳情頁往左滑 → 返回清單
+   ------------------------------------------------------------
+   只在手機版(stage-detail 生效時)作用;若手指起點落在可橫向
+   捲動的元素(示意圖、表格等)上則不攔截,避免誤觸。
+   ============================================================ */
+(function(){
+  const SWIPE_X = 70;   /* 水平位移門檻 px */
+  const SWIPE_Y = 55;   /* 垂直位移上限 px,超過視為捲動 */
+  let x0 = 0, y0 = 0, live = false;
+  const pane = el("detail");
+  if(!pane) return;
+
+  function scrollableX(node){
+    while(node && node !== pane){
+      if(node.scrollWidth - node.clientWidth > 8) return true;
+      node = node.parentElement;
+    }
+    return false;
+  }
+  pane.addEventListener("touchstart", e => {
+    live = false;
+    if(e.touches.length !== 1) return;
+    if(!el("app").classList.contains("stage-detail")) return;
+    if(scrollableX(e.target)) return;
+    x0 = e.touches[0].clientX;
+    y0 = e.touches[0].clientY;
+    live = true;
+  }, { passive:true });
+  pane.addEventListener("touchend", e => {
+    if(!live) return;
+    live = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    if(dx < -SWIPE_X && Math.abs(dy) < SWIPE_Y) goBack();
+  }, { passive:true });
+})();
 
 el("search").addEventListener("input", renderList);
 el("impFile").addEventListener("change", function(){
