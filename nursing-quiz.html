@@ -201,7 +201,7 @@ const EXAMS = [...new Set(BANK.map(examKey))]
     return ay===by ? sessOrd(bs)-sessOrd(as) : by-ay;})
   .map(k=>{const[y,s]=k.split('-'); return {key:k, year:y, session:s, label:y+' '+s};});
 const SKEY='nrsQuiz_v2';
-const BUILD='2026-07-31b';
+const BUILD='2026-08-01a';
 const LETTERS=['A','B','C','D'];
 const BANK_BY_ID = Object.fromEntries(BANK.map(i=>[i.id,i]));
 
@@ -262,15 +262,24 @@ function savedSessionInfo(){
   if(!s || !Array.isArray(s.ids) || !s.ids.length) return null;
   const list = s.ids.map(id=>BANK_BY_ID[id]).filter(Boolean);
   if(list.length < 2) return null;
-  const idx = Math.min(Math.max(0, s.idx|0), list.length-1);
-  return {raw:s, list, idx};
+  const ans = s.answers || {};
+  const answered = list.filter(it => it.id in ans).length;
+  /* 續作點以「本回第一題還沒作答的題目」為準，不用最後瀏覽到的題號；
+     這樣只翻頁看題、沒有作答，續作時仍會回到該作答的地方。 */
+  let idx = list.findIndex(it => !(it.id in ans));
+  if(idx < 0) idx = list.length - 1;          // 全部答完
+  const viewedIdx = Math.min(Math.max(0, s.idx|0), list.length-1);
+  return {raw:s, list, idx, viewedIdx, answered};
 }
-function resumeSession(){
+function resumeSession(from){
   const info = savedSessionInfo();
   if(!info){ clearSavedSession(); render(); return; }
   const s = info.raw;
+  const startIdx = (from==='start') ? 0
+                 : (from==='viewed') ? info.viewedIdx
+                 : info.idx;
   session = {
-    list:info.list, idx:info.idx, mode:s.mode, title:s.title,
+    list:info.list, idx:startIdx, mode:s.mode, title:s.title,
     color:s.color || 'var(--accent)', timed:!!s.timed,
     startTime: Date.now() - (s.elapsed||0),
     answers:  s.answers  || {},
@@ -328,14 +337,20 @@ function renderHome(){
   const rs = savedSessionInfo();
   if(rs){
     const cur = rs.list[rs.idx];
-    const pct = (rs.idx+1)/rs.list.length*100;
+    const col = rs.raw.color || 'var(--accent)';
+    const pct = rs.answered / rs.list.length * 100;
+    const viewedNote = (rs.viewedIdx > rs.idx)
+      ? `<div class="tiny" style="margin-top:4px">（上次翻到第 ${rs.viewedIdx+1} 題，但那些題目還沒作答）</div>` : '';
     h += `<div class="eyebrow">繼續上次練習</div>
-    <div class="card" style="border-left:4px solid ${rs.raw.color||'var(--accent)'}">
+    <div class="card" style="border-left:4px solid ${col}">
       <div style="font-size:18px;font-weight:700;color:var(--ink)">${esc(rs.raw.title||'上次的練習')}</div>
-      <div class="tiny" style="margin-top:3px">做到第 ${rs.idx+1} / ${rs.list.length} 題（原卷第 ${cur.num} 題・${esc(cur.subject)}）・${fmtAgo(rs.raw.savedAt)}</div>
-      <div class="progress" style="margin-top:9px"><i style="width:${pct}%;background:${rs.raw.color||'var(--accent)'}"></i></div>
-      <div style="display:flex;gap:10px;margin-top:13px">
-        <button class="btn sm" style="flex:1.7;background:${rs.raw.color||'var(--accent)'}" onclick="resumeSession()">繼續作答</button>
+      <div class="tiny" style="margin-top:3px">已作答 ${rs.answered} / ${rs.list.length} 題・${fmtAgo(rs.raw.savedAt)}</div>
+      <div class="progress" style="margin-top:9px"><i style="width:${pct}%;background:${col}"></i></div>
+      <div class="tiny" style="margin-top:9px;color:var(--ink2)">接著從第 ${rs.idx+1} 題開始（原卷第 ${cur.num} 題・${esc(cur.subject)}）</div>
+      ${viewedNote}
+      <button class="btn sm" style="margin-top:11px;background:${col}" onclick="resumeSession()">繼續作答</button>
+      <div style="display:flex;gap:10px;margin-top:9px">
+        <button class="btn ghost sm" style="flex:1" onclick="resumeSession('start')">從第一題開始</button>
         <button class="btn ghost sm" style="flex:1" onclick="dropSavedSession()">放棄</button>
       </div>
     </div>`;
@@ -492,7 +507,7 @@ function renderQuiz(){
       <span class="qtag" style="background:${s.color}">${s.short}</span>
       <span class="qhr">
         ${clock}
-        <span class="qcount" onclick="openJump()">${idx+1} / ${list.length}</span>
+        <span class="qcount" onclick="openJump()">${idx+1} / ${list.length} ⇅</span>
         <button class="starbtn ${starred?'on':''}" onclick="toggleStar('${item.id}')" title="標記不熟">${starred?'★':'☆'}</button>
       </span>
     </div>
@@ -555,6 +570,12 @@ function renderSessionEnd(){
   const a=list.filter(i=>i.id in session.answers).length;
   const c=list.filter(i=>{const p=session.answers[i.id];return p!=null&&isCorrect(i,p)}).length;
   const pct=a?Math.round(c/a*100):0;
+  const un=list.length-a;
+  const unBlock = un
+    ? `<div class="card" style="max-width:320px;margin:0 auto 14px;text-align:left">
+         <div class="tiny">還有 <b style="color:var(--ink)">${un}</b> 題沒有作答，進度已保留。</div>
+         <button class="btn sm" style="margin-top:10px" onclick="resumeSession()">回去作答這 ${un} 題</button>
+       </div>` : '';
   const el=session.endTime-session.startTime;
   const timeBlock = session.timed
     ? `<div class="card" style="max-width:320px;margin:0 auto 16px">
@@ -568,6 +589,7 @@ function renderSessionEnd(){
     <div style="margin:14px 0 18px;font-size:17.5px;color:var(--ink2)">
       作答 ${a} 題・答對 <b style="color:var(--ok-ink)">${c}</b> 題・正確率 <b>${pct}%</b></div>
     ${timeBlock}
+    ${unBlock}
     <div style="display:flex;gap:10px;max-width:320px;margin:0 auto">
       <button class="btn ghost sm" onclick="go('home')">回首頁</button>
       <button class="btn sm" onclick="go('practice')">再練一回</button>
@@ -575,7 +597,8 @@ function renderSessionEnd(){
   </div>`;
   let f=document.getElementById('fabs'); if(f) f.remove();
   session=null;
-  clearSavedSession();
+  /* 還有沒作答的題目就保留續作點，避免只是翻頁看到最後就把進度歸零 */
+  if(!un) clearSavedSession();
 }
 
 /* JUMP SHEET */
@@ -595,6 +618,10 @@ function openJump(){
       <div class="sheet" onclick="event.stopPropagation()">
         <h3>跳至題目</h3>
         <div class="hint">點選題號直接前往・顯示原卷題號</div>
+        <div style="display:flex;gap:9px;margin-bottom:13px">
+          <button class="btn ghost sm" style="flex:1" onclick="jumpTo(0)">⇤ 回第一題</button>
+          <button class="btn ghost sm" style="flex:1" onclick="jumpFirstUnanswered()">跳到未作答</button>
+        </div>
         <div class="grid">${cells}</div>
         <div class="legend">
           <span><i style="background:var(--ok)"></i>答對</span>
@@ -606,6 +633,10 @@ function openJump(){
     </div>`;
 }
 function jumpTo(i){ closeModal(); gotoIdx(i); }
+function jumpFirstUnanswered(){
+  const i = session.list.findIndex(it => !(it.id in session.answers));
+  jumpTo(i < 0 ? 0 : i);
+}
 function closeModal(e){ if(e&&e.target.closest('.sheet'))return; document.getElementById('modal').innerHTML=''; }
 
 /* REVIEW (錯題本 + 不熟) */
