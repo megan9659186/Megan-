@@ -2856,7 +2856,7 @@ function goBack(){
 }
 
 /* ============================================================
-   手勢:在手術詳情頁往左滑 → 返回清單
+   手勢:在手術詳情頁往右滑 → 返回清單
    ------------------------------------------------------------
    只在手機版(stage-detail 生效時)作用;若手指起點落在可橫向
    捲動的元素(示意圖、表格等)上則不攔截,避免誤觸。
@@ -2889,7 +2889,7 @@ function goBack(){
     live = false;
     const t = e.changedTouches[0];
     const dx = t.clientX - x0, dy = t.clientY - y0;
-    if(dx < -SWIPE_X && Math.abs(dy) < SWIPE_Y) goBack();
+    if(dx > SWIPE_X && Math.abs(dy) < SWIPE_Y) goBack();
   }, { passive:true });
 })();
 
