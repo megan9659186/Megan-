@@ -130,9 +130,16 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 
 /* ---------- List cards ---------- */
 .card{
+  position:relative;
   background:var(--surface);border:1px solid var(--line);border-radius:11px;
   padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s;
 }
+.badge-new{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.7px;
+  line-height:1.5;padding:1px 6px;border-radius:5px;
+  background:var(--clay);color:#FBF8F1;vertical-align:middle}
+.card .badge-new{position:absolute;top:12px;right:12px}
+.card.has-new .name{padding-right:48px}
+.d-title .badge-new{margin-left:9px;position:relative;top:-4px}
 .card:hover{border-color:var(--sage);transform:translateY(-1px)}
 .card.active{border-color:var(--sage);background:var(--sage-tint)}
 .card .name{font-weight:500;font-size:16.5px}
@@ -423,7 +430,7 @@ const SURGERIES = [
     specialty:"一般外科",
     name:"腹腔鏡膽囊/闌尾切除術",
     en:"Laparoscopic Cholecystectomy / Appendectomy",
-    summary:{ position:"Supine · LC rev Trendelenburg / Appy Trendelenburg + left tilt", posType:"revtrend", time:"0.5–2 hr", blood:"少", airway:"GA / ETT" },
+    summary:{ position:"Supine · LC rev Trendelenburg / Appy Trendelenburg + left tilt", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少", airway:"GA / ETT" },
     preop:[
       "一般評估;注意膽道疾病、黃疸、可能中轉開腹",
       "評估是否合併急性膽囊炎(飽胃→可能需要 RSI、感染狀態)",
@@ -479,7 +486,7 @@ const SURGERIES = [
     specialty:"一般外科",
     name:"甲狀腺切除術",
     en:"Thyroidectomy",
-    summary:{ position:"Supine · neck extended", posType:"supine", time:"1–3 hr", blood:"中", airway:"GA / ETT(常用IONM tube)" },
+    summary:{ position:"Supine · neck extended", posType:"supine", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT(常用IONM tube)" },
     preop:[
       "<b class='w'>確認甲狀腺功能為euthyroid</b>,避免thyroid storm",
       "術前若甲亢:抗甲狀腺藥/β-blocker 避免風暴;Lugol's/SSKI 降低腺體血流與出血;術前 Ca/維生素 D 降低術後低血鈣",
@@ -537,7 +544,7 @@ const SURGERIES = [
     specialty:"一般外科",
     name:"腹腔鏡肝切除術",
     en:"Laparoscopic Liver Resection",
-    summary:{ position:"Supine · reverse Trendelenburg (± French/split-leg)", posType:"revtrend", time:"2–5 hr", blood:"中～多(離斷期可能大量)", airway:"GA / ETT" },
+    summary:{ position:"Supine · reverse Trendelenburg (± French/split-leg)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中～多(離斷期可能大量)", airway:"GA / ETT" },
     preop:[
       "評估肝功能與肝儲備(Child-Pugh、MELD、ICG 清除率)、門脈高壓、食道靜脈曲張、凝血與血小板",
       "肝病(肝硬化、化療後肝、脂肪肝)影響藥物代謝與出血風險",
@@ -611,7 +618,7 @@ const SURGERIES = [
     specialty:"一般外科",
     name:"腹腔鏡胃切除術(腫瘤)",
     en:"Laparoscopic Gastrectomy (Oncologic)",
-    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"3–5 hr", blood:"中", airway:"GA / ETT" },
+    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT" },
     preop:[
       "胃癌病人常見營養不良、貧血、體重減輕 → 術前營養與貧血優化",
       "評估幽門阻塞/胃滯留 → <b class='w'>飽胃誤吸風險,考慮 RSI</b>",
@@ -659,7 +666,7 @@ const SURGERIES = [
     specialty:"一般外科",
     name:"減重手術(袖狀胃/繞道)",
     en:"Bariatric Surgery (Sleeve / Gastric Bypass)",
-    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"1.5–3 hr", blood:"少", airway:"GA / ETT(困難氣道準備)" },
+    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少", airway:"GA / ETT(困難氣道準備)" },
     preop:[
       "常見 OSA/OHS(以 STOP-Bang 篩檢)、困難氣道、GERD、糖尿病、脂肪肝、肺高壓/右心負荷",
       "<b class='w'>預期困難插管與快速去飽和</b> → 完善氣道計畫、備困難氣道器材與影像喉鏡",
@@ -712,7 +719,7 @@ const SURGERIES = [
     specialty:"一般外科",
     name:"腹腔鏡胰十二指腸切除術(Whipple)",
     en:"Laparoscopic Pancreaticoduodenectomy (Whipple)",
-    summary:{ position:"Supine · reverse Trendelenburg (± split-leg)", posType:"revtrend", time:"6–10 hr", blood:"中～多", airway:"GA / ETT" },
+    summary:{ position:"Supine · reverse Trendelenburg (± split-leg)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中～多", airway:"GA / ETT" },
     preop:[
       "常見<b>阻塞性黃疸</b>(膽紅素↑ → 維生素 K 依賴因子↓致凝血異常、腎前氮質血症);黃疸另有全身效應:心肌抑制、急性腎損傷、免疫抑制、傷口癒合不良<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>阻塞性黃疸全身效應與膽鹽缺乏、內毒素血症、腸道屏障受損有關,可致<b>心肌抑制</b>、腎前性<b>急性腎損傷</b>與凝血異常;例行內視鏡膽道支架並不降低死亡率,且增加感染/敗血等操作併發症。</span>",
       "<b>惡病質與營養不良</b>:胰癌為所有癌症中惡病質發生率最高,診斷時可達八成;以 MUST / NRS-2002 篩檢,高蛋白(1.5 g/kg/day)、補充胰酶(PERT)",
@@ -786,7 +793,7 @@ const SURGERIES = [
     specialty:"骨科",
     name:"全膝關節置換術",
     en:"Total Knee Arthroplasty (TKA)",
-    summary:{ position:"Supine", posType:"supine", time:"1–2 hr", blood:"中(止血帶)", airway:"GA 或 半身麻醉/區域" },
+    summary:{ position:"Supine", posType:"supine", time:"參考捷格手術排程時間", blood:"中(止血帶)", airway:"GA 或 半身麻醉/區域" },
     preop:[
       "老年共病評估:心肺功能、糖尿病、OSA",
       "抗凝/抗血小板藥物、活動度、跌倒風險"
@@ -831,7 +838,7 @@ const SURGERIES = [
     specialty:"骨科",
     name:"腰椎手術(減壓／短節融合)",
     en:"Lumbar Spine Surgery (Decompression / Short-segment Fusion)",
-    summary:{ position:"Prone (Wilson frame / bolsters)", posType:"prone", time:"可長可短(參考排程預估時間)", blood:"中(融合較多)", airway:"GA / ETT(Non-kinking ETT)" },
+    summary:{ position:"Prone (Wilson frame / bolsters)", posType:"prone", time:"參考捷格手術排程時間", blood:"中(融合較多)", airway:"GA / ETT(Non-kinking ETT)" },
     preop:[
       "紀錄神經功能基準值(肌力、感覺)→ 供術後比對",
       "共病與出血風險:抗凝／抗血小板藥物、狹窄程度、肥胖、OSA(阻塞性睡眠呼吸中止)",
@@ -895,7 +902,7 @@ const SURGERIES = [
     specialty:"骨科",
     name:"頸椎手術(前位 ACDF／後位)",
     en:"Cervical Spine Surgery (ACDF / Posterior)",
-    summary:{ position:"Supine · neck slightly extended (ACDF) / Prone (posterior)", posType:"supine", time:"1.5–3 hr", blood:"少～中", airway:"GA / ETT(Non-kinking ETT・困難氣道準備)" },
+    summary:{ position:"Supine · neck slightly extended (ACDF) / Prone (posterior)", posType:"supine", time:"參考捷格手術排程時間", blood:"少～中", airway:"GA / ETT(Non-kinking ETT・困難氣道準備)" },
     preop:[
       "<b class='w'>頸椎不穩定／脊髓壓迫 → 插管時頸部活動須最小化</b>,評估是否需 Awake 插管(Fiber 或其他影像式插管工具備用,call help)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>頸椎不穩定或嚴重脊髓壓迫時,插管過程的頸部後仰或過度活動可能使脊髓進一步受損。此時常選擇<b>清醒纖維支氣管鏡插管</b>(病人保留自主呼吸與肌張力,插管後可即時確認神經功能),或在維持頸部中立(手動軸線固定,manual in-line stabilisation)下使用影像式喉鏡,盡量減少頸椎位移。</span>",
       "神經功能基準值(含脊髓病變 myelopathy 徵象)、活動範圍與症狀誘發姿勢",
@@ -953,7 +960,7 @@ const SURGERIES = [
     specialty:"骨科",
     name:"經皮內視鏡腰椎椎間盤切除術",
     en:"Percutaneous Endoscopic Lumbar Discectomy (PELD)",
-    summary:{ position:"Prone", posType:"prone", time:"3–4 小時或以上", blood:"少", airway:"GA / ETT(Non-kinking)" },
+    summary:{ position:"Prone", posType:"prone", time:"參考捷格手術排程時間", blood:"少", airway:"GA / ETT(Non-kinking)" },
     preop:[
       "紀錄神經功能基準值(肌力、感覺)→ 供術後比對",
       "共病與出血風險:抗凝／抗血小板藥物、狹窄程度、肥胖、OSA(阻塞性睡眠呼吸中止)",
@@ -1002,7 +1009,7 @@ const SURGERIES = [
     specialty:"骨科",
     name:"半髖關節置換術(股骨頸骨折)",
     en:"Bipolar Hemiarthroplasty (Femoral Neck Fracture)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"1–2 hr", blood:"中", airway:"半身麻醉 / GA(兩者皆可)" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"半身麻醉 / GA(兩者皆可)" },
     preop:[
       "高齡脆弱族群:心肺共病、譫妄風險、多重用藥、營養與衰弱評估",
       "<b>手術時機:入院後 24–48 小時內手術與較佳預後相關</b>;避免不必要延遲<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>多項研究顯示髖部骨折延遲手術與較高併發症及死亡率相關,指引建議在病人生理狀態允許下<b>盡早手術(常以入院後 24–48 小時為目標)</b>。延遲也可能增加<b>脂肪栓塞</b>(骨折斷端未固定、持續活動使骨髓脂肪不斷進入循環)與<b>靜脈血栓/肺栓塞</b>(臥床不動)——是脂肪與血栓性栓塞,而非空氣栓塞。合理延遲僅限可矯正且影響預後的狀況(如嚴重貧血、電解質異常、可逆的凝血問題);單純為等待抗凝藥代謝或行政因素而延遲並不理想。</span>",
@@ -1062,7 +1069,7 @@ const SURGERIES = [
     specialty:"骨科",
     name:"股骨轉子間骨折固定術",
     en:"Intertrochanteric Fracture Fixation (ITC)",
-    summary:{ position:"Supine on fracture (traction) table", posType:"supine", time:"1–2 hr", blood:"中(可隱性失血)", airway:"半身麻醉 / GA(兩者皆可)、a-line(可能)＋粗 line" },
+    summary:{ position:"Supine on fracture (traction) table", posType:"supine", time:"參考捷格手術排程時間", blood:"中(可隱性失血)", airway:"半身麻醉 / GA(兩者皆可)、a-line(可能)＋粗 line" },
     preop:[
       "高齡脆弱族群評估同股骨頸骨折;<b>及早手術(常以入院後 24–48 小時為目標)</b>、避免不必要延遲<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>髖部骨折延遲手術與較高死亡及併發症相關:登錄資料顯示入院逾 24 小時才手術,30 天死亡相對風險上升約一成;輕中度認知障礙者延遲逾一天,譫妄風險約增為兩倍。大型隨機試驗(HIP ATTACK)比較『加速手術』(自診斷起中位 6 小時)與『常規照護』(中位 24 小時),兩組 90 天死亡與主要併發症無差異,但加速組的<b>譫妄、下床時間與住院天數皆較低</b>。臨床意涵:延遲僅在能<b>有效且限時矯正</b>可逆問題(如嚴重貧血、電解質或可逆凝血異常)時才合理;為等待抗凝藥代謝或行政因素而延遲並不理想。手術本身即提供有效止痛,即使屬緩和性質,除非病人瀕臨死亡通常仍宜進行。</span>",
       "<b>ITC 隱性失血可觀</b>(骨折斷面與軟組織滲血)→ 術前血紅素恐低估、宜備血<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>轉子間骨折屬囊外骨折(extracapsular),骨折斷面與周圍軟組織可持續滲血並積存於大腿肌間隙,形成<b>隱性失血</b>——外觀與引流量看不到,但血紅素會逐步下降。囊外骨折與較複雜的固定手術失血量高於囊內的股骨頸骨折,故術前單次血紅素可能高估實際血容,術後也須連續追蹤。實務上應預期較多總失血、及早備血並評估輸血需求。</span>",
@@ -1119,7 +1126,7 @@ const SURGERIES = [
     specialty:"胸腔外科",
     name:"肺葉切除術",
     en:"Lobectomy (VATS / Thoracotomy)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"2–4 hr", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
     preop:[
       "肺功能(PFT、DLCO)、運動耐受度、預測術後肺功能",
       "戒菸、心臟評估",
@@ -1177,7 +1184,7 @@ const SURGERIES = [
     specialty:"胸腔外科",
     name:"達文西機器人胸腔手術",
     en:"Robotic-Assisted Thoracic Surgery (RATS / da Vinci)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考電子排程預估", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
     preop:[
       "病人選擇同肺葉切除:肺功能(PFT、DLCO)、運動耐受度、預測術後肺功能;戒菸、心臟評估",
       "相較傳統 VATS,機器人器械自由度高、傷口小;但常需 CO₂ 灌注建立<b>capnothorax</b>(人工二氧化碳氣胸)、手術與 docking(機器對接)時間較長 → 對<b class='w'>心肺儲備差</b>者仍須審慎評估",
@@ -1241,7 +1248,7 @@ const SURGERIES = [
     specialty:"胸腔外科",
     name:"楔形切除術",
     en:"Wedge Resection (VATS)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"1–2 hr", blood:"少", airway:"GA / DLT 或 Blocker・單肺通氣(OLV)・粗 line + FloTrac 或 a-line" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"少", airway:"GA / DLT 或 Blocker・單肺通氣(OLV)・粗 line + FloTrac 或 a-line" },
     preop:[
       "適應症:周邊小結節之<b>診斷性切除</b>、原發性小型(≤2 cm)周邊 NSCLC 之治癒性 sublobar resection、或肺轉移瘤切除",
       "<b>非解剖式(non-anatomic)切除</b>:僅楔形移除病灶與其邊緣,保留最多肺實質 → 常用於<b class='w'>心肺儲備差、無法耐受肺葉切除</b>之病人<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>肺葉切除是<b>解剖式</b>切除:沿著肺葉的血管、支氣管界線,整葉拿掉。楔形切除則是<b>非解剖式</b>:不管肺葉邊界,直接用縫合切割器把含病灶的一小塊肺實質『咬』下來,像切一角蛋糕。好處是切得少、保留最多會換氣的肺 → 對本來就喘、肺功能差的病人負擔小。代價是切除範圍與淋巴清除較有限,腫瘤學上需嚴格篩選病人;若冰凍病理顯示邊緣(margin)不夠,可能得當場改做範圍更大的切除。</span>",
@@ -1304,7 +1311,7 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"扁桃腺切除術",
     en:"Tonsillectomy",
-    summary:{ position:"Supine · head extended", posType:"supine", time:"<1 hr", blood:"少–中", airway:"GA / RAE・共用氣道" },
+    summary:{ position:"Supine · head extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / RAE・共用氣道" },
     preop:[
       "<b class='w'>OSA評估</b>(打鼾/小兒)→對鴉片敏感",
       "近期上呼吸道感染→氣道反應性升高",
@@ -1351,7 +1358,7 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"小兒扁桃腺/腺樣體切除術",
     en:"Pediatric Adenotonsillectomy",
-    summary:{ position:"Supine · shoulder roll, neck extended (Rose position)", posType:"supine", time:"參考捷格排程手術時間", blood:"少(吞入致低估)", airway:"GA / cuffed oral RAE / Non-kinking" },
+    summary:{ position:"Supine · shoulder roll, neck extended (Rose position)", posType:"supine", time:"參考捷格手術排程時間", blood:"少(吞入致低估)", airway:"GA / cuffed oral RAE / Non-kinking" },
     preop:[
       "<b>適應症決定風險屬性</b>:<b class='w'>阻塞型睡眠呼吸障礙(obstructive sleep-disordered breathing, oSDB)/阻塞型睡眠呼吸中止(OSA)</b>為最常見適應症;反覆扁桃腺炎則依 <b>Paradise criteria</b> 判定<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Paradise criteria 用於界定『反覆咽扁桃腺炎嚴重族群』:一年內 ≥7 次、連續兩年每年 ≥5 次、或連續三年每年 ≥3 次發作,且僅採計有病歷紀錄者。臨床意義在於:以感染為適應症的孩子多半沒有睡眠呼吸障礙,圍術期呼吸風險相對低;以 oSDB/OSA 為適應症者才是鴉片敏感與呼吸不良事件的高風險族群。麻醉前分辨這兩類病人,是後續止痛與監測強度的第一個分岔點。</span>",
       "<b class='w'>OSA 嚴重度分層決定照護等級</b>:多項睡眠檢查(polysomnography, PSG)呈呼吸中止低通氣指數(AHI)≥10/hr 或 SpO₂ 最低值 <80% 屬重度;無 PSG 時可用夜間血氧與 McGill oximetry score 分層<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>PSG 是診斷金標準,但多數孩童術前拿不到。McGill oximetry score 只需一夜居家血氧紀錄,依去飽和事件的次數與最低血氧分為 1 到 4 級:分數愈高代表阻塞愈嚴重,與術後呼吸不良事件相關性良好。實務用法是『陽性結果有意義、陰性結果不能排除 OSA』——分數高即可直接視為高風險安排住院監測,分數正常仍須參考病史與共病。</span>",
@@ -1447,7 +1454,7 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"鼻部手術(鼻竇/鼻中膈/鼻整形)",
     en:"Nasal Surgery (FESS / Septoplasty / Septorhinoplasty)",
-    summary:{ position:"Supine · reverse Trendelenburg 10–20° (head-up)", posType:"revtrend", time:"參考捷格排程手術時間", blood:"少–中", airway:"GA / oral RAE 氣管內管・共用氣道" },
+    summary:{ position:"Supine · reverse Trendelenburg 10–20° (head-up)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / oral RAE 氣管內管・共用氣道" },
     preop:[
       "常見<b>慢性鼻竇炎(chronic rhinosinusitis)</b>合併<b class='w'>下呼吸道發炎</b>:高達三分之二病人併氣喘/COPD/支氣管擴張 → 評估並優化氣道反應性<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>上下呼吸道為連續一體(『同一氣道』概念),鼻竇黏膜慢性發炎常伴支氣管高反應性。術前若氣喘控制不佳,誘導與拔管期較易支氣管痙攣;宜延續吸入型類固醇/支氣管擴張劑,並評估近期發作與用藥。</span>",
       "<b class='w'>阿斯匹靈加重呼吸道疾病(AERD;鼻息肉 + 氣喘 + NSAID 敏感)</b> → 避免非類固醇消炎止痛藥(NSAID)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣喘病人約一至二成在服用 NSAID 後出現呼吸道症狀,合併鼻息肉的慢性鼻竇炎者比例更高。術前用藥史問診應主動詢問止痛藥反應,並在麻醉計畫中改以 paracetamol 與其他非 NSAID 途徑止痛。</span>",
@@ -1531,15 +1538,16 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"耳部手術(鼓室成形/乳突/聽小骨)",
     en:"Middle Ear Surgery (Tympanoplasty / Mastoidectomy / Ossiculoplasty)",
-    summary:{ position:"Supine · head turned, 10–15° head-up", posType:"revtrend", time:"1–3 hr(乳突較長)", blood:"少(需 bloodless field)", airway:"GA / reinforced ETT 或 LMA・顏面神經監測→肌鬆受限" },
+    updated:"2026-08-02",
+    summary:{ position:"Supine · head turned, 10–15° head-up", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少(需 bloodless field)", airway:"GA / Non-kinking ETT 或有可能 LMA・顏面神經監測(如果使用顏面監測器)→肌鬆受限" },
     preop:[
       "多為日間手術;評估共病、聽力障礙溝通;<b class='w'>近期上呼吸道感染</b>使氣道反應性升高,擇期宜延後",
-      "小兒感音性聽損者留意合併症候群(如 Jervell–Lange-Nielsen 之長 QT)→ 術前心電圖",
+      "小兒感音性聽損者留意合併症候群(如 Jervell–Lange-Nielsen 之 QT prolong)→ 術前心電圖",
       "PONV 高風險族群評估(年輕、暈動症病史)"
     ],
     airway:[
       "<b class='w'>共用氣道、病人頭轉向對側、麻醉端遠離</b> → 確保導管牢固、迴路不受牽拉",
-      "選 reinforced(加強型)氣管內管避免打折;若採喉罩須留意頭部轉動致移位",
+      "選 Non-kinking(加強型)氣管內管避免凹折;若採喉罩須留意頭部轉動致移位",
       "<b class='w'>顏面神經監測時肌鬆受限</b>:插管僅用單次短效肌鬆或不用,之後避免持續肌鬆<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>顏面神經走行於中耳腔,術中易受傷。顏面神經監測(facial nerve monitoring)以肌電圖偵測神經受刺激來辨識與保護神經;因判讀依賴肌肉反應,誘導後應避免持續肌肉鬆弛,或改短效並確認恢復,以免壓抑訊號。</span>"
     ],
     monitor:[
@@ -1581,7 +1589,7 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"腮腺切除術",
     en:"Parotidectomy",
-    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"2–4 hr", blood:"中", airway:"GA / reinforced 或 south-facing RAE ETT・顏面神經監測→誘導後不維持肌鬆" },
+    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / reinforced 或 south-facing RAE ETT・顏面神經監測→誘導後不維持肌鬆" },
     preop:[
       "評估腫瘤良惡性與範圍;深葉/惡性腫瘤手術較廣、時間較長",
       "<b class='w'>術前記錄基準顏面神經功能(House–Brackmann 分級)</b>",
@@ -1629,7 +1637,7 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"顯微喉手術(支撐喉鏡)",
     en:"Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)",
-    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"<0.5–1 hr(常短而強刺激)", blood:"少", airway:"GA / microlaryngeal tube(MLT 小號)或 tubeless(jet/THRIVE)・共用+困難氣道・雷射防護" },
+    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA / microlaryngeal tube(MLT 小號)或 tubeless(jet/THRIVE)・共用+困難氣道・雷射防護" },
     preop:[
       "<b class='w'>術前氣道評估至關重要</b>:聲帶/喉部病灶、腫瘤、放療後纖維化可致<b>氣道阻塞與插管困難</b> → 影像與內視鏡評估、與外科團隊共擬計畫(NAP4 教訓)",
       "評估發聲改變、喘鳴、平躺呼吸困難等阻塞徵象",
@@ -1678,7 +1686,7 @@ const SURGERIES = [
     specialty:"婦產科",
     name:"剖腹產(全身麻醉)",
     en:"Cesarean Section (GA)",
-    summary:{ position:"Supine · left tilt (LUD)", posType:"supine", time:"<1 hr", blood:"中–多", airway:"GA / RSI・ETT" },
+    summary:{ position:"Supine · left tilt (LUD)", posType:"supine", time:"參考捷格手術排程時間", blood:"中–多", airway:"GA / RSI・ETT" },
     preop:[
       "首選區域麻醉;全麻多用於緊急、區域禁忌或失敗",
       "<b class='w'>視同飽胃(full stomach)→誤吸風險高</b>;制酸劑/H2 blocker、citrate",
@@ -1726,7 +1734,7 @@ const SURGERIES = [
     specialty:"神經外科",
     name:"開顱腫瘤切除",
     en:"Craniotomy (Supratentorial Tumour)",
-    summary:{ position:"Supine · head-up, head pins", posType:"supine", time:"數小時", blood:"中(可能多)", airway:"GA / 加強型ETT" },
+    summary:{ position:"Supine · head-up, head pins", posType:"supine", time:"參考捷格手術排程時間", blood:"中(可能多)", airway:"GA / 加強型ETT" },
     preop:[
       "評估 ICP、神經功能基準、腫瘤位置與水腫;類固醇、抗癲癇藥續用",
       "避免術前重鎮靜(意識↓/CO₂↑→ICP↑)"
@@ -1771,7 +1779,7 @@ const SURGERIES = [
     specialty:"大腸直腸外",
     name:"腹腔鏡大腸切除",
     en:"Laparoscopic Colectomy",
-    summary:{ position:"Lithotomy · Trendelenburg", posType:"trend", time:"2–4 hr", blood:"中", airway:"GA / ETT" },
+    summary:{ position:"Lithotomy · Trendelenburg", posType:"trend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT" },
     preop:[
       "ERAS:避免長時間禁食、術前碳水飲品;矯正貧血;戒菸",
       "老年與心肺共病評估"
@@ -1814,7 +1822,7 @@ const SURGERIES = [
     specialty:"泌尿科",
     name:"經尿道攝護腺切除",
     en:"Transurethral Resection of Prostate (TURP)",
-    summary:{ position:"Lithotomy", posType:"supine", time:"<1.5 hr", blood:"中(不易估計)", airway:"半身麻醉常見 / GA・ETT或LMA" },
+    summary:{ position:"Lithotomy", posType:"supine", time:"參考捷格手術排程時間", blood:"中(不易估計)", airway:"半身麻醉常見 / GA・ETT或LMA" },
     preop:[
       "老年、心肺共病;抗凝藥;基準血鈉 Na⁺"
     ],
@@ -1854,7 +1862,7 @@ const SURGERIES = [
     specialty:"整形外科",
     name:"游離皮瓣重建",
     en:"Free Flap Reconstruction",
-    summary:{ position:"Supine (視皮瓣部位)", posType:"supine", time:"長(數小時)", blood:"中", airway:"GA / ETT(頭頸皮瓣常鼻插管)" },
+    summary:{ position:"Supine (視皮瓣部位)", posType:"supine", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT(頭頸皮瓣常鼻插管)" },
     preop:[
       "長時間手術;共病(頭頸癌常合併吸菸/心肺);氣道評估(頭頸→可能困難、鼻插管)"
     ],
@@ -1896,7 +1904,7 @@ const SURGERIES = [
     specialty:"心臟外科",
     name:"冠狀動脈繞道(on-pump)",
     en:"Coronary Artery Bypass Graft (CABG)",
-    summary:{ position:"Supine", posType:"supine", time:"3–5 hr", blood:"多", airway:"GA / ETT" },
+    summary:{ position:"Supine", posType:"supine", time:"參考捷格手術排程時間", blood:"多", airway:"GA / ETT" },
     preop:[
       "心功能/EF、冠狀解剖、共病(DM、腎、頸動脈);抗血小板/抗凝停用時機;STS 風險分層"
     ],
@@ -1938,7 +1946,7 @@ const SURGERIES = [
     specialty:"心臟外科",
     name:"保留瓣膜主動脈根部置換(David)",
     en:"Valve-Sparing Aortic Root Replacement (David)",
-    summary:{ position:"Supine", posType:"supine", time:"4–6 hr", blood:"多", airway:"GA / ETT" },
+    summary:{ position:"Supine", posType:"supine", time:"參考捷格手術排程時間", blood:"多", airway:"GA / ETT" },
     preop:[
       "主動脈根部動脈瘤 ± 主動脈閉鎖不全(AR);常見年輕、結締組織疾病(Marfan/Loeys-Dietz)",
       "<b class='w'>結締組織病:注意合併二尖瓣脫垂、主動脈剝離風險、自發性氣胸、硬脊膜膨出(影響神經麻醉)、關節過動(擺位)</b>",
@@ -2008,10 +2016,19 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v1.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v1.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-08-02";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-02",
+    note: "耳部手術內容更新;全部術式預估時間統一改為參考排程;新增 NEW 標示。",
+    items: [
+      "耳部手術(鼓室成形/乳突/聽小骨):麻醉方式與氣管內管敘述更新,用詞比照本院習慣",
+      "全部術式:預估時間一律改為「參考捷格手術排程時間」",
+      "新增或內容有更新的術式,卡片右上角與內頁標題會出現 NEW 標示(30 天後自動消失)"
+    ]
+  },
   {
     date: "2026-08-02",
     note: "鼻部手術卡片依近年英文期刊與 EPOS 2020 全面改寫;移除本院未使用之喉部填塞相關內容。",
@@ -3769,6 +3786,15 @@ function updatesHtml(){
   </div>`;
 }
 
+/* NEW 標示:術式物件加上選填欄位 updated:"YYYY-MM-DD",該日起 NEW_DAYS 天內顯示 */
+const NEW_DAYS = 30;
+function isNewItem(s){
+  if(!s || !s.updated) return false;
+  const t = Date.parse(s.updated + "T00:00:00");
+  if(isNaN(t)) return false;
+  return (Date.now() - t) < NEW_DAYS * 86400000;
+}
+
 function renderList(){
   const q = el("search").value.trim();
   if(activeSpec===EXAM_CHIP || activeSpec===QUIZ_CHIP){ renderSetList(activeSpec); return; }
@@ -3793,7 +3819,9 @@ function renderList(){
   }
   el("list").innerHTML = items.map(s=>{
     const id = SURGERIES.indexOf(s);
-    return `<div class="card ${id===activeId?'active':''}" data-id="${id}">
+    const isN = isNewItem(s);
+    return `<div class="card ${id===activeId?'active':''} ${isN?'has-new':''}" data-id="${id}">
+      ${isN ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
       <div class="name">${s.en}</div>
       <div class="en">${s.name}</div>
       <div class="meta">
@@ -3866,7 +3894,7 @@ function showDetail(id){
   el("detail").innerHTML = `
     <button class="back" id="backBtn">← 返回清單</button>
     <div class="d-head">
-      <div class="d-title">${s.en}</div>
+      <div class="d-title">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
       <div class="d-title-zh">${s.name}</div>
       <div class="d-en">${s.specialty}</div>
       <div class="d-summary">
