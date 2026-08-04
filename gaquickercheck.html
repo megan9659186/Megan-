@@ -307,12 +307,15 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .drug-tbl .dn{font-weight:600;color:var(--ink);line-height:1.45}
 .drug-tbl .dc{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
 .drug-tbl .pill{white-space:normal;line-height:1.5;padding:2px 7px}
+.drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:12.5px;
+  font-weight:700;letter-spacing:.02em;padding:6px 12px;border-bottom:1px solid #DCC3BB}
 .scroll-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:7px}
-.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:2px}
-.tool-scroll::-webkit-scrollbar{height:7px}
-.tool-scroll::-webkit-scrollbar-track{background:transparent}
-.tool-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
-.tool-scroll::-webkit-scrollbar-thumb:hover{background:var(--ink-soft)}
+.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:5px;
+  scrollbar-width:thin;scrollbar-color:var(--clay) var(--clay-tint)}
+.tool-scroll::-webkit-scrollbar{-webkit-appearance:none;height:9px}
+.tool-scroll::-webkit-scrollbar-track{background:var(--clay-tint);border-radius:5px}
+.tool-scroll::-webkit-scrollbar-thumb{background:var(--clay);border-radius:5px}
+.tool-scroll::-webkit-scrollbar-thumb:hover{background:#A6837A}
 .tool-warn{background:var(--flag-tint);border:1px solid #DCC3BB;border-left:3px solid var(--flag);
   border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#6E4F49}
 .tool-warn b{color:var(--warn);font-weight:700}
@@ -2206,10 +2209,25 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v2.9";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v3.1";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-08-04";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-04",
+    note: "幫浦輸注新增「降壓與抗心律不整藥」分類。",
+    items: [
+      "藥物泡法:Angidil、nicardipine、Cordarone 由「其他」獨立成「降壓與抗心律不整藥」一區,與升壓藥分開,避免急用時看錯方向"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "幫浦輸注藥物依用途分類;表格捲軸改為咖啡色。",
+    items: [
+      "藥物泡法:持續輸注(幫浦)區分為強心與升壓藥、止痛藥、麻醉與鎮靜藥、其他四類,方便快速找藥",
+      "藥物泡法:表格下方的左右捲軸改為莫蘭迪咖啡色,一眼看得出可以左右滑動"
+    ]
+  },
   {
     date: "2026-08-04",
     note: "藥物泡法移除 regular insulin。",
@@ -4822,19 +4840,29 @@ const DRUG_PREP = [
     ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
     ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 D5W 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
   ]},
-  { g:"持續輸注(幫浦)", rows:[
-    ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 D5W 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b>本單位以 D5W 泡製</b>"],
-    ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
-    ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
-    ["Dopamine","200 mg/5 mL/amp","1 amp 加 NS 250 mL;洗腎病人:1 amp 加 NS 100 mL","0.8 mg/mL<br>EasyDopa 1.6 mg/mL<br>洗腎 2 mg/mL","2–20 µg/kg/min"],
-    ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 D5W 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"],
-    ["Cordarone","150 mg/3 mL/amp","依醫囑泡製,<b class='w'>只能用 D5W</b>","依醫囑","150 mg 滴注時間需大於 10 分鐘"],
-    ["Remifentanil<br>高濃度","2 mg/vial","先以 NS 40 mL 稀釋完成,再分裝成 2 支 20 mL","50 µg/mL<br>1 mL = 50 µg","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>空瓶由領藥人員保管,不可直接交給他人</b>"],
-    ["Remifentanil<br>稀釋版","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"],
-    ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
-    ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩"],
-    ["Nicardipine","2.5 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","3–15 mg/hr;反射性心跳上升"],
-    ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL 晶體液","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
+  { g:"持續輸注(幫浦)", subs:[
+    { s:"強心與升壓藥", rows:[
+      ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 D5W 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b>本單位以 D5W 泡製</b>"],
+      ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
+      ["Dopamine","200 mg/5 mL/amp","1 amp 加 NS 250 mL;洗腎病人:1 amp 加 NS 100 mL","0.8 mg/mL<br>EasyDopa 1.6 mg/mL<br>洗腎 2 mg/mL","2–20 µg/kg/min"],
+      ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 D5W 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"]
+    ]},
+    { s:"降壓與抗心律不整藥", rows:[
+      ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
+      ["Nicardipine","2.5 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","3–15 mg/hr;反射性心跳上升"],
+      ["Cordarone","150 mg/3 mL/amp","依醫囑泡製,<b class='w'>只能用 D5W</b>","依醫囑","150 mg 滴注時間需大於 10 分鐘"]
+    ]},
+    { s:"止痛藥", rows:[
+      ["Remifentanil<br>高濃度","2 mg/vial","先以 NS 40 mL 稀釋完成,再分裝成 2 支 20 mL","50 µg/mL<br>1 mL = 50 µg","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>空瓶由領藥人員保管,不可直接交給他人</b>"],
+      ["Remifentanil<br>稀釋版","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"]
+    ]},
+    { s:"麻醉與鎮靜藥", rows:[
+      ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩"]
+    ]},
+    { s:"其他", rows:[
+      ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
+      ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL 晶體液","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
+    ]}
   ]},
   { g:"其他需稀釋藥品", rows:[
     ["Succinylcholine","50 mg/mL","100 mg(2 mL)加 NS 稀釋成 5 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
@@ -4862,11 +4890,14 @@ function drugPrepHtml(){
           <table class="tool-tbl drug-tbl">
             <colgroup><col style="width:170px"><col style="width:240px"><col style="width:130px"><col style="width:220px"></colgroup>
             <tr><th>藥物／原裝濃度</th><th>常見泡法</th><th>泡好濃度</th><th>常用劑量／備註</th></tr>
-            ${sec.rows.map(r=>`<tr>
-              <td><div class="dn">${r[0]}</div><div class="dc">${r[1]}</div></td>
-              <td>${r[2]}</td>
-              <td><span class="pill b">${r[3]}</span></td><td>${r[4]}</td>
-            </tr>`).join("")}
+            ${(sec.subs || [{ rows: sec.rows }]).map(sub=>`
+              ${sub.s ? `<tr class="drug-sub"><td colspan="4">${sub.s}</td></tr>` : ""}
+              ${sub.rows.map(r=>`<tr>
+                <td><div class="dn">${r[0]}</div><div class="dc">${r[1]}</div></td>
+                <td>${r[2]}</td>
+                <td><span class="pill b">${r[3]}</span></td><td>${r[4]}</td>
+              </tr>`).join("")}
+            `).join("")}
           </table>
         </div>
       </div>`).join("")}
