@@ -140,6 +140,9 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .card .badge-new{position:absolute;top:12px;right:12px}
 .card.has-new .name{padding-right:48px}
 .d-title .badge-new{margin-left:9px;position:relative;top:-4px}
+.chip.has-new{position:relative}
+.chip .chip-new{position:absolute;top:-8px;right:-8px;font-size:9px;letter-spacing:.5px;padding:0 4px;
+  border-radius:4px;box-shadow:0 0 0 2px var(--bg)}
 .card:hover{border-color:var(--sage);transform:translateY(-1px)}
 .card.active{border-color:var(--sage);background:var(--sage-tint)}
 .card .name{font-weight:500;font-size:16.5px}
@@ -262,6 +265,61 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .refs-box li::before{content:counter(r);position:absolute;left:0;top:0;width:17px;height:17px;
   background:var(--sage-tint);color:#5a6a5a;border-radius:5px;font-size:12.5px;font-weight:600;
   display:flex;align-items:center;justify-content:center}
+.refs-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:700;color:var(--ink-soft)}
+.refs-det>summary::-webkit-details-marker{display:none}
+.refs-det>summary::after{content:'▾';margin-left:auto;font-size:12px;opacity:.65;transition:transform .18s}
+.refs-det[open]>summary::after{transform:rotate(180deg)}
+.refs-num{font-size:12px;font-weight:600;color:#5a6a5a;background:var(--sage-tint);
+  border-radius:5px;padding:1px 7px}
+.refs-det[open]>ol{margin-top:12px}
+
+/* ---------- 麻醉計算機 / 藥物泡法 ---------- */
+.tool-wrap{display:flex;flex-direction:column;gap:16px}
+.tool-head{font-size:19px;font-weight:700;color:var(--ink)}
+.tool-sub{font-size:13.5px;line-height:1.7;color:var(--ink-soft);margin-top:4px}
+.tool-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.tool-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin-bottom:11px}
+.calc-form{display:flex;flex-wrap:wrap;gap:11px}
+.calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 120px;min-width:110px}
+.calc-f label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+.calc-f input,.calc-f select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.calc-f input:focus,.calc-f select:focus{outline:2px solid var(--sage);outline-offset:-1px}
+.calc-out{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.calc-cell{flex:1 1 132px;min-width:126px;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px}
+.calc-cell .k{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em}
+.calc-cell .v{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
+.calc-cell .u{font-size:12px;font-weight:600;color:var(--ink-soft);margin-left:3px}
+.calc-cell .h{font-size:11.5px;line-height:1.5;color:var(--ink-soft);margin-top:4px}
+.calc-cell.hi{background:var(--sage-tint);border-color:#BFCBBD}
+.calc-note{font-size:12.5px;line-height:1.65;color:var(--ink-soft);margin-top:10px}
+.tool-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tool-tbl th{text-align:left;font-weight:700;color:var(--ink-soft);font-size:12px;
+  padding:7px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+.tool-tbl td{padding:8px;border-bottom:1px solid var(--line);line-height:1.55;color:var(--ink);vertical-align:top}
+.tool-tbl tr:last-child td{border-bottom:none}
+.tool-tbl td b{font-weight:600}
+.tool-box h3.th-new{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.drug-tbl{table-layout:fixed;min-width:760px}
+.drug-tbl td,.drug-tbl th{padding:9px 12px}
+.drug-tbl .dn{font-weight:600;color:var(--ink);line-height:1.45}
+.drug-tbl .dc{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+.drug-tbl .pill{white-space:normal;line-height:1.5;padding:2px 7px}
+.scroll-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:7px}
+.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:2px}
+.tool-scroll::-webkit-scrollbar{height:7px}
+.tool-scroll::-webkit-scrollbar-track{background:transparent}
+.tool-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.tool-scroll::-webkit-scrollbar-thumb:hover{background:var(--ink-soft)}
+.tool-warn{background:var(--flag-tint);border:1px solid #DCC3BB;border-left:3px solid var(--flag);
+  border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#6E4F49}
+.tool-warn b{color:var(--warn);font-weight:700}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:5px;
+  background:var(--ochre-tint);color:#6E6047;white-space:nowrap}
+.pill.s{background:var(--sage-tint);color:#4F5C4F}
+.pill.b{background:var(--slate-tint);color:#4E5766}
 
 /* ---------- 個人筆記 / 照片(存在本機瀏覽器) ---------- */
 .note-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);
@@ -484,6 +542,7 @@ const SURGERIES = [
   },
   {
     specialty:"一般外科",
+    alsoSpec:["耳鼻喉科"],
     name:"甲狀腺切除術",
     en:"Thyroidectomy",
     summary:{ position:"Supine · neck extended", posType:"supine", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT(常用IONM tube)" },
@@ -1589,14 +1648,15 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"腮腺切除術",
     en:"Parotidectomy",
-    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / reinforced 或 south-facing RAE ETT・顏面神經監測→誘導後不維持肌鬆" },
+    updated:"2026-08-04",
+    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / IONM tube・顏面神經監測→誘導後不維持肌鬆" },
     preop:[
       "評估腫瘤良惡性與範圍;深葉/惡性腫瘤手術較廣、時間較長",
       "<b class='w'>術前記錄基準顏面神經功能(House–Brackmann 分級)</b>",
       "確認外科團隊是否使用術中顏面神經監測 → 影響肌鬆策略"
     ],
     airway:[
-      "<b class='w'>術野鄰近氣道、病人頭轉向對側、麻醉端遠離</b> → reinforced 或 south-facing RAE 導管,牢固固定、避免打折",
+      "<b class='w'>術野鄰近氣道、病人頭轉向對側、麻醉端遠離</b> → 使用 IONM tube(術中神經監測氣管內管),牢固固定、避免打折",
       "留意插管後不再有機會調整導管(鋪單後術野覆蓋)"
     ],
     monitor:[
@@ -1637,25 +1697,26 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"顯微喉手術(支撐喉鏡)",
     en:"Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)",
-    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA / microlaryngeal tube(MLT 小號)或 tubeless(jet/THRIVE)・共用+困難氣道・雷射防護" },
+    updated:"2026-08-04",
+    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA / 小半號 ETT・共用+困難氣道・雷射防護" },
     preop:[
-      "<b class='w'>術前氣道評估至關重要</b>:聲帶/喉部病灶、腫瘤、放療後纖維化可致<b>氣道阻塞與插管困難</b> → 影像與內視鏡評估、與外科團隊共擬計畫(NAP4 教訓)",
+      "<b class='w'>術前氣道評估至關重要</b>:聲帶/喉部病灶、腫瘤、放療後纖維化可致<b>氣道阻塞與插管困難</b> → 影像與內視鏡評估、與外科團隊共擬計畫(NAP4 教訓)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>NAP4 是英國皇家麻醉學院與困難氣道學會 2011 年公布的第四次全國稽核,收集全英國一年內所有嚴重氣道事件(死亡、腦損傷、需要緊急外科氣道、非預期入住加護)。主要教訓:<b>一、氣道評估被省略,或評估了卻沒有據此改變計畫。二、只有 Plan A、沒有替代方案</b>,失敗後仍反覆嘗試同一手法而不換方式。<b>三、頭頸部腫瘤與氣道阻塞病人佔了不成比例的嚴重事件</b>,該做清醒插管時常常沒做。<b>四、需要緊急頸前氣道時失敗率高</b>,訓練與器材都不足。<b>五、EtCO₂ 監測使用不足</b>,導管滑脫或位置錯誤沒被及早發現。<b>六、吸入性肺炎是最常見的死因。七、延遲求援與跨團隊溝通不良</b>是共通背景。對共用氣道的喉部手術而言,重點就是術前確實評估、事先與外科團隊講好 Plan A/B/C,並把外科氣道器材備在手邊。</span>",
       "評估發聲改變、喘鳴、平躺呼吸困難等阻塞徵象",
       "禁食狀態、共病與心肺儲備"
     ],
     airway:[
       "<b class='w'>共用氣道 + 潛在困難氣道</b>:麻醉與外科團隊須共享氣道並備妥困難氣道與外科氣道器材、call help",
-      "選項:<b>microlaryngeal tube(MLT,小號長導管)</b>提供術野同時保通氣;或 <b>tubeless(無管)技術</b>爭取乾淨術野<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>為給外科團隊乾淨無管術野,可採無管技術(tubeless):包括間歇性拔插小號導管、噴射通氣(jet ventilation,聲門上或聲門下)、以及經鼻高流量濕化氧(THRIVE)提供窒息式氧合。各法皆須全靜脈麻醉維持穩定深度與不動;噴射通氣須熟悉氣壓傷與 CO₂ 蓄積風險,THRIVE 則須留意 CO₂ 隨時間上升。</span>",
+      "氣管內管選用<b>比平常小半號的 ETT</b>,留出術野空間;固定確實、避免懸吊或器械進出時移位<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>支撐喉鏡置入後口咽空間有限,外科團隊需要清楚視野操作聲帶病灶,因此氣管內管會比該病人平常使用的尺寸小半號。管徑變小後氣道阻力上升、吐氣時間拉長,設定呼吸器時要留意氣道壓與是否有氣體滯留;管子細又處在擁擠的口內,懸吊架設與器械進出時容易滑動,固定要確實並全程確認 EtCO₂ 波形與潮氣容積。</span>",
       "<b class='w'>雷射手術須防氣道起火</b>:雷射專用抗燃導管、氣囊以生理食鹽水(可加亞甲藍)充填、FiO₂ 降至最低、避免笑氣<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>雷射氣道手術最需防範『氣道起火』。起火需三要素同時存在:助燃劑(高濃度氧氣/笑氣)、可燃物(氣管內管、棉片、組織)、與點火源(雷射)。降低風險:使用雷射專用抗燃導管、氣囊以生理食鹽水(可加亞甲藍指示破損)充填、把吸入氧濃度(FiO₂)降到能維持安全血氧的最低值(常 <30%)、避免笑氣、雷射擊發前先告知團隊暫停高濃度氧。起火時立即停雷射、移除導管、停氧並以生理食鹽水滅火。</span>"
     ],
     monitor:[
-      "標準 ASA 基本監測;<b>tubeless/jet 技術須密切追蹤氧合與 CO₂ 蓄積</b>(必要時間歇血氣)"
+      "標準 ASA 基本監測;小管徑導管下留意<b>氣道壓、潮氣容積與 EtCO₂ 波形</b>,確認通氣足夠"
     ],
     hemo:[
       "<b class='w'>支撐喉鏡懸吊為強烈刺激</b>:置入與懸吊瞬間常引發血壓、心跳飆升 → 麻醉須深且可快速調節<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>支撐喉鏡懸吊(suspension laryngoscopy)對咽喉是強烈刺激,置入與懸吊瞬間血壓、心跳常飆升;但手術本身短、刺激時強時無 → 麻醉須『深且可快速調節』。remifentanil 併 propofol 的全靜脈麻醉便於即時加深以壓制反應、停藥後又能快速甦醒。必要時以短效 β 阻斷劑或血管活性藥處理血壓波動。</span>"
     ],
     intraop:[
-      "<b>全靜脈麻醉(propofol–remifentanil)</b>為主:提供不動、穩定深度與快速甦醒;確保<b class='w'>完全不動</b>以防精細操作/雷射誤傷",
+      "<b>可建議全靜脈麻醉(propofol–remifentanil)</b>:提供不動、穩定深度與快速甦醒;確保<b class='w'>完全不動</b>以防精細操作/雷射誤傷",
       "牙齒與口唇保護(喉鏡置入);短促手術須警覺刺激的『開/關』落差"
     ],
     drug:[
@@ -1672,14 +1733,143 @@ const SURGERIES = [
     flags:[
       "氣道起火(雷射)",
       "喉痙攣、喉水腫致術後氣道阻塞",
-      "tubeless/jet 相關:低血氧、CO₂ 蓄積、氣壓傷(氣胸/縱膈氣腫)",
+      "小管徑導管相關:通氣不足與 CO₂ 蓄積、導管移位或分泌物阻塞",
       "懸吊刺激致血壓/心律劇烈波動;牙齒/口咽軟組織損傷"
     ],
     refs:[
       "Pearson, K. L., & McGuire, B. E. (2017). Anaesthesia for laryngo-tracheal surgery, including tubeless field techniques. BJA Education, 17(7), 242–248.",
-      "Patel, A., & Nouraei, S. A. R. (2015). Transnasal humidified rapid-insufflation ventilatory exchange (THRIVE): A physiological method of increasing apnoea time in patients with difficult airways. Anaesthesia, 70(3), 323–329.",
-      "Jaquet, Y., Monnier, P., Van Melle, G., et al. (2006). Complications of different ventilation strategies in endoscopic laryngeal surgery: A 10-year review. Anesthesiology, 104(1), 52–59.",
+      "Cook, T. M., Woodall, N., & Frerk, C. (2011). Major complications of airway management in the UK: Results of the Fourth National Audit Project of the Royal College of Anaesthetists and the Difficult Airway Society. Part 1: Anaesthesia. British Journal of Anaesthesia, 106(5), 617–631.",
+      "Jones, T. S., Black, I. H., Robinson, T. N., & Jones, E. L. (2019). Operating room fires. Anesthesiology, 130(3), 492–501.",
       "Apfelbaum, J. L., Caplan, R. A., Barker, S. J., et al. (2013). Practice advisory for the prevention and management of operating room fires: An updated report by the American Society of Anesthesiologists Task Force on Operating Room Fires. Anesthesiology, 118(2), 271–290."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"氣管切開術",
+    en:"Tracheostomy",
+    updated:"2026-08-04",
+    summary:{ position:"Supine · shoulder roll, neck extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / 原有 ETT 換至氣切管・共用氣道・電燒防火" },
+    preop:[
+      "先確認<b>適應症與時機</b>:長期呼吸器脫離困難、上呼吸道阻塞、清除分泌物、頭頸手術前先建立氣道",
+      "<b class='w'>區分『開刀房擇期氣切』與『氣道急症下氣切』</b>:後者常在氧合不穩、無法插管的情況進行,計畫與人力完全不同",
+      "評估既有氣道:是否已插管、導管尺寸與深度、有無氣道腫瘤或狹窄;頸部活動度、甲狀腺腫大、肥胖短頸、既往氣切或放療疤痕",
+      "<b>凝血功能與抗凝血/抗血小板藥</b>;重症病人常合併血小板低下",
+      "術前與外科團隊確認:氣切管型號、有無氣囊、是否需加長型(肥胖或深頸)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣切管有幾個要先講好的規格:<b>尺寸</b>(內徑,成人男性常用 7.5–8.0、女性 7.0–7.5)、<b>有無氣囊</b>(需要正壓通氣或有吸入風險就要帶氣囊)、<b>長度</b>(頸部脂肪厚、氣管位置深的病人需要加長型 extended-length,否則管子會頂在氣管前壁或滑出)、以及<b>有無內管</b>(inner cannula,方便清理分泌物)。事先確認可以避免置入後才發現不合用、必須重新換管的窘境。</span>"
+    ],
+    airway:[
+      "<b class='w'>全程共用氣道</b>:切開氣管、退管、置入氣切管的每一步都要與外科團隊口頭同步,不能各做各的",
+      "已插管者:<b>先把 ETT 氣囊放氣、往前推進到隆突附近</b>,避免被切開的氣管環或手術刀劃破氣囊;必要時暫時加深麻醉與加藥防止嗆咳",
+      "<b class='w'>退管時機由外科團隊喊</b>:氣管前壁切開、確認可置入後才在直視下慢慢退 ETT,退到剛好露出切口即可,<b>先不要整支拔掉</b>,萬一氣切管放不進去還能推回去",
+      "氣切管置入後<b>立即確認 EtCO₂ 波形</b>再固定;無波形視同放錯位置<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣切管最怕的是<b>假通道(false passage)</b>——管子沒進到氣管腔,而是插進氣管前方的軟組織。此時外觀看起來管子在位、手動甦醒球也壓得動,但氧氣完全沒進肺。唯一可靠的判斷是<b>持續且有波形的 EtCO₂</b>,搭配雙側胸廓起伏與呼吸音、SpO₂ 趨勢。只要 EtCO₂ 沒出來,就當作放錯,立即告知外科團隊、把原本的 ETT 推回去恢復通氣,不要一邊硬壓一邊觀察。</span>",
+      "尚未插管而氣道阻塞者:是否需<b>清醒局部麻醉下氣切</b>由外科與麻醉共同決定;貿然誘導可能失去自主呼吸又無法通氣"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;<b>EtCO₂ 是換管成功與否的關鍵指標</b>,換管前後不可中斷",
+      "重症或血流動力學不穩者:動脈導管、既有中心靜脈導管沿用",
+      "換管前後留意<b>氣道壓與潮氣容積變化</b>(氣切管較短、阻力較低,壓力通常下降)"
+    ],
+    hemo:[
+      "多數穩定;<b class='w'>加護病房重症病人</b>常對麻醉藥敏感,誘導與加深時易低血壓,備血管收縮劑",
+      "頸部操作牽扯可致心搏過緩;甲狀腺峽部與前頸靜脈叢出血是常見來源"
+    ],
+    intraop:[
+      "<b class='w'>電燒 + 高濃度氧 = 氣道起火</b>:氣管切開前把 FiO₂ 降到能維持安全血氧的最低值、避免笑氣,並在切開前口頭確認",
+      "墊肩使頸部後仰有助暴露;<b>誘導完成後再墊肩</b>,ETT 深度會改變,墊完要重新確認",
+      "換管期間<b>維持足夠麻醉深度與不動</b>,嗆咳可致氣管撕裂或管子脫出"
+    ],
+    drug:[
+      "誘導與維持依病人狀況;重症者劑量減量、慢慢給",
+      "<b>換管前追加肌鬆或加深麻醉</b>,避免咳嗽;短時間手術可用 rocuronium 併 sugammadex 逆轉",
+      "局部浸潤麻醉由外科團隊施打,可減少切皮反應與術後疼痛"
+    ],
+    emergence:[
+      "確認氣切管固定牢靠(縫線 + 頸帶)、氣囊壓力適當、抽吸乾淨",
+      "<b class='w'>拍胸部 X 光</b>確認位置並排除氣胸",
+      "轉出前完成交班:氣切管型號與尺寸、是否為<b>新造廔管(7 天內)</b>、床邊備品(同號與小一號氣切管、氣管擴張器、原尺寸 ETT)"
+    ],
+    postop:[
+      "<b class='w'>新造廔管在成熟(約 7 天)前脫出極危險</b>:廔道尚未形成,盲目重插易造成假通道 → 循原路重建氣道或改由口插管",
+      "監測出血、皮下氣腫、分泌物阻塞;定期抽吸與濕化",
+      "床頭懸掛<b>氣切急救資訊卡</b>(手術方式、管路規格、上呼吸道是否仍相通)"
+    ],
+    flags:[
+      "氣道起火(電燒 + 高濃度氧)",
+      "假通道與氣切管放置失敗 → 缺氧;EtCO₂ 無波形時立即以原 ETT 回復通氣",
+      "氣切管脫出(尤其新造廔管 7 天內)",
+      "出血:早期為甲狀腺峽部/靜脈叢;晚期<b>氣管無名動脈廔管</b>為致命大出血",
+      "氣胸、縱膈氣腫、皮下氣腫;氣管後壁損傷致氣管食道廔管",
+      "長期:氣管狹窄、肉芽組織、氣管軟化"
+    ],
+    refs:[
+      "McGrath, B. A., Bates, L., Atkinson, D., & Moore, J. A. (2012). Multidisciplinary guidelines for the management of tracheostomy and laryngectomy airway emergencies. Anaesthesia, 67(9), 1025–1041.",
+      "Cook, T. M., Woodall, N., Harper, J., & Benger, J. (2011). Major complications of airway management in the UK: Results of the Fourth National Audit Project of the Royal College of Anaesthetists and the Difficult Airway Society. Part 2: Intensive care and emergency departments. British Journal of Anaesthesia, 106(5), 632–642.",
+      "Jones, T. S., Black, I. H., Robinson, T. N., & Jones, E. L. (2019). Operating room fires. Anesthesiology, 130(3), 492–501."
+    ]
+  },
+  {
+    specialty:"耳鼻喉科",
+    name:"懸壅垂顎咽成形術(打鼾/睡眠呼吸中止)",
+    en:"Uvulopalatopharyngoplasty (UPPP)",
+    updated:"2026-08-04",
+    summary:{ position:"Supine · slight head extension, mouth gag", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / ETT(常用 oral RAE)・OSA 困難氣道・共用氣道" },
+    preop:[
+      "<b class='w'>幾乎所有病人都有阻塞性睡眠呼吸中止(OSA)</b>:先看多項睡眠檢查的 AHI 與最低血氧;沒做過檢查者以 STOP-Bang 評估<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>STOP-Bang 是八題篩檢工具,每題答是得一分:<b>S</b>noring 打鼾大聲、<b>T</b>iredness 白天嗜睡、<b>O</b>bserved apnea 有人目擊呼吸中止、<b>P</b>ressure 高血壓、<b>B</b>MI 大於 35、<b>a</b>ge 大於 50 歲、<b>n</b>eck 頸圍(男大於 43 cm、女大於 41 cm)、<b>g</b>ender 男性。0–2 分為低風險,3–4 分中風險,<b>5 分以上為高風險</b>,術後呼吸抑制、去飽和與非計畫入住加護的機率明顯上升。AHI(每小時呼吸中止與低通氣次數)則是嚴重度分級:5–15 輕度、15–30 中度、大於 30 重度。</span>",
+      "<b class='w'>OSA 病人對鴉片與鎮靜劑異常敏感</b> → 術前避免給鎮靜前導藥",
+      "評估困難面罩通氣與困難插管:肥胖、短頸、頸圍大、下顎後縮、Mallampati III–IV、扁桃腺肥大",
+      "共病篩檢:高血壓、心律不整、肺高壓與右心衰竭、代謝症候群;長期未治療者可有 CO₂ 滯留",
+      "<b>術前有在用 CPAP 者請病人自備機器與面罩</b>,術後盡早恢復使用"
+    ],
+    airway:[
+      "<b class='w'>預期困難氣道</b>:備 videolaryngoscope、不同尺寸喉頭鏡片與聲門上氣道、call help;肥胖者採<b>頭高斜坡位(ramped)</b>並充分預充氧",
+      "<b>去飽和極快</b>(FRC↓、耗氧↑) → 預充氧要做足,必要時加壓面罩或高流量鼻氧延長安全窒息時間",
+      "常用 <b>oral RAE 導管</b>置於下唇正中,配合開口器固定;開口器撐開時導管可能受壓或移位 → <b class='w'>撐開後重新確認雙側呼吸音與 EtCO₂</b>",
+      "與外科團隊共用氣道,拔管計畫要一起討論"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;肥胖者選對尺寸血壓壓脈帶",
+      "<b>持續 EtCO₂ 與氣道壓</b>:開口器操作與頭位改變都可能使導管扭折",
+      "重度 OSA 或合併心肺共病者考慮動脈導管;術中留意通氣量與 CO₂ 趨勢"
+    ],
+    hemo:[
+      "多數穩定;局部浸潤含腎上腺素可致短暫心跳血壓上升",
+      "長期重度 OSA 者可能有肺高壓 → 避免缺氧、高碳酸、酸中毒等升高肺血管阻力的因素"
+    ],
+    intraop:[
+      "<b class='w'>目標是把鴉片用量壓到最低</b>:採多模式止痛(paracetamol、NSAID、dexamethasone、局部浸潤麻醉),減少術後呼吸抑制",
+      "<b>dexamethasone</b> 減少咽部水腫與 PONV",
+      "口咽出血與分泌物多 → 使用喉部填塞須<b class='w'>確實記錄並在拔管前取出</b>",
+      "維持正常體溫與血容;避免過度輸液加重咽部水腫"
+    ],
+    drug:[
+      "<b class='w'>肥胖病人給藥依不同體重換算</b>:誘導用 lean body weight、肌鬆用 ideal body weight、succinylcholine 與 sugammadex 用實際體重(詳見麻醉計算機)",
+      "肌鬆以 rocuronium 為主,拔管前<b>務必以 TOF 確認完全恢復</b>,必要時 sugammadex 逆轉",
+      "避免長效鴉片與 benzodiazepine;需要時用短效並小量滴定",
+      "PONV 高風險 → 至少兩種止吐藥合併"
+    ],
+    emergence:[
+      "<b class='w'>拔管期是整台刀最危險的時候</b>:咽部水腫 + 手術創面 + 鴉片殘留 + 原本就塌陷的上呼吸道<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>UPPP 病人本來上呼吸道就容易塌陷,手術又在同一個部位造成腫脹與出血面,再加上麻醉藥與鴉片殘留讓咽部肌肉張力下降,所以拔管後很容易立刻阻塞。拔管前要滿足幾個條件:<b>肌鬆完全恢復</b>(TOF 比值達標)、<b>病人清醒且能聽指令</b>、氣道反射回來、咽部與胃內血液分泌物抽吸乾淨、確認填塞物已取出。拔管採<b>半坐臥或側臥</b>而非平躺,床邊備妥再插管器材與外科氣道,拔管後持續給氧並嚴密觀察。有在用 CPAP 的病人術後盡早接回。</span>",
+      "拔管前:抽吸口咽與胃內血液、確認填塞物取出、<b>TOF 確認肌鬆完全恢復</b>、病人清醒能聽指令",
+      "<b>採半坐臥或側臥拔管</b>,床邊備再插管器材與外科氣道;拔管後持續給氧",
+      "避免深麻醉下拔管"
+    ],
+    postop:[
+      "<b class='w'>延長恢復室觀察時間</b>,以脈搏血氧與呼吸型態監測;重度 OSA、需用鴉片者考慮加護或可監測病房",
+      "<b>盡早恢復 CPAP</b>;採半坐臥姿",
+      "止痛以非鴉片為主;需要鴉片時小量、短效、密切監測",
+      "衛教出血徵象(吞嚥困難、吐血、頻繁吞口水)與回診時機"
+    ],
+    flags:[
+      "拔管後上呼吸道阻塞、咽部水腫 → 需再插管",
+      "鴉片或鎮靜劑引起的術後呼吸抑制與去飽和",
+      "術後出血(早期原發性、5–10 天續發性)→ 誤吸與氣道急症",
+      "困難面罩通氣/困難插管、去飽和迅速",
+      "長期重度 OSA:肺高壓、右心衰竭、心律不整"
+    ],
+    refs:[
+      "Memtsoudis, S. G., Cozowicz, C., Nagappa, M., et al. (2018). Society of Anesthesia and Sleep Medicine guideline on intraoperative management of adult patients with obstructive sleep apnea. Anesthesia & Analgesia, 127(4), 967–987.",
+      "Cozowicz, C., & Memtsoudis, S. G. (2021). Perioperative management of the patient with obstructive sleep apnea: A narrative review. Anesthesia & Analgesia, 132(5), 1231–1243.",
+      "Chung, F., Abdullah, H. R., & Liao, P. (2016). STOP-Bang questionnaire: A practical approach to screen for obstructive sleep apnea. Chest, 149(3), 631–638.",
+      "Seet, E., Nagappa, M., & Wong, D. T. (2021). Airway management in surgical patients with obstructive sleep apnea. Anesthesia & Analgesia, 132(5), 1321–1327."
     ]
   },
   {
@@ -2016,10 +2206,106 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v1.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-08-02";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v2.9";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-08-04";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-04",
+    note: "藥物泡法移除 regular insulin。",
+    items: [
+      "藥物泡法:移除 regular insulin 一列"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "藥物泡法:succinylcholine 改為本單位泡法。",
+    items: [
+      "藥物泡法:succinylcholine 泡好濃度由 10 mg/mL 改為本單位的 20 mg/mL"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "藥物泡法備藥提醒調整;表格捲軸更明顯。",
+    items: [
+      "藥物泡法:移除「幫浦設定完成後請第二人覆核」這一則提醒",
+      "藥物泡法:表格下方的左右捲軸改為看得見,用滑鼠也比較好拉"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "藥物泡法的藥名移除商品名。",
+    items: [
+      "藥物泡法:藥名一律只列學名,移除括號內的商品名(如 Bosmin、Levophed、Precedex、Transamine 等)"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "藥物泡法新增 remifentanil 稀釋版與 Precedex 泡法;表格改為可左右滑動。",
+    items: [
+      "藥物泡法新增 remifentanil 稀釋版:1 vial 稀釋成 200 mL,1 mL = 10 µg",
+      "藥物泡法:Precedex 改為本單位泡法,1 vial 稀釋成 40 mL",
+      "藥物泡法:表格改回可左右滑動,欄位變寬,字不再擠成一團"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "麻醉計算機新增兩個計算工具;藥物泡法表格版面調整。",
+    items: [
+      "麻醉計算機新增「4-2-1 法則」:輸入體重與禁食時數,直接算出每小時維持量、禁食缺失量與前三小時的補法",
+      "麻醉計算機新增「失血預估」:依族群估算血容量 EBV,並算出可容許失血量與失血 15%、30% 的量",
+      "藥物泡法:原裝濃度改放在藥名下方,常見泡法欄位變寬,數字更好讀"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "藥物泡法改為本單位泡製規範。",
+    items: [
+      "藥物泡法:整份改依本單位泡製表更新,包含 norepinephrine、epinephrine、ephedrine、remifentanil、Angidil(Isoket)、dopamine、dobutamine、Cordarone,並補上洗腎病人的稀釋方式",
+      "藥物泡法:新增 Transamine 幫浦用法與高、低劑量給法",
+      "藥物泡法:新增本單位濃度速算公式與容量常數對照",
+      "藥物泡法:移除 phenylephrine、labetalol,以及不需稀釋(原液直接使用)的藥品"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "新增麻醉計算機與藥物泡法兩個工具頁;耳鼻喉科新增氣管切開術與 UPPP。",
+    items: [
+      "新增「麻醉計算機」:輸入身高體重即可算出 BMI、理想體重、淨體重、校正體重、預測體重與體表面積,並附常用藥物該用哪個體重的對照表",
+      "新增「藥物泡法」:整理血管活性藥、持續輸注、麻醉常用與急救藥品的原裝濃度、常見稀釋方式與泡好濃度",
+      { t: "耳鼻喉科新增:氣管切開術(共用氣道換管流程、假通道辨識、電燒防火、新造廔管風險)", en: "Tracheostomy" },
+      { t: "耳鼻喉科新增:懸壅垂顎咽成形術 UPPP(OSA 評估、困難氣道、少用鴉片、拔管期風險)", en: "Uvulopalatopharyngoplasty (UPPP)" },
+      { t: "甲狀腺切除術現在在一般外科與耳鼻喉科兩個科別下都找得到(同一張卡片)", en: "Thyroidectomy" },
+      { t: "顯微喉手術:NAP4 教訓新增可展開說明", en: "Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)" }
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "顯微喉手術氣道方式更新為本院作法;文獻出處改為可收合。",
+    items: [
+      { t: "顯微喉手術(支撐喉鏡):氣管內管改為小半號 ETT,刪除 microlaryngeal tube 與無管(tubeless)技術相關內容(本院未使用),共用氣道與雷射防火內容保留", en: "Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)" },
+      { t: "顯微喉手術(支撐喉鏡):麻醉方式由「全靜脈麻醉為主」改為「可建議全靜脈麻醉」", en: "Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)" },
+      "每台手術的「文獻出處」預設收合,點一下才展開全部,內頁看起來更清爽"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "腮腺切除術氣道方式更新為本院作法;NEW 標示同步顯示在科別上。",
+    items: [
+      { t: "腮腺切除術:氣管內管改為 IONM tube,刪除 reinforced 與 south-facing RAE 導管相關敘述", en: "Parotidectomy" },
+      "近期有新增或更新術式的科別,chip 右上角也會出現 NEW 標示",
+      "NEW 標示顯示天數由 30 天改為 7 天"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "歷屆考古題複習新增 111 年度兩個科目題組。",
+    items: [
+      "111 年 · 專科護理通論(單選 80 題)",
+      "111 年 · 進階專科護理(單選 80 題,含 2 題原題心電圖)",
+      "111 年通論第 24 題送分、第 26 題複選給分,第 63 題附官方疑義審查說明"
+    ]
+  },
   {
     date: "2026-08-02",
     note: "耳部手術內容更新;全部術式預估時間統一改為參考排程;新增 NEW 標示。",
@@ -2796,6 +3082,349 @@ const EXAM_SETS = [
       { q: "有關硬脊膜穿刺後頭痛(post-dural puncture headache)的敘述,下列何者正確?",
         opts: ["症狀常與姿勢相關,躺著比較嚴重但如果站著則得到部分緩解","使用較細的針且避免反覆穿刺可以減少發生的機會","發生時避免脫水與給予非類固醇類止痛藥物,無助於改善症狀","常規性的臥床休息,可預防性減少硬脊膜穿刺後頭痛發生率"], ans: 1 }
     ]
+  },
+  {
+    id: "exam-111-general",
+    year: 111,
+    subject: "專科護理通論",
+    title: "111 年 · 專科護理通論",
+    sub: "衛生福利部麻醉科專科護理師甄審【筆試甄審】;單選 80 題,答案依官方公告標準答案。第 24 題送分、第 26 題複選給分,對答案時附說明。",
+    questions: [
+      { q: "依據「臺灣護理人員法」(民國 109 年修正),下列何者<b>不屬於</b>專科護理師之執業範疇?",
+        opts: ["麻醉護理與照護","醫院加護病房照護","健康促進及衛教","社區居家在宅接生"], ans: 3 },
+      { q: "肺癌高居臺灣癌症死因第一位,下列何者為 2022 年國民健康署之肺癌早期偵測計畫,針對肺癌特定風險者的建議?",
+        opts: ["50 歲以上民眾,每 2 年可做 1 次胸部低劑量電腦斷層攝影檢查","65 歲以上民眾,每年可做 1 次胸部 X 光篩檢","50 歲以上民眾,每 2 年可做 1 次胸部 X 光檢查","40 歲以上民眾,每 3 年可做 1 次胸部 X 光篩檢"], ans: 0 },
+      { q: "醫療品質可從三個構面做指標制定,即結構面指標(structure indicators)、過程面指標(process indicators)與結果面指標(outcome indicators),下列敘述何者<b>錯誤</b>?",
+        opts: ["具備專科護理師執照者執行業務的比值屬於結果面指標","醫事人員洗手正確率屬於過程面指標","手術後傷口感染率屬於結果面指標","醫事人力與病床的比值屬於結構面指標"], ans: 0 },
+      { q: "醫療品質管理的手法及工具中,常用的柏拉圖是運用於問題解決流程中哪個步驟?",
+        opts: ["問題確認","回饋改善","成果評估","提出方案"], ans: 3 },
+      { q: "品質改善專案常用的特性要因圖(cause and effect diagram),主要是找出問題的根本原因,所以又稱為?",
+        opts: ["魚骨圖","甘特圖","管制圖","流程圖"], ans: 0 },
+      { q: "依據「人體器官移植條例」(民國 110 年修正)對於自活體摘取器官施行移植手術的規定,下列何者正確?",
+        opts: ["捐贈者滿 20 歲以上,意識清楚,本人簽署同意書即可","捐贈給配偶時,一定要結婚滿兩年才能捐贈","受贈者以組織配對合宜性為主,不一定要有親屬關係","捐贈的案件,要經過醫院醫學倫理委員會審查通過才能捐贈"], ans: 3 },
+      { q: "照護品質維護為專科護理師的核心能力之一,在參與急診病人跌倒根本原因分析(root cause analysis, RCA)時,與小組成員運用時序法,列出事件發生時間的先後順序,為根本原因分析的哪一個階段?",
+        opts: ["RCA 前的準備","找出近端原因","進行危害分析","確認根本原因"], ans: 1 },
+      { q: "美國醫學研究院(IOM)提出有效改善醫療品質的作法,應該達成滿足服務病人的六大目標,下列何者<b>錯誤</b>?",
+        opts: ["安全性","即時性","公平","尊重"], ans: 3 },
+      { q: "教育方案設計中,為了解教學成效,下列何者較<b>不適宜</b>?",
+        opts: ["宜採用多元評估策略","評量技能方法可採用筆試與口頭報告了解學習成效","依據教學目標擬定教學評量策略","客觀結構式臨床測驗(OSCE)屬於綜合性評量,可測量學員臨床能力之表現"], ans: 1 },
+      { q: "下列何者<b>不屬於</b> Hamric 模式所規劃的專科護理師核心能力?",
+        opts: ["健康政策的倡議與推動能力","以病人為中心的跨團隊照護能力","照護過程有臨床實務的品質提升能力","將新知識轉換到實務中的能力"], ans: 0 },
+      { q: "有效的會談可以收集病人資料,協助病人解決問題,建立良好的治療性人際關係。下列何者<b>不屬於</b>治療性會談的技巧?",
+        opts: ["給予建議性的指示","鼓勵做比較","沉默(silence)","重述(restating)"], ans: 0 },
+      { q: "國民健康署為改善老年人生活安全與照護品質,2021 年 2 月發表《老人防跌工作手冊》,若經評估長者的下肢肌力不足或步態及平衡異常,除轉介相關科別醫師診斷外,下列何者<b>不是</b>主要考慮轉介之項目?",
+        opts: ["物理治療師","職能治療師","附近可參加之運動團體","社工師"], ans: 3 },
+      { q: "專科護理師規劃在職教育課程時,為達到教學成效,第一步工作為何?",
+        opts: ["評估學習者需求","確認教學方法","確立教學目標","擬定教學策略"], ans: 0 },
+      { q: "王先生表示:「我要不要選擇另一種治療方式呢?」,專科護理師回答:「您認為呢?」,此時專科護理師是使用下列何種會談溝通技巧?",
+        opts: ["強化(post reinforcement)","澄清(clarification)","促進(facilitation)","反映(reflection)"], ans: 3 },
+      { q: "病人術後於病房練習走路,跌倒撞到頭部,護理師聯繫正在手術中的主治醫師,主治醫師以電話指示專科護理師,立即進行身體評估、安排電腦斷層,並會診神經內科及向病人與家屬說明病況和處置。有關以上專科護理師之行為,下列敘述何者正確?",
+        opts: ["說明病情不在專科護理師於醫師監督下可執行的業務範圍內,專科護理師應告知家屬,待主治醫師下刀後親自說明","跌倒為突發事件,不屬於預立特定醫療流程範圍,故專科護理師不應代為開立電腦斷層檢查單及會診單","執行病人及家屬有關醫學與護理之諮詢及病情說明,本屬專科護理師之執業範圍,行為符合規範","專科護理師僅可向家屬說明身體評估的結果,而安排電腦斷層與會診神經內科,屬於醫療行為,不應代為說明"], ans: 2 },
+      { q: "依據醫病共享決策 SHARE 五步驟,下列順序何者正確?<br>①對決策結果的評值　②了解病人對疾病的看法、治療期待與偏好　③幫助病人了解各治療選項及其優缺點　④尋求病人同意參與決策　⑤與病人達成共同決策",
+        opts: ["①②③⑤④","②④①⑤③","④③②⑤①","②①④③⑤"], ans: 2 },
+      { q: "在醫療照護團隊中,為傳遞正確醫療訊息,達到以病人為中心的最佳照護成果,身為照護團隊一員的你,會運用醫療團隊資源管理(team resource management, TRM)模組中的哪個模組?",
+        opts: ["情境監測(situation monitoring)","領導風格(leadership)","溝通(communication)","互助支援(mutual support)"], ans: 2 },
+      { q: "醫療照顧者提供病人衛生教育,協助其獲得健康相關行為改變,達到自我照顧與健康促進,下列敘述何者<b>錯誤</b>?",
+        opts: ["提供病人疾病衛教前,須了解病人對疾病照護認識的程度","依照醫療照顧人員的業務方便及可近性,選定單一教學方法及衛教工具","每日評估病人可執行的照顧措施狀況,可激發病人學習參與的動機","清楚確定病人疾病照顧學習目標"], ans: 1 },
+      { q: "根據衛生福利部頒定的「專科護理師於醫師監督下執行醫療業務辦法」第 4 條規定,須成立作業小組,並且明訂專師及訓練專師執行監督下之醫療業務時之標準作業程序,下列敘述何者正確?",
+        opts: ["由護理部主責,定期召開會議","標準作業程序須訂定每半年更新一次","須訂定回報病人狀況與處置結果之機制","經過外部專家審核,方可實施"], ans: 2 },
+      { q: "根據 1997 年 Charles 等人建立「醫病共享決策」(shared decision making, SDM)照護模式,下列何者<b>不是</b>決策過程及實踐步驟?",
+        opts: ["資訊交換階段","實證搜尋階段","商議階段","決策階段"], ans: 1 },
+      { q: "「專師及訓練專師執行監督下之醫療業務辦法」第 5 條,有關預立特定醫療流程訂定內容之規定,下列何者<b>錯誤</b>?",
+        opts: ["使用 ICD-10 所羅列的疾病來製作照護流程診斷","包含書寫紀錄及記錄相關處置或措施","明訂專師及訓練專師應具備之特定訓練標準或要件","明訂監督之醫師及監督方式"], ans: 0 },
+      { q: "有關啟動與執行「預立醫療決定」之敘述,下列何者<b>不符合</b>條件標準?",
+        opts: ["臨床失智評估表(clinical dementia rate, CDR)得分 3 分者","三個月前車禍致嚴重腦傷,格拉斯哥昏迷指數(GCS)3 分者","腦梗塞後六個月,格拉斯哥昏迷指數(GCS)3 分者","阿茲海默症功能性評估量表(functional assessment staging test, FAST)得分 8 分者"], ans: 1 },
+      { q: "專科護理師下班後,在停車場被病人家屬大聲叫住,無端以言語辱罵,並拉扯頭髮拖拉至路旁,要求跪地道歉。對此暴力事件的敘述,下列何者<b>錯誤</b>?",
+        opts: ["此行為以強暴、脅迫、恐嚇、公然侮辱等方法妨礙醫療業務執行,已違反醫療法","因未於執行醫療業務期間發生,應以刑法公然侮辱和普通傷害罪認之","刑法之公然侮辱和普通傷害罪,屬告訴乃論,專科護理師需要主動提出告訴認之","醫療法於強暴、脅迫、恐嚇等暴力行為的刑責規範,高於刑法規範"], ans: 0 },
+      { q: "目前國民健康署對於健康民眾所提供之癌症篩檢服務,下列族群何者<b>不符合</b>其標準?",
+        opts: ["36 歲張先生,已戒食檳榔 6 年","55 歲李先生,無大腸癌家族病史","45 歲陳小姐,父親罹患肺癌","42 歲王小姐,姑姑 5 年前罹患乳癌"], ans: [0, 1, 2, 3],
+        exp: "依官方公告答案,本題送分,四個選項均給分。" },
+      { q: "基於行善原則,下列何種處置屬於去除傷害的範疇?",
+        opts: ["執行技術前確實洗手","圍上床欄預防跌落","協助病人執行關節運動,避免攣縮","即早進行出院準備服務之規劃"], ans: 2 },
+      { q: "病人符合下列臨床條件之一,且有預立醫療決定者,醫療機構或醫師得依其預立醫療決定終止、撤除或不施行維持生命治療或人工營養及流體餵養之全部或一部,下列何者<b>錯誤</b>?",
+        opts: ["由二位與該疾病診斷或治療相關之專科醫師確診之末期病人","不可逆轉之昏迷狀況,若因外傷所致,其意識超過三個月無恢復跡象","永久植物人狀態,若因外傷所致,其植物人狀態超過六個月無改善跡象","極重度失智,臨床失智評估量表(clinical dementia rate, CDR)達三分以上"], ans: [0, 1],
+        exp: "依官方公告答案,本題 A、B 皆給分。" },
+      { q: "吸菸是下列癌症的危險因子,其中以何者增加的風險最低?",
+        opts: ["肺癌","口腔癌","食道癌","膀胱癌"], ans: 3 },
+      { q: "下列何者<b>不為</b>肥胖對內分泌與新陳代謝功能的影響?",
+        opts: ["血脂異常","代謝症候群","第一型糖尿病","多囊性卵巢症候群"], ans: 2 },
+      { q: "有關 GRADE 評核系統(grading of recommendation assessment, development and evaluation)之應用,下列敘述何者<b>錯誤</b>?",
+        opts: ["是針對單一臨床研究進行證據等級分級","最多可納入七個結果指標","針對不精確性的評估,在臨床指引及系統性文獻回顧的用法不同","介入措施的證據等級取決於所有結果指標中證據等級較低者"], ans: 0 },
+      { q: "在品質改善手法中,目標的設定必須具體可行、能夠量化。有關目標設定依據之敘述,下列何者<b>錯誤</b>?",
+        opts: ["同業或類似工作的實績","上司的期望及要求","自我努力的要求","品管手法熟練度"], ans: 3 },
+      { q: "下列何者<b>不是</b>應用實證方法提升照護品質的 5A 步驟?",
+        opts: ["提出問題(ask)","問題評估(assessment)","文獻評讀(appraise)","臨床應用(apply)"], ans: 1 },
+      { q: "根據考科藍臺灣研究中心 2020 年更新的《臺灣實證臨床指引發展及更新手冊》,實證臨床指引撰寫完成之後,建議用於外部審查評估指引品質的評讀工具為何?",
+        opts: ["PRISMA","ROBINS-I","AGREE II","GRADE"], ans: 2 },
+      { q: "有關醫院推動持續品質改善(CQI)之敘述,下列何者<b>錯誤</b>?",
+        opts: ["以團隊合作方式達成全面品質管理","尊重每一部門及員工提出的品質改善方案","運用大數據分析管理進行品質增進計畫","以領導者為中心建構醫院核心價值與文化"], ans: 3 },
+      { q: "有關醫院參加臺灣醫療品質指標系統(TQIS)之敘述,下列何者<b>錯誤</b>?",
+        opts: ["品管中心定期提供報表,可與其他機構比較,及早發現異常趨勢即時改善","醫療單位僅需依據臨床指引提供照顧,品質指標監測及改善是品管中心的責任","醫療品質監測指標包括結構、過程與結果三個面向","臨床指標是品質改善與評鑑查核的工具,故指標高低無法直接解釋醫療品質好壞"], ans: 1 },
+      { q: "新冠肺炎疫情間,媒體報導重症病人進行清醒俯臥,但過去在加護病房未曾使用此技能,也不知道其對死亡率之效果,故藉由實證方法尋找最佳研究證據,制定醫院新冠肺炎俯臥的標準,下列何者最<b>不適當</b>?",
+        opts: ["擬定 PICO:清醒俯臥是否可降低重症新冠肺炎病人的死亡率","分析各篇文獻,確認對象與使用情境,擬定適應症、禁忌症以及清醒俯臥的治療流程","因為新冠肺炎為新興傳染病,故尋找病例對照研究的文獻優於隨機控制試驗文獻","制定為標準後仍需定期評估照顧成果,運用俯臥對病人的優點,也要避免其他合併症的產生"], ans: 2 },
+      { q: "有關國民健康署戒菸教戰手冊對訂定戒菸計畫(STAR)之敘述,下列何者<b>錯誤</b>?",
+        opts: ["S(set):慎重設定戒菸日,跨出戒菸第一步","T(tell):暗自告訴自己,我要開始戒菸了","A(anticipate):預期戒菸過程可能會遇到的困難,並嘗試安排處理方式","R(remove):將菸與相關一切事物從環境中完全拿掉"], ans: 1 },
+      { q: "有關健康體能的四大要素之敘述,下列何者<b>錯誤</b>?",
+        opts: ["肌耐力就是肌肉力量","心肺耐力為四大要素中最重要的一項","柔軟度代表關節可以活動的最大範圍","身體脂肪百分比是身體組成重要項目"], ans: 0 },
+      { q: "有關我國社區老人健康促進之敘述,下列何者<b>錯誤</b>?",
+        opts: ["公共衛生進步導致高齡化社會的來臨","促進老人健康可早期預防或減少慢性病及其併發症之發生","本土化社區老人健康促進工作之推廣模式是以醫院為基礎","藉由老人間的互動可強化老人健康促進及改善日常生活行為"], ans: 2 },
+      { q: "有關檳榔之敘述,下列何者<b>錯誤</b>?",
+        opts: ["檳榔子屬第一類致癌物","檳榔致癌部位主要在口腔、咽及食道","嚼不含任何添加物的檳榔子則不會致癌","其導致之口腔癌為臺灣男性罹患的主要癌症之一"], ans: 2 },
+      { q: "有關吸菸者行為改變階段模式之敘述,下列何者<b>錯誤</b>?",
+        opts: ["懵懂期指未來六個月中沒有改變行動的意圖","沉思期指開始覺察到吸菸的問題,但同時有繼續吸菸以及停止吸菸的矛盾心情","決定期指意圖在未來一個月內行動,通常還未有任何改變","維持期指戒菸已超過六個月,新行為模式已較穩定"], ans: 2 },
+      { q: "依據世界衛生組織(WHO)「長者整合性照護指引(integrated care for older people, ICOPE)」,希望幫助長者及早發現可能導致失能的風險因子,其六大功能指標,<b>不包含</b>下列何者?",
+        opts: ["認知","營養","聽力","失禁"], ans: 3 },
+      { q: "Dicenso 等學者(2009)把實證醫學照護資料庫分類為 6 大類,常用的臨床指引屬下列何種資料?",
+        opts: ["原始研究精要(synopses of studies)","研究摘要(summaries)","統合研究資料(syntheses)","統合研究精要(synopses of syntheses)"], ans: 1 },
+      { q: "有關醫策會臺灣病人安全通報系統(Taiwan Patient-safety Reporting system, TPR)之醫療異常事件通報作業,下列敘述何者<b>錯誤</b>?",
+        opts: ["通報系統的方便性及可近性是重要因素","通報系統採用具名制,以利事件分析及改善","成功醫療異常事件通報系統,是以錯誤中學習為原則","醫療異常通報是病人安全文化的營造"], ans: 1 },
+      { q: "依據臨床疾病預防的說明,下列何者<b>錯誤</b>?",
+        opts: ["三級預防(tertiary prevention)是針對反覆再發的疾病,採取合併多種藥物治療,以防止疾病再次復發,例如合併兩種抗血小板藥物以治療冠狀動脈疾病","次級預防(secondary prevention)是針對已罹病的病人給予治療,以防止疾病再次發生甚至導致死亡,例如給予抗雌激素以降低早期乳癌手術後復發","初級預防(primary prevention)是針對已出現的疾病危險因子給予介入,以防止疾病發生,例如控制血壓以降低中風發生","根本預防(primordial prevention)是以根本性的方式防止疾病危險因子出現,例如減少燃煤發電以降低空氣污染,進而降低肺癌發生"], ans: 0 },
+      { q: "下列病人何者最可能是困難氣道?",
+        opts: ["Mallampati 氣道分級第一級的學齡期孩童","張口四指幅且甲頦距離超過三指幅的老年人","BMI 24 kg/m² 的男性","過去病史有類風濕性關節炎的女性"], ans: 3 },
+      { q: "有關嬰兒和大人呼吸道的差異,下列敘述何者<b>錯誤</b>?",
+        opts: ["嬰兒的會厭形狀呈現 omega 型且較軟,成人是 U 型且較硬","嬰兒的喉嚨位置相對於成人較高","嬰兒的舌頭相對比較大,容易阻塞氣道","成人呼吸道最窄的地方為 cricoid ring,嬰兒呼吸道最窄的部份在聲帶"], ans: 3 },
+      { q: "有關術前心血管風險評估,下列敘述何者正確?",
+        opts: ["針對低風險手術,建議無症狀的病人常規執行 12 導程心電圖","年齡超過 70 歲病人術前常規接受心臟超音波檢查","對心血管置放過支架病人,應了解置放時間、種類、位置及適應症","術前若服用 Aspirin 會增加術中出血風險,建議停用 3~4 天"], ans: 2 },
+      { q: "裝有心臟節律器(pacemaker)的病人預計接受常規手術,下列處置何者<b>錯誤</b>?",
+        opts: ["術前評估應了解當初裝節律器的適應症、廠牌、目前功能以及電池壽命","需聯絡專家來確定術中 pacemaker 可以持續的作用與監測它的作用","請外科醫師使用雙極電燒(bipolar electrosurgical unit)","術中皆應放置磁鐵在 pacemaker 上面,使它改變成固定速率 pacing 的模式"], ans: 3 },
+      { q: "50 歲女性,有高血壓和糖尿病史,每日規則服藥沒有影響日常功能,此次因腿部多顆脂肪瘤預行切除術,有關其術前評估,下列敘述何者正確?",
+        opts: ["ASA 體位分級為第二級","可輕易爬兩層樓梯,術中一定不會有任何心肺功能不足的問題","日常規律服用 beta-blocker 控制血壓,但在手術當日應停止服用","若是在術前心電圖發現第一度房室阻斷(1° AV block),則應延後手術"], ans: 0 },
+      { q: "65 歲病人,每天抽 2 包菸持續 40 年,因患有慢性阻塞性肺病(COPD)有長期使用吸入性支氣管擴張劑控制病情,此次預做全身麻醉切除膽囊,下列敘述何者<b>錯誤</b>?",
+        opts: ["吸菸病人手術後容易會有痰液黏稠、肺泡部分塌陷、併發肺炎等風險","請病人戒菸 24 小時即可改善黏液纖毛運動、促進細小氣道功能且減少痰液、分泌物產生","手術前吸入性支氣管擴張劑仍應繼續使用","術前肺功能測驗(pulmonary function test, PFT)可以提供較客觀的病人肺功能依據"], ans: 1 },
+      { q: "運動功能級數代謝當量(metabolic equivalents, METs)可以簡易客觀評估病人的心肺功能,假使病人平日可早起晨泳,每週步行打高爾夫球,試問其運動功能級數約為多少代謝當量?",
+        opts: [">4","3","<2","無法評估"], ans: 0 },
+      { q: "80 歲病人預接受常規泌尿道手術,當其術前心電圖呈現下列何種情況時,建議先延遲手術?",
+        opts: ["第三度房室阻斷(3° AV block)","舊的心肌缺血證據(明顯 Q 波)","竇性心搏過緩,心律 55 下,血壓 135/82 mmHg","心電圖偶爾出現心室早期收縮(ventricular premature complex, VPC)"], ans: 0 },
+      { q: "有關有氣喘病史的病人,其術前評估與術中麻醉照護,下列敘述何者正確?",
+        opts: ["其病因是下呼吸道阻塞,因此聽診呼吸音出現 stridor","肺功能檢查可提供氣流阻塞的證據,一秒內費力呼氣容積(FEV₁)數值會增加","全身麻醉應盡量避免插管,改用喉頭面罩(LMA)並在術中使用 desflurane 做維持","當手術前後期間發生呼吸併發症時,可使用短效氣管擴張劑取代長效型藥物"], ans: 3 },
+      { q: "一位在婦產科診所生產併發產後大出血的產婦送至醫學中心開刀房,試問麻醉專科護理師於麻醉專科醫師監督下可以執行哪項業務?",
+        opts: ["中央靜脈導管置放","脊椎穿刺","週邊動脈導管置放","硬脊膜外導管置放"], ans: 2 },
+      { q: "下列何種用藥除非有必要,否則應於全身麻醉當天停用?",
+        opts: ["口服降血糖藥","類固醇","氣喘用藥","甲狀腺用藥"], ans: 0 },
+      { q: "下列何者為低血鈣症(hypocalcemia)常見的病因?",
+        opts: ["hypoparathyroidism","biliary colic","chronic immobilization","Paget's disease"], ans: 0 },
+      { q: "有關 Cushing's syndrome 的臨床特徵,下列敘述何者正確?",
+        opts: ["常有低血鈉","常有高血壓","常有高血鉀","常有低血糖"], ans: 1 },
+      { q: "有關嗜鉻細胞瘤,下列敘述何者正確?",
+        opts: ["常因 catecholamine 釋放不足而引起症狀","需評估是否有擴張性或肥厚性心肌病變","血容量經常過高","不需監控血糖變化"], ans: 1 },
+      { q: "針對末期肝病(end-stage liver disease, ESLD)病人的身體評估敘述,下列敘述何者<b>錯誤</b>?",
+        opts: ["血管可能出現解剖性分流,如:蜘蛛痣","腹水引起明顯腹脹,可能引起肺膨脹不全","血流堆積在肝血循上游的血管,如:食道靜脈曲張","白蛋白可能低於 2.5 g/dL,藥物敏感性也隨之降低"], ans: 3 },
+      { q: "肝硬化病人的 albumin: 2.7 g/dL,bilirubin: 2.9 mg/dL,大量腹水,無肝性腦病變,PT prolong 4.5 sec.,請問其 Child-Pugh score?",
+        opts: ["6 分,分級 A","9 分,分級 B","11 分,分級 C","13 分,分級 D"], ans: 2 },
+      { q: "導致術後腎衰竭的危險因子<b>不包括</b>下列何者?",
+        opts: ["糖尿病","腎功能不全","BMI 指數 24","年齡大於 65 歲"], ans: 2 },
+      { q: "有關 diabetes mellitus 的評估,下列敘述何者<b>錯誤</b>?",
+        opts: ["常由血管病變造成長期合併症","是造成年輕人與中年人腎衰竭的常見原因","可能引發自律神經病變,加快胃排空","hemoglobin A1c 可做為血糖長期控制的評估指標"], ans: 2 },
+      { q: "35 歲女性病人,沒有動暈病史,有抽菸,預計手術中會使用鴉片類藥物止痛,依照 Apfel's score 評估,其術後噁心嘔吐(PONV)風險為何?",
+        opts: ["1 個危險因子,PONV 發生率為 21%","2 個危險因子,PONV 發生率為 39%","3 個危險因子,PONV 發生率為 61%","4 個危險因子,PONV 發生率為 79%"], ans: 0,
+        exp: "官方疑義試題答案公告說明:依據 Apfel's score 評估計算僅有女性一個危險因子,答案為 A。" },
+      { q: "有關尿崩症(diabetes insipidus, DI),下列敘述何者正確?",
+        opts: ["腦下垂體後葉分泌(antidiuretic hormone, ADH)過多","腎小管對 ADH 反應過強","腎原性 DI 給予 vasopressine 可減少尿量","每天尿量多於 2000 mL"], ans: 3 },
+      { q: "有關甲狀腺亢進,下列敘述何者<b>錯誤</b>?",
+        opts: ["血清促甲狀腺激素(TSH)升高","失眠與腹瀉","體重減輕","心輸出量過高"], ans: 0 },
+      { q: "下列何者是「專科護理師於醫師監督下執行醫療業務辦法」(民國 106 年 05 月 08 日修正)規範法條適用者可執行之醫療行為?",
+        opts: ["涉及侵入人體之管路處置","涉及侵入人體之檢查處置","預立特定醫療流程所需表單之代為開立","以上皆是"], ans: 3 },
+      { q: "下列各項手術的麻醉,何者最適合放置有彎角的經口氣管內管?",
+        opts: ["脊椎側彎矯正手術","大範圍腮腺切除手術","正顎手術","扁桃腺切除及腺樣體切除手術"], ans: 3 },
+      { q: "有關自律神經,下列敘述何者<b>錯誤</b>?",
+        opts: ["自律神經包含交感與副交感神經","麻醉中交感神經之反應局限於其相應之區域皮節(dermatome)","交感神經之節前神經纖維較短,節後神經纖維較長","交感神經之節前神經元之神經纖維尾端是以乙醯膽鹼(acetylcholine)為神經傳遞物質"], ans: 1 },
+      { q: "有關副交感神經,下列敘述何者<b>錯誤</b>?",
+        opts: ["發自於第 3、7、9、10 腦神經及脊髓薦椎(sacral)段","不論節前或節後神經纖維均以乙醯膽鹼(acetylcholine)為神經傳遞物質","副交感神經在目標器官中之乙醯膽鹼(acetylcholine)受器是菸鹼性(nicotinic)受器","突觸內的乙醯膽鹼(acetylcholine)會被血液中之膽鹼酶(cholinesterase)水解"], ans: 2 },
+      { q: "有關臨床麻醉前評估,下列敘述何者<b>錯誤</b>?",
+        opts: ["與病人與家屬面談,以了解病史、麻醉史及用藥史","醫院之固定標準套餐檢驗與檢查是很重要的,可以發現未知異常","適切的身體理學檢查","告知預定的麻醉計劃,並簽署麻醉同意書"], ans: 1 },
+      { q: "依據美國 ASA 體位分級,有重大或嚴重系統性疾病,限制正常活動,如:需進行腎臟透析之腎衰竭,是屬於下列哪一項?",
+        opts: ["ASA class 1","ASA class 2","ASA class 3","ASA class 4"], ans: 2 },
+      { q: "有關慢性疾病之術前處置,下列敘述何者<b>錯誤</b>?",
+        opts: ["對於洗腎之病人,應避免手術前 24 小時內進行血液透析","慢性高血鉀病人,若血鉀濃度小於 6 mEq/dL,是不需要特別處理","長期血糖控制不良的病人,手術風險可能增加","控制血糖的目標是預防空腹時低血糖,血糖過高及酮酸血症"], ans: 0 },
+      { q: "有關常規手術禁食(NPO)指引,下列敘述何者<b>錯誤</b>?",
+        opts: ["成人吃完肉多多火鍋,NPO 需達 8 小時以上","嬰兒喝完嬰兒配方奶又喝母奶,NPO 需達 6 小時以上","嬰兒只喝嬰兒配方奶,NPO 需達 4 小時以上","成人吃土司,NPO 需達 6 小時以上"], ans: 2 },
+      { q: "有關雷射手術,下列敘述何者<b>錯誤</b>?",
+        opts: ["雷射能量產生的煙及粒子沒有疾病傳染的風險","雷射能量可能有傷及視網膜的風險","雷射效果取決於使用的雷射光源的物理特性","雷射光具穿透性,參與手術人員都要戴上護目鏡"], ans: 0 },
+      { q: "口腔外科病人將進行拔牙手術,因長期嚼食檳榔,經評估上下門齒間距離 2 公分,氣道處理方式決定以清醒(awake)氣管內插管,下列敘述何者<b>錯誤</b>?",
+        opts: ["可靜脈給予 glycopyrrolate 0.2 mg 來降低口水分泌","相較於經口腔,經鼻光纖氣管插管較常引發嘔吐反射","選擇經鼻插管發生出血的風險較高","可使用表面局部麻醉劑 lidocaine"], ans: 1 },
+      { q: "長期臥床老年人接受清創手術,下列哪種肌肉鬆弛劑應<b>避免</b>使用?",
+        opts: ["rocuronium","succinylcholine","cisatracurium","sevoflurane"], ans: 1 },
+      { q: "70 歲病人進行全髖關節置換(total hip replacement, THR)手術,術中使用骨水泥(methylmethacrylate cement, MMC)來固定人造關節,過程中可能會出現哪些心肺相關副作用?<br>①支氣管擴張　②低血壓　③低血氧　④心血管塌陷",
+        opts: ["①②④","①②③","①③④","②③④"], ans: 3 },
+      { q: "口腔外科手術中,用鋼絲進行頜間固定的手術,為減少術中出血量影響手術視野,常會使用低壓麻醉技巧,在進行控制性低壓麻醉時,平均動脈壓應維持在多少?",
+        opts: ["40~50 mmHg","20~30 mmHg","80~90 mmHg","60~70 mmHg"], ans: 3 },
+      { q: "3 歲兒童,最近有發生上呼吸道感染(URI),此次因中耳炎入院準備接受手術,下列之處置陳述,何者<b>錯誤</b>?",
+        opts: ["術前需詢問父母,病童是否現存 URI","術前應檢查病童是否有鼻塞、咳嗽、哮喘及發燒","凡病童有 URI 者,無論大小手術即刻取消排程手術","若有下呼吸道感染症狀,則可能取消常規手術"], ans: 2 },
+      { q: "有關麻醉維持,下列敘述何者<b>錯誤</b>?",
+        opts: ["維持全麻的目的是使其失憶、鎮痛、肌肉鬆弛和控制因傷害性刺激所誘發的交感神經反應","在全麻術中發生病人肌肉很緊不好開刀,可以使用高濃度如 2 個 MAC 的揮發性麻藥來達到肌肉鬆弛效果","揮發性麻藥有效力強的優勢,劑量濃度容易調整,也可以有效地降低因為傷害性刺激所誘發的過度交感神經反應","和吸入性麻醉藥相比較,靜脈注射麻醉劑需透過可靠的血清濃度輸注模式來給藥"], ans: 1 },
+    ]
+  },
+  {
+    id: "exam-111-advanced",
+    year: 111,
+    subject: "進階專科護理",
+    title: "111 年 · 進階專科護理",
+    sub: "衛生福利部麻醉科專科護理師甄審【筆試甄審】;單選 80 題,答案依官方公告標準答案。第 22、30 題附原題心電圖。",
+    questions: [
+      { q: "關於低血鈉的鑑別診斷與評估,下列何者<b>錯誤</b>?",
+        opts: ["須先測血中滲透壓(plasma osmolality),排除假性低血鈉","每上升血糖 100 mg/dL,血鈉會下降 1.6~2.4 mEq/L","低體容性低血鈉(hypovolemic hyponatremia)常見於心衰竭和肝硬化病人","24 小時內矯正低血鈉,可能會造成橋腦中央髓鞘溶解症(central pontine demyelination)"], ans: 2 },
+      { q: "病人的動脈血氣體分析為 pH:7.32,PaCO₂:34 mmHg,PaO₂:96 mmHg,HCO₃⁻:16 mmol/L。其他抽血報告 albumin:4.2 g/dL、Na⁺:142 mmol/L、K⁺:4.0 mmol/L、Cl⁻:115 mmol/L,下列敘述何者正確?",
+        opts: ["屬於代謝性酸中毒,高陰離子間隙(high anion gap)","屬於代謝性酸中毒,正常陰離子間隙(normal anion gap)","屬於代謝性鹼中毒,高陰離子間隙(high anion gap)","屬於代謝性鹼中毒,正常陰離子間隙(normal anion gap)"], ans: 1 },
+      { q: "關於嗎啡類藥物的敘述,下列何者<b>錯誤</b>?",
+        opts: ["臨床上使用可能有噁心嘔吐、鎮靜、呼吸抑制及瞳孔變小等副作用","採取長時間連續輸注 fentanyl,會出現藥物代謝速率變慢的情況","肥胖病人劑量計算,採用總體重比淨體重(lean body mass)合適","合併 NSAIDs 或其他作用機轉止痛藥,能提升止痛效果及安全性"], ans: 2 },
+      { q: "關於 NSAIDs 的敘述,下列何者正確?",
+        opts: ["傳統 NSAIDs 主要抑制 COX-1,抑制 prostaglandins 的產生,達到止痛的效果","使用 celecoxib,對胃黏膜的保護性較好,可以減少胃腸道出血的副作用","長期使用 celecoxib 可以降低心肌梗塞或其他心血管併發症的風險","在癌症疼痛階段性治療中,可取代嚴重疼痛時強效高劑量嗎啡類藥物止痛的角色"], ans: 1 },
+      { q: "創傷病人氣管內管插管的適應症,下列何者<b>錯誤</b>?",
+        opts: ["頸部血腫併口咽道出血","嚴重顏面骨折","純氧治療下仍氧合不足","腰椎骨折損傷合併下肢無力"], ans: 3 },
+      { q: "下列何種細菌導致的管路相關性感染,在不移除管路而僅以藥物治療的成功率最高?",
+        opts: ["金黃色葡萄球菌(staphylococcus aureus)","綠膿桿菌(pseudomonas aeruginosa)","寡食單胞菌(stenotrophomonas)","凝固酶陰性葡萄球菌(coagulase-negative staphylococci, CoNS)"], ans: 3 },
+      { q: "下列何種退燒藥不會掩蓋發炎的徵象,不會損害血小板的功能,也和雷氏症候群無關,是較優先的選擇?",
+        opts: ["Aspirin","Diclofenac","Betamethasone","Acetaminophen"], ans: 3 },
+      { q: "病房醫療人員出現噁心嘔吐及群聚腹瀉症候群的情形,且糞便細菌培養均為陰性,下列何者為最有可能的病原體?",
+        opts: ["諾羅病毒(norovirus)","輪狀病毒(rotavirus)","大腸桿菌(E. coli)","沙門氏菌(salmonella)"], ans: 0 },
+      { q: "下列何者為梅毒(syphilis)最常見的傳染途徑?",
+        opts: ["性接觸感染","子宮內感染","輸血","器官移植"], ans: 0 },
+      { q: "懷孕女性應避免食用軟起司,且不要重覆加熱即食食品,主要是為避免何種細菌感染?",
+        opts: ["大腸桿菌(E. coli)","A 型鏈球菌(group A streptococcus)","B 型鏈球菌(group B streptococcus)","李斯特菌(Listeria)"], ans: 3 },
+      { q: "在臺灣發生腦膜炎雙球菌群聚感染(meningococcal infections),會以哪一型別的可能性最大?",
+        opts: ["A 型","B 型","C 型","W135 型"], ans: 1 },
+      { q: "肝癌末期病人目前每四小時注射嗎啡針劑進行疼痛控制,但病人仍頻繁感覺疼痛,且有嚴重便秘及腹脹,不想進食,下列安寧緩和療護措施,何者最為適當?",
+        opts: ["優先放置肛管,以緩解病人腹脹的症狀","優先增加軟便藥物,以減少嗎啡造成的副作用","優先增加嗎啡劑量,以緩解疼痛感受","優先考慮改用 NSAIDs,以避免嗎啡成癮的可能"], ans: 2 },
+      { q: "下列哪一項<b>不是</b>臨終瀕死階段常出現的臨床症狀?",
+        opts: ["腸蠕動增加、滲便","呼吸不規則、費力","嘴巴張開無法閉合","皮膚濕冷、肢體發紺"], ans: 0 },
+      { q: "當末期病人出現瀕死前的嘎嘎聲(death rattle)時,下列處置何者<b>錯誤</b>?",
+        opts: ["抬高床頭,協助病人呼吸","增加抽痰頻率,減少呼吸道分泌物","向家屬說明病人已進入瀕死階段,請家屬進行死亡準備","使用抗膽鹼藥物可以減少呼吸道分泌物及雜音"], ans: 1 },
+      { q: "有高血壓及高血脂病史病人,清晨突然感到後背劇痛,輻射至胸部及腹部,且冒冷汗,至急診時,病人意識清楚,心肺聽診正常,無腹部壓痛,四肢肌力正常,但無法測出左足背動脈搏動。下列哪一項檢查最能確立診斷?",
+        opts: ["胸腹部電腦斷層檢查","心電圖檢查","週邊血管超音波檢查","腹部超音波檢查"], ans: 0 },
+      { q: "病人急性脇腹部痛(flank pain),往下延伸至腹壁及生殖器,伴隨噁心、嘔吐,疼痛性質為痙攣痛,合併肉眼可見的血尿,下列何者為最可能的診斷?",
+        opts: ["腎臟腫瘤","輸尿管結石","前列腺肥大","腎病症候群"], ans: 1 },
+      { q: "Chvostek's sign 及 Trousseau's sign 最可能發生在下列何種手術之後?",
+        opts: ["副甲狀腺切除手術","甲狀腺切除手術","卵巢切除手術","胸腺切除手術"], ans: 0 },
+      { q: "高血壓病人平時服用利尿劑控制血壓,突然發生右側大腳趾及足踝關節紅腫劇痛,X 光檢查正常,抽血 WBC 9500/μL,CRP 及 ESR 皆有上升情形,下列何種檢查可以確立診斷?",
+        opts: ["週邊血管超音波檢查","血液培養","關節液檢查","尿酸檢驗"], ans: 2 },
+      { q: "多發性骨髓瘤的常見症狀,下列何者<b>錯誤</b>?",
+        opts: ["骨頭疼痛","貧血","反覆感染","淋巴結腫大"], ans: 3 },
+      { q: "肺癌病人因呼吸喘多日後至急診,血壓 85/70 mmHg,心跳 120 次/分,身體檢查發現頸靜脈怒張,呼吸音對稱、心音低沉、指甲發紺及四肢無水腫。下列何者為最可能的診斷?",
+        opts: ["肋膜積水","心臟衰竭","心包膜填塞","氣胸"], ans: 2 },
+      { q: "病人因腹痛、體重減輕及腹瀉就醫,主訴每天腹瀉至少 4~5 次、大便帶血且有裡急後重感,大腸鏡檢查發現從直腸到整段大腸黏膜皆呈現充血、易碎及發炎性變化,且有許多偽息肉,下列何者為最可能的診斷?",
+        opts: ["潰瘍性大腸炎","大腸激躁症","憩室炎","克隆氏症"], ans: 0 },
+      { q: "病人因呼吸急促合併胸悶被送到急診,意識清楚但血壓 72/38 mmHg,心電圖顯示如下圖,下列處置何者<b>錯誤</b>?",
+        opts: ["不優先考慮迷走神經刺激術(vagal maneuver)","adenosine 6 mg IV drip","同步整流 50 J(雙相)","整流時可考慮給予鎮靜劑"], ans: 1,
+        fig: { src: "data:image/webp;base64,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", cap: "原題附圖(衛生福利部 111 年度麻醉科專科護理師甄審試題)" } },
+      { q: "使用呼吸器可能造成的併發症及處置,下列何者<b>錯誤</b>?",
+        opts: ["呼吸道壓力過高可能造成 barotrauma","吐氣時間不足可能造成 auto-PEEP","呼吸器相關肺炎常發生於使用呼吸器 24 小時內","可用 H₂-blocker 或 PPI 預防 stress-induced peptic ulcer"], ans: 2 },
+      { q: "關於敗血性休克的處置,下列何者<b>錯誤</b>?",
+        opts: ["輸液復甦(fluid resuscitation)","及早給予合適的抗生素治療","維持平均動脈壓(MAP)大於 65 mmHg","維持中央靜脈血氧飽和濃度(ScvO₂)在 50~60%"], ans: 3 },
+      { q: "50 歲病人,體重 40 kg,進行硬脊膜外術後止痛,加藥後病人主訴口、舌頭麻和耳鳴,接著意識不清。下列何種劑量最有可能產生心臟毒性?",
+        opts: ["0.5% lidocaine 10 mL","0.5% bupivacaine 10 mL","0.125% levobupivacaine 10 mL","0.125% ropivacaine 10 mL"], ans: 1 },
+      { q: "40 歲病人接受手術,麻醉後生命跡象穩定,下刀前靜脈滴注 cefazolin,三分鐘後發生心跳加速、血壓下降、呼吸道壓力上升、理學檢查發現全身紅疹及眼睛紅腫。下列處置何者<b>不適當</b>?",
+        opts: ["diphenhydramine 可以緩解呼吸道壓力上升","給予 epinephrine intravenous 10~100 mcg","立刻停止 cefazolin 繼續滴注,管路內藥物移除","腎上腺素反應不佳時,應開始液體復甦"], ans: 0 },
+      { q: "40 歲男性發生車禍,疑似肝臟破裂出血,安排送血管攝影室止血,心跳 110 次/分、血壓 80/30 mmHg,到急診時吐出大量鮮血,預計插管全身麻醉並採用快速誘導(RSI),有關快速誘導藥物,下列何者最適當?",
+        opts: ["propofol 2 mg/kg","etomidate 0.2 mg/kg","cisatracurium 0.1 mg/kg","pancuronium 0.04 mg/kg"], ans: 1 },
+      { q: "病人接受甲狀腺手術,術後發生呼吸困難,預計重返開刀房手術,下列敘述何者正確?",
+        opts: ["手術影響上喉神經產生聲帶關閉","應額外準備清醒插管設備","不應打開手術縫線,避免傷口流血不止","氣管內管選擇跟上次手術相同即可"], ans: 1 },
+      { q: "有關多模止痛使用的藥物,下列敘述何者正確?",
+        opts: ["propacetamol 為非類固醇類止痛藥,由腎臟代謝,使用過量會有腎毒性","nalbuphine hydrochloride 對於開車或操作機器不會有影響","gabapentin 作用在 GABA receptor,可以減少成人神經痛","dexamethasone 可以減少術後噁心嘔吐"], ans: 3 },
+      { q: "燒傷病人接受清創手術,術中發現 ECG 如下圖,下列處置何者<b>不適當</b>?",
+        opts: ["靜脈注射胰島素使細胞外鉀離子進入細胞","給予 dantrolene 避免鈣離子釋出","靜脈注射 calcium gluconate 穩定膜電位","給予利尿劑,必要時立即洗腎"], ans: 1,
+        fig: { src: "data:image/webp;base64,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", cap: "原題附圖(衛生福利部 111 年度麻醉科專科護理師甄審試題)" } },
+      { q: "用於門診手術麻醉的鴉片類藥物,下列何者半衰期最短?",
+        opts: ["remifentanil","alfentanil","fentanyl","sufentanil"], ans: 0 },
+      { q: "有關術後加速康復(enhanced recovery after surgery, ERAS),下列敘述何者<b>錯誤</b>?",
+        opts: ["麻醉兩個小時之前可喝清澈的液體(clear liquid diet)","使用短效麻醉劑、維持正常體溫、預防術後噁心和嘔吐以及圍術期血容量正常","應避免常規使用鼻胃管,但如果使用,盡可能在手術結束時移除鼻胃管","腹橫肌平面阻斷(TAP block)可能造成腹部手術中滲液,不可術前施打"], ans: 3 },
+      { q: "有關二尖瓣逆流(mitral regurgitation),下列何種處置可改善心輸出量?",
+        opts: ["降低心跳和減少後負荷","降低心跳和增加後負荷","增加心跳和減少後負荷","增加心跳和增加後負荷"], ans: 2 },
+      { q: "有關剛接受心導管治療的病人,安排常規非心臟手術,下列敘述何者<b>錯誤</b>?",
+        opts: ["無支架植入氣球血管擴張術病人,應在氣球擴張術 14 天後施行","金屬裸冠狀動脈支架(bare metal coronary stents, BMS)的病人,應在放置 30 天後施行","塗藥型支架(drug eluting stents, DES)的病人,應在放置 7 天後施行","使用雙重抗血小板藥物治療者,施行低出血風險可直接壓迫止血的手術,可持續給予 Aspirin 治療"], ans: 2 },
+      { q: "有關血管內腹主動脈修復術(endovascular abdominal aortic repair, EVAR)之麻醉考量,下列敘述何者<b>錯誤</b>?",
+        opts: ["由於不需要動脈橫斷鉗閉,故術中血液動力學更穩定","建立大口徑周邊管路(16 或 14 號穿刺針),很少需要中心靜脈管路","外科醫師在展開支架時,需實行提升血壓,以防止支架移位","與半身麻醉相比,局部麻醉無法減輕缺血性疼痛,因此需要全身給予止痛劑"], ans: 2 },
+      { q: "有關麻醉對肺血管阻力的影響,下列敘述何者<b>錯誤</b>?",
+        opts: ["吸入一氧化氮可減少肺血管阻力","低二氧化碳血症會增加肺血管阻力","低體溫會增加肺血管阻力","低血氧會增加肺血管阻力"], ans: 1 },
+      { q: "60 歲病人預施行左側全肺切除術,下列何種氣管內管最為適當?",
+        opts: ["一般氣管內管","右管雙腔氣管內管","左管雙腔氣管內管","支氣管阻斷導管"], ans: 1 },
+      { q: "病人患有肥厚性心肌症(hypertrophic cardiomyopathy, HCM),預接受闌尾切除手術,下列處置何者會加重左心室出口通道阻塞?",
+        opts: ["增加後負荷","給予靜脈輸液","使用吸入性麻醉藥物","維持病人心跳大於 100 次/分"], ans: 3 },
+      { q: "有關小兒先天性心臟病手術,下列敘述何者<b>錯誤</b>?",
+        opts: ["可以用 sevoflurane、fentanyl 或 ketamine 做為誘導藥物","在誘導前一定要先建立動脈導管監測血壓","需注意肺血管阻力(pulmonary vascular resistance, PVR)和系統性血管阻力(systemic vascular resistance, SVR)的平衡","視情況有可能需要深低溫體循環(deep hypothermic circulatory arrest, DHCA)降溫至 18~20 ℃"], ans: 1 },
+      { q: "45 歲病人,BMI 40 kg/m²,頸圍 45 cm,患有高血壓,晚上睡覺會打鼾且白天醒來都很嗜睡,預接受腹腔鏡闌尾切除術。有關麻醉考量,下列敘述何者正確?",
+        opts: ["誘導前不需先給氧氣","全身止痛應優先區域止痛","病人較易遭遇困難面罩通氣或困難插管","benzodiazepines 和 opioids 不需要減量"], ans: 2 },
+      { q: "有關氣喘(asthma)病人之全身麻醉考量,下列敘述何者正確?",
+        opts: ["術中呼吸速率設定 12~16 次/分,使吸氣時間延長","全身麻醉使用喉頭面罩(LMA)較不刺激","麻醉誘導使用 thiopental 比 propofol 更為合適","止痛使用 morphine 比起 fentanyl 更為合適"], ans: 1 },
+      { q: "患有冠心症病人,欲維持氧的供需平衡,下列處置何者<b>錯誤</b>?",
+        opts: ["維持足夠的血紅色素濃度","使用 beta-blocker 避免心搏過速","可使用利尿劑降低心室前負荷","避免給予 nitrate 造成冠狀動脈收縮"], ans: 3 },
+      { q: "有關緊急情況的剖腹產麻醉處置,下列敘述何者正確?",
+        opts: ["如果採用脊髓麻醉,可由麻醉專科護理師執行","可考慮全身麻醉以達到快速進行手術的目的","採用脊髓麻醉需要提供第四頸椎以上的感覺阻斷高度","如果要使用鴉片類藥物,要在嬰兒產出前給予"], ans: 1 },
+      { q: "在全身麻醉的手術過程中清醒可能導致嚴重的心理後遺症,對於手術中清醒風險較高的病人,下列預防手術中清醒的方式何者正確?",
+        opts: ["使用笑氣及靜脈麻醉劑較少發生術中清醒","術前給予失憶的藥物,如:benzodiazepines","增加肌肉鬆弛劑有預防術中清醒的效果","提供至少 0.3 MAC 的吸入性麻醉劑"], ans: 1 },
+      { q: "殘餘的神經肌肉阻斷劑效果可能使病人在恢復室發生上呼吸道阻塞,下列藥物的使用或生理狀態何者<b>不會</b>造成非去極化神經肌肉阻斷效果延長?",
+        opts: ["使用 dantrolene","使用鈣離子阻斷劑","低血鎂","低體溫"], ans: 2 },
+      { q: "非類固醇類消炎藥(nonsteroidal anti-inflammatory drugs, NSAIDs)可以做為手術後的止痛藥物,但其作用機轉可能在某些病人產生嚴重副作用或併發症,下列病人的病史何者最適合使用 NSAIDs 做為術後止痛?",
+        opts: ["胃潰瘍","慢性腎病","有出血傾向","憂鬱症"], ans: 3 },
+      { q: "術後發抖(postoperative shivering)會導致耗氧量及二氧化碳生成量增加,不利於心肺儲備功能有限的病人,有關術後發抖,下列敘述何者正確?",
+        opts: ["只會發生在接受半身麻醉的病人","經常與大腦的異常放電有關","許多鴉片類藥物對消除發抖是有效的","nicardipine 對於消除術後發抖效果最佳"], ans: 2 },
+      { q: "接受麻醉後的病人在恢復室用修正過的 Aldrete 評分,病人受刺激沒有反應,無法照指令移動四肢,血壓與麻醉前相同,呼吸急促,不給氧氣的情況下 SpO₂ 為 93%,請問此病人的評分應為多少?",
+        opts: ["5","3","7","1"], ans: 0 },
+      { q: "術後噁心嘔吐(postoperative nausea and vomiting, PONV)為恢復室常見問題之一,下列何種藥物<b>不適合</b>用於治療 PONV?",
+        opts: ["droperidol","pancuronium","ondansetron","metoclopramide"], ans: 1 },
+      { q: "創傷病人因顱內出血預計接受緊急開顱手術,下列敘述何者正確?",
+        opts: ["若病人有低血壓、高體溫、低血氧、顱內高壓則暗示預後較差","為提供腦細胞足夠能量,應給予葡萄糖輸液維持高血糖","低體溫可降低腦部代謝,應盡量將體溫降至攝氏 32 度以下","過度換氣可降低顱內壓,目標是 PaCO₂:20~25 mmHg"], ans: 0 },
+      { q: "術後尿滯留(postoperative urinary retention, POUR)是當膀胱內容積超過 500~600 mL 還無法將尿解出時稱之,有關 POUR 的敘述,下列何者<b>錯誤</b>?",
+        opts: ["女性發生機會比男性高","較常發生在肛門直腸手術及關節置換手術","術中使用 anticholinergics 也可能導致 POUR","診斷可用超音波檢查而得知"], ans: 0 },
+      { q: "顱後窩腫瘤(posterior fossa tumor)採坐姿以進行腦部腫瘤切除手術,術中發生靜脈空氣栓塞(venous air embolism),下列敘述何者<b>錯誤</b>?",
+        opts: ["此時麻醉監測儀器其潮氣末端二氧化碳濃度(end-tidal CO₂ concentration)突然上升,胸前都卜勒超音波(precordial Doppler)出現磨輪樣雜音(mill-wheel)","當發生靜脈空氣栓塞,應立即通知外科醫師,可使用液體沖洗手術部位防止空氣再進入","可透過位置放置正確的中央靜脈導管抽吸空氣,並輕柔壓迫內頸靜脈","若發生低血壓,可將病人採取頭低腳高的仰臥姿勢並補充輸液及藥物支持"], ans: 0 },
+      { q: "全膝關節置換(total knee replacement, TKR)手術中經常使用止血帶(tourniquet)以減少手術部位出血,有關止血帶,下列敘述何者正確?",
+        opts: ["止血帶充氣壓力可調至 250 mmHg,即可防止所有病人手術部位出血的效果","止血帶放開後,會造成病人代謝性鹼中毒(metabolic alkalosis)","止血帶放開後,會產生體溫及潮氣末端二氧化碳濃度突然下降","止血帶充氣時間達 2 小時,應先將止血帶洩氣 15~20 分鐘後再次充氣"], ans: 3 },
+      { q: "有關麻醉藥物與眼內壓(intraocular pressure)的相關性,下列敘述何者正確?",
+        opts: ["吸入性麻醉藥物會使眼內壓上升","ketamine 是適合的眼科手術麻醉藥物","非去極化神經肌肉阻斷劑具降低眼內壓的作用","succinylcholine 注射後 1~4 分鐘內可降低眼內壓"], ans: 2 },
+      { q: "阻塞性睡眠呼吸中止症(obstructive sleep apnea, OSA)為上呼吸道手術病人麻醉前評估的重要項目之一,進行 STOP-Bang 問卷調查有助於 OSA 病人評估,下列哪個評估項目<b>不包含</b>在 STOP-Bang 問卷中?",
+        opts: ["接受高血脂治療","身體質量指數(BMI)大於 35","年齡大於 50 歲","男性"], ans: 0 },
+      { q: "因子宮肌瘤使用達文西機器手臂執行子宮切除術,術中姿勢擺位照護,下列敘述何者<b>錯誤</b>?",
+        opts: ["頭部放置矽膠頭圈,並保持頸椎平直","術中常採用頭高腳低的姿勢,容易發生下肢腔室症候群","生理監測導線及點滴管路,應確認長度適當,並避免病人皮膚壓迫損傷","在甦醒拔管前,可能因姿勢導致喉頭水腫情形,可先執行氣囊漏氣測試"], ans: 1 },
+      { q: "病人因發生車禍,經頭部電腦斷層顯示顱內出血需緊急進行手術,手術中外科醫師表示病人腦部腫脹,有關麻醉照護處置,下列何者正確?",
+        opts: ["給予類固醇","減少病人呼吸次數","增加吸入性麻醉藥物濃度","採取頭高腳低的姿勢"], ans: 3 },
+      { q: "髖關節骨折常發生於老年人,選擇半身麻醉(spinal anesthesia)下執行髖關節骨折手術的好處<b>不包含</b>下列何者?",
+        opts: ["避免插管及過程中使用的藥物","減少手術中使用全身性藥物的劑量","降低術後死亡率","減少血栓形成"], ans: 2 },
+      { q: "有關坐姿(sitting position)手術麻醉照護,下列敘述何者正確?",
+        opts: ["雙手自然垂直下放,以減少肩膀肌肉與上肢血管神經拉扯","雙腳需平行伸直維持平衡,避免造成坐骨神經損傷","下頷骨與胸骨的距離保持 1 指寬,以免影響呼吸道","需要注意手肘尺神經無壓力施壓,以免造成尺神經損傷"], ans: 3 },
+      { q: "有關耳部手術麻醉照護處置,下列敘述何者<b>錯誤</b>?",
+        opts: ["epinephrine 常用於耳部顯微手術,以減少出血增加手術視野","N₂O 可降低中耳的耳壓,故建議於耳部手術麻醉中使用","耳部手術,可使用神經肌肉監測器確認周邊神經的 train-of-four 反應","中耳手術麻醉後常見術後噁心嘔吐,可預防性給予止吐藥"], ans: 1 },
+      { q: "有關泌尿外科手術麻醉,下列敘述何者正確?",
+        opts: ["膀胱鏡及輸尿管鏡使用的無菌水沖洗溶液,被身體吸收後不易引起溶血","經尿道前列腺切除術(TURP),其術中較低的周邊靜脈壓可減少沖洗液被吸收","截石體位(lithotomy)是膀胱鏡及輸尿管鏡最常見擺位,因架腳可短暫增加心輸出量及肺部順應性","經尿道膀胱腫瘤切除術使用神經肌肉阻斷劑,是為了避免因刺激閉孔神經而導致的腿部不自主運動"], ans: 3 },
+      { q: "有關經尿道前列腺切除術(TURP)症候群,下列敘述何者<b>錯誤</b>?",
+        opts: ["身體吸收大量沖洗液產生的症狀,只在術中早期出現","中樞神經症狀包含意識模糊、躁動、噁心或視力障礙","心血管系統的症狀包括心律不整、肺水腫等","處理原則為儘快中止手術,限制體液輸入和使用利尿劑"], ans: 0 },
+      { q: "病人因闌尾發炎施行腹腔鏡闌尾切除術,下列敘述何者正確?",
+        opts: ["為使手術視野顯露,適用於頭高腳低的姿勢","手術姿勢會使顱內壓(ICP)及中央靜脈壓(CVP)下降","CO₂ 注入腹腔時,適宜的腹內壓應維持 12~15 mmHg 範圍","氣腹(pneumoperitoneum)時,功能性肺餘容積(functional residual capacity, FRC)會上升"], ans: 2 },
+      { q: "有關達文西機器手臂輔助腹部手術,術中氣腹的生理變化,下列敘述何者正確?",
+        opts: ["肺順應性上升","胃腸黏膜血流量不受影響","灌入二氧化碳導致呼吸道壓力下降","腹內壓上升至 25 mmHg 時,全身血管阻力上升"], ans: 3 },
+      { q: "20 歲病人因巧克力囊腫,預行腹腔鏡手術而至麻前門診評估,自述先前做無痛腸胃鏡檢查後有噁心嘔吐情形,但否認其他系統性疾病及抽煙喝酒過敏史。有關麻醉計畫,下列敘述何者正確?",
+        opts: ["病人為 postoperative nausea and vomiting(PONV)低風險病人","針對 PONV 問題,在執行全身麻醉時不需要預防性用藥處理","serotonin 拮抗劑不只能用於 PONV 預防,對於症狀緩解也有效果","droperidol 是預防和治療 PONV 的第一線用藥,只要給藥後執行 complete ECG 即可"], ans: 2 },
+      { q: "有關慢性酒精性肝硬化病人的麻醉照護,下列敘述何者<b>錯誤</b>?",
+        opts: ["心血管系統為低心輸出量、全身阻力上升的循環狀態","大多採全身麻醉,但凝血功能正常時,也可謹慎考慮區域麻醉","無手術刺激下,吸入性麻醉藥及區域麻醉皆使肝血流量下降","腹水或肝性腦病變病人,有較高的誤吸風險,應考慮快速誘導插管"], ans: 0 },
+      { q: "有關產科麻醉,下列敘述何者正確?",
+        opts: ["前置胎盤為預防急性出血,需至少一條大管徑靜脈導管且一定要剖腹生產","產婦吸入高濃度氧氣會增加胎兒視網膜病變的風險","孕婦接受非產科常規手術,應該延至產後 6 週再進行,介入性手術治療則在第二孕期","懷孕後第 90~120 天是胎兒器官生成最重要的時期,麻醉藥除 cocaine 外,沒有證據會導致畸胎的風險"], ans: 2 },
+      { q: "有關術後認知功能障礙(postoperative cognitive dysfunction, POCD)的危險因子,<b>不包含</b>下列何者?",
+        opts: ["全身麻醉","高齡","術前有腦血管意外(CVA)病史","低教育程度"], ans: 0 },
+      { q: "4 歲孩童,體重 15 kg,預計接受插管全身麻醉手術,下列何種氣管內管尺寸最適當?",
+        opts: ["3.0 mm","4.0 mm","5.0 mm","6.0 mm"], ans: 2 },
+      { q: "有關 COVID-19 的描述、臨床徵狀、重症照護,下列敘述何者<b>錯誤</b>?",
+        opts: ["發病前不具傳染性,無症狀感染者也不會散播傳染病源","致病原為 SARS-CoV-2,主要的傳播途徑為飛沫傳染或接觸傳染","臨床表現可出現發燒、呼吸道症狀、不明原因腹瀉或嗅覺、味覺異常","進展至呼吸窘迫症候群時,可採俯臥姿勢以改善氧氣飽合度"], ans: 0 },
+      { q: "有關肥胖病人接受麻醉的考量,下列敘述何者<b>錯誤</b>?",
+        opts: ["肺部順應性(compliance)下降,功能性肺餘容積(FRC)下降","低血氧和高碳酸血症,在肥胖病人中是常見的問題","肥胖病人併阻塞型睡眠中止症候群,術中輸注 dexmedetomidine 可以減少嗎啡的使用量","肥胖病人的藥物劑量,不需要根據除脂體重(lean body weight, LBW)來計算"], ans: 3 },
+      { q: "有關麻醉藥物與小兒麻醉,下列敘述何者<b>錯誤</b>?",
+        opts: ["succinylcholine 不建議用在小孩身上,除非是為了緊急狀況的呼吸道控制","congenital hiatal hernia 可使用高頻共振換氣(high frequency oscillatory ventilation, HFOV)促進肺部氣體交換","使用 succinylcholine 之後,可能心搏過緩甚至停止","使用 succinylcholine 可能造成低血鉀和牙關緊閉"], ans: 3 },
+      { q: "有關麻醉中的病人擺位(positioning),下列敘述何者<b>錯誤</b>?",
+        opts: ["俯臥擺位可能造成眼靜脈栓塞、中央眼動脈阻塞或眼角膜擦傷","平躺姿勢最容易維持血流動力學穩定","俯臥可改善急性呼吸窘迫的血氧含量","頭低腳高會增加顱內壓,但會降低中央靜脈壓(CVP)"], ans: 3 },
+      { q: "有關肝臟移植的再灌流生理變化,下列敘述何者<b>錯誤</b>?",
+        opts: ["高血鉀","代謝性酸中毒","高體溫","系統血管阻力下降"], ans: 2 },
+      { q: "為了降低老年人在手術期間的麻醉風險,有關藥物選擇,下列敘述何者正確?",
+        opts: ["當老年人在手術後發生顫抖(shivering)時,可使用 mepivacaine 來緩解","心血管用藥中要特別停用 beta-blocker,避免術中心跳過慢","隨著老化而導致腦實質逐漸萎縮,吸入性麻醉劑的需求量會隨年齡增加","應由病人照護醫師和外科醫師決定是否繼續服用血小板和抗凝血藥物"], ans: 3 },
+      { q: "有關老年人的呼吸道處置,下列敘述何者正確?",
+        opts: ["可能因沒有牙齒,面罩通氣比較容易","可能因沒有牙齒,使用喉頭鏡(laryngoscopy)插管比較容易","年齡愈大,咽喉反射(pharyngeal reflexes)愈明顯,發生肺部誤吸胃容物的機率愈高","不可以使用口咽或鼻咽通氣管(oral or nasopharyngeal airway)維持氣道暢通,避免造成口腔或鼻腔出血受傷"], ans: 1 },
+      { q: "有關老年人的麻醉藥物藥理學變化,下列敘述何者正確?",
+        opts: ["由於肝腎功能降低和體脂肪比例增加,麻醉藥物在體內清除時間延長","老化對藥物動力學和藥效學改變不大,大部分的麻醉藥物劑量不需調整","發生藥物不良反應的狀況會隨著年齡及使用藥物數量的增加而下降","因循環系統中的血清蛋白(albumin)濃度降低,使得藥物藥效降低"], ans: 0 },
+      { q: "有關老年人靜脈麻醉藥物的選擇,下列敘述何者正確?",
+        opts: ["remifentanil 藥效短又無活化的代謝物,但要小心呼吸抑制","dexmedetomidine 輸注時不會抑制呼吸,也不受其他安眠藥物影響","propofol 的好處是病人恢復快,對血液動力學影響小","barbiturates 有很好的止痛效果,適合用於老年病人"], ans: 0 },
+      { q: "80 歲病人因右髖關節骨折進行手術,有關麻醉相關照護,下列敘述何者正確?",
+        opts: ["病人常合併多重疾病,術中應提高警覺並即時處理突發狀況","目前研究證據指出半身麻醉優於全身麻醉","發生術後認知功能障礙(postoperative cognitive dysfunction, POCD),通常都是單一且容易逆轉的原因","若發現有急性心肌梗塞,則手術應延後 6 個月進行"], ans: 0 },
+      { q: "30 歲病人因病態性肥胖及長期高血壓病史,預計進行達文西機器手臂減重手術,下列敘述何者正確?",
+        opts: ["因手術出血量並不多,只需準備一般管徑的靜脈輸液及壓脈帶量測血壓即可","身體質量指數(BMI)並不影響功能性肺餘容積(FRC),麻醉誘導時不需要特別注意","一般術後會降低其它共病或改善症狀,如:高血壓、糖尿病或阻塞性睡眠呼吸中止症","給予 propofol 當作麻醉誘導藥物時,劑量應以實際體重(total body weight, TBW)來計算"], ans: 2 },
+    ]
   }
 ];
 
@@ -3188,11 +3817,19 @@ let activeSpec = HOME_CHIP;   /* 開啟時停在首頁(更新紀錄) */
 let activeId = null;
 
 const NORA_SPEC = "外區麻醉";      /* 手術室外麻醉;內容建置中,先開好科別 chip */
+const CALC_CHIP = "麻醉計算機";
+const DRUG_CHIP = "藥物泡法";
 const EXAM_CHIP = "歷屆考古題複習";
 const QUIZ_CHIP = "AI 練習題";
+/* 一台手術可用選填 alsoSpec:["科別"] 同時掛在其他科別 chip 下,不必複製卡片 */
+function inSpec(s, sp){ return s.specialty===sp || (s.alsoSpec||[]).includes(sp); }
 const specialties = [
-  HOME_CHIP, "全部",
-  ...[...new Set([...SURGERIES.map(s=>s.specialty), NORA_SPEC])],
+  HOME_CHIP, CALC_CHIP, DRUG_CHIP, "全部",
+  ...[...new Set([
+    ...SURGERIES.map(s=>s.specialty),
+    ...SURGERIES.flatMap(s=>s.alsoSpec||[]),
+    NORA_SPEC
+  ])],
   EXAM_CHIP, QUIZ_CHIP
 ];
 
@@ -3573,10 +4210,17 @@ async function initNotes(){
   if(activeId != null) showDetail(activeId);
 }
 
+function specHasNew(sp){
+  if(sp===HOME_CHIP || sp==="全部" || sp===EXAM_CHIP || sp===QUIZ_CHIP
+     || sp===CALC_CHIP || sp===DRUG_CHIP) return false;
+  return SURGERIES.some(s => inSpec(s,sp) && isNewItem(s));
+}
+
 function renderChips(){
   el("chips").innerHTML = specialties.map(sp =>{
     const cls = (sp===EXAM_CHIP || sp===QUIZ_CHIP) ? "chip study" : "chip";
-    return `<button class="${cls}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}</button>`;
+    const isN = specHasNew(sp);
+    return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
   }).join("");
   el("chips").querySelectorAll(".chip").forEach(c=>{
     c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; renderChips(); renderList(); };
@@ -3787,7 +4431,7 @@ function updatesHtml(){
 }
 
 /* NEW 標示:術式物件加上選填欄位 updated:"YYYY-MM-DD",該日起 NEW_DAYS 天內顯示 */
-const NEW_DAYS = 30;
+const NEW_DAYS = 7;
 function isNewItem(s){
   if(!s || !s.updated) return false;
   const t = Date.parse(s.updated + "T00:00:00");
@@ -3795,9 +4439,470 @@ function isNewItem(s){
   return (Date.now() - t) < NEW_DAYS * 86400000;
 }
 
+/* ============================================================
+   麻醉計算機
+   ------------------------------------------------------------
+   IBW(Devine)、PBW(ARDSNet)、AdjBW、LBW(Janmahasatian)、
+   BMI、BSA(Mosteller);另附各類藥物該用哪個體重的對照表。
+   ============================================================ */
+const CALC_STATE = { sex:"M", ht:170, wt:70 };
+const FLUID_STATE = { wt:70, npo:8 };
+const EBV_STATE = { wt:70, grp:"75", hb0:13, hbT:8 };
+
+const EBV_GROUPS = [
+  { v:"95", t:"早產兒(95 mL/kg)" },
+  { v:"85", t:"足月新生兒(85 mL/kg)" },
+  { v:"80", t:"嬰兒 1 歲以下(80 mL/kg)" },
+  { v:"75", t:"兒童(75 mL/kg)" },
+  { v:"75m", t:"成年男性(75 mL/kg)" },
+  { v:"65", t:"成年女性(65 mL/kg)" }
+];
+
+/* 4-2-1 法則:前 10 kg 每公斤 4 mL/hr、次 10 kg 每公斤 2 mL/hr、超過 20 kg 每公斤 1 mL/hr */
+function fluidCalc(wt, npo){
+  if(!(wt>0)) return null;
+  const mh = wt<=10 ? wt*4 : (wt<=20 ? 40 + (wt-10)*2 : 60 + (wt-20));
+  const hrs = (npo>0 && isFinite(npo)) ? npo : 0;
+  const def = mh * hrs;
+  return { mh, def, h1: def/2 + mh, h23: def/4 + mh };
+}
+
+/* EBV = 體重 × 族群係數;ABL = EBV ×(目前 Hb − 可接受最低 Hb)÷ 目前 Hb */
+function ebvCalc(wt, perKg, hb0, hbT){
+  if(!(wt>0) || !(perKg>0)) return null;
+  const ebv = wt*perKg;
+  const ok = hb0>0 && hbT>0 && hb0>hbT;
+  const abl = ok ? ebv*(hb0-hbT)/hb0 : null;
+  return { ebv, abl, pct: abl==null ? null : abl/ebv*100, l15: ebv*0.15, l30: ebv*0.30 };
+}
+
+function calcAll(sex, ht, wt){
+  if(!(ht>0) || !(wt>0)) return null;
+  const m = ht/100;
+  const bmi = wt/(m*m);
+  const inchOver60 = Math.max(0, (ht/2.54) - 60);
+  const ibw = (sex==="M" ? 50 : 45.5) + 2.3*inchOver60;
+  const pbw = (sex==="M" ? 50 : 45.5) + 0.91*(ht - 152.4);
+  const adj = ibw + 0.4*(wt - ibw);
+  const lbw = sex==="M"
+    ? (9270*wt)/(6680 + 216*bmi)
+    : (9270*wt)/(8780 + 244*bmi);
+  const bsa = Math.sqrt(ht*wt/3600);
+  return { bmi, ibw, pbw, adj:Math.max(adj, ibw), lbw, bsa };
+}
+
+function bmiBand(b){
+  if(b < 18.5) return "過輕";
+  if(b < 24)   return "正常範圍";
+  if(b < 27)   return "過重";
+  if(b < 30)   return "輕度肥胖";
+  if(b < 35)   return "中度肥胖";
+  return "重度肥胖";
+}
+
+const DOSE_WEIGHT = [
+  { d:"Propofol(誘導)",            w:"LBW",  cls:"s", n:"用實際體重會過量,容易低血壓" },
+  { d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  n:"清除率隨體重上升;仍需依反應滴定" },
+  { d:"Thiopental(誘導)",          w:"LBW",  cls:"s", n:"維持追加改用實際體重" },
+  { d:"Fentanyl / Sufentanil",       w:"LBW",  cls:"s", n:"依實際體重給會明顯過量" },
+  { d:"Remifentanil",                w:"LBW",  cls:"s", n:"TCI 亦以 LBW 或 IBW 設定" },
+  { d:"Morphine",                    w:"IBW",  cls:"b", n:"肥胖者呼吸抑制風險高,小量滴定" },
+  { d:"Rocuronium / Vecuronium",     w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長" },
+  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同上" },
+  { d:"Succinylcholine",             w:"TBW",  cls:"",  n:"血漿膽鹼酯酶活性隨體重增加" },
+  { d:"Sugammadex",                  w:"TBW",  cls:"",  n:"依仿單以實際體重計算" },
+  { d:"Neostigmine",                 w:"TBW",  cls:"",  n:"有單次最大劑量上限" },
+  { d:"Dexmedetomidine",             w:"AdjBW",cls:"",  n:"" },
+  { d:"Midazolam(單次)",           w:"TBW",  cls:"",  n:"重複給藥改用 IBW,脂溶性高易蓄積" },
+  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限" },
+  { d:"局部麻醉劑最大安全劑量",       w:"LBW",  cls:"s", n:"以實際體重換算會超過安全上限" },
+  { d:"預防性抗生素",                 w:"TBW",  cls:"",  n:"體重大者需提高劑量" },
+  { d:"低分子量肝素(預防劑量)",     w:"TBW",  cls:"",  n:"依各藥品分級建議" },
+  { d:"潮氣容積設定",                 w:"PBW",  cls:"b", n:"6–8 mL/kg PBW,與實際體重無關" }
+];
+
+function calcHtml(){
+  const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
+  const f = (x,n=1) => x==null ? "—" : x.toFixed(n);
+  const newTag = isNewItem({ updated:"2026-08-04" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  const fr = fluidCalc(FLUID_STATE.wt, FLUID_STATE.npo);
+  const ebvPerKg = parseFloat(EBV_STATE.grp);
+  const br = ebvCalc(EBV_STATE.wt, ebvPerKg, EBV_STATE.hb0, EBV_STATE.hbT);
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">麻醉計算機</div>
+      <div class="tool-sub">體重過重的病人,不同藥物要用不同的體重去算。輸入身高體重後對照下方表格取用;另附 4-2-1 維持輸液與失血預估。結果僅供輔助,實際劑量與輸液仍需依病人狀況與臨床反應調整。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>基本資料</h3>
+      <div class="calc-form">
+        <div class="calc-f">
+          <label for="cSex">生理性別</label>
+          <select id="cSex">
+            <option value="M"${CALC_STATE.sex==="M"?" selected":""}>男</option>
+            <option value="F"${CALC_STATE.sex==="F"?" selected":""}>女</option>
+          </select>
+        </div>
+        <div class="calc-f">
+          <label for="cHt">身高(cm)</label>
+          <input id="cHt" type="number" inputmode="decimal" min="100" max="230" step="0.5" value="${CALC_STATE.ht}">
+        </div>
+        <div class="calc-f">
+          <label for="cWt">體重(kg)</label>
+          <input id="cWt" type="number" inputmode="decimal" min="20" max="300" step="0.5" value="${CALC_STATE.wt}">
+        </div>
+      </div>
+
+      <div class="calc-out" id="cOut">
+        <div class="calc-cell hi">
+          <div class="k">BMI</div>
+          <div class="v">${f(r&&r.bmi)}<span class="u">kg/m²</span></div>
+          <div class="h">${r?bmiBand(r.bmi):"—"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">IBW 理想體重</div>
+          <div class="v">${f(r&&r.ibw)}<span class="u">kg</span></div>
+          <div class="h">Devine 公式</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">LBW 淨體重</div>
+          <div class="v">${f(r&&r.lbw)}<span class="u">kg</span></div>
+          <div class="h">Janmahasatian 公式</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">AdjBW 校正體重</div>
+          <div class="v">${f(r&&r.adj)}<span class="u">kg</span></div>
+          <div class="h">IBW + 0.4 ×(實際 − IBW)</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">PBW 預測體重</div>
+          <div class="v">${f(r&&r.pbw)}<span class="u">kg</span></div>
+          <div class="h">設潮氣容積用:${r?(r.pbw*6).toFixed(0)+"–"+(r.pbw*8).toFixed(0)+" mL":"—"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">BSA 體表面積</div>
+          <div class="v">${f(r&&r.bsa,2)}<span class="u">m²</span></div>
+          <div class="h">Mosteller 公式</div>
+        </div>
+      </div>
+      <div class="calc-note">BMI 分級採國民健康署成人標準(正常 18.5–24、過重 24–27、肥胖 ≥27)。校正體重取 IBW 與計算值的較大者。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3 class="th-new">4-2-1 法則(維持輸液)${newTag}</h3>
+      <div class="calc-form">
+        <div class="calc-f">
+          <label for="fWt">體重(kg)</label>
+          <input id="fWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${FLUID_STATE.wt}">
+        </div>
+        <div class="calc-f">
+          <label for="fNpo">禁食時數(hr)</label>
+          <input id="fNpo" type="number" inputmode="decimal" min="0" max="24" step="1" value="${FLUID_STATE.npo}">
+        </div>
+      </div>
+      <div class="calc-out" id="fOut">
+        <div class="calc-cell hi">
+          <div class="k">每小時維持量</div>
+          <div class="v">${fr?Math.round(fr.mh):"—"}<span class="u">mL/hr</span></div>
+          <div class="h">4-2-1 法則</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">禁食缺失量</div>
+          <div class="v">${fr?Math.round(fr.def):"—"}<span class="u">mL</span></div>
+          <div class="h">維持量 × 禁食時數</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">第 1 小時給</div>
+          <div class="v">${fr?Math.round(fr.h1):"—"}<span class="u">mL</span></div>
+          <div class="h">缺失量的一半 + 維持量</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">第 2、3 小時各給</div>
+          <div class="v">${fr?Math.round(fr.h23):"—"}<span class="u">mL</span></div>
+          <div class="h">缺失量的四分之一 + 維持量</div>
+        </div>
+      </div>
+      <div class="calc-note">維持量算法:前 10 kg 每公斤 4 mL/hr、第 11–20 kg 每公斤 2 mL/hr、超過 20 kg 每公斤 1 mL/hr。禁食缺失量的分次補法為傳統作法;現行禁食規範已放寬(清流質術前 2 小時、輕食 6 小時),多數病人實際缺失有限,<b>請依血壓、心跳、尿量與失血量調整,不必機械式補足</b>。失血與第三間隙流失另外計算。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3 class="th-new">失血預估(EBV 與可容許失血量)${newTag}</h3>
+      <div class="calc-form">
+        <div class="calc-f">
+          <label for="bWt">體重(kg)</label>
+          <input id="bWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${EBV_STATE.wt}">
+        </div>
+        <div class="calc-f">
+          <label for="bGrp">族群</label>
+          <select id="bGrp">
+            ${EBV_GROUPS.map(g=>`<option value="${g.v}"${EBV_STATE.grp===g.v?" selected":""}>${g.t}</option>`).join("")}
+          </select>
+        </div>
+        <div class="calc-f">
+          <label for="bHb0">目前 Hb(g/dL)</label>
+          <input id="bHb0" type="number" inputmode="decimal" min="3" max="22" step="0.1" value="${EBV_STATE.hb0}">
+        </div>
+        <div class="calc-f">
+          <label for="bHbT">可接受最低 Hb(g/dL)</label>
+          <input id="bHbT" type="number" inputmode="decimal" min="3" max="15" step="0.1" value="${EBV_STATE.hbT}">
+        </div>
+      </div>
+      <div class="calc-out" id="bOut">
+        <div class="calc-cell hi">
+          <div class="k">EBV 估計血容量</div>
+          <div class="v">${br?Math.round(br.ebv):"—"}<span class="u">mL</span></div>
+          <div class="h">${ebvPerKg} mL/kg × 體重</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">可容許失血量 ABL</div>
+          <div class="v">${(br&&br.abl!=null)?Math.round(br.abl):"—"}<span class="u">mL</span></div>
+          <div class="h">${(br&&br.pct!=null)?`約佔 EBV ${br.pct.toFixed(0)}%`:"目前 Hb 需高於可接受最低 Hb"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">失血 15%</div>
+          <div class="v">${br?Math.round(br.l15):"—"}<span class="u">mL</span></div>
+          <div class="h">心跳開始上升</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">失血 30%</div>
+          <div class="v">${br?Math.round(br.l30):"—"}<span class="u">mL</span></div>
+          <div class="h">血壓開始下降,積極評估輸血</div>
+        </div>
+      </div>
+      <div class="calc-note">ABL 以目前 Hb 為分母計算,屬於較保守的估法;若改用手術前後的平均 Hb 為分母(Gross 公式),算出來的容許量會略高。<b>輸血決策不是只看數字</b>,還要合併出血速度、心肺共病與臨床徵象;一般穩定、非活動性出血的病人多以 Hb 7–8 g/dL 為輸血門檻。孕婦血容量增加約三到四成、肥胖病人每公斤血容量偏低,估計值都會失真。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>各名詞在算什麼</h3>
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>名詞</th><th>意思</th><th>公式</th></tr>
+          <tr><td><b>TBW</b> 實際體重</td><td>磅秤上量到的體重</td><td>—</td></tr>
+          <tr><td><b>IBW</b> 理想體重</td><td>依身高推算的標準體重,與胖瘦無關</td><td>男 50、女 45.5 kg,身高每超過 152.4 cm(60 英吋)一英吋加 2.3 kg</td></tr>
+          <tr><td><b>PBW</b> 預測體重</td><td>設定呼吸器潮氣容積專用,肺的大小由身高決定</td><td>男 50、女 45.5 kg + 0.91 ×(身高 cm − 152.4)</td></tr>
+          <tr><td><b>LBW</b> 淨體重</td><td>扣掉脂肪後的體重(肌肉、骨骼、內臟);心輸出量與多數藥物清除率跟著它走</td><td>男 9270 × 體重 ÷(6680 + 216 × BMI)<br>女 9270 × 體重 ÷(8780 + 244 × BMI)</td></tr>
+          <tr><td><b>AdjBW</b> 校正體重</td><td>介於理想與實際之間,承認脂肪組織也有部分分布容積</td><td>IBW + 0.4 ×(實際體重 − IBW)</td></tr>
+          <tr><td><b>BSA</b> 體表面積</td><td>部分藥物與心輸出指數以此換算</td><td>√(身高 cm × 體重 kg ÷ 3600)</td></tr>
+        </table>
+      </div>
+      <div class="calc-note">肥胖病人身上,脂肪組織血流低、但脂溶性藥物會蓄積,所以<b>單次誘導劑量</b>看的是初期分布容積與心輸出量(用 LBW),<b>持續輸注</b>看的是清除率(較接近實際體重),<b>肌鬆劑</b>幾乎不分布到脂肪(用 IBW)。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>常用藥物該用哪個體重</h3>
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>藥物</th><th>依據體重</th><th>備註</th></tr>
+          ${DOSE_WEIGHT.map(x=>`<tr><td>${x.d}</td><td><span class="pill ${x.cls}">${x.w}</span></td><td>${x.n||"—"}</td></tr>`).join("")}
+        </table>
+      </div>
+      <div class="calc-note">本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
+    </div>
+
+    <div class="tool-box">
+      <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">7</span></summary>
+          <ol>
+            <li>Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280.</li>
+            <li>Holliday, M. A., &amp; Segar, W. E. (1957). The maintenance need for water in parenteral fluid therapy. Pediatrics, 19(5), 823–832.</li>
+            <li>Mueller, M. M., Van Remoortel, H., Meybohm, P., et al. (2019). Patient blood management: Recommendations from the 2018 Frankfurt Consensus Conference. JAMA, 321(10), 983–997.</li>
+            <li>Ingrande, J., &amp; Lemmens, H. J. M. (2010). Dose adjustment of anaesthetics in the morbidly obese. British Journal of Anaesthesia, 105(Suppl 1), i16–i23.</li>
+            <li>Janmahasatian, S., Duffull, S. B., Ash, S., et al. (2005). Quantification of lean bodyweight. Clinical Pharmacokinetics, 44(10), 1051–1065.</li>
+            <li>Nightingale, C. E., Margarson, M. P., Shearer, E., et al. (2015). Peri-operative management of the obese surgical patient 2015. Anaesthesia, 70(7), 859–876.</li>
+            <li>The Acute Respiratory Distress Syndrome Network. (2000). Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome. New England Journal of Medicine, 342(18), 1301–1308.</li>
+          </ol>
+        </details>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      本計算機為臨床輔助工具,不取代臨床判斷。所有劑量請依病人狀況、藥品仿單與所屬機構protocol核對後給藥。
+    </div>
+  </div>`;
+}
+
+function wireCalc(){
+  const upd = () => {
+    const sex = el("cSex").value;
+    const ht = parseFloat(el("cHt").value);
+    const wt = parseFloat(el("cWt").value);
+    CALC_STATE.sex = sex;
+    if(ht>0) CALC_STATE.ht = ht;
+    if(wt>0) CALC_STATE.wt = wt;
+    const r = calcAll(sex, ht, wt);
+    const f = (x,n=1) => (x==null || !isFinite(x)) ? "—" : x.toFixed(n);
+    const cells = el("cOut").querySelectorAll(".calc-cell");
+    const vals = r ? [
+      [f(r.bmi), bmiBand(r.bmi)],
+      [f(r.ibw), null],
+      [f(r.lbw), null],
+      [f(r.adj), null],
+      [f(r.pbw), `設潮氣容積用:${(r.pbw*6).toFixed(0)}–${(r.pbw*8).toFixed(0)} mL`],
+      [f(r.bsa,2), null]
+    ] : [["—",'—'],["—",null],["—",null],["—",null],["—","設潮氣容積用:—"],["—",null]];
+    cells.forEach((c,i)=>{
+      const v = c.querySelector(".v");
+      const u = v.querySelector(".u");
+      v.textContent = vals[i][0];
+      if(u) v.appendChild(u);
+      if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
+    });
+  };
+  ["cSex","cHt","cWt"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", upd); n.addEventListener("change", upd); }
+  });
+
+  const setCells = (boxId, vals) => {
+    const box = el(boxId); if(!box) return;
+    box.querySelectorAll(".calc-cell").forEach((c,i)=>{
+      if(!vals[i]) return;
+      const v = c.querySelector(".v");
+      const u = v.querySelector(".u");
+      v.textContent = vals[i][0];
+      if(u) v.appendChild(u);
+      if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
+    });
+  };
+  const n0 = x => (x==null || !isFinite(x)) ? "—" : Math.round(x).toString();
+
+  const updFluid = () => {
+    const wt = parseFloat(el("fWt").value);
+    const npo = parseFloat(el("fNpo").value);
+    if(wt>0) FLUID_STATE.wt = wt;
+    if(npo>=0 && isFinite(npo)) FLUID_STATE.npo = npo;
+    const x = fluidCalc(wt, npo);
+    setCells("fOut", x
+      ? [[n0(x.mh),null],[n0(x.def),null],[n0(x.h1),null],[n0(x.h23),null]]
+      : [["—",null],["—",null],["—",null],["—",null]]);
+  };
+  ["fWt","fNpo"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", updFluid); n.addEventListener("change", updFluid); }
+  });
+
+  const updEbv = () => {
+    const wt = parseFloat(el("bWt").value);
+    const grp = el("bGrp").value;
+    const perKg = parseFloat(grp);
+    const hb0 = parseFloat(el("bHb0").value);
+    const hbT = parseFloat(el("bHbT").value);
+    if(wt>0) EBV_STATE.wt = wt;
+    EBV_STATE.grp = grp;
+    if(hb0>0) EBV_STATE.hb0 = hb0;
+    if(hbT>0) EBV_STATE.hbT = hbT;
+    const x = ebvCalc(wt, perKg, hb0, hbT);
+    setCells("bOut", x
+      ? [[n0(x.ebv), perKg + " mL/kg × 體重"],
+         [x.abl==null ? "—" : n0(x.abl), x.pct==null ? "目前 Hb 需高於可接受最低 Hb" : `約佔 EBV ${x.pct.toFixed(0)}%`],
+         [n0(x.l15), null],
+         [n0(x.l30), null]]
+      : [["—",null],["—",null],["—",null],["—",null]]);
+  };
+  ["bWt","bGrp","bHb0","bHbT"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", updEbv); n.addEventListener("change", updEbv); }
+  });
+}
+
+/* ============================================================
+   本科常見藥物泡法
+   ------------------------------------------------------------
+   欄位:藥名 / 原裝濃度 / 常見泡法 / 泡好濃度 / 常用劑量與備註
+   內容依本單位藥物泡製規範整理,實際請以本院藥局最新規範為準。
+   ============================================================ */
+const DRUG_PREP = [
+  { g:"單次推注(bolus)稀釋", rows:[
+    ["Ephedrine","40 mg/mL(1 mL/amp)","1 mL 加 NS 4 mL 稀釋成 5 mL,限 IV 使用","8 mg/mL","單次 5–10 mg;IM 給予不稀釋、抽成 1 mL 並依醫囑;<b>A 級刀也要稀釋</b>"],
+    ["Epinephrine<br>低濃度","1 mg/mL(1 mL/amp)","0.1 mg 加 NS 9.9 mL","0.01 mg/mL<br>= 10 µg/mL","過敏或低血壓時小量滴定 10–50 µg"],
+    ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
+    ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 D5W 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
+  ]},
+  { g:"持續輸注(幫浦)", rows:[
+    ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 D5W 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b>本單位以 D5W 泡製</b>"],
+    ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
+    ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
+    ["Dopamine","200 mg/5 mL/amp","1 amp 加 NS 250 mL;洗腎病人:1 amp 加 NS 100 mL","0.8 mg/mL<br>EasyDopa 1.6 mg/mL<br>洗腎 2 mg/mL","2–20 µg/kg/min"],
+    ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 D5W 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"],
+    ["Cordarone","150 mg/3 mL/amp","依醫囑泡製,<b class='w'>只能用 D5W</b>","依醫囑","150 mg 滴注時間需大於 10 分鐘"],
+    ["Remifentanil<br>高濃度","2 mg/vial","先以 NS 40 mL 稀釋完成,再分裝成 2 支 20 mL","50 µg/mL<br>1 mL = 50 µg","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>空瓶由領藥人員保管,不可直接交給他人</b>"],
+    ["Remifentanil<br>稀釋版","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"],
+    ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
+    ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩"],
+    ["Nicardipine","2.5 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","3–15 mg/hr;反射性心跳上升"],
+    ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL 晶體液","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
+  ]},
+  { g:"其他需稀釋藥品", rows:[
+    ["Succinylcholine","50 mg/mL","100 mg(2 mL)加 NS 稀釋成 5 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
+    ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 D5W 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"]
+  ]}
+];
+
+function drugPrepHtml(){
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">本科常見藥物泡法</div>
+      <div class="tool-sub">依本單位藥物泡製規範整理原裝濃度、稀釋方式與泡好後的濃度,方便交班與備藥時對照。</div>
+    </div>
+
+    <div class="tool-warn">
+      <b>使用前務必確認</b>:本單位的稀釋慣例、幫浦設定與現有藥品規格不盡相同,本表僅為常見作法整理,<b>請以本院藥局最新規範與實際藥品標示為準</b>。泡好的針筒一定要貼上藥名、濃度、時間與泡藥者;同一藥品有多種濃度時(如 epinephrine)尤其要標清楚。
+    </div>
+
+    ${DRUG_PREP.map(sec=>`
+      <div class="tool-box">
+        <h3>${sec.g}</h3>
+        <div class="scroll-hint">表格可左右滑動查看</div>
+        <div class="tool-scroll">
+          <table class="tool-tbl drug-tbl">
+            <colgroup><col style="width:170px"><col style="width:240px"><col style="width:130px"><col style="width:220px"></colgroup>
+            <tr><th>藥物／原裝濃度</th><th>常見泡法</th><th>泡好濃度</th><th>常用劑量／備註</th></tr>
+            ${sec.rows.map(r=>`<tr>
+              <td><div class="dn">${r[0]}</div><div class="dc">${r[1]}</div></td>
+              <td>${r[2]}</td>
+              <td><span class="pill b">${r[3]}</span></td><td>${r[4]}</td>
+            </tr>`).join("")}
+          </table>
+        </div>
+      </div>`).join("")}
+
+    <div class="tool-box">
+      <h3>本單位濃度速算</h3>
+      <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
+        <li><b>完整公式</b>:藥量(mg)÷ 溶液總量(mL)× 1000 ÷ 體重(kg)÷ 60 = 每 1 mL/hr 相當於幾 µg/kg/min</li>
+        <li><b>簡易公式</b>:藥量(mg)÷〔體重(kg)× 容量常數〕= 每 1 mL/hr 相當於幾 µg/kg/min</li>
+        <li><b>容量常數</b>:100 mL → 6、200 mL → 12、250 mL → 15、300 mL → 18、400 mL → 24、500 mL → 30</li>
+        <li>需持續點滴給藥時,<b>先加藥稀釋、再排 set 內空氣</b></li>
+        <li>劑量有變動時依主治醫師醫囑執行,<b>問清楚、聽清楚再執行</b></li>
+      </ul>
+    </div>
+
+    <div class="tool-box">
+      <h3>備藥時的幾個提醒</h3>
+      <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
+        <li><b>一次只泡一支、泡完立刻貼標</b>,不要一口氣抽好幾支再回頭補標籤</li>
+        <li>濃度相近但強度差很多的藥(epinephrine 0.01 mg/mL 與 0.1 mg/mL、norepinephrine 推注與輸注)<b class='w'>分開放置</b></li>
+        <li>換班或接手他人備好的針筒時,<b>沒有標示就重泡</b>,不要憑外觀猜</li>
+        <li>高濃度輸注藥物盡量走<b>中心靜脈</b>;週邊給予時固定好並定時檢查有無外滲</li>
+      </ul>
+    </div>
+
+    <div class="disclaimer">
+      本表為臨床記憶輔助,非取代臨床判斷與藥品仿單。給藥前請完成標準核對流程,並依所屬機構protocol調整。
+    </div>
+  </div>`;
+}
+
 function renderList(){
   const q = el("search").value.trim();
   if(activeSpec===EXAM_CHIP || activeSpec===QUIZ_CHIP){ renderSetList(activeSpec); return; }
+  if(activeSpec===CALC_CHIP && !q){ el("list").innerHTML = calcHtml(); wireCalc(); return; }
+  if(activeSpec===DRUG_CHIP && !q){ el("list").innerHTML = drugPrepHtml(); return; }
   if((!activeSpec || activeSpec===HOME_CHIP) && !q){
     el("list").innerHTML = updatesHtml();
     el("list").querySelectorAll(".upd-link").forEach(b=>{
@@ -3805,9 +4910,10 @@ function renderList(){
     });
     return;
   }
-  const allSpec = !activeSpec || activeSpec==="全部" || activeSpec===HOME_CHIP;   /* 在首頁搜尋 = 全科搜尋 */
+  const allSpec = !activeSpec || activeSpec==="全部" || activeSpec===HOME_CHIP
+    || activeSpec===CALC_CHIP || activeSpec===DRUG_CHIP;   /* 在首頁或工具頁搜尋 = 全科搜尋 */
   const items = SURGERIES.filter(s =>
-    (allSpec || s.specialty===activeSpec) && matches(s,q)
+    (allSpec || inSpec(s,activeSpec)) && matches(s,q)
   );
   if(!items.length){
     el("list").innerHTML = (activeSpec===NORA_SPEC && !q)
@@ -3912,8 +5018,10 @@ function showDetail(id){
       </div>` : ""}
     ${s.refs && s.refs.length ? `
       <div class="refs-box">
-        <h3>文獻出處　References</h3>
-        <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">${s.refs.length}</span></summary>
+          <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
+        </details>
       </div>` : ""}
     ${noteBoxHtml(s)}
     <div class="disclaimer">
