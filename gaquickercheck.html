@@ -8,10 +8,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="麻醉速查">
 <meta name="theme-color" content="#FBF8F1">
+<meta name="color-scheme" content="light">
 <title>各科手術全身麻醉快速查詢</title>
+<style>html{background:#FBF8F1;color-scheme:light}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --bg:#FBF8F1;         /* 淺米白底 */
@@ -2215,10 +2218,19 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v3.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v3.6";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-08-05";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-05",
+    note: "改善手機開啟速度,不再先出現黑畫面。",
+    items: [
+      "手機在深色模式或從桌面圖示開啟時,開頭會先閃黑畫面數秒的問題已修正,改為直接顯示原本的米白底",
+      "字型改為背景載入,不再等字型下載完才顯示內容,開啟速度加快",
+      "自動更新偵測改為只確認有無新版,不再每分鐘重新下載整份檔案,省手機流量也讓載入更順"
+    ]
+  },
   {
     date: "2026-08-05",
     note: "歷屆考古題新增 112 年度兩科完整試題。",
@@ -5802,12 +5814,22 @@ initNotes();
   var baseline = null;
   function hash(t){var h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0;}return t.length+':'+h;}
   function getSig(){
-    return fetch(SELF,{cache:'no-store'}).then(function(res){
+    /* 先用 HEAD 只取標頭,不下載整份檔案(省流量、不與首次載入搶頻寬) */
+    return fetch(SELF,{method:'HEAD',cache:'no-store'}).then(function(res){
       if(!res.ok) throw 0;
       var e=res.headers.get('etag'), m=res.headers.get('last-modified');
       if(e) return 'e:'+e;
       if(m) return 'm:'+m;
-      return res.text().then(function(t){return 'h:'+hash(t);});
+      throw 0;
+    }).catch(function(){
+      /* 伺服器不支援 HEAD 或沒回這兩個標頭時,才退回抓全檔比對 */
+      return fetch(SELF,{cache:'no-store'}).then(function(res){
+        if(!res.ok) throw 0;
+        var e=res.headers.get('etag'), m=res.headers.get('last-modified');
+        if(e) return 'e:'+e;
+        if(m) return 'm:'+m;
+        return res.text().then(function(t){return 'h:'+hash(t);});
+      });
     });
   }
   window.applyUpdate=function(){ location.reload(); };
