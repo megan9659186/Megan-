@@ -34,6 +34,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
+html,body{touch-action:manipulation}   /* 關閉點兩下放大,保留雙指縮放 */
 body{
   font-family:"Noto Sans TC",system-ui,sans-serif;
   background:var(--bg);color:var(--ink);
@@ -310,12 +311,15 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:12.5px;
   font-weight:700;letter-spacing:.02em;padding:6px 12px;border-bottom:1px solid #DCC3BB}
 .scroll-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:7px}
-.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:5px;
-  scrollbar-width:thin;scrollbar-color:var(--clay) var(--clay-tint)}
-.tool-scroll::-webkit-scrollbar{-webkit-appearance:none;height:9px}
-.tool-scroll::-webkit-scrollbar-track{background:var(--clay-tint);border-radius:5px}
-.tool-scroll::-webkit-scrollbar-thumb{background:var(--clay);border-radius:5px}
-.tool-scroll::-webkit-scrollbar-thumb:hover{background:#A6837A}
+.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  scrollbar-width:none;-ms-overflow-style:none}
+.tool-scroll::-webkit-scrollbar{display:none;width:0;height:0}
+.scroll-rail{position:relative;height:9px;margin-top:8px;border-radius:5px;
+  background:var(--clay-tint);cursor:pointer;touch-action:none}
+.scroll-rail.off{display:none}
+.scroll-rail .scroll-thumb{position:absolute;top:0;bottom:0;left:0;min-width:26px;
+  border-radius:5px;background:var(--clay)}
+.scroll-rail:hover .scroll-thumb{background:#A6837A}
 .tool-warn{background:var(--flag-tint);border:1px solid #DCC3BB;border-left:3px solid var(--flag);
   border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#6E4F49}
 .tool-warn b{color:var(--warn);font-weight:700}
@@ -2209,10 +2213,35 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v3.1";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v3.4";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-08-04";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-04",
+    note: "濃度速算的 µg/kg/hr 只在 dexmedetomidine 時出現。",
+    items: [
+      "藥物泡法:µg/kg/hr 換算格改為只有選 dexmedetomidine 時才顯示,其他藥不再出現,避免看錯單位"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "表格捲動條改為常駐顯示;關閉點兩下放大。",
+    items: [
+      "表格下方的左右捲動條改為咖啡色常駐顯示,不用先滑動才看得到,也可以直接拖曳它捲動表格",
+      "關閉點兩下放大畫面的功能(先前會放大並超出畫面),雙指縮放仍可正常使用"
+    ]
+  },
+  {
+    date: "2026-08-04",
+    note: "濃度速算改成可以直接輸入數字的計算機。",
+    items: [
+      "藥物泡法:「本單位濃度速算」由公式改為計算機,輸入藥量、溶液總量與體重就直接算出泡好濃度、每 1 mL/hr 相當於多少 µg/kg/min 與 µg/kg/hr",
+      "藥物泡法:新增劑量與速率互算,輸入目標劑量算出幫浦該設幾 mL/hr,輸入目前速率算出實際劑量",
+      "藥物泡法:可從下拉選單挑本單位常見泡法(如 norepinephrine 8 mg/100 mL)自動帶入,不必自己打",
+      "藥物泡法:原本的公式與容量常數保留在計算機下方供心算與核對"
+    ]
+  },
   {
     date: "2026-08-04",
     note: "幫浦輸注新增「降壓與抗心律不整藥」分類。",
@@ -4825,6 +4854,7 @@ function wireCalc(){
     const n = el(id);
     if(n){ n.addEventListener("input", updEbv); n.addEventListener("change", updEbv); }
   });
+  initScrollRails();
 }
 
 /* ============================================================
@@ -4870,7 +4900,59 @@ const DRUG_PREP = [
   ]}
 ];
 
+/* ---------- 濃度速算(幫浦)---------- */
+const DRUG_PRESETS = [
+  { t:"自行輸入", mg:null, mL:null },
+  { t:"Norepinephrine 8 mg / 100 mL", mg:8, mL:100 },
+  { t:"Epinephrine 10 mg / 100 mL", mg:10, mL:100 },
+  { t:"Dopamine 200 mg / 250 mL", mg:200, mL:250 },
+  { t:"Dopamine 洗腎 200 mg / 100 mL", mg:200, mL:100 },
+  { t:"Dobutamine 250 mg / 250 mL", mg:250, mL:250 },
+  { t:"Dobutamine 洗腎 250 mg / 100 mL", mg:250, mL:100 },
+  { t:"Angidil 10 mg / 100 mL", mg:10, mL:100 },
+  { t:"Angidil 洗腎 10 mg / 20 mL", mg:10, mL:20 },
+  { t:"Nicardipine 10 mg / 100 mL", mg:10, mL:100 },
+  { t:"Remifentanil 2 mg / 40 mL", mg:2, mL:40 },
+  { t:"Remifentanil 稀釋版 2 mg / 200 mL", mg:2, mL:200 },
+  { t:"Dexmedetomidine 0.2 mg / 40 mL", mg:0.2, mL:40, hr:true }
+];
+
+const DRUG_CALC_STATE = { pi:"1", mg:8, mL:100, wt:70, dose:0.05, rate:5 };
+
+function drugIsHrUnit(pi){
+  const p = DRUG_PRESETS[+pi];
+  return !!(p && p.hr);           /* 只有以每小時計量的藥(dexmedetomidine)才顯示 µg/kg/hr */
+}
+
+function drugConcCalc(mg, mL, wt){
+  if(!(mg>0) || !(mL>0) || !(wt>0)) return null;
+  const cmg = mg/mL;                 /* mg/mL */
+  const cug = cmg*1000;              /* µg/mL */
+  return { cmg, cug, perMin: cug/60/wt, perHr: cug/wt };
+}
+
+function drugRateFromDose(mg, mL, wt, dose){
+  const c = drugConcCalc(mg, mL, wt);
+  if(!c || !(dose>0)) return null;
+  return dose*wt*60/c.cug;           /* mL/hr */
+}
+
+function drugDoseFromRate(mg, mL, wt, rate){
+  const c = drugConcCalc(mg, mL, wt);
+  if(!c || !(rate>0)) return null;
+  return { min: rate*c.perMin, hr: rate*c.perHr };
+}
+
 function drugPrepHtml(){
+  const S = DRUG_CALC_STATE;
+  const dgF = x => (x==null || !isFinite(x)) ? "—"
+    : (Math.abs(x)>=100 ? x.toFixed(0) : Math.abs(x)>=10 ? x.toFixed(1) : Math.abs(x)>=1 ? x.toFixed(2) : x.toFixed(3));
+  const dc = drugConcCalc(S.mg, S.mL, S.wt);
+  const dgRate = drugRateFromDose(S.mg, S.mL, S.wt, S.dose);
+  const dgDose = drugDoseFromRate(S.mg, S.mL, S.wt, S.rate);
+  const dgHr = drugIsHrUnit(S.pi);
+  const dgNew = isNewItem({ updated:"2026-08-04" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   return `
   <div class="tool-wrap">
     <div>
@@ -4903,11 +4985,74 @@ function drugPrepHtml(){
       </div>`).join("")}
 
     <div class="tool-box">
-      <h3>本單位濃度速算</h3>
+      <h3 class="th-new">本單位濃度速算${dgNew}</h3>
+      <div class="tool-sub" style="margin:0 0 11px">輸入藥量、溶液總量與體重,直接算出泡好濃度與速率對照;也可先選常見泡法自動帶入。</div>
+      <div class="calc-form">
+        <div class="calc-f" style="flex:1 1 240px;min-width:200px">
+          <label for="dgPreset">常見泡法(可略)</label>
+          <select id="dgPreset">
+            ${DRUG_PRESETS.map((p,i)=>`<option value="${i}"${DRUG_CALC_STATE.pi===String(i)?" selected":""}>${p.t}</option>`).join("")}
+          </select>
+        </div>
+        <div class="calc-f">
+          <label for="dgMg">藥量(mg)</label>
+          <input id="dgMg" type="number" inputmode="decimal" min="0" step="0.1" value="${DRUG_CALC_STATE.mg}">
+        </div>
+        <div class="calc-f">
+          <label for="dgVol">溶液總量(mL)</label>
+          <input id="dgVol" type="number" inputmode="decimal" min="1" step="1" value="${DRUG_CALC_STATE.mL}">
+        </div>
+        <div class="calc-f">
+          <label for="dgWt">體重(kg)</label>
+          <input id="dgWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${DRUG_CALC_STATE.wt}">
+        </div>
+      </div>
+      <div class="calc-out" id="dgOut">
+        <div class="calc-cell hi">
+          <div class="k">泡好濃度</div>
+          <div class="v">${dgF(dc&&dc.cmg)}<span class="u">mg/mL</span></div>
+          <div class="h">${dc?`= ${dgF(dc.cug)} µg/mL`:"—"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">每 1 mL/hr 相當於</div>
+          <div class="v">${dgF(dc&&dc.perMin)}<span class="u">µg/kg/min</span></div>
+          <div class="h">依輸入體重換算</div>
+        </div>
+        <div class="calc-cell" id="dgHrCell"${dgHr?"":' style="display:none"'}>
+          <div class="k">每 1 mL/hr 相當於</div>
+          <div class="v">${dgF(dc&&dc.perHr)}<span class="u">µg/kg/hr</span></div>
+          <div class="h">dexmedetomidine 以每小時計量,用這格</div>
+        </div>
+      </div>
+
+      <div class="calc-form" style="margin-top:14px">
+        <div class="calc-f">
+          <label for="dgDose">目標劑量(µg/kg/min)</label>
+          <input id="dgDose" type="number" inputmode="decimal" min="0" step="0.01" value="${DRUG_CALC_STATE.dose}">
+        </div>
+        <div class="calc-f">
+          <label for="dgRate">目前速率(mL/hr)</label>
+          <input id="dgRate" type="number" inputmode="decimal" min="0" step="0.1" value="${DRUG_CALC_STATE.rate}">
+        </div>
+      </div>
+      <div class="calc-out" id="dgOut2">
+        <div class="calc-cell hi">
+          <div class="k">幫浦應設速率</div>
+          <div class="v">${dgF(dgRate)}<span class="u">mL/hr</span></div>
+          <div class="h">達到上方目標劑量所需</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">目前速率的實際劑量</div>
+          <div class="v">${dgF(dgDose&&dgDose.min)}<span class="u">µg/kg/min</span></div>
+          <div class="h">${dgDose?(dgHr?`= ${dgF(dgDose.hr)} µg/kg/hr`:"依上方濃度與體重換算"):"—"}</div>
+        </div>
+      </div>
+      <div class="calc-note"><b>公式</b>:藥量(mg)÷ 溶液總量(mL)× 1000 ÷ 體重(kg)÷ 60 = 每 1 mL/hr 相當於幾 µg/kg/min。<b>心算版</b>:藥量(mg)÷〔體重(kg)× 容量常數〕,容量常數 100 mL → 6、200 mL → 12、250 mL → 15、300 mL → 18、400 mL → 24、500 mL → 30。計算結果僅供核對,<b>實際速率仍依醫囑與病人反應調整</b>。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>上幫浦前的提醒</h3>
       <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
-        <li><b>完整公式</b>:藥量(mg)÷ 溶液總量(mL)× 1000 ÷ 體重(kg)÷ 60 = 每 1 mL/hr 相當於幾 µg/kg/min</li>
-        <li><b>簡易公式</b>:藥量(mg)÷〔體重(kg)× 容量常數〕= 每 1 mL/hr 相當於幾 µg/kg/min</li>
-        <li><b>容量常數</b>:100 mL → 6、200 mL → 12、250 mL → 15、300 mL → 18、400 mL → 24、500 mL → 30</li>
         <li>需持續點滴給藥時,<b>先加藥稀釋、再排 set 內空氣</b></li>
         <li>劑量有變動時依主治醫師醫囑執行,<b>問清楚、聽清楚再執行</b></li>
       </ul>
@@ -4929,11 +5074,152 @@ function drugPrepHtml(){
   </div>`;
 }
 
+/* ---------- 表格左右捲動指示條(常駐顯示)---------- */
+let RAIL_DRAG = null;
+let RAIL_GLOBAL_BOUND = false;
+
+function railBindGlobal(){
+  if(RAIL_GLOBAL_BOUND) return;
+  RAIL_GLOBAL_BOUND = true;
+  const move = e => {
+    if(!RAIL_DRAG) return;
+    const d = RAIL_DRAG;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const max = d.sc.scrollWidth - d.sc.clientWidth;
+    const track = d.rail.clientWidth - d.thumb.offsetWidth;
+    if(track > 0 && max > 0) d.sc.scrollLeft = d.left0 + (x - d.x0) * (max / track);
+  };
+  const up = () => { RAIL_DRAG = null; };
+  document.addEventListener("mousemove", move);
+  document.addEventListener("touchmove", move, { passive:true });
+  document.addEventListener("mouseup", up);
+  document.addEventListener("touchend", up);
+  document.addEventListener("touchcancel", up);
+}
+
+function initScrollRails(){
+  railBindGlobal();
+  document.querySelectorAll(".tool-scroll").forEach(sc => {
+    let rail = sc.nextElementSibling;
+    if(!rail || !rail.classList || !rail.classList.contains("scroll-rail")){
+      rail = document.createElement("div");
+      rail.className = "scroll-rail";
+      rail.innerHTML = `<div class="scroll-thumb"></div>`;
+      sc.parentNode.insertBefore(rail, sc.nextSibling);
+    }
+    const thumb = rail.querySelector(".scroll-thumb");
+    const sync = () => {
+      const max = sc.scrollWidth - sc.clientWidth;
+      if(max <= 2){ rail.classList.add("off"); return; }
+      rail.classList.remove("off");
+      const w = Math.max((sc.clientWidth / sc.scrollWidth) * 100, 14);
+      thumb.style.width = w + "%";
+      thumb.style.left = ((sc.scrollLeft / max) * (100 - w)) + "%";
+    };
+    if(!sc.dataset.railed){
+      sc.dataset.railed = "1";
+      sc.addEventListener("scroll", sync, { passive:true });
+      const start = e => {
+        const max = sc.scrollWidth - sc.clientWidth;
+        if(max <= 2) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const tb = thumb.getBoundingClientRect();
+        /* 直接點軌道任一處:先把滑塊移過去再開始拖曳 */
+        if(x < tb.left || x > tb.right){
+          const rb = rail.getBoundingClientRect();
+          const track = rail.clientWidth - thumb.offsetWidth;
+          if(track > 0){
+            const p = Math.min(Math.max((x - rb.left - thumb.offsetWidth/2) / track, 0), 1);
+            sc.scrollLeft = p * max;
+            sync();
+          }
+        }
+        RAIL_DRAG = { sc, rail, thumb, x0:x, left0:sc.scrollLeft };
+        if(e.cancelable) e.preventDefault();
+      };
+      rail.addEventListener("mousedown", start);
+      rail.addEventListener("touchstart", start, { passive:false });
+      window.addEventListener("resize", sync);
+    }
+    sync();
+    setTimeout(sync, 80);
+  });
+}
+
+function wireDrugCalc(){
+  const S = DRUG_CALC_STATE;
+  const fmt = x => (x==null || !isFinite(x)) ? "—"
+    : (Math.abs(x)>=100 ? x.toFixed(0) : Math.abs(x)>=10 ? x.toFixed(1) : Math.abs(x)>=1 ? x.toFixed(2) : x.toFixed(3));
+  const setCells = (boxId, vals) => {
+    const box = el(boxId); if(!box) return;
+    box.querySelectorAll(".calc-cell").forEach((c,i)=>{
+      if(!vals[i]) return;
+      const v = c.querySelector(".v");
+      const u = v.querySelector(".u");
+      v.textContent = vals[i][0];
+      if(u) v.appendChild(u);
+      if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
+    });
+  };
+  const upd = () => {
+    const mg = parseFloat(el("dgMg").value);
+    const mL = parseFloat(el("dgVol").value);
+    const wt = parseFloat(el("dgWt").value);
+    const dose = parseFloat(el("dgDose").value);
+    const rate = parseFloat(el("dgRate").value);
+    if(mg>0) S.mg = mg;
+    if(mL>0) S.mL = mL;
+    if(wt>0) S.wt = wt;
+    if(dose>0) S.dose = dose;
+    if(rate>0) S.rate = rate;
+    const isHr = drugIsHrUnit(S.pi);
+    const hrCell = el("dgHrCell");
+    if(hrCell) hrCell.style.display = isHr ? "" : "none";
+    const c = drugConcCalc(mg, mL, wt);
+    setCells("dgOut", c
+      ? [[fmt(c.cmg), `= ${fmt(c.cug)} µg/mL`], [fmt(c.perMin), null], [fmt(c.perHr), null]]
+      : [["—","—"], ["—",null], ["—",null]]);
+    const r = drugRateFromDose(mg, mL, wt, dose);
+    const d = drugDoseFromRate(mg, mL, wt, rate);
+    setCells("dgOut2", [
+      [fmt(r), null],
+      [fmt(d && d.min), d ? (isHr ? `= ${fmt(d.hr)} µg/kg/hr` : "依上方濃度與體重換算") : "—"]
+    ]);
+  };
+  const pre = el("dgPreset");
+  if(pre){
+    pre.addEventListener("change", () => {
+      S.pi = pre.value;
+      const p = DRUG_PRESETS[+pre.value];
+      if(p && p.mg != null){
+        el("dgMg").value = p.mg;
+        el("dgVol").value = p.mL;
+      }
+      upd();
+    });
+  }
+  ["dgMg","dgVol","dgWt","dgDose","dgRate"].forEach(id=>{
+    const n = el(id);
+    if(n){
+      n.addEventListener("input", upd);
+      n.addEventListener("change", upd);
+    }
+  });
+  ["dgMg","dgVol"].forEach(id=>{
+    const n = el(id);
+    if(n) n.addEventListener("input", () => {
+      const p = el("dgPreset");
+      if(p){ p.value = "0"; S.pi = "0"; }
+    });
+  });
+  initScrollRails();
+}
+
 function renderList(){
   const q = el("search").value.trim();
   if(activeSpec===EXAM_CHIP || activeSpec===QUIZ_CHIP){ renderSetList(activeSpec); return; }
   if(activeSpec===CALC_CHIP && !q){ el("list").innerHTML = calcHtml(); wireCalc(); return; }
-  if(activeSpec===DRUG_CHIP && !q){ el("list").innerHTML = drugPrepHtml(); return; }
+  if(activeSpec===DRUG_CHIP && !q){ el("list").innerHTML = drugPrepHtml(); wireDrugCalc(); return; }
   if((!activeSpec || activeSpec===HOME_CHIP) && !q){
     el("list").innerHTML = updatesHtml();
     el("list").querySelectorAll(".upd-link").forEach(b=>{
