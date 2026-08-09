@@ -34,6 +34,8 @@
   --slate-tint:#DCE0E5;
   --ochre:#B7A177;      /* 用藥 灰赭 */
   --ochre-tint:#E9E1D0;
+  --grey-tint:#E7E3DB;  /* 待校對底色 淺灰 */
+  --grey-line:#D2CCC0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
@@ -144,6 +146,8 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
   background:var(--surface);border:1px solid var(--line);border-radius:11px;
   padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s;
 }
+/* 待校對:底色改淺灰,與已校對的乳白底區隔 */
+.card.unchecked{background:var(--grey-tint);border-color:var(--grey-line)}
 .badge-new{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.7px;
   line-height:1.5;padding:1px 6px;border-radius:5px;
   background:var(--clay);color:#FBF8F1;vertical-align:middle}
@@ -196,6 +200,11 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .upd-link{font:inherit;color:var(--ink);background:none;border:0;padding:0;text-align:left;cursor:pointer;
   text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .upd-link:hover{color:#5E6B5E;text-decoration-color:var(--sage)}
+.rv-chip{display:inline-block;padding:1px 8px;margin:1px 0;border-radius:7px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink-soft);
+  text-decoration:none;line-height:1.5}
+button.rv-chip{cursor:pointer}
+button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
 .upd-tip{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:18px;line-height:1.6}
 
 /* ---------- Detail view ---------- */
@@ -355,6 +364,9 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .cri-group{font-size:12.5px;font-weight:700;color:#8A7A50;letter-spacing:.06em;margin:0 0 8px}
 .cri-item{background:var(--ochre-tint);border:1px solid #D6C9A8;border-radius:11px;
   padding:12px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s}
+.cri-item.unchecked{background:var(--grey-tint);border-color:var(--grey-line)}
+.cri-item.unchecked .ci-name{color:#57534A}
+.cri-item.unchecked .ci-en,.cri-item.unchecked .ci-key{color:var(--ink-soft)}
 .cri-item:hover{border-color:var(--ochre);transform:translateY(-1px)}
 .cri-item .ci-name{font-weight:700;font-size:15.5px;color:#5F5335;line-height:1.4}
 .cri-item .ci-en{font-size:12px;color:#8A7A50;margin-top:2px;line-height:1.5}
@@ -1834,20 +1846,21 @@ const SURGERIES = [
     specialty:"耳鼻喉科",
     name:"氣管切開術",
     en:"Tracheostomy",
-    updated:"2026-08-04",
+    updated:"2026-08-09",
     summary:{ position:"Supine · shoulder roll, neck extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / 原有 ETT 換至氣切管・共用氣道・電燒防火" },
     preop:[
       "先確認<b>適應症與時機</b>:長期呼吸器脫離困難、上呼吸道阻塞、清除分泌物、頭頸手術前先建立氣道",
-      "<b class='w'>區分『開刀房擇期氣切』與『氣道急症下氣切』</b>:後者常在氧合不穩、無法插管的情況進行,計畫與人力完全不同",
+      "<b class='w'>區分『排程氣切手術』與『急氣切(Call help!)』</b>:後者常在氧合不穩、無法插管的情況進行,計畫與人力完全不同",
+      "<b>事先與麻醉醫師確認誘導藥物</b>(可能會用到 midazolam / remifentanil)並<b>備妥 suction</b>",
       "評估既有氣道:是否已插管、導管尺寸與深度、有無氣道腫瘤或狹窄;頸部活動度、甲狀腺腫大、肥胖短頸、既往氣切或放療疤痕",
       "<b>凝血功能與抗凝血/抗血小板藥</b>;重症病人常合併血小板低下",
       "術前與外科團隊確認:氣切管型號、有無氣囊、是否需加長型(肥胖或深頸)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣切管有幾個要先講好的規格:<b>尺寸</b>(內徑,成人男性常用 7.5–8.0、女性 7.0–7.5)、<b>有無氣囊</b>(需要正壓通氣或有吸入風險就要帶氣囊)、<b>長度</b>(頸部脂肪厚、氣管位置深的病人需要加長型 extended-length,否則管子會頂在氣管前壁或滑出)、以及<b>有無內管</b>(inner cannula,方便清理分泌物)。事先確認可以避免置入後才發現不合用、必須重新換管的窘境。</span>"
     ],
     airway:[
-      "<b class='w'>全程共用氣道</b>:切開氣管、退管、置入氣切管的每一步都要與外科團隊口頭同步,不能各做各的",
+      "<b class='w'>全程共用氣道</b>:切開氣管、退管、置入氣切管的每一步都要與外科團隊口頭同步,不能各做各的,<b class='w'>務必配合外科指令慢慢退管</b>",
       "已插管者:<b>先把 ETT 氣囊放氣、往前推進到隆突附近</b>,避免被切開的氣管環或手術刀劃破氣囊;必要時暫時加深麻醉與加藥防止嗆咳",
       "<b class='w'>退管時機由外科團隊喊</b>:氣管前壁切開、確認可置入後才在直視下慢慢退 ETT,退到剛好露出切口即可,<b>先不要整支拔掉</b>,萬一氣切管放不進去還能推回去",
-      "氣切管置入後<b>立即確認 EtCO₂ 波形</b>再固定;無波形視同放錯位置<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣切管最怕的是<b>假通道(false passage)</b>——管子沒進到氣管腔,而是插進氣管前方的軟組織。此時外觀看起來管子在位、手動甦醒球也壓得動,但氧氣完全沒進肺。唯一可靠的判斷是<b>持續且有波形的 EtCO₂</b>,搭配雙側胸廓起伏與呼吸音、SpO₂ 趨勢。只要 EtCO₂ 沒出來,就當作放錯,立即告知外科團隊、把原本的 ETT 推回去恢復通氣,不要一邊硬壓一邊觀察。</span>",
+      "氣切管置入後<b class='w'>立即確認 EtCO₂ 波形</b>再固定;無波形視同放錯位置<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣切管最怕的是<b>假通道(false passage)</b>——管子沒進到氣管腔,而是插進氣管前方的軟組織。此時外觀看起來管子在位、手動甦醒球也壓得動,但氧氣完全沒進肺。唯一可靠的判斷是<b>持續且有波形的 EtCO₂</b>,搭配雙側胸廓起伏與呼吸音、SpO₂ 趨勢。只要 EtCO₂ 沒出來,就當作放錯,立即告知外科團隊、把原本的 ETT 推回去恢復通氣,不要一邊硬壓一邊觀察。</span>",
       "尚未插管而氣道阻塞者:是否需<b>清醒局部麻醉下氣切</b>由外科與麻醉共同決定;貿然誘導可能失去自主呼吸又無法通氣"
     ],
     monitor:[
@@ -1871,7 +1884,6 @@ const SURGERIES = [
     ],
     emergence:[
       "確認氣切管固定牢靠(縫線 + 頸帶)、氣囊壓力適當、抽吸乾淨",
-      "<b class='w'>拍胸部 X 光</b>確認位置並排除氣胸",
       "轉出前完成交班:氣切管型號與尺寸、是否為<b>新造廔管(7 天內)</b>、床邊備品(同號與小一號氣切管、氣管擴張器、原尺寸 ETT)"
     ],
     postop:[
@@ -1894,10 +1906,11 @@ const SURGERIES = [
     ]
   },
   {
+    checked: "2026-08-09",
     specialty:"耳鼻喉科",
     name:"懸壅垂顎咽成形術(打鼾/睡眠呼吸中止)",
     en:"Uvulopalatopharyngoplasty (UPPP)",
-    updated:"2026-08-04",
+    updated:"2026-08-09",
     summary:{ position:"Supine · slight head extension, mouth gag", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / ETT(常用 oral RAE)・OSA 困難氣道・共用氣道" },
     preop:[
       "<b class='w'>幾乎所有病人都有阻塞性睡眠呼吸中止(OSA)</b>:先看多項睡眠檢查的 AHI 與最低血氧;沒做過檢查者以 STOP-Bang 評估<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>STOP-Bang 是八題篩檢工具,每題答是得一分:<b>S</b>noring 打鼾大聲、<b>T</b>iredness 白天嗜睡、<b>O</b>bserved apnea 有人目擊呼吸中止、<b>P</b>ressure 高血壓、<b>B</b>MI 大於 35、<b>a</b>ge 大於 50 歲、<b>n</b>eck 頸圍(男大於 43 cm、女大於 41 cm)、<b>g</b>ender 男性。0–2 分為低風險,3–4 分中風險,<b>5 分以上為高風險</b>,術後呼吸抑制、去飽和與非計畫入住加護的機率明顯上升。AHI(每小時呼吸中止與低通氣次數)則是嚴重度分級:5–15 輕度、15–30 中度、大於 30 重度。</span>",
@@ -1906,9 +1919,10 @@ const SURGERIES = [
       "共病篩檢:高血壓、心律不整、肺高壓與右心衰竭、代謝症候群;長期未治療者可有 CO₂ 滯留",
       "<b>術前有在用 CPAP 者請病人自備機器與面罩</b>,術後盡早恢復使用"
     ],
+    diagram:{ section:"preop", caption:"Mallampati 分級:Class III–IV 提示困難面罩通氣與困難插管風險上升(原創示意圖)", svg:`<svg viewBox="0 0 680 350" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>Mallampati 氣道分級示意圖</title><desc>四格口內視診示意圖,依序為 Mallampati Class I 至 Class IV,舌根逐漸遮蔽軟顎與懸壅垂;Class III 與 Class IV 以紅色標示為困難氣道風險上升。</desc><defs><clipPath id="mp-clip"><ellipse cx="75" cy="100" rx="38" ry="55"/></clipPath></defs><rect x="8" y="8" width="664" height="334" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="340" y="33" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="600" fill="#423E39">Mallampati 氣道分級</text><g transform="translate(18,44)"><rect x="0" y="0" width="150" height="248" rx="12" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.2"/><ellipse cx="75" cy="100" rx="47" ry="64" fill="#DFC7BF" stroke="#B8968C" stroke-width="1.4"/><g clip-path="url(#mp-clip)"><ellipse cx="75" cy="118" rx="32" ry="46" fill="#7A625B"/><path d="M 37,100 A 38,55 0 0 1 113,100 Z" fill="#F3E6E0"/><path d="M 75,98 C 69,98 67,108 70,120 C 71,127 79,127 80,120 C 83,108 81,98 75,98 Z" fill="#DDB2A8" stroke="#B8968C" stroke-width="1"/><path d="M 50,102 C 44,118 46,136 52,152" fill="none" stroke="#E8CFC6" stroke-width="4.2" stroke-linecap="round"/><path d="M 100,102 C 106,118 104,136 98,152" fill="none" stroke="#E8CFC6" stroke-width="4.2" stroke-linecap="round"/><ellipse cx="75" cy="190" rx="41" ry="52" fill="#CE9C92" stroke="#AE7F76" stroke-width="1.2"/><path d="M 75,144 L 75,210" stroke="#B98A80" stroke-width="1.2" opacity="0.7"/></g><text x="75" y="196" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="600" fill="#423E39">Class I</text><text x="75" y="217" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">軟顎、咽門、懸壅垂</text><text x="75" y="234" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">與扁桃腺柱皆可見</text></g><g transform="translate(182,44)"><rect x="0" y="0" width="150" height="248" rx="12" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.2"/><ellipse cx="75" cy="100" rx="47" ry="64" fill="#DFC7BF" stroke="#B8968C" stroke-width="1.4"/><g clip-path="url(#mp-clip)"><ellipse cx="75" cy="118" rx="32" ry="46" fill="#7A625B"/><path d="M 37,100 A 38,55 0 0 1 113,100 Z" fill="#F3E6E0"/><path d="M 75,98 C 69,98 67,108 70,120 C 71,127 79,127 80,120 C 83,108 81,98 75,98 Z" fill="#DDB2A8" stroke="#B8968C" stroke-width="1"/><path d="M 50,102 C 44,118 46,136 52,152" fill="none" stroke="#E8CFC6" stroke-width="4.2" stroke-linecap="round"/><path d="M 100,102 C 106,118 104,136 98,152" fill="none" stroke="#E8CFC6" stroke-width="4.2" stroke-linecap="round"/><ellipse cx="75" cy="172" rx="41" ry="52" fill="#CE9C92" stroke="#AE7F76" stroke-width="1.2"/><path d="M 75,126 L 75,192" stroke="#B98A80" stroke-width="1.2" opacity="0.7"/></g><text x="75" y="196" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="600" fill="#423E39">Class II</text><text x="75" y="217" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">可見軟顎、咽門</text><text x="75" y="234" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">與部分懸壅垂</text></g><g transform="translate(346,44)"><rect x="0" y="0" width="150" height="248" rx="12" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.6"/><ellipse cx="75" cy="100" rx="47" ry="64" fill="#DFC7BF" stroke="#B8968C" stroke-width="1.4"/><g clip-path="url(#mp-clip)"><ellipse cx="75" cy="118" rx="32" ry="46" fill="#7A625B"/><path d="M 37,100 A 38,55 0 0 1 113,100 Z" fill="#F3E6E0"/><path d="M 75,98 C 69,98 67,108 70,120 C 71,127 79,127 80,120 C 83,108 81,98 75,98 Z" fill="#DDB2A8" stroke="#B8968C" stroke-width="1"/><ellipse cx="75" cy="160" rx="41" ry="52" fill="#CE9C92" stroke="#AE7F76" stroke-width="1.2"/><path d="M 75,114 L 75,180" stroke="#B98A80" stroke-width="1.2" opacity="0.7"/></g><text x="75" y="196" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">Class III</text><text x="75" y="217" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">僅見軟顎與</text><text x="75" y="234" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">懸壅垂基部</text></g><g transform="translate(510,44)"><rect x="0" y="0" width="150" height="248" rx="12" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.6"/><ellipse cx="75" cy="100" rx="47" ry="64" fill="#DFC7BF" stroke="#B8968C" stroke-width="1.4"/><g clip-path="url(#mp-clip)"><ellipse cx="75" cy="118" rx="32" ry="46" fill="#7A625B"/><path d="M 37,100 A 38,55 0 0 1 113,100 Z" fill="#F3E6E0"/><ellipse cx="75" cy="142" rx="41" ry="52" fill="#CE9C92" stroke="#AE7F76" stroke-width="1.2"/><path d="M 75,96 L 75,162" stroke="#B98A80" stroke-width="1.2" opacity="0.7"/></g><text x="75" y="196" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">Class IV</text><text x="75" y="217" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">僅見硬顎</text><text x="75" y="234" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">看不到軟顎</text></g><text x="340" y="312" text-anchor="middle" font-family="sans-serif" font-size="12.5" font-weight="600" fill="#8F2B20">Class III–IV:困難面罩通氣、喉頭鏡視野不佳與困難插管風險上升</text><text x="340" y="331" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#726B62">評估方式:病人坐姿、頭部中立、盡量張口伸舌、不發聲</text></svg>` },
     airway:[
-      "<b class='w'>預期困難氣道</b>:備 videolaryngoscope、不同尺寸喉頭鏡片與聲門上氣道、<b class='w'>call help</b>;肥胖者採<b>頭高斜坡位(ramped)</b>並充分預充氧",
-      "<b>去飽和極快</b>(FRC↓、耗氧↑) → 預充氧要做足,必要時加壓面罩或高流量鼻氧延長安全窒息時間",
+      "<b class='w'>預期困難氣道</b>:備影像式插管工具、不同尺寸喉頭鏡片與聲門上氣道、<b class='w'>call help</b>;肥胖者採<b>頭高斜坡位(ramped)</b>並充分 preoxygenation;<b class='w'>oral / nasal airway 與 suction 備在旁邊</b>,需要時馬上可用",
+      "<b>去飽和極快</b>(FRC↓、耗氧↑) → preoxygenation 要做足,必要時加壓面罩或高流量鼻氧延長安全窒息時間",
       "常用 <b>oral RAE 導管</b>置於下唇正中,配合開口器固定;開口器撐開時導管可能受壓或移位 → <b class='w'>撐開後重新確認雙側呼吸音與 EtCO₂</b>",
       "與外科團隊共用氣道,拔管計畫要一起討論"
     ],
@@ -2293,10 +2307,44 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v5.3";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-08-07";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v5.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-08-09";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-09",
+    note: "待校對的術式與危機處理卡片改為淺灰底。",
+    items: [
+      "術式列表與危機處理列表:尚未校對的項目卡片底色改為莫蘭迪淺灰,已校對的維持原本乳白底",
+      "首頁校對進度加註說明:底色偏灰即代表待校對"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "校對進度呈現調整;UPPP 列入已校對。",
+    items: [
+      "首頁校對進度:待校對的術式與危機處理項目改以淺灰色方框標示,一眼可分辨",
+      "耳鼻喉科懸壅垂顎咽成形術 UPPP 移入已校對"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "耳鼻喉科 UPPP 術前評估與氣道內容更新。",
+    items: [
+      "UPPP:術前評估新增 Mallampati 分級示意圖,標示 Class III–IV 為困難氣道風險",
+      "UPPP:氣道呼吸新增提醒 oral / nasal airway 與 suction 備在旁邊,需要時馬上可用",
+      "UPPP:用語調整為影像式插管工具與 preoxygenation"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "耳鼻喉科氣管切開術內容依本院作法調整。",
+    items: [
+      "氣管切開術:術前評估改以「排程氣切手術」與「急氣切(Call help!)」區分,並新增事先與麻醉醫師確認誘導藥物、備妥抽吸的提醒",
+      "氣管切開術:氣道呼吸強調退管須配合外科指令慢慢退管,氣切管置入後確認 EtCO₂ 波形改為紅字警示",
+      "氣管切開術:甦醒拔管移除拍胸部 X 光確認位置的內容"
+    ]
+  },
   {
     date: "2026-08-07",
     note: "AI 練習題移除舊題組,只保留國考模擬兩組。",
@@ -5524,7 +5572,7 @@ function progressRow(label, done, total, okText, todoText){
 }
 
 /* 把術式依科別分組,整科都校對完就只寫科別名,否則列出該科未校對的刀 */
-function surgSummary(list){
+function surgSummary(list, todo){
   const bySpec = [];
   list.forEach(s => {
     let g = bySpec.find(x => x.sp === s.specialty);
@@ -5538,12 +5586,13 @@ function surgSummary(list){
     const g = bySpec.find(x => x.sp === s.specialty);
     if(g) g.hit.push(s);
   });
+  const cls = todo ? "upd-link rv-chip" : "upd-link";
+  const btn = s => `<button class="${cls}" type="button" data-go="${SURGERIES.indexOf(s)}">${s.name}</button>`;
   return bySpec.map(g => {
-    if(g.hit.length === g.all.length) return `<b>${g.sp}</b>(全部)`;
-    const names = g.hit.map(s =>
-      `<button class="upd-link" type="button" data-go="${SURGERIES.indexOf(s)}">${s.name}</button>`).join("、");
-    return `<b>${g.sp}</b>:${names}`;
-  }).join(";");
+    /* 待校對一律逐台列出並加灰底方框;已校對整科完成時只寫科別名 */
+    if(!todo && g.hit.length === g.all.length) return `<b>${g.sp}</b>(全部)`;
+    return `<b>${g.sp}</b>:${g.hit.map(btn).join(todo ? " " : "、")}`;
+  }).join(todo ? "　" : ";");
 }
 
 function reviewProgressHtml(){
@@ -5552,16 +5601,17 @@ function reviewProgressHtml(){
   const cDone = CRISIS.filter(isChecked);
   const cTodo = CRISIS.filter(c => !isChecked(c));
   const cName = arr => arr.map(c => c.name).join("、");
+  const cChip = arr => arr.map(c => `<span class="rv-chip">${c.name}</span>`).join(" ");
 
   return `<div class="rv-prog">
       <div class="rv-title">校對進度</div>
       ${progressRow("術式", sDone.length, SURGERIES.length,
-        sDone.length ? surgSummary(sDone) : "尚未開始",
-        sTodo.length ? surgSummary(sTodo) : "")}
+        sDone.length ? surgSummary(sDone, false) : "尚未開始",
+        sTodo.length ? surgSummary(sTodo, true) : "")}
       ${progressRow("危機處理", cDone.length, CRISIS.length,
         cDone.length ? cName(cDone) : "尚未開始",
-        cTodo.length ? cName(cTodo) : "")}
-      <div class="rv-foot">「待校對」代表內容已建置但尚未逐條核對過,使用時請特別對照所屬單位作法與主治醫師醫囑。</div>
+        cTodo.length ? cChip(cTodo) : "")}
+      <div class="rv-foot">「待校對」代表內容已建置但尚未逐條核對過,使用時請特別對照所屬單位作法與主治醫師醫囑。列表中<b>底色偏灰</b>的術式與危機處理項目即為待校對。</div>
     </div>`;
 }
 
@@ -7112,7 +7162,7 @@ function crisisHtml(){
       <div>
         <div class="cri-group">${g}</div>
         ${CRISIS.filter(c => c.group === g).map(c => `
-          <div class="cri-item" data-go="${c.id}">
+          <div class="cri-item ${isChecked(c)?'':'unchecked'}" data-go="${c.id}">
             <div class="ci-name">${c.name}</div>
             <div class="ci-en">${c.en}</div>
             ${c.key ? `<div class="ci-key">${c.key}</div>` : ""}
@@ -7165,7 +7215,7 @@ function renderList(){
   el("list").innerHTML = items.map(s=>{
     const id = SURGERIES.indexOf(s);
     const isN = isNewItem(s);
-    return `<div class="card ${id===activeId?'active':''} ${isN?'has-new':''}" data-id="${id}">
+    return `<div class="card ${id===activeId?'active':''} ${isN?'has-new':''} ${isChecked(s)?'':'unchecked'}" data-id="${id}">
       ${isN ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
       <div class="name">${s.en}</div>
       <div class="en">${s.name}</div>
