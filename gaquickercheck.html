@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="麻醉速查">
 <meta name="theme-color" content="#FBF8F1">
 <meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
 <title>各科手術全身麻醉快速查詢</title>
 <style>html{background:#FBF8F1;color-scheme:light}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -386,6 +388,8 @@ button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
 .cri-ul li,.cri-ol li{font-size:14.5px;line-height:1.78;color:var(--ink);margin-bottom:6px}
 .cri-ul li:last-child,.cri-ol li:last-child{margin-bottom:0}
 .cri-ul li::marker{color:var(--ochre)}
+.cri-ul li.hd{list-style:none;margin-left:-21px;margin-top:11px;margin-bottom:6px;font-size:12.5px;font-weight:700;letter-spacing:.05em;color:var(--ink-soft)}
+.cri-ul li.hd:first-child{margin-top:0}
 .cri-ol li::marker{color:#8A7A50;font-weight:700}
 .cri-card b.w{font-weight:700;color:var(--warn)}
 .cri-avoid{background:var(--flag-tint);border:1px solid #DCC3BB;border-radius:10px;padding:12px 14px}
@@ -1271,6 +1275,278 @@ const SURGERIES = [
     ]
   },
   {
+    specialty:"骨科",
+    name:"全髖關節置換術",
+    en:"Total Hip Replacement (THR)",
+    updated:"2026-08-10",
+    summary:{ position:"Lateral decubitus (posterior) · Supine (direct anterior)", posType:"lateral", time:"參考捷格手術排程時間", blood:"中(可隱性失血)", airway:"半身麻醉 / GA(兩者皆可)" },
+    preop:[
+      "<b>擇期刀與髖部骨折的急診刀不同</b>:有時間把貧血、糖尿病、心肺功能、營養與牙科感染源先優化",
+      "術前查 Hb 並矯正貧血;<b class='w'>抗凝與抗血小板藥物盤點會直接影響半身麻醉的可行性與時機</b>(依區域麻醉抗凝指引)",
+      "依 ERAS:術前衛教、避免長時間禁食、術前碳水化合物飲品、事先講好當天下床的目標",
+      "<b class='w'>翻修手術(revision)失血與時間都明顯多於初次手術</b> → 備血、粗管路,並考慮動脈導管",
+      "確認是否使用骨水泥:骨水泥固定者要預先做好骨水泥植入症候群的準備"
+    ],
+    airway:[
+      "半身麻醉:病人清醒或輕鎮靜;側臥時間長,擺位舒適與呼吸狀況要持續確認",
+      "全身麻醉:側臥採氣管內管並牢固固定;<b>頭頸維持中立</b>,避免過度側屈或旋轉",
+      "誘導用 <b>rocuronium</b>,結束前以 <b>sugammadex</b> 逆轉"
+    ],
+    monitor:[
+      "標準 ASA 基本監測即足夠;<b>翻修手術、心肺共病重或預期大量失血者加動脈導管</b>",
+      "<b class='w'>骨水泥與假體置入前後密切監測血壓、血氧、EtCO₂ 與心律</b>,並事先請外科在置入前告知",
+      "體溫與尿量;側臥擺位後重新確認血壓壓脈帶與血氧探頭的位置與數值"
+    ],
+    hemo:[
+      "<b class='w'>骨水泥植入症候群(BCIS)</b>:擴髓與骨水泥加壓使髓內壓大幅上升,把骨髓脂肪與骨水泥成分推入循環 → 低血壓、低血氧、EtCO₂ 突降、心律不整,嚴重時心跳停止<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>BCIS 常在<b>骨水泥灌注、假體插入或關節復位後數分鐘內</b>發生。輕度只有短暫低血氧或低血壓,重度才會意識喪失或心血管崩潰;<b>輕度形式其實不算少見</b>,只是常被當成一般麻醉波動而忽略。高風險族群是高齡、心肺儲備差、骨質疏鬆、病理性骨折與翻修手術。<b>預防</b>:置入前請外科先告知、把吸入氧濃度調高、確認血容量足夠、備妥升壓藥;外科端會做髓腔沖洗與抽吸減壓、避免灌注過早。<b>處置</b>:給百分之百氧並確保通氣、快速輸液加升壓藥、心搏過緩給 atropine、嚴重循環衰竭用 epinephrine 並依主治醫師指示啟動急救,同時排除出血與其他病因。</span>",
+      "<b>tranexamic acid 減少失血與輸血</b>,是 ERAS 路徑的標準做法之一,依主治醫師指示給予",
+      "<b class='w'>不常規使用控制性降壓</b>:器官低灌流的風險大於減少失血的好處",
+      "半身麻醉的交感阻斷加上側臥,誘導後低血壓常見 → 緩慢給藥、備妥輸液與升壓藥"
+    ],
+    intraop:[
+      "側臥擺位:骨盆固定器要牢、<b>腋窩墊避免臂神經叢受壓</b>、受壓側耳與眼保護、下肢受壓點墊好",
+      "脫位與復位髖關節時可能有短暫的血壓與心跳變化",
+      "<b class='w'>手術相關神經損傷</b>(坐骨神經、股神經、外側股皮神經)與切口、牽引及肢體延長有關 → 術後要主動評估",
+      "積極保溫;預防性抗生素在切皮前給足並依時間重複",
+      "隱性失血不容小覷:引流與傷口滲血之外,還有肌肉間隙的積血"
+    ],
+    drug:[
+      "多模式止痛:acetaminophen + NSAID + 單劑 dexamethasone(兼 PONV 預防),盡量減少鴉片",
+      "區域鎮痛以<b>運動保留為原則</b>:<b class='w'>PENG(髖囊周圍神經阻滯)可改善術後恢復品質而較不影響股四頭肌力</b>,亦可搭配關節周圍浸潤;避免會造成股四頭肌無力、延後下床的股神經阻斷",
+      "注意局部麻醉藥總量以防 <b class='w'>LAST(局部麻醉藥全身毒性)</b>;關節周圍浸潤與神經阻斷的量要一起算",
+      "全麻族群使用麻醉深度監測、避免過深,以降低術後譫妄"
+    ],
+    emergence:[
+      "平順甦醒與拔管;確認體溫、疼痛與止吐都已處理",
+      "半身麻醉者注意阻斷消退情形與<b>術後尿滯留</b>",
+      "轉床時維持髖關節姿勢限制,避免脫位"
+    ],
+    postop:[
+      "<b>當日或隔日下床</b>是 ERAS 的核心;止痛與血壓穩定都是為了讓病人能走",
+      "追蹤 Hb(隱性失血)、給予靜脈栓塞預防",
+      "<b class='w'>脫位預防衛教</b>:依手術入路給予姿勢限制;神經阻斷後肢體無力要防跌",
+      "年長者注意譫妄與疼痛控制"
+    ],
+    flags:[
+      "骨水泥植入症候群、脂肪栓塞",
+      "靜脈血栓栓塞與肺栓塞",
+      "術後髖關節脫位",
+      "手術相關神經損傷(坐骨神經、股神經、外側股皮神經)",
+      "隱性失血造成術後貧血;翻修手術大出血",
+      "局部麻醉藥全身毒性、阻斷後跌倒、半身麻醉後尿滯留"
+    ],
+    refs:[
+      "Wainwright, T. W., Gill, M., McDonald, D. A., Middleton, R. G., Reed, M., Sahota, O., Yates, P., & Ljungqvist, O. (2020). Consensus statement for perioperative care in total hip replacement and total knee replacement surgery: Enhanced Recovery After Surgery (ERAS) Society recommendations. Acta Orthopaedica, 91(1), 3–19.",
+      "Brokke, K. E., Graman, M., Servaas, S., Sierevelt, I. N., Steegers, M. A. H., & Nolte, P. A. (2025). Bone cement implantation syndrome: A scoping review. British Journal of Anaesthesia, 135(4), 1038–1050.",
+      "Pascarella, G., Costa, F., Del Buono, R., Pulitanò, R., Strumia, A., Piliego, C., & Agrò, F. E. (2021). Impact of the pericapsular nerve group (PENG) block on postoperative analgesia and functional recovery following total hip arthroplasty: A randomised, observer-masked, controlled trial. Anaesthesia, 76(11), 1492–1498."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"關節鏡手術(膝／肩)",
+    en:"Arthroscopic Surgery (Knee / Shoulder)",
+    updated:"2026-08-10",
+    summary:{ position:"Supine with leg holder (knee) · Beach chair or lateral (shoulder)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA(LMA 或 ETT)+ 區域阻斷;膝亦可半身麻醉" },
+    preop:[
+      "多為健康年輕族群的日間手術(半月板、十字韌帶) → 目標是<b>快速甦醒、良好止痛、順利當日出院</b>;但肩袖修補與肩關節不穩定手術的病人年齡層較高",
+      "<b class='w'>肩關節鏡若採沙灘椅位(beach chair),術前要問腦血管疾病、頸椎病變、姿勢性低血壓與高血壓控制情形</b>",
+      "確認手術側別與標記,阻斷前執行 time-out(避免錯側阻斷)",
+      "<b>阻斷前先問呼吸功能</b>:嚴重肺病、對側橫膈麻痺、重度睡眠呼吸中止者,不適合傳統的斜角肌間臂神經叢阻斷"
+    ],
+    airway:[
+      "膝關節鏡:多數用 <b>LMA</b> 即可;亦可採半身麻醉",
+      "<b class='w'>肩關節鏡採沙灘椅位時,頭頸固定後麻醉端很難再靠近氣道</b> → 導管或 LMA 固定確實,擺位完成後重新確認通氣與 EtCO₂",
+      "<b>頭頸維持中立</b>,避免過度旋轉、側屈或前屈造成頸部拉扯與神經傷害;耳朵與眼睛不可受壓",
+      "側臥牽引位的肩關節鏡:注意受壓側腋窩墊與臂神經叢保護"
+    ],
+    monitor:[
+      "標準 ASA 基本監測",
+      "<b class='w'>沙灘椅位:在上臂量到的血壓會高估腦部的灌流壓</b> → 換算高度差、或把動脈導管的歸零點放在外耳道高度<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>血液是有重量的,同一條血管在越高的位置壓力越低。<b>高度每上升約 1.25 公分,壓力大約下降 1 mmHg</b>。沙灘椅位時外耳道通常比心臟高出約 20 至 30 公分,換算下來<b>腦部的平均動脈壓比手臂量到的低了大約 15 至 25 mmHg</b>,病人越高、椅背角度越大,差距越大。臨床上的意義:手臂量到 70 mmHg 看起來還可以,腦部可能只剩 50 mmHg 以下。所以沙灘椅位<b>不做控制性降壓</b>,並把血壓維持在校正後仍不低於基準值七成的範圍;有動脈導管時把換能器歸零在外耳道高度最直接。若有腦氧監測可作為輔助,但不能取代把血壓維持住這件事。</span>",
+      "體溫監測:大量沖洗液加上暴露,低體溫很常見",
+      "長時間肩關節鏡要定期評估<b>頸部與胸壁是否腫脹</b>"
+    ],
+    diagram:{ section:"monitor", caption:"沙灘椅位時手臂血壓與腦部灌流壓的高度差(原創示意圖)", svg:`<svg viewBox="0 0 680 330" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>沙灘椅位血壓高度差示意圖</title><desc>示意圖顯示病人採沙灘椅半坐姿,血壓壓脈帶位於手臂約心臟高度,外耳道高於心臟約二十至三十公分,依每一點二五公分約一毫米汞柱換算,腦部平均動脈壓比手臂量到的低約十五至二十五毫米汞柱。</desc><rect x="8" y="8" width="664" height="314" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="340" y="34" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="600" fill="#423E39">沙灘椅位:量到的血壓不等於腦部的血壓</text><g transform="translate(40,52)"><rect x="0" y="0" width="300" height="248" rx="12" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.2"/><path d="M 60,224 L 176,224 L 176,120 L 236,58" stroke="#B7AE9F" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M 96,214 L 176,214 L 176,126 L 214,88" stroke="#4A443D" stroke-width="22" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="224" cy="74" r="18" fill="#4A443D"/><ellipse cx="168" cy="152" rx="14" ry="12" fill="#CE9C92" stroke="#AE7F76" stroke-width="1.2"/><text x="150" y="176" text-anchor="end" font-family="sans-serif" font-size="11" fill="#726B62">心臟</text><rect x="120" y="176" width="34" height="15" rx="4" fill="#A9B6AF" stroke="#7A8B87" stroke-width="1"/><text x="116" y="188" text-anchor="end" font-family="sans-serif" font-size="11" fill="#5E6B68">壓脈帶</text><line x1="252" y1="74" x2="286" y2="74" stroke="#8F2B20" stroke-width="1.4" stroke-dasharray="4 3"/><line x1="186" y1="182" x2="286" y2="182" stroke="#8F2B20" stroke-width="1.4" stroke-dasharray="4 3"/><line x1="278" y1="74" x2="278" y2="182" stroke="#8F2B20" stroke-width="2.4"/><path d="M 278,74 L 272,86 L 284,86 Z" fill="#8F2B20"/><path d="M 278,182 L 272,170 L 284,170 Z" fill="#8F2B20"/><text x="272" y="132" text-anchor="end" font-family="sans-serif" font-size="11.5" font-weight="600" fill="#8F2B20">20–30 cm</text><text x="150" y="242" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#726B62">外耳道高於心臟,椅背越陡差距越大</text></g><g transform="translate(360,52)"><rect x="0" y="0" width="280" height="248" rx="12" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.2"/><text x="20" y="34" font-family="sans-serif" font-size="13.5" font-weight="600" fill="#423E39">換算原則</text><text x="20" y="60" font-family="sans-serif" font-size="12.5" fill="#4A443D">高度每上升 1.25 cm</text><text x="20" y="80" font-family="sans-serif" font-size="12.5" fill="#4A443D">壓力約下降 1 mmHg</text><rect x="20" y="98" width="240" height="60" rx="8" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.4"/><text x="140" y="122" text-anchor="middle" font-family="sans-serif" font-size="12.5" fill="#8F2B20">手臂量到的平均動脈壓</text><text x="140" y="145" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">減去約 15–25 mmHg = 腦部</text><text x="20" y="186" font-family="sans-serif" font-size="12.5" fill="#4A443D">手臂 70 mmHg → 腦部可能不到 50</text><text x="20" y="212" font-family="sans-serif" font-size="12.5" font-weight="600" fill="#8F2B20">所以沙灘椅位不做控制性降壓</text><text x="20" y="232" font-family="sans-serif" font-size="12.5" fill="#4A443D">有動脈導管就把歸零點放在外耳道</text></g></svg>` },
+    hemo:[
+      "<b class='w'>由平躺變成半坐的當下靜脈回流下降、血壓會掉</b>,再加上麻醉與阻斷的交感抑制 → 擺位過程要慢、邊擺邊看血壓",
+      "沙灘椅位維持血壓的原則:<b>以校正到腦部高度後的數值判讀</b>,避免比基準值下降超過三成",
+      "膝關節鏡使用止血帶者:<b class='w'>放氣後再灌流會出現代謝性酸、血鉀上升、EtCO₂ 上升與暫時性低血壓</b> → 放氣前先預告、放氣後密切觀察",
+      "多數關節鏡失血很少;若出現血壓持續偏低,先排除體位與阻斷因素,再找其他原因"
+    ],
+    intraop:[
+      "<b class='w'>灌流液外滲</b>:肩關節鏡時間長、灌流壓高時,液體會滲入頸部、胸壁與三角肌區,造成明顯腫脹,<b>嚴重時壓迫氣道</b> → 定期用手摸、拔管前一定要評估",
+      "大量沖洗液加上暴露容易低體溫 → 加溫毯、沖洗液加溫、提高室溫",
+      "止血帶(膝):壓力依肢體周徑與血壓設定,<b>時間超過 2 小時風險明顯上升</b>,超時要與外科溝通放氣休息",
+      "體位相關受壓點檢查:膝關節鏡的腿架與大腿固定帶、肩關節鏡的頭頸與健側手臂",
+      "沙灘椅位時罕見但已有靜脈空氣栓塞的報告,出現無法解釋的 EtCO₂ 下降與低血壓要納入考慮"
+    ],
+    drug:[
+      "<b>斜角肌間臂神經叢阻斷(interscalene block)止痛效果最好</b>,但<b class='w'>幾乎必然造成同側橫膈麻痺</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>橫膈神經來自 C3 到 C5,在前斜角肌表面走行,與 C5、C6 神經根非常接近,所以傳統高容積的斜角肌間阻斷幾乎一定會把橫膈神經一起阻斷,造成<b>同側橫膈麻痺</b>。健康人多半只覺得有點喘、可以耐受;但<b>嚴重肺部疾病、對側橫膈已經有問題、極度肥胖或重度睡眠呼吸中止的病人可能出現明顯呼吸困難</b>。降低風險的方法:<b>減少局部麻醉藥的劑量與容積</b>、把注射點遠離 C5 與 C6 神經根,或改用鎖骨上、上肩胛神經合併腋神經等替代阻斷。其他可能併發症包括 Horner 徵候群、聲音沙啞(喉返神經)、氣胸,以及誤入硬膜外或蜘蛛膜下腔。術後若病人主訴喘,先想到橫膈麻痺,採半坐臥、給氧並通知主治醫師。</span>",
+      "<b class='w'>局部麻醉藥總量要合計</b>(阻斷 + 關節內或傷口浸潤)以避免 LAST",
+      "日間手術用藥以短效為主;<b>PONV 預防不可省</b>,年輕女性與使用鴉片者風險更高",
+      "多模式止痛:acetaminophen、NSAID、dexamethasone(亦可延長阻斷時效)"
+    ],
+    emergence:[
+      "<b class='w'>先回到平躺、確認頸部與胸壁腫脹狀況再拔管</b>;腫脹明顯者評估氣道並延後拔管",
+      "阻斷側上肢會完全無力無感覺 → <b>三角巾固定、衛教保護,避免壓迫與外傷</b>",
+      "膝關節鏡半身麻醉者注意阻斷消退與尿滯留"
+    ],
+    postop:[
+      "<b class='w'>衛教反彈痛(rebound pain)</b>:阻斷退掉的時候會突然很痛,通常在術後 12 至 24 小時 → 教病人<b>不要等到痛了才吃藥</b>,在阻斷還有效時就先按時服用口服止痛藥",
+      "出院前確認:能自行行走或有人照顧、疼痛可控、無呼吸困難、傷口與敷料狀況良好",
+      "<b>阻斷後出現喘或呼吸不順要回診</b>;肢體感覺運動若超過預期時間仍未恢復也要回診",
+      "膝關節鏡:依復健計畫早期活動;肩關節鏡:依外科指示使用肩帶"
+    ],
+    flags:[
+      "沙灘椅位腦部低灌流 → 缺血性腦傷或視神經傷害(罕見但後果嚴重)",
+      "斜角肌間阻斷相關:橫膈麻痺與呼吸困難、Horner 徵候群、聲音沙啞、氣胸、誤入硬膜外或蜘蛛膜下腔",
+      "灌流液外滲造成頸部與胸壁腫脹、氣道壓迫",
+      "止血帶相關:放氣後血流動力學變化、止血帶神經麻痺",
+      "局部麻醉藥全身毒性(LAST)、反彈痛",
+      "體位相關神經傷害(頸部過度旋轉、臂神經叢受壓)、低體溫"
+    ],
+    refs:[
+      "Murphy, G. S., Greenberg, S. B., & Szokol, J. W. (2019). Safety of beach chair position shoulder surgery: A review of the current literature. Anesthesia & Analgesia, 129(1), 101–118.",
+      "El-Boghdadly, K., Chin, K. J., & Chan, V. W. S. (2017). Phrenic nerve palsy and regional anesthesia for shoulder surgery: Anatomical, physiologic, and clinical considerations. Anesthesiology, 127(1), 173–191.",
+      "Gan, T. J., Belani, K. G., Bergese, S., Chung, F., Diemunsch, P., Habib, A. S., ... Philip, B. K. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"骨折切開復位內固定術",
+    en:"Open Reduction and Internal Fixation (ORIF)",
+    updated:"2026-08-10",
+    summary:{ position:"Supine / lateral / prone (site-dependent)", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中(股骨、骨盆可多)", airway:"GA 或區域麻醉;急診刀常需快速誘導插管" },
+    preop:[
+      "<b class='w'>多數是外傷急診刀,一律視同飽胃</b>:疼痛、鴉片與創傷本身都會延遲胃排空,禁食時間再久也不能當成空腹 → 以 rocuronium 快速誘導插管",
+      "<b class='w'>不要被明顯的肢體骨折吸走注意力</b>:先系統性排查頭部、頸椎、胸腹與骨盆的合併傷,尤其是高能量外傷",
+      "<b>隱性失血常被低估</b>:單一股骨幹骨折就可能失血一千毫升以上,骨盆骨折更多 → 查 Hb、建立可靠靜脈、依情況備血",
+      "<b class='w'>開放性骨折:抗生素越早越好,理想在受傷後一小時內給予</b>,並確認破傷風疫苗狀態與清創時機",
+      "抗凝與抗血小板藥物盤點(影響區域麻醉的可行性);高能量外傷的年輕人與低能量跌倒的年長者,評估重點完全不同"
+    ],
+    airway:[
+      "急診飽胃 → <b class='w'>快速誘導插管</b>;疑似頸椎損傷者維持頸椎軸線徒手固定,並優先使用影像式喉頭鏡",
+      "上肢手術可以臂神經叢阻斷為主要麻醉;下肢可考慮脊髓麻醉,但<b>多發外傷、血流動力學不穩或凝血異常者不適合</b>",
+      "俯臥或側臥依骨折部位決定;擺位完成後重新確認導管深度、呼吸音與氣道壓"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;<b>多發外傷、預期大量失血或心肺共病者加動脈導管、粗管路與加溫輸液裝置</b>",
+      "<b class='w'>體溫要當成生命徵象在看</b>:外傷病人本來就容易低體溫,而低體溫直接惡化凝血",
+      "尿量;擠壓傷或長時間缺血者注意尿色與肌酸激酶(橫紋肌溶解)",
+      "術前先記錄患肢末梢循環、感覺與運動狀態,作為術後比較的基準"
+    ],
+    hemo:[
+      "失血分成看得到的與看不到的:骨折斷端、肌肉間隙與手術剝離面都會出血,復位與內固定當下可能突然湧出",
+      "<b class='w'>低體溫、酸中毒與凝血病會互相惡化</b> → 積極保溫、避免大量晶體液稀釋、需要輸血時同步補充凝血製品",
+      "<b>tranexamic acid 在外傷後越早給越好</b>,依主治醫師指示使用",
+      "使用止血帶者:放氣後會出現代謝性酸、血鉀上升、EtCO₂ 上升與暫時性低血壓 → 放氣前先預告"
+    ],
+    intraop:[
+      "<b class='w'>脂肪栓塞症候群</b>:長骨骨折本身與髓內器械操作都會把骨髓脂肪推入循環<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>脂肪栓塞是指骨髓脂肪進入靜脈循環,常見到幾乎所有長骨骨折都會發生;真正造成器官傷害的<b>脂肪栓塞症候群</b>則少見得多。<b>典型表現</b>是在受傷後 24 至 72 小時出現三聯徵:低血氧與呼吸窘迫(最常見)、神經功能異常(混亂、躁動、意識改變),以及軀幹與腋下的點狀出血疹(最具特異性但出現率最低)。<b>術中</b>可能只表現為無法解釋的血氧下降、EtCO₂ 變化、低血壓或心律不整,診斷靠排除法。<b>風險最高</b>的是年輕男性、多處長骨骨折、髓內擴髓與打釘。<b>減少風險</b>:盡量減少骨折端在受傷後到手術前的活動、及早做確定性固定、術中降低髓內壓。<b>治療以支持為主</b>:保護性肺通氣、維持氧合與循環,嚴重者送加護病房;類固醇的角色仍不明確。</span>",
+      "<b class='w'>急性骨筋膜室症候群</b>:術中就要開始留意,而不是等術後<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>急性骨筋膜室症候群是封閉肌肉腔室內壓力上升,造成組織灌流不足與肌肉神經壞死,常見於<b>脛骨骨幹、前臂與擠壓傷</b>。最早也最重要的徵兆是<b>與傷勢不成比例的疼痛,以及被動牽拉患處肌肉時的劇痛</b>;脈搏消失是很晚期的表現,不能拿來排除。<b>區域麻醉並不是禁忌</b>,但共識建議:使用<b>低濃度局部麻醉藥</b>、避免高濃度或長時間的連續阻斷、避免加太多會讓阻斷變深變久的輔助藥、和外科與病房事先講好監測方式並清楚記錄。真正的關鍵是<b>不要只靠疼痛這一個指標</b>:需要的止痛藥量突然愈來愈大、腫脹緊繃、感覺異常,都要當成警訊立即通報外科,必要時直接量腔室壓力。</span>",
+      "止血帶依肢體周徑與收縮壓設定壓力並<b>記錄起訖時間</b>;時間過長會增加神經與肌肉傷害",
+      "積極保溫;預防性抗生素在切皮前給足,長時間手術依藥物半衰期重複給予",
+      "C-arm 透視時注意輻射防護與管路被拉扯"
+    ],
+    drug:[
+      "急診刀誘導以 propofol(依血流動力學減量)+ <b>rocuronium</b> 快速誘導,結束前以 <b>sugammadex</b> 逆轉",
+      "<b>多模式止痛加區域阻斷</b>:上肢用臂神經叢,下肢視部位用股神經、內收肌管或膕窩阻斷;<b class='w'>骨筋膜室症候群高風險部位改用低濃度、單次而非長時間連續阻斷</b>,並與外科討論",
+      "局部麻醉藥總量要合計以避免 <b class='w'>LAST</b>",
+      "外傷病人術前常已用了不少鴉片,耐受性較高,劑量要重新滴定而非照表操課"
+    ],
+    emergence:[
+      "平順甦醒與拔管;飽胃誘導者確認氣道反射恢復",
+      "<b>拔管前後再次檢查患肢末梢循環、感覺與運動</b>,並與術前基準比較",
+      "交班要交清楚:阻斷部位與範圍、止血帶時間、失血量、開放性骨折的抗生素給藥時間"
+    ],
+    postop:[
+      "<b class='w'>術後每小時評估患肢</b>:疼痛超乎預期、被動牽拉痛、腫脹緊繃、感覺異常 → 立即通報,懷疑骨筋膜室症候群",
+      "<b class='w'>需要愈來愈多止痛藥才壓得住的疼痛是警訊,要通報而不是一直加藥</b>",
+      "長骨骨折者持續監測呼吸與意識狀態,注意術後 24 至 72 小時才出現的脂肪栓塞症候群",
+      "靜脈栓塞預防、早期復健與營養支持;開放性骨折依外科計畫追蹤傷口與感染徵象"
+    ],
+    flags:[
+      "脂肪栓塞症候群(尤其多處長骨骨折與髓內器械操作)",
+      "急性骨筋膜室症候群",
+      "隱性失血、低體溫與凝血病的惡性循環",
+      "急診飽胃誤吸;合併傷被漏掉(頭、頸椎、胸腹、骨盆)",
+      "開放性骨折感染、神經血管損傷",
+      "止血帶相關傷害、局部麻醉藥全身毒性"
+    ],
+    refs:[
+      "Nathanson, M. H., Harrop-Griffiths, W., Aldington, D. J., Forward, D., Mannion, S., Kinnear-Mellor, R. G. M., Miller, K. L., Ratnayake, B., Wiles, M. D., & Wolmarans, M. R. (2021). Regional analgesia for lower leg trauma and the risk of acute compartment syndrome: Guideline from the Association of Anaesthetists. Anaesthesia, 76(11), 1518–1525.",
+      "Luff, D., & Hewson, D. W. (2021). Fat embolism syndrome. BJA Education, 21(9), 322–328.",
+      "British Orthopaedic Association. (2017). BOAST: Open fracture management. British Orthopaedic Association.",
+      "British Orthopaedic Association. (2021). BOAST: The safe use of intraoperative tourniquets. British Orthopaedic Association."
+    ]
+  },
+  {
+    specialty:"骨科",
+    name:"骨折閉鎖復位內固定術",
+    en:"Closed Reduction and Internal Fixation (CRIF)",
+    updated:"2026-08-10",
+    summary:{ position:"Supine (± traction table) · C-arm", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA(LMA 或 ETT)或區域麻醉;急診刀常需快速誘導插管" },
+    preop:[
+      "不切開傷口,在 X 光透視下把骨折復位後經皮打入鋼釘、螺釘或髓內釘;<b class='w'>切口小不等於麻醉單純</b>",
+      "常見情境:小兒肱骨髁上與前腕骨折、成人腕部與髖部骨折、長骨的髓內釘固定",
+      "急診刀依<b>飽胃</b>處理;<b class='w'>小兒務必問清楚最後進食時間與內容</b>,並依年齡準備器材與藥物劑量",
+      "<b class='w'>復位失敗隨時可能改成切開復位</b> → 管路、備血與時間預估都要用 ORIF 的規格準備",
+      "術前記錄患肢的末梢循環、感覺與運動(小兒肱骨髁上骨折特別要記錄橈動脈搏動與手指活動),作為術後比較基準"
+    ],
+    airway:[
+      "預期時間短、仰臥、非飽胃者可用 <b>LMA</b>;<b>飽胃、俯臥或側臥、使用牽引床或預期時間長者用 ETT</b>",
+      "急診飽胃 → 以 rocuronium 快速誘導插管",
+      "<b class='w'>牽引床或頭頸固定後,管路位置就很難再調整</b> → 擺位完成後重新確認呼吸音、氣道壓與 EtCO₂"
+    ],
+    monitor:[
+      "標準 ASA 基本監測",
+      "<b class='w'>復位操作那一瞬間刺激很強</b>,容易出現心跳血壓上升或體動 → 確認麻醉深度與肌鬆足夠再讓外科動手",
+      "C-arm 反覆進出時管路與監測線容易被拉扯或移位,<b>每次移動後重新確認</b>",
+      "體溫(小兒散熱快);輻射防護:穿鉛衣、拉開距離、請外科盡量縮短透視時間"
+    ],
+    hemo:[
+      "出血通常很少;若血壓持續偏低,先想其他原因而不是歸因於手術本身",
+      "<b class='w'>牽引與復位可能引起強烈疼痛刺激或迷走反應</b>,出現心搏過緩與低血壓時請外科暫停操作",
+      "髓內釘擴髓與打入時髓內壓上升,一樣有把骨髓脂肪推入循環的風險",
+      "使用牽引床時注意會陰柱壓迫與健側肢體的擺位"
+    ],
+    intraop:[
+      "<b class='w'>復位需要足夠的肌肉鬆弛與止痛</b>:肌鬆不夠會讓復位困難、外科反覆嘗試,反而拉長時間、增加軟組織腫脹",
+      "<b class='w'>反覆復位嘗試會提高術後急性骨筋膜室症候群的風險</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>閉鎖復位靠的是外力牽引與徒手操作,過程中軟組織會再次受到擠壓與拉扯。嘗試次數愈多、時間愈久,腫脹愈明顯,加上術後包紮的石膏或副木若太緊,就可能把腔室內壓推上去。<b>最早的警訊是與傷勢不成比例的疼痛,以及被動牽拉患處肌肉時的劇痛</b>;脈搏消失屬於很晚期的表現。麻醉端能做的事:讓復位一次到位所需的肌鬆與止痛足夠、術後不要用會完全掩蓋疼痛的高濃度長效阻斷、把手術經過與阻斷內容清楚交班,並提醒病房抬高患肢與逐小時評估。前臂與小腿是最需要警覺的部位。</span>",
+      "保溫,尤其小兒與時間拉長的病例",
+      "隨時準備轉為切開復位:轉換時失血、時間與麻醉需求都會跳一級"
+    ],
+    drug:[
+      "急診刀以 <b>rocuronium</b> 快速誘導;短時間手術可用短效方案,結束前以 <b>sugammadex</b> 逆轉",
+      "多模式止痛:acetaminophen、NSAID(依外科對骨癒合的意見)、局部浸潤",
+      "<b class='w'>骨筋膜室症候群高風險部位(前臂、小腿)的區域阻斷要先與外科討論</b>,並選擇低濃度、單次的做法",
+      "PONV 預防;小兒依體重計算劑量並複誦確認"
+    ],
+    emergence:[
+      "平順甦醒;短刀更要注意甦醒品質與止吐",
+      "<b class='w'>拔管前確認石膏或副木沒有過緊</b>,並再次檢查患肢末梢循環、感覺與運動",
+      "小兒甦醒躁動常見,環境安靜、盡早讓家長陪伴,並先排除疼痛與低血氧等原因"
+    ],
+    postop:[
+      "<b class='w'>患肢抬高、每小時評估</b>:疼痛超乎預期、被動牽拉痛、腫脹緊繃、感覺異常都要立即通報",
+      "<b>石膏或副木過緊加上腫脹是術後骨筋膜室症候群的常見組合</b>,必要時請外科剖開石膏",
+      "小兒的疼痛評估要靠哭鬧、不肯活動患肢等客觀行為指標,不能只問",
+      "依外科指示追蹤 X 光確認復位是否維持;長骨骨折者留意脂肪栓塞的呼吸與意識變化"
+    ],
+    flags:[
+      "復位失敗轉為切開復位,手術時間、失血與麻醉需求超出原本預期",
+      "急性骨筋膜室症候群(反覆復位、石膏或副木過緊)",
+      "脂肪栓塞(髓內釘擴髓與打入)",
+      "急診飽胃誤吸;小兒禁食時間不足",
+      "牽引床相關壓迫傷(會陰柱、健側肢體)、輻射暴露",
+      "復位操作引起的迷走反應性心搏過緩"
+    ],
+    refs:[
+      "Nathanson, M. H., Harrop-Griffiths, W., Aldington, D. J., Forward, D., Mannion, S., Kinnear-Mellor, R. G. M., Miller, K. L., Ratnayake, B., Wiles, M. D., & Wolmarans, M. R. (2021). Regional analgesia for lower leg trauma and the risk of acute compartment syndrome: Guideline from the Association of Anaesthetists. Anaesthesia, 76(11), 1518–1525.",
+      "Luff, D., & Hewson, D. W. (2021). Fat embolism syndrome. BJA Education, 21(9), 322–328.",
+      "British Orthopaedic Association. (2021). BOAST: The safe use of intraoperative tourniquets. British Orthopaedic Association."
+    ]
+  },
+  {
     checked: "2026-08-07",
     specialty:"胸腔外科",
     name:"肺葉切除術",
@@ -2022,6 +2298,562 @@ const SURGERIES = [
     ]
   },
   {
+    specialty:"婦產科",
+    name:"腹腔鏡子宮肌瘤切除術",
+    en:"Laparoscopic Myomectomy (LM)",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy · Trendelenburg", posType:"trend", time:"參考捷格手術排程時間", blood:"中–多", airway:"GA / ETT・氣腹+頭低位" },
+    preop:[
+      "多為育齡女性、希望保留子宮;<b class='w'>常有經血過多造成的缺鐵性貧血</b> → 術前查 Hb、鐵蛋白,必要時先補鐵或輸血",
+      "評估子宮大小、肌瘤數目與位置:體積大、數目多、位置深者<b>出血量與手術時間明顯增加</b>,轉開腹機率上升",
+      "確認是否可能懷孕;術前依 ERAS 建議縮短禁食,清流質至術前 2 小時",
+      "與外科確認是否會使用<b>血管收縮劑</b>(vasopressin 或稀釋 epinephrine)注入子宮肌層,術前先講好劑量與時機"
+    ],
+    airway:[
+      "氣腹加頭低位需正壓通氣與確實氣道保護 → 採 <b>GA + ETT</b>",
+      "<b class='w'>頭低位與氣腹使橫膈上推,氣管導管可能滑入右主支氣管</b> → 擺位與充氣完成後重新聽診雙側呼吸音、確認 EtCO₂ 與氣道壓",
+      "腹內壓上升使肺順應性下降、氣道壓上升 → 視情況調整潮氣容積與呼吸次數,維持 EtCO₂ 正常"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;<b>持續看氣道壓與 EtCO₂ 趨勢</b>",
+      "<b class='w'>肌瘤切開面出血可以很快</b> → 至少一條大口徑靜脈,依術前 Hb 與肌瘤條件決定是否備血",
+      "留置尿管、加溫毯與輸液加溫;長時間手術注意體溫"
+    ],
+    hemo:[
+      "氣腹使腹內壓上升 → 靜脈回流與後負荷改變、SVR 上升;合併頭低位時 CVP、顱內壓與眼壓皆上升",
+      "<b class='w'>子宮肌層注射血管收縮劑後可能突然嚴重心搏過緩、血壓劇烈變動、周邊脈搏消失,嚴重者心跳停止或肺水腫</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>子宮肌層注射的血管收縮劑會經由切開面血管進入全身循環。文獻上即使是低濃度、總量只有數個單位,也有心搏過緩、無法測得血壓、心律不整、肺水腫甚至心跳停止的報告。實務上的重點是:<b>注射前外科要先告知麻醉端</b>、盡量稀釋、總量壓到最低、分次注射並先回抽確認沒有血液,注射當下麻醉端要盯著心電圖與血壓。出現心搏過緩時先停止注射、給氧、依主治醫師指示使用 atropine 或升壓藥,並準備進一步急救。氣腹狀態下腹內壓較高,吸收可能更快,要更小心。</span>",
+      "出血時先確認氣腹壓力與體位是否掩蓋了低血容;必要時降低氣腹壓、暫停手術重新評估"
+    ],
+    intraop:[
+      "<b>深度肌肉鬆弛可改善腹腔工作空間</b>,並讓外科能在較低的氣腹壓下操作,減少高腹內壓帶來的生理負擔",
+      "<b class='w'>tranexamic acid 可減少肌瘤切除的失血量</b>,術前與主治醫師確認是否使用",
+      "縫合肌層與 morcellation 都很花時間 → 保溫、避免長時間高腹內壓、注意體位固定是否鬆脫",
+      "維持正常體溫與適度輸液;過量輸液會加重頭低位造成的臉部與氣道水腫"
+    ],
+    drug:[
+      "誘導 propofol + <b>rocuronium</b>;維持吸入或 TIVA,術中維持深度肌鬆,結束前以 <b>sugammadex</b> 逆轉",
+      "<b class='w'>PONV 屬高風險族群</b>(女性、非吸菸、婦科腹腔鏡、術中鴉片) → 至少合併兩種止吐藥並考慮 dexamethasone",
+      "多模式止痛:paracetamol、NSAID、傷口局部麻醉浸潤,盡量減少鴉片"
+    ],
+    emergence:[
+      "拔管前請外科<b>盡量排空腹腔內殘餘氣體</b>,可減輕術後肩痛",
+      "以 TOF 確認肌鬆完全恢復再拔管;避免嗆咳造成腹壓上升與傷口出血",
+      "頭低位時間長者拔管前留意臉部與眼瞼水腫、聲音改變"
+    ],
+    postop:[
+      "多模式止痛為主;衛教<b>肩痛來自殘餘二氧化碳</b>,通常一至兩天內緩解",
+      "追蹤 Hb 與生命徵象,注意腹腔內出血(心跳快、血壓低、腹脹、尿量少)",
+      "早期下床與進食;依風險評估給予靜脈栓塞預防"
+    ],
+    flags:[
+      "肌瘤切開面大出血、需輸血或轉開腹",
+      "血管收縮劑全身吸收造成心搏過緩、心血管崩潰或肺水腫",
+      "氣腹相關:皮下氣腫、氣胸、縱膈氣腫、二氧化碳栓塞",
+      "頭低位相關:臉部與氣道水腫、顱內壓與眼壓上升、體位滑動與神經壓迫",
+      "子宮穿破、腸道或大血管損傷(trocar 置入時)"
+    ],
+    refs:[
+      "Kathopoulis, N., Prodromidou, A., Zacharakis, D., Chatzipapas, I., Diakosavvas, M., Kypriotis, K., Grigoriadis, T., & Protopapas, A. (2022). The effect of intravenous tranexamic acid on myomectomy: A systematic review and meta-analysis of randomized controlled trials. Journal of Personalized Medicine, 12(9), 1492.",
+      "Carey, B. M., Jones, C. N., & Fawcett, W. J. (2019). Anaesthesia for minimally invasive abdominal and pelvic surgery. BJA Education, 19(8), 254–260.",
+      "Bruintjes, M. H., van Helden, E. V., Braat, A. E., Dahan, A., Scheffer, G. J., van Laarhoven, C. J., & Warlé, M. C. (2017). Deep neuromuscular block to optimize surgical space conditions during laparoscopic surgery: A systematic review and meta-analysis. British Journal of Anaesthesia, 118(6), 834–842."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"腹腔鏡卵巢切除術(含卵巢囊腫切除)",
+    en:"Laparoscopic Oophorectomy / Ovarian Cystectomy",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy · Trendelenburg", posType:"trend", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / ETT・氣腹+頭低位" },
+    preop:[
+      "先分清楚是<b>保留卵巢的囊腫切除</b>(多為年輕、想保留生育功能)還是<b>整顆卵巢切除</b>(年紀較大或疑似惡性)",
+      "疑似惡性者查腫瘤指標與影像,可能改為開腹或擴大手術 → 術前確認手術範圍與備血",
+      "<b class='w'>卵巢扭轉是急診刀</b>:禁食時間常不足、疼痛嘔吐脫水 → 依飽胃處理,以 rocuronium 快速誘導插管",
+      "巨大囊腫會抬高橫膈、壓迫下腔靜脈 → 仰臥可能就會喘與低血壓,誘導前先評估"
+    ],
+    airway:[
+      "採 <b>GA + ETT</b>;巨大囊腫或急診飽胃者以<b class='w'>快速誘導插管</b>處理",
+      "擺位與充氣後重新確認雙側呼吸音、氣道壓與 EtCO₂",
+      "腹脹明顯者預充氧要做足,去飽和速度比一般人快"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;持續看氣道壓與 EtCO₂",
+      "巨大囊腫<b class='w'>抽吸引流後腹內壓驟降,可能出現血壓下降</b> → 引流當下與麻醉端同步注意",
+      "留置尿管;手術時間長者加溫"
+    ],
+    hemo:[
+      "氣腹加頭低位造成的循環變化與其他婦科腹腔鏡相同;多數病人可耐受",
+      "出血點以<b>骨盆漏斗韌帶內的卵巢血管</b>為主,結紮不確實時出血很快",
+      "扭轉解開後可能出現缺血再灌流反應,注意血壓與心律"
+    ],
+    intraop:[
+      "子宮內膜異位囊腫沾黏多、剝離面滲血、手術時間常拉長,要有轉開腹的心理準備",
+      "囊液外漏會造成腹膜刺激;疑似惡性時外科會盡量避免破裂 → 操作較慢,配合維持穩定氣腹與肌鬆",
+      "深度肌鬆搭配較低氣腹壓可改善視野;維持正常體溫與適度輸液"
+    ],
+    drug:[
+      "誘導 propofol + <b>rocuronium</b>;維持吸入或 TIVA,以 <b>sugammadex</b> 逆轉",
+      "<b class='w'>年輕女性做婦科腹腔鏡是 PONV 最高風險組合</b> → 常規合併兩種以上止吐藥,並考慮以 TIVA 降低風險",
+      "多模式止痛:paracetamol、NSAID、trocar 傷口局部麻醉浸潤"
+    ],
+    emergence:[
+      "請外科排空殘餘氣體;TOF 確認肌鬆完全恢復後拔管",
+      "多數為當日或隔日出院刀 → 甦醒品質與止吐比強效止痛更重要"
+    ],
+    postop:[
+      "早期進食與下床;衛教肩痛與腹脹屬正常現象",
+      "注意腹腔內出血徵象;年輕病人代償好,心跳上升常比血壓下降更早出現",
+      "雙側卵巢切除的停經前病人術後會直接進入停經狀態,需婦產科門診追蹤"
+    ],
+    flags:[
+      "卵巢血管出血、腹腔內出血",
+      "輸尿管損傷(卵巢血管與輸尿管走行相鄰)",
+      "囊腫破裂、囊液外漏造成腹膜炎;疑似惡性者影響分期",
+      "氣腹與頭低位相關併發症",
+      "扭轉病例:缺血再灌流、急診飽胃誤吸"
+    ],
+    refs:[
+      "Carey, B. M., Jones, C. N., & Fawcett, W. J. (2019). Anaesthesia for minimally invasive abdominal and pelvic surgery. BJA Education, 19(8), 254–260.",
+      "Gan, T. J., Belani, K. G., Bergese, S., Chung, F., Diemunsch, P., Habib, A. S., ... Philip, B. K. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448.",
+      "Park, S. K., Son, Y. G., Yoo, S., Lim, T., Kim, W. H., & Kim, J. T. (2018). Deep vs. moderate neuromuscular blockade during laparoscopic surgery: A systematic review and meta-analysis. European Journal of Anaesthesiology, 35(11), 867–875."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"經腹全子宮切除術",
+    en:"Abdominal Total Hysterectomy (ATH)",
+    updated:"2026-08-10",
+    summary:{ position:"Supine · slight Trendelenburg", posType:"supine", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT" },
+    preop:[
+      "常見適應症為大型肌瘤、子宮腺肌症、經血過多與惡性腫瘤 → <b class='w'>術前務必看 Hb,慢性經血過多者常已有貧血</b>",
+      "子宮體積大、既往剖腹手術沾黏、惡性侵犯 → 出血量與手術時間增加,術前備血",
+      "依 ERAS:不常規做腸道準備,術前 2 小時可喝清流質,避免長時間禁食造成脫水",
+      "評估靜脈栓塞風險(惡性、肥胖、久臥)並依風險給預防"
+    ],
+    airway:[
+      "標準 <b>GA + ETT</b>;無特殊困難氣道因素",
+      "腹壁牽引器撐開時腹內壓上升,注意氣道壓變化"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;留置尿管觀察尿量",
+      "<b>至少一條大口徑靜脈</b>;子宮大、惡性或術前貧血者備血並考慮動脈導管",
+      "積極保溫:加溫毯、輸液加溫;開腹加上腹腔暴露散熱快"
+    ],
+    hemo:[
+      "主要出血來自<b>子宮動脈與卵巢血管</b>,結紮前後為出血高峰",
+      "<b class='w'>牽引子宮或壓迫腹腔臟器可能引起迷走反射,出現心搏過緩與低血壓</b> → 請外科暫停操作、給氧,依主治醫師指示處理",
+      "避免過量輸液;以維持組織灌流與尿量為目標,而非追求高輸液量"
+    ],
+    intraop:[
+      "出血風險高者可與主治醫師討論使用 tranexamic acid",
+      "<b>術前或術中做腹壁筋膜平面阻斷</b>(如 TAP 或 QL 阻斷)或傷口局部浸潤,能明顯降低術後鴉片用量",
+      "維持體溫、監測尿量;長時間手術注意壓瘡與周邊神經受壓"
+    ],
+    drug:[
+      "誘導 propofol + <b>rocuronium</b>;維持吸入或 TIVA,以 <b>sugammadex</b> 逆轉",
+      "多模式止痛:paracetamol、NSAID、局部阻斷,鴉片作為補強而非主力",
+      "PONV 高風險 → 至少兩種止吐藥並考慮 dexamethasone"
+    ],
+    emergence:[
+      "TOF 確認肌鬆完全恢復;平順拔管,避免嗆咳造成腹壓上升與傷口出血",
+      "拔管前確認體溫、疼痛與止吐都已處理"
+    ],
+    postop:[
+      "多模式止痛與早期下床、早期進食(ERAS 核心)",
+      "監測傷口與陰道出血、尿量與腹脹;注意術後腸阻",
+      "依風險給予靜脈栓塞預防;惡性者預防期需延長"
+    ],
+    flags:[
+      "術中或術後大出血、骨盆腔血腫",
+      "輸尿管、膀胱或腸道損傷",
+      "靜脈血栓栓塞",
+      "術後腸阻、傷口感染或裂開",
+      "牽引造成的迷走反射性心搏過緩"
+    ],
+    refs:[
+      "Nelson, G., Bakkum-Gamez, J., Kalogera, E., Glaser, G., Altman, A., Meyer, L. A., ... Dowdy, S. C. (2019). Guidelines for perioperative care in gynecologic/oncology: Enhanced Recovery After Surgery (ERAS) Society recommendations—2019 update. International Journal of Gynecological Cancer, 29(4), 651–668.",
+      "Uppal, V., Retter, S., Kehoe, E., & McKeen, D. M. (2020). Quadratus lumborum block for postoperative analgesia: A systematic review and meta-analysis. Canadian Journal of Anesthesia, 67(11), 1557–1575.",
+      "Gan, T. J., Belani, K. G., Bergese, S., Chung, F., Diemunsch, P., Habib, A. S., ... Philip, B. K. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"腹腔鏡全子宮切除術",
+    en:"Laparoscopic Total Hysterectomy (LTH)",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy · steep Trendelenburg, uterine manipulator", posType:"trend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT・氣腹+陡頭低位" },
+    preop:[
+      "與 ATH 相同的術前重點:貧血、子宮大小、既往手術沾黏、惡性與否",
+      "<b class='w'>需要長時間陡峭頭低位</b> → 術前評估心肺功能、青光眼、腦部病灶與嚴重肥胖等相對不利因素",
+      "與外科確認手術預估時間;時間越長,體位相關併發症風險越高"
+    ],
+    airway:[
+      "採 <b>GA + ETT</b>,導管務必牢固固定",
+      "<b class='w'>陡頭低位加氣腹會把橫膈與隆凸往頭側推,導管容易變成右主支氣管插管</b> → 擺好位置、充氣完成後一定要重新聽診並看氣道壓",
+      "肺順應性下降、氣道壓上升 → 調整通氣策略維持 EtCO₂;必要時與外科討論降低氣腹壓"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;<b>氣道壓與 EtCO₂ 全程盯著</b>",
+      "留置尿管;<b class='w'>陰道斷端打開時氣腹會漏氣</b>,此時 EtCO₂ 與氣道壓可能突然改變,不要誤判為導管問題",
+      "體位固定與防滑裝置檢查:肩托、防滑墊、手臂內收保護"
+    ],
+    hemo:[
+      "陡頭低位使靜脈回流增加、CVP 上升;氣腹使 SVR 上升 → 血壓常偏高,但心輸出量不一定增加",
+      "<b class='w'>顱內壓與眼壓同時上升</b>,合併過量輸液會加重臉部、眼瞼與上呼吸道水腫",
+      "子宮動脈結紮前後為出血高峰;腹腔鏡下出血不易估計,以生命徵象與吸引瓶量共同判斷"
+    ],
+    diagram:{ section:"hemo", caption:"陡峭頭低位合併二氧化碳氣腹的主要生理影響(原創示意圖)", svg:`<svg viewBox="0 0 680 360" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>陡峭頭低位合併氣腹的生理影響示意圖</title><desc>示意圖顯示病人頭低腳高姿勢並有二氧化碳氣腹,標示橫膈上推使功能肺餘容積下降與氣道壓上升、氣管導管可能移位至右主支氣管、靜脈回流與中心靜脈壓上升、顱內壓與眼壓上升,以及臉部與上呼吸道水腫。</desc><rect x="8" y="8" width="664" height="344" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="340" y="34" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="600" fill="#423E39">陡峭頭低位 + 二氧化碳氣腹</text><g transform="translate(34,58)"><rect x="0" y="0" width="300" height="240" rx="12" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.2"/><line x1="24" y1="188" x2="276" y2="112" stroke="#B7AE9F" stroke-width="7" stroke-linecap="round"/><line x1="52" y1="196" x2="52" y2="222" stroke="#B7AE9F" stroke-width="5" stroke-linecap="round"/><line x1="250" y1="124" x2="250" y2="222" stroke="#B7AE9F" stroke-width="5" stroke-linecap="round"/><circle cx="52" cy="168" r="17" fill="#4A443D"/><path d="M 70,176 L 214,133" stroke="#4A443D" stroke-width="24" stroke-linecap="round"/><path d="M 214,133 L 262,104" stroke="#4A443D" stroke-width="15" stroke-linecap="round"/><ellipse cx="150" cy="148" rx="34" ry="24" fill="#CE9C92" stroke="#AE7F76" stroke-width="1.4" opacity="0.92"/><text x="150" y="153" text-anchor="middle" font-family="sans-serif" font-size="11.5" font-weight="600" fill="#5A3F39">氣腹</text><path d="M 150,120 L 150,96" stroke="#8F2B20" stroke-width="3" stroke-linecap="round"/><path d="M 150,92 L 144,104 L 156,104 Z" fill="#8F2B20"/><text x="150" y="84" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#8F2B20">橫膈往頭側推</text><path d="M 92,196 L 62,206" stroke="#7A8B87" stroke-width="2.6" stroke-linecap="round"/><path d="M 58,207 L 70,201 L 70,212 Z" fill="#7A8B87"/><text x="150" y="216" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#5E6B68">靜脈回流往頭側增加</text><text x="150" y="234" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#726B62">頭低腳高、骨盆抬高以利術野</text></g><g transform="translate(352,58)"><rect x="0" y="0" width="294" height="240" rx="12" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.2"/><text x="18" y="30" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">呼吸</text><text x="18" y="50" font-family="sans-serif" font-size="12" fill="#4A443D">功能肺餘容積下降、肺塌陷</text><text x="18" y="68" font-family="sans-serif" font-size="12" fill="#4A443D">肺順應性下降、氣道壓上升</text><text x="18" y="86" font-family="sans-serif" font-size="12" fill="#4A443D">氣管導管可能滑入右主支氣管</text><text x="18" y="114" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">循環</text><text x="18" y="134" font-family="sans-serif" font-size="12" fill="#4A443D">靜脈回流與中心靜脈壓上升</text><text x="18" y="152" font-family="sans-serif" font-size="12" fill="#4A443D">周邊血管阻力上升、血壓偏高</text><text x="18" y="170" font-family="sans-serif" font-size="12" fill="#4A443D">二氧化碳吸收使呼氣末二氧化碳上升</text><text x="18" y="198" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">其他</text><text x="18" y="218" font-family="sans-serif" font-size="12" fill="#4A443D">顱內壓與眼壓上升</text><text x="18" y="236" font-family="sans-serif" font-size="12" fill="#4A443D">臉部、眼瞼與上呼吸道水腫</text></g><text x="340" y="322" text-anchor="middle" font-family="sans-serif" font-size="12.5" font-weight="600" fill="#8F2B20">手術時間越長、輸液越多,水腫與體位相關併發症風險越高</text><text x="340" y="341" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">擺位完成後務必重新確認呼吸音、氣道壓與呼氣末二氧化碳</text></svg>` },
+    intraop:[
+      "深度肌鬆可讓外科在較低氣腹壓下操作;若血壓或氣道壓難以控制,主動提出降低氣腹壓或暫時回到水平位",
+      "<b class='w'>輸液要克制</b>:過量輸液直接反映在術後臉部與上呼吸道水腫,而頭低位下尿量本來就會偏少,不能只看尿量狂灌",
+      "檢查手臂、肩部與腿部受壓點;<b>截石位加長時間手術有小腿腔室症候群的風險</b>,術中定期活動與放鬆腿架",
+      "維持正常體溫;子宮操作器操作時注意子宮穿破與出血"
+    ],
+    drug:[
+      "誘導 propofol + <b>rocuronium</b>;術中維持深度肌鬆,結束前以 <b>sugammadex</b> 逆轉",
+      "<b>PONV 極高風險</b> → 兩種以上止吐藥合併,並考慮 dexamethasone 與 TIVA",
+      "多模式止痛:paracetamol、NSAID、trocar 傷口局部浸潤;鴉片盡量少量短效"
+    ],
+    emergence:[
+      "<b class='w'>回到水平位後先觀察一段時間再拔管</b>:確認通氣、氧合與臉部水腫狀況穩定",
+      "頭低位時間長或臉部明顯水腫者,拔管前評估是否有上呼吸道水腫,床邊備再插管器材",
+      "TOF 確認肌鬆完全恢復;請外科排空殘餘氣體以減輕肩痛"
+    ],
+    postop:[
+      "採半坐臥;監測氧合與呼吸型態,注意拔管後遲發性上呼吸道水腫",
+      "早期下床與進食;多模式止痛",
+      "衛教陰道斷端出血與腹痛的回診時機;注意腹腔內出血徵象"
+    ],
+    flags:[
+      "氣管導管移位至右主支氣管、氣道壓過高",
+      "臉部與上呼吸道水腫、拔管後呼吸道阻塞",
+      "顱內壓與眼壓上升相關風險(青光眼、腦部病灶者尤其)",
+      "體位相關:病人滑動、臂神經叢傷害、小腿腔室症候群",
+      "輸尿管或膀胱損傷、陰道斷端出血或裂開",
+      "氣腹相關:皮下氣腫、氣胸、二氧化碳栓塞"
+    ],
+    refs:[
+      "Carey, B. M., Jones, C. N., & Fawcett, W. J. (2019). Anaesthesia for minimally invasive abdominal and pelvic surgery. BJA Education, 19(8), 254–260.",
+      "Robba, C., Cardim, D., Donnelly, J., Bertuccio, A., Bacigaluppi, S., Bragazzi, N., ... Czosnyka, M. (2016). Effects of pneumoperitoneum and Trendelenburg position on intracranial pressure assessed using different non-invasive methods. British Journal of Anaesthesia, 117(6), 783–791.",
+      "Nelson, G., Bakkum-Gamez, J., Kalogera, E., Glaser, G., Altman, A., Meyer, L. A., ... Dowdy, S. C. (2019). Guidelines for perioperative care in gynecologic/oncology: Enhanced Recovery After Surgery (ERAS) Society recommendations—2019 update. International Journal of Gynecological Cancer, 29(4), 651–668."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"雙側輸卵管卵巢切除術",
+    en:"Bilateral Salpingo-Oophorectomy (BSO)",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy · Trendelenburg", posType:"trend", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / ETT・氣腹+頭低位" },
+    preop:[
+      "先確認手術目的:<b>單獨的預防性切除</b>(如遺傳性乳癌卵巢癌症候群)、良性病灶,或<b>併在全子宮切除、癌症分期手術裡一起做</b>,麻醉準備差很多",
+      "單獨的預防性手術病人通常年輕健康、手術時間短 → 以快速甦醒、良好止吐與當日出院為目標",
+      "併在大手術裡時,麻醉計畫要以主手術為準,不要只依 BSO 本身估計失血與時間",
+      "停經前病人術後會立即進入手術性停經,術前婦產科會先做衛教與後續治療規劃"
+    ],
+    airway:[
+      "腹腔鏡途徑採 <b>GA + ETT</b>;擺位與充氣後重新確認呼吸音與氣道壓",
+      "併行開腹大手術時依主手術的氣道計畫處理"
+    ],
+    monitor:[
+      "單獨手術:標準 ASA 基本監測即可",
+      "併行大手術或惡性分期手術:依主手術升級監測(大口徑靜脈、動脈導管、體溫、尿量)",
+      "留置尿管視手術長短決定"
+    ],
+    hemo:[
+      "多數穩定;氣腹與頭低位的循環變化與其他婦科腹腔鏡相同",
+      "<b class='w'>出血點在骨盆漏斗韌帶內的卵巢血管</b>,血管斷端回縮時止血困難、出血可以很快",
+      "沾黏嚴重或既往手術者剝離面滲血較多,手術時間拉長"
+    ],
+    intraop:[
+      "外科處理骨盆漏斗韌帶時<b>輸尿管就在旁邊</b>,操作較慢,配合維持穩定氣腹與肌鬆",
+      "疑似惡性時盡量避免標本破裂 → 取出標本用取物袋,可能需要延長切口",
+      "維持正常體溫;單獨手術避免過量輸液以利快速恢復"
+    ],
+    drug:[
+      "誘導 propofol + <b>rocuronium</b>;維持吸入或 TIVA,以 <b>sugammadex</b> 逆轉",
+      "<b class='w'>PONV 高風險</b> → 至少兩種止吐藥;短時間手術更應避免長效鴉片",
+      "多模式止痛:paracetamol、NSAID、傷口局部浸潤"
+    ],
+    emergence:[
+      "請外科排空殘餘氣體;TOF 確認肌鬆完全恢復後拔管",
+      "以甦醒品質與止吐為優先,利於當日出院"
+    ],
+    postop:[
+      "早期進食與下床;衛教肩痛與腹脹",
+      "注意腹腔內出血徵象(心跳快、腹脹、頭暈、尿量少)",
+      "手術性停經的相關症狀與後續門診追蹤由婦產科處理"
+    ],
+    flags:[
+      "卵巢血管出血、腹腔內出血",
+      "輸尿管損傷",
+      "標本破裂(惡性時影響分期)",
+      "氣腹與頭低位相關併發症",
+      "併行大手術時被低估的失血與手術時間"
+    ],
+    refs:[
+      "Nelson, G., Bakkum-Gamez, J., Kalogera, E., Glaser, G., Altman, A., Meyer, L. A., ... Dowdy, S. C. (2019). Guidelines for perioperative care in gynecologic/oncology: Enhanced Recovery After Surgery (ERAS) Society recommendations—2019 update. International Journal of Gynecological Cancer, 29(4), 651–668.",
+      "Carey, B. M., Jones, C. N., & Fawcett, W. J. (2019). Anaesthesia for minimally invasive abdominal and pelvic surgery. BJA Education, 19(8), 254–260.",
+      "Gan, T. J., Belani, K. G., Bergese, S., Chung, F., Diemunsch, P., Habib, A. S., ... Philip, B. K. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"卵巢癌腫瘤減積手術",
+    en:"Ovarian Cancer Cytoreductive (Debulking) Surgery",
+    updated:"2026-08-10",
+    summary:{ position:"Supine · long midline laparotomy", posType:"supine", time:"參考捷格手術排程時間", blood:"多", airway:"GA / ETT・長時間大手術" },
+    preop:[
+      "<b class='w'>這是婦癌裡最大的一台刀</b>:可能包含大網膜切除、腹膜剝離、橫膈剝離、腸道切除吻合、脾臟切除與淋巴廓清",
+      "病人多有<b>腹水、營養不良、低白蛋白、貧血與體重減輕</b> → 術前評估營養狀態與功能儲備",
+      "接受過術前化療者:注意<b class='w'>骨髓抑制、藥物相關心毒性與周邊神經病變</b>,查血球與心臟功能",
+      "腹水大量者橫膈上抬、肺容積下降,平躺就會喘;同時屬於<b>誤吸高風險</b>",
+      "<b>靜脈血栓栓塞風險極高</b>(惡性、腹腔壓迫、長時間手術) → 術前確認預防措施"
+    ],
+    airway:[
+      "採 <b>GA + ETT</b>;腹水與腹脹明顯者依飽胃處理,以 rocuronium 快速誘導插管",
+      "預充氧要做足;功能肺餘容積下降使去飽和迅速",
+      "腹水引流後肺順應性改善,可重新調整通氣參數"
+    ],
+    monitor:[
+      "標準監測 + <b>動脈導管</b>(逐搏血壓、反覆血氣、乳酸、血紅素)",
+      "<b>本院常規置放中心靜脈導管</b>,用於升壓藥給藥與長時間輸液",
+      "<b class='w'>多條大口徑靜脈、加壓輸液與輸血加溫裝置備妥</b>;備血並與血庫保持聯繫",
+      "體溫、尿量全程監測;長時間大切口散熱極快,積極保溫",
+      "定期追蹤血氣、電解質、鈣、凝血功能與血糖"
+    ],
+    hemo:[
+      "<b class='w'>體液移動大、失血可以很急</b>:腹膜剝離面與脾臟、肝門區操作是常見的大出血點",
+      "<b class='w'>放腹水後腹內壓驟降、靜脈血管床擴張,血壓可能明顯下降</b> → 引流前先預告、備妥輸液與升壓藥",
+      "輸液以維持組織灌流為目標,<b>目標導向與限制性策略在住院天數上未見明顯差異</b>,但過量輸液與術後肺部併發症增加有關<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>在卵巢癌減積手術的隨機試驗中,以心輸出量監測導引的目標導向輸液與限制性輸液相比,住院天數與術後併發症並沒有顯著差異。臨床意義是:<b>沒有一個固定公式可以照抄</b>,重點在於避免兩個極端 —— 過度輸液會造成組織水腫、吻合口癒合不良與術後肺部併發症增加;輸液不足則造成低灌流與急性腎損傷。實務上以血壓、心跳、乳酸、尿量與血氣的變化趨勢綜合判斷,並依麻醉主治醫師指示調整。</span>",
+      "低體溫、酸中毒與稀釋性凝血病會互相惡化 → 早期補充凝血因子與血小板,依血氣與凝血結果調整"
+    ],
+    intraop:[
+      "<b class='w'>橫膈剝離時可能造成氣胸</b>:突然氣道壓上升、血氧下降或血壓掉,要立刻想到並告知外科",
+      "腸道切除吻合時避免組織水腫;維持灌流壓與正常體溫有助吻合癒合",
+      "積極保溫:加溫毯、輸液與沖洗液加溫、提高室溫",
+      "大量輸血時注意低鈣、高鉀與凝血病;必要時與主治醫師討論使用 tranexamic acid",
+      "止痛可考慮硬膜外或腹壁筋膜平面阻斷,依凝血狀態與主治醫師判斷選擇"
+    ],
+    drug:[
+      "誘導依血流動力學狀態選藥並減量;維持以吸入或 TIVA 皆可,重點是穩定灌流",
+      "肌鬆以 <b>rocuronium</b> 為主,結束前以 <b>sugammadex</b> 逆轉",
+      "升壓藥、輸血、鈣劑、凝血製品事先備妥;抗生素依時間重複給予",
+      "多模式止痛;PONV 預防"
+    ],
+    emergence:[
+      "<b class='w'>手術時間長、失血多、體溫低或仍需大量升壓藥者,帶管轉加護病房</b>,不勉強在手術室拔管",
+      "符合條件者才在確認體溫回升、凝血穩定、TOF 完全恢復後拔管",
+      "拔管前確認止痛計畫與後續照護單位已聯繫好"
+    ],
+    postop:[
+      "加護或高照護病房:血流動力學、尿量、乳酸、凝血、體溫與呼吸狀況",
+      "多模式止痛(硬膜外或筋膜平面阻斷加上非鴉片藥物)以利早期活動",
+      "<b>惡性婦癌術後靜脈栓塞預防需延長</b>,依婦癌團隊指示執行",
+      "早期營養支持;注意術後肺部併發症、吻合口漏與腹腔內感染"
+    ],
+    flags:[
+      "術中大出血、稀釋性凝血病、低體溫與酸中毒的惡性循環",
+      "放腹水或腫瘤移除後的急性低血壓",
+      "橫膈剝離造成氣胸、術後肋膜積液",
+      "術後肺部併發症、急性腎損傷",
+      "靜脈血栓栓塞、腸道吻合口漏、腹腔內感染"
+    ],
+    refs:[
+      "Nelson, G., Bakkum-Gamez, J., Kalogera, E., Glaser, G., Altman, A., Meyer, L. A., ... Dowdy, S. C. (2019). Guidelines for perioperative care in gynecologic/oncology: Enhanced Recovery After Surgery (ERAS) Society recommendations—2019 update. International Journal of Gynecological Cancer, 29(4), 651–668.",
+      "Goswami, J., Pal, A. R., Mitrabarman, S., Sinha, S., Nayak, P., & Mukhopadhyay, A. (2023). Restrictive versus goal-directed fluid replacement strategy in ovarian cancer cytoreductive surgery (RiGoROCS): A randomised controlled trial. Indian Journal of Anaesthesia, 67(12), 1101–1109.",
+      "Uppal, V., Retter, S., Kehoe, E., & McKeen, D. M. (2020). Quadratus lumborum block for postoperative analgesia: A systematic review and meta-analysis. Canadian Journal of Anesthesia, 67(11), 1557–1575."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"門診婦科小手術(子宮擴刮術、子宮鏡)",
+    en:"Outpatient Gynecologic Procedures (D&C / Hysteroscopy)",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA / LMA 或面罩・共用會陰術野" },
+    preop:[
+      "多為短時間、當日往返的手術,但<b class='w'>子宮鏡手術有致命併發症,不可以因為時間短就放鬆</b>",
+      "確認適應症:診斷性子宮鏡、瘜肉或黏膜下肌瘤切除、子宮內膜切除、流產後或不完全流產的清宮",
+      "<b>流產或產後相關清宮</b>:可能出血多、感染甚至凝血功能異常 → 查 Hb、凝血,建立可靠靜脈",
+      "與外科確認<b class='w'>使用的灌流液種類、灌流壓與預估手術時間</b>,並事先講好液體差額的通報數字"
+    ],
+    airway:[
+      "短時間手術常採 <b>GA + LMA</b> 或面罩加深度鎮靜;診斷性子宮鏡有時只需鎮靜或子宮頸旁阻斷",
+      "手術長、頭低位或吸收風險高者改用 <b>ETT</b>",
+      "<b class='w'>術野在會陰、麻醉端離氣道較遠</b> → 固定確實、隨時可以介入"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;<b>持續看呼氣末二氧化碳</b>,即使使用 LMA 或面罩也不能省",
+      "<b class='w'>灌流液的進出量與差額由外科與巡迴護理師持續計算並定時報數</b>,麻醉端要主動追問",
+      "手術時間拉長或液體差額上升時,考慮抽血檢查鈉離子與滲透壓"
+    ],
+    hemo:[
+      "<b class='w'>擴張子宮頸與牽拉子宮可引起迷走反射</b>,出現心搏過緩、血壓下降甚至短暫心搏停止 → 停止操作、給氧,依主治醫師指示給 atropine",
+      "多數失血少;流產後清宮或血管豐富的病灶可能出血較多",
+      "外科在子宮頸注射含血管收縮劑的局部麻醉藥時,注意心跳血壓變化"
+    ],
+    intraop:[
+      "<b class='w'>灌流液吸收過多會造成體液超載、低血鈉與低滲透壓</b>,嚴重可致肺水腫、腦水腫與抽搐;使用低張液時風險最高",
+      "<b>盡量使用等張生理食鹽水</b>、把灌流壓降到能看清楚的最低值、限制靜脈輸液,並隨時掌握液體差額",
+      "<b class='w'>呼氣末二氧化碳突然下降合併去飽和與低血壓 → 先想到氣體栓塞</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>子宮鏡手術時子宮腔被撐開,靜脈竇被切開又處於較高位置,空氣或氣體可能被吸入靜脈。臨床表現是<b>呼氣末二氧化碳突然下降</b>、血氧下降、血壓下降與心律不整,嚴重時心血管崩潰。處置原則:立刻通知外科停止手術、把子宮鏡取出並讓灌流停止、把病人放平或稍微頭低左側臥、給百分之百氧氣、停用氧化亞氮、大量輸液並依麻醉主治醫師指示給升壓藥,必要時開始心肺復甦。預防上要避免重複進出子宮鏡、避免讓子宮位置高於心臟太多、擴張子宮頸時避免動作過大。</span>",
+      "子宮穿破時可能傷及腸道或血管;突然出血、腹脹或灌流液大量流失都要警覺"
+    ],
+    diagram:{ section:"intraop", caption:"子宮鏡灌流液差額的參考通報與停手術門檻(原創示意圖;實際數值依主治醫師與本院規範)", svg:`<svg viewBox="0 0 680 300" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>子宮鏡灌流液差額門檻示意圖</title><desc>示意圖比較等張生理食鹽水與低張灌流液的液體差額門檻,顯示低張液約在七百五十毫升通報、一千毫升停止手術,等張液約在一千五百毫升通報、二千五百毫升停止手術,年長或有心肺共病者門檻應下修。</desc><rect x="8" y="8" width="664" height="284" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="340" y="34" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="600" fill="#423E39">灌流液差額(進入量減去回收量)</text><g transform="translate(40,56)"><text x="0" y="14" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">低張灌流液(電解質不足)</text><rect x="0" y="26" width="600" height="26" rx="6" fill="#EDE7DC"/><rect x="0" y="26" width="180" height="26" rx="6" fill="#C7B9A4"/><rect x="180" y="26" width="60" height="26" fill="#C0392B"/><line x1="180" y1="20" x2="180" y2="58" stroke="#8F2B20" stroke-width="2"/><line x1="240" y1="20" x2="240" y2="58" stroke="#8F2B20" stroke-width="2"/><text x="180" y="72" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#8F2B20">750 mL 通報</text><text x="252" y="72" text-anchor="start" font-family="sans-serif" font-size="11.5" font-weight="600" fill="#8F2B20">1000 mL 停止手術</text></g><g transform="translate(40,146)"><text x="0" y="14" font-family="sans-serif" font-size="13" font-weight="600" fill="#5E6B68">等張生理食鹽水</text><rect x="0" y="26" width="600" height="26" rx="6" fill="#EDE7DC"/><rect x="0" y="26" width="330" height="26" rx="6" fill="#A9B6AF"/><rect x="330" y="26" width="220" height="26" fill="#C0392B"/><line x1="330" y1="20" x2="330" y2="58" stroke="#8F2B20" stroke-width="2"/><line x1="550" y1="20" x2="550" y2="58" stroke="#8F2B20" stroke-width="2"/><text x="330" y="72" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#5E6B68">1500 mL 通報</text><text x="550" y="72" text-anchor="middle" font-family="sans-serif" font-size="11.5" font-weight="600" fill="#8F2B20">2500 mL 停止手術</text></g><text x="340" y="258" text-anchor="middle" font-family="sans-serif" font-size="12.5" font-weight="600" fill="#8F2B20">年長者或有心肺共病者門檻要往下修</text><text x="340" y="278" text-anchor="middle" font-family="sans-serif" font-size="11.5" fill="#726B62">差額上升時:抽血看鈉離子、限制靜脈輸液、降低灌流壓、與外科一起決定是否停手術</text></svg>` },
+    drug:[
+      "多用 propofol 為主的短效方案;維持吸入或 TIVA 皆可",
+      "<b class='w'>疑似氣體栓塞時停用氧化亞氮</b>",
+      "止痛以 paracetamol 與 NSAID 為主,搭配子宮頸旁阻斷或局部浸潤,盡量少用鴉片",
+      "PONV 預防不可省;年輕女性、婦科手術屬高風險"
+    ],
+    emergence:[
+      "多數可迅速甦醒;拔除 LMA 前確認氣道反射恢復",
+      "甦醒異常延遲、躁動或抽搐 → <b class='w'>先想到低血鈉與體液超載</b>,立即抽血並通知主治醫師",
+      "確認陰道出血量與生命徵象穩定再送恢復室"
+    ],
+    postop:[
+      "恢復室觀察出血量、腹痛與排尿;達標後當日離院",
+      "液體差額偏高者延長觀察並追蹤鈉離子、尿量與呼吸狀況",
+      "衛教返診時機:大量出血、劇烈腹痛、發燒、呼吸困難或意識改變"
+    ],
+    flags:[
+      "灌流液吸收造成體液超載、低血鈉與低滲透壓(肺水腫、腦水腫、抽搐)",
+      "氣體栓塞(呼氣末二氧化碳驟降、低血壓、心血管崩潰)",
+      "子宮穿破合併腸道或血管損傷、腹腔內出血",
+      "擴張子宮頸引起的迷走反射性心搏過緩",
+      "流產後清宮相關:大出血、感染與敗血症"
+    ],
+    refs:[
+      "Elahmedawy, H., & Snook, N. J. (2021). Complications of operative hysteroscopy: An anaesthetist's perspective. BJA Education, 21(7), 240–242.",
+      "AAGL. (2013). AAGL practice report: Practice guidelines for the management of hysteroscopic distending media. Journal of Minimally Invasive Gynecology, 20(2), 137–148.",
+      "Gan, T. J., Belani, K. G., Bergese, S., Chung, F., Diemunsch, P., Habib, A. S., ... Philip, B. K. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"陰道前後壁修補術",
+    en:"Anterior and Posterior Colporrhaphy (A-P Repair)",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / LMA 或 ETT・亦可脊髓麻醉" },
+    preop:[
+      "病人多為<b>年長、停經後、常合併多重共病</b>的骨盆腔器官脫垂患者 → 術前重點在心肺功能、用藥與功能狀態評估",
+      "常與陰道式全子宮切除或尿失禁手術一併進行,術前確認完整手術範圍與預估時間",
+      "抗血栓藥物的停用與橋接依主治醫師與內外科共同決定",
+      "依 ERAS 建議避免長時間禁食,術前 2 小時可喝清流質"
+    ],
+    airway:[
+      "<b>全身麻醉或脊髓麻醉皆可</b>;兩者在術後尿滯留與恢復上結果相近,選擇依病人共病、意願與主治醫師判斷",
+      "全身麻醉時短時間手術可用 LMA;時間長、頭低位或誤吸風險高者用 ETT",
+      "脊髓麻醉需達到足夠的薦椎阻斷高度以涵蓋會陰部"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;年長者注意血壓變化幅度",
+      "留置尿管;術後常需短期留置或間歇導尿",
+      "手術時間長者加溫並注意體溫"
+    ],
+    hemo:[
+      "多數穩定;<b class='w'>脊髓麻醉在年長者可能造成明顯低血壓</b> → 緩慢給藥、預備升壓藥",
+      "外科在陰道黏膜下注射含腎上腺素的局部麻醉藥以利分離與止血,注射後可有短暫心跳血壓上升",
+      "出血多來自陰道壁與旁組織的滲血,通常可壓迫止血;深部血腫較少見但不易早期發現"
+    ],
+    intraop:[
+      "<b class='w'>截石位是神經傷害的主要來源</b>:腓總神經、股神經與閉孔神經受壓或過度牽拉 → 腿架墊好、避免髖關節過度外展與屈曲",
+      "手術時間長時定期放下腿部活動,<b>降低小腿腔室症候群風險</b>",
+      "手臂與肩部位置固定確實;年長者皮膚脆弱,注意壓瘡",
+      "維持正常體溫;避免過量輸液"
+    ],
+    drug:[
+      "全身麻醉:短效藥物為主,肌鬆視術式需要,以 <b>sugammadex</b> 逆轉",
+      "<b>多模式止痛</b>:paracetamol、NSAID、局部浸潤或陰部神經阻斷,盡量減少鴉片",
+      "年長者<b class='w'>避免長效鎮靜與抗膽鹼藥物</b>,以降低術後譫妄風險",
+      "PONV 預防"
+    ],
+    emergence:[
+      "平順甦醒;避免嗆咳造成修補處出血",
+      "確認陰道填塞物有無放置並<b class='w'>記錄在交班單上</b>,連同尿管一併交班",
+      "年長者拔管後注意意識恢復狀況與定向感"
+    ],
+    postop:[
+      "<b class='w'>術後尿滯留很常見</b>,依婦產科流程執行拔尿管後的排尿試驗",
+      "多模式止痛與早期下床;衛教避免用力解便與提重物",
+      "注意陰道出血量、發燒與會陰部血腫;年長者注意譫妄與跌倒風險"
+    ],
+    flags:[
+      "術後尿滯留、拔尿管失敗",
+      "陰道壁出血或會陰部血腫",
+      "截石位相關周邊神經傷害、小腿腔室症候群",
+      "直腸或膀胱損傷",
+      "年長者術後譫妄、脊髓麻醉相關低血壓"
+    ],
+    refs:[
+      "Altman, A. D., Robert, M., Armbrust, R., Fawcett, W. J., Nihira, M., Jones, C. N., Tamussino, K., Sehouli, J., Dowdy, S. C., & Nelson, G. (2020). Guidelines for vulvar and vaginal surgery: Enhanced Recovery After Surgery Society recommendations. American Journal of Obstetrics and Gynecology, 223(4), 475–485.",
+      "Anglim, B. C., Tomlinson, G., Paquette, J., & McDermott, C. D. (2022). A risk calculator for postoperative urinary retention (POUR) following vaginal pelvic floor surgery: Multivariable prediction modelling. BJOG, 129(13), 2203–2213.",
+      "Gan, T. J., Belani, K. G., Bergese, S., Chung, F., Diemunsch, P., Habib, A. S., ... Philip, B. K. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia & Analgesia, 131(2), 411–448."
+    ]
+  },
+  {
+    specialty:"婦產科",
+    name:"陰道式全子宮切除術",
+    en:"Vaginal Total Hysterectomy (VTH)",
+    updated:"2026-08-10",
+    summary:{ position:"Lithotomy", posType:"supine", time:"參考捷格手術排程時間", blood:"中", airway:"GA / ETT 或 LMA・亦可脊髓麻醉" },
+    preop:[
+      "常見於<b>子宮脫垂的年長病人</b>,也用於子宮不大的良性病灶;經常同時做陰道前後壁修補",
+      "年長者術前重點在心肺功能、共病控制、用藥(尤其抗血栓藥)與功能狀態",
+      "查 Hb;經血過多者可能已有貧血,術前先矯正",
+      "依 ERAS 避免長時間禁食;確認是否合併其他術式以估計時間與失血"
+    ],
+    airway:[
+      "<b>全身麻醉或脊髓麻醉皆可</b>,依病人共病與主治醫師判斷;脊髓麻醉需涵蓋薦椎皮節",
+      "全身麻醉時間長或需較深肌鬆者用 <b>ETT</b>;單純短時間手術可考慮 LMA",
+      "術野在會陰、麻醉端與病人頭部之間有距離 → 導管與管路固定確實"
+    ],
+    monitor:[
+      "標準 ASA 基本監測;年長者注意血壓波動",
+      "<b class='w'>陰道式手術的失血不容易估計</b>:血會流到布單與吸引瓶以外的地方 → 主動與器械護理師確認紗布與吸引量",
+      "留置尿管;手術時間長者加溫並監測體溫;必要時建立第二條靜脈"
+    ],
+    hemo:[
+      "出血來自<b>子宮動脈下行支與子宮薦骨韌帶、主韌帶斷端</b>;視野受限使止血較困難",
+      "<b class='w'>牽拉子宮下拉時可引起迷走反射,出現心搏過緩與低血壓</b> → 請外科暫停牽拉、給氧,依主治醫師指示處理",
+      "外科注射含血管收縮劑的局部麻醉藥於子宮頸旁以減少出血,注射後注意心跳血壓變化",
+      "脊髓麻醉的年長者可能明顯低血壓 → 緩慢給藥、備妥升壓藥"
+    ],
+    intraop:[
+      "<b class='w'>截石位相關神經傷害與小腿腔室症候群是主要體位風險</b> → 腿架墊好、避免髖部過度屈曲外展,長時間手術定期放腿活動",
+      "手術結束時外科可能放置陰道填塞物,<b>務必確認並記錄</b>,連同取出時間一併交班",
+      "維持正常體溫、避免過量輸液;年長者對輸液量的耐受度較差",
+      "手術困難或子宮過大時可能改為腹腔鏡輔助或轉開腹 → 事先與外科確認備案"
+    ],
+    drug:[
+      "誘導 propofol + <b>rocuronium</b>(需要肌鬆時),以 <b>sugammadex</b> 逆轉",
+      "多模式止痛:paracetamol、NSAID、局部浸潤或陰部神經阻斷",
+      "年長者<b class='w'>避免長效鎮靜與抗膽鹼藥物</b>,降低術後譫妄風險",
+      "PONV 預防;婦科手術屬高風險"
+    ],
+    emergence:[
+      "平順甦醒與拔管,避免嗆咳與腹壓上升造成陰道斷端出血",
+      "確認陰道填塞物、尿管與失血量都已記錄並交班",
+      "年長者注意甦醒品質與定向感"
+    ],
+    postop:[
+      "<b class='w'>持續觀察陰道出血量</b>;內出血時可能只表現為心跳上升、頭暈與尿量減少,血壓下降往往較晚出現",
+      "術後尿滯留常見,依婦產科流程執行排尿試驗;陰道填塞物依指示時間取出",
+      "多模式止痛、早期下床與進食;依風險給予靜脈栓塞預防",
+      "年長者注意譫妄與跌倒風險"
+    ],
+    flags:[
+      "術中或術後出血、陰道斷端出血、骨盆腔血腫",
+      "膀胱或輸尿管損傷",
+      "牽拉子宮引起的迷走反射性心搏過緩",
+      "術後尿滯留;陰道填塞物遺留",
+      "截石位相關神經傷害、小腿腔室症候群",
+      "年長者術後譫妄、脊髓麻醉相關低血壓"
+    ],
+    refs:[
+      "Altman, A. D., Robert, M., Armbrust, R., Fawcett, W. J., Nihira, M., Jones, C. N., Tamussino, K., Sehouli, J., Dowdy, S. C., & Nelson, G. (2020). Guidelines for vulvar and vaginal surgery: Enhanced Recovery After Surgery Society recommendations. American Journal of Obstetrics and Gynecology, 223(4), 475–485.",
+      "Nelson, G., Bakkum-Gamez, J., Kalogera, E., Glaser, G., Altman, A., Meyer, L. A., ... Dowdy, S. C. (2019). Guidelines for perioperative care in gynecologic/oncology: Enhanced Recovery After Surgery (ERAS) Society recommendations—2019 update. International Journal of Gynecological Cancer, 29(4), 651–668.",
+      "Anglim, B. C., Tomlinson, G., Paquette, J., & McDermott, C. D. (2022). A risk calculator for postoperative urinary retention (POUR) following vaginal pelvic floor surgery: Multivariable prediction modelling. BJOG, 129(13), 2203–2213."
+    ]
+  },
+  {
     specialty:"神經外科",
     name:"開顱腫瘤切除",
     en:"Craniotomy (Supratentorial Tumour)",
@@ -2307,10 +3139,106 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v5.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-08-09";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v6.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-08-10";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-10",
+    note: "骨科新增骨折固定兩台術式。",
+    items: [
+      { t: "骨科新增:骨折切開復位內固定術(急診飽胃、合併傷、隱性失血、脂肪栓塞與骨筋膜室症候群)", en: "Open Reduction and Internal Fixation (ORIF)" },
+      { t: "骨科新增:骨折閉鎖復位內固定術(復位所需肌鬆、隨時轉開放的準備、石膏過緊與術後患肢評估、小兒與輻射防護)", en: "Closed Reduction and Internal Fixation (CRIF)" }
+    ]
+  },
+  {
+    date: "2026-08-10",
+    note: "骨科新增兩台術式。",
+    items: [
+      { t: "骨科新增:全髖關節置換術(骨水泥植入症候群、傳明酸、運動保留型阻斷、脫臼與隱性失血)", en: "Total Hip Replacement (THR)" },
+      { t: "骨科新增:關節鏡手術,膝與肩(沙灘椅位血壓高度差示意圖、斜角肌間阻斷與橫膈麻痺、灌流液外滲、反彈痛衛教)", en: "Arthroscopic Surgery (Knee / Shoulder)" }
+    ]
+  },
+  {
+    date: "2026-08-10",
+    note: "婦產科新增九台術式。",
+    items: [
+      { t: "婦產科新增:腹腔鏡子宮肌瘤切除術(貧血、出血控制、子宮肌層注射血管收縮劑的風險)", en: "Laparoscopic Myomectomy (LM)" },
+      { t: "婦產科新增:腹腔鏡卵巢切除術,含卵巢囊腫切除(巨大囊腫、卵巢扭轉急診刀)", en: "Laparoscopic Oophorectomy / Ovarian Cystectomy" },
+      { t: "婦產科新增:經腹全子宮切除術(出血、保溫、腹壁筋膜平面阻斷)", en: "Abdominal Total Hysterectomy (ATH)" },
+      { t: "婦產科新增:腹腔鏡全子宮切除術(陡峭頭低位生理影響示意圖、導管移位、水腫與拔管)", en: "Laparoscopic Total Hysterectomy (LTH)" },
+      { t: "婦產科新增:雙側輸卵管卵巢切除術(單獨手術與併行大手術的差別)", en: "Bilateral Salpingo-Oophorectomy (BSO)" },
+      { t: "婦產科新增:卵巢癌腫瘤減積手術(大量體液移動、放腹水後低血壓、橫膈剝離氣胸、術後加護)", en: "Ovarian Cancer Cytoreductive (Debulking) Surgery" },
+      { t: "婦產科新增:門診婦科小手術,子宮擴刮術與子宮鏡(灌流液差額示意圖、低血鈉、氣體栓塞)", en: "Outpatient Gynecologic Procedures (D&C / Hysteroscopy)" },
+      { t: "婦產科新增:陰道前後壁修補術(截石位神經傷害、術後尿滯留、年長者用藥)", en: "Anterior and Posterior Colporrhaphy (A-P Repair)" },
+      { t: "婦產科新增:陰道式全子宮切除術(失血不易估計、牽拉迷走反射、陰道填塞物交班)", en: "Vaginal Total Hysterectomy (VTH)" }
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "危機處理校對進度更新。",
+    items: [
+      "危機處理局部麻醉藥全身毒性(LAST)移入已校對",
+      "危機處理過敏性反應移入已校對"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "危機處理:過敏性反應卡片更新。",
+    items: [
+      "過敏性反應:誘因補上乳膠製品的實際來源(手套、導尿管),並新增血液製品",
+      "過敏性反應:處置強調 epinephrine 要合併大量輸液,並改為紅字標示",
+      "過敏性反應:後續處理新增與麻醉主治醫師討論是否外送檢體驗過敏原(紫頭、黃頭)",
+      "過敏性反應:劑量表新增支氣管痙攣用藥、抗組織胺與類固醇,並註明後兩者不可取代 epinephrine"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "危機處理:局部麻醉藥全身毒性(LAST)更新為本院用藥與速算。",
+    items: [
+      "LAST:脂肪乳劑標明為 SMOFlipid,並移除請人拿急救車的敘述",
+      "LAST:劑量表改為 SMOFlipid 本院給法,起始 1.5 mL/kg bolus 最多三次、後續 15 mL/kg/hr,並附 50 與 60 公斤速算",
+      "LAST:循環不穩時避免大劑量 propofol 改為紅字標示",
+      "LAST:心跳停止時 epinephrine 改為明確標示劑量盡量限制在 1 mcg/kg 以下,並以紅字呈現"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "惡性高熱用詞修正並完成校對。",
+    items: [
+      "惡性高熱:早期症狀的鈉石灰罐改為蘇打石灰罐",
+      "惡性高熱:處置改為換麻機或取新蛇管,將舊的蛇管換新之後切到 one-way 迴路",
+      "危機處理惡性高熱移入已校對"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "危機處理:惡性高熱卡片更新。",
+    items: [
+      "惡性高熱:辨識區改為早期症狀與晚期症狀分段條列,早期以 EtCO₂ 上升與咬肌痙攣為主,體溫上升明確歸為晚期",
+      "惡性高熱:一句話摘要改為接觸過麻醉氣體或 Succinylcholine 即應想到",
+      "惡性高熱:移除活性碳濾器,改為換麻機或取新蛇管、將迴路切到 one-way(本院作法)",
+      "惡性高熱:劑量表中 dantrolene 稀釋方式改為紅字標示,用詞由泡開改為稀釋"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "首頁使用聲明精簡。",
+    items: [
+      "首頁使用聲明:移除考題來源與示意圖出處的說明文字"
+    ]
+  },
+  {
+    date: "2026-08-09",
+    note: "首頁使用聲明擴充;本站設定為不被搜尋引擎收錄。",
+    items: [
+      "首頁使用聲明補充:內容依本院作法與流程撰寫,他院作法未必相同,不適用於本院以外的臨床情境",
+      "首頁使用聲明補充:本工具為記憶輔助,不取代主治醫師指示與最新指引",
+      "首頁使用聲明補充:考題引用衛生福利部公開試題,示意圖為原創繪製",
+      "首頁使用聲明補充:僅供本院麻醉學員使用,請勿轉傳予院外人員",
+      "本站已設定不被 Google 等搜尋引擎收錄,只能透過網址開啟"
+    ]
+  },
   {
     date: "2026-08-09",
     note: "待校對的術式與危機處理卡片改為淺灰底。",
@@ -5531,8 +6459,9 @@ function updatesHtml(){
   return `<div class="upd">
     <div class="upd-notice">
       本工具為花蓮慈濟麻醉科醫師與麻醉專科護理師的<b>共筆分享</b>,非官方文件。<br>
-      臨床麻醉流程一律以<b>所屬單位 ISO 標準作業程序</b>為準。<br>
-      <b>僅供花蓮慈濟麻醉學員參考使用。</b>
+      內容多依<b>本院作法與流程</b>撰寫,他院作法未必相同,不適用於本院以外的臨床情境。<br>
+      臨床麻醉流程一律以<b>所屬單位 ISO 標準作業程序</b>為準;本工具為記憶輔助,不取代主治醫師指示與最新指引。<br>
+      <b>僅供花蓮慈濟麻醉學員參考使用,請勿轉傳予院外人員。</b>
     </div>
     ${reviewProgressHtml()}
     <div class="upd-h">最近更新</div>
@@ -6356,7 +7285,7 @@ function wireDrugCalc(){
    字串用雙引號,內文不可再出現雙引號;class 一律單引號;
    小於與大於符號一律寫成 &lt; 與 &gt;,避免被當成標籤。
    ============================================================ */
-const CRISIS_UPDATED = "2026-08-07";
+const CRISIS_UPDATED = "2026-08-09";
 let CRISIS_OPEN = null;   /* null = 停在列表層;否則為展開中的 crisis id */
 
 const CRISIS = [
@@ -6633,17 +7562,23 @@ const CRISIS = [
   },
 
   {
+    checked: "2026-08-09",
     group: "藥物與過敏",
     id: "mh",
     name: "惡性高熱",
     en: "Malignant Hyperthermia",
-    key: "停用揮發性麻醉藥 → 立刻給 Dantrolene 2.5 mg/kg",
+    key: "接觸過麻醉氣體或 Succinylcholine → 立刻給 Dantrolene 2.5 mg/kg",
     recog: [
+      "## 早期症狀",
       "<b>EtCO₂ 快速上升,而且提高分鐘通氣量仍壓不下來</b> → 最早也最可靠的線索",
       "無法解釋的心搏過速、心律不整、呼吸過速",
-      "全身肌肉僵直;給 succinylcholine 後出現咬肌痙攣",
-      "混合型酸血症、高血鉀、肌球蛋白尿(可樂色尿)",
-      "<b class='w'>體溫上升是晚期表現,不能等發燒才想到</b>"
+      "給 succinylcholine 後出現咬肌痙攣;進而全身肌肉僵直",
+      "皮膚潮紅、出汗;蘇打石灰罐發燙",
+      "## 晚期症狀",
+      "<b class='w'>體溫急速上升(可每 5 分鐘升高 1 至 2 °C);體溫是晚期表現,不能等發燒才想到</b>",
+      "混合型酸血症(呼吸性加代謝性)、高血鉀",
+      "肌球蛋白尿(可樂色尿)、CK 大幅上升 → 急性腎損傷",
+      "心室性心律不整、瀰漫性血管內凝血、心跳停止"
     ],
     act: [
       "<b class='w'>通知麻醉主治醫師、Call Help!</b>",
@@ -6651,13 +7586,13 @@ const CRISIS = [
       "<b>停用所有揮發性麻醉藥與 succinylcholine</b>,改以全靜脈麻醉維持",
       "100% 氧氣、高流量 ≥10 L/min,分鐘通氣量提高到 2–3 倍",
       "通知外科團隊儘快結束或暫停手術",
-      "<b>立刻給 dantrolene;不要為了換麻醉機或洗管路而延遲</b>,可同時加裝活性碳濾器",
+      "<b>立刻給 dantrolene;不要為了換麻醉機或洗管路而延遲</b>,可同時換麻機或取新蛇管,將舊的蛇管換新之後切到 one-way 迴路",
       "積極降溫:冰生理食鹽水靜脈輸注、體表冰敷、體腔沖洗;<b>降到 38 °C 就停止</b>,避免過度低體溫",
       "處理高血鉀與酸血症,並反覆追蹤血氣、電解質、CK 與凝血功能",
       "放置導尿管,維持尿量 ≥1–2 mL/kg/hr,預防肌球蛋白造成急性腎損傷"
     ],
     dose: [
-      ["Dantrolene 首劑", "<b>2.5 mg/kg IV 快速推注</b>", "70 kg 約 175 mg;傳統劑型每瓶 20 mg 要用 60 mL 無菌注射用水泡開,一次得泡很多瓶,務必多人同時進行"],
+      ["Dantrolene 首劑", "<b>2.5 mg/kg IV 快速推注</b>", "70 kg 約 175 mg;傳統劑型每瓶 20 mg 要用 <b class='w'>60 mL 無菌注射用水稀釋</b>,一次得泡很多瓶,務必多人同時進行"],
       ["Dantrolene 續劑", "每 5–10 分鐘重複 2.5 mg/kg", "直到 EtCO₂、心跳與僵直改善;總量常需 10 mg/kg 以上,沒有上限"],
       ["高血鉀", "Calcium gluconate 30 mg/kg 或 calcium chloride 10 mg/kg IV", "併用 regular insulin 0.1 U/kg 加葡萄糖,並持續監測血糖"],
       ["酸血症", "Sodium bicarbonate 1–2 mEq/kg IV", "依血氣結果調整"]
@@ -6680,6 +7615,7 @@ const CRISIS = [
   },
 
   {
+    checked: "2026-08-09",
     group: "藥物與過敏",
     id: "last",
     name: "局部麻醉藥全身毒性",
@@ -6693,17 +7629,18 @@ const CRISIS = [
     ],
     act: [
       "<b class='w'>通知麻醉主治醫師、Call Help!</b>",
-      "<b>立刻停止注射局部麻醉藥</b>,並請人拿脂肪乳劑與急救車",
+      "<b>立刻停止注射局部麻醉藥</b>,並請人拿脂肪乳劑(SMOFlipid)",
       "確保氣道、給 100% 氧氣,必要時插管;避免缺氧與高碳酸血症,兩者都會加重毒性",
-      "抽搐給 benzodiazepine;<b>循環不穩時避免大劑量 propofol</b>",
+      "抽搐給 benzodiazepine;<b class='w'>循環不穩時避免大劑量 propofol</b>",
       "<b>儘早給 20% 脂肪乳劑</b>,不必等到心跳停止才用",
-      "心跳停止則依 ACLS 進行,但 epinephrine 必須<b>減量</b>",
+      "心跳停止則依 ACLS 進行,但 <b class='w'>epinephrine 劑量盡量限制在 1 mcg/kg 以下</b>",
       "考慮心肺體外循環或 ECMO;LAST 的急救可能需要持續很久,不要太早放棄"
     ],
     dose: [
-      ["脂肪乳劑 · 體重 ≥70 kg", "<b>20% lipid emulsion 100 mL,2–3 分鐘推完</b>", "接著 200–250 mL 於 15–20 分鐘內輸注"],
-      ["脂肪乳劑 · 體重 &lt;70 kg", "<b>1.5 mL/kg 推注(以理想體重計)</b>", "接著 0.25 mL/kg/min 持續輸注"],
-      ["仍不穩定", "可再重複推注 1–2 次,或把輸注速率加倍", "建議上限約 12 mL/kg"],
+      ["SMOFlipid · 起始", "<b>1.5 mL/kg IV bolus</b>", "SMOFlipid 1000 mL/bot;以理想體重計,<b class='w'>最多 loading 三次</b>"],
+      ["SMOFlipid · 後續", "<b>15 mL/kg/hr 持續輸注</b>", "循環穩定後可減速;建議總量上限約 12 mL/kg"],
+      ["速算 · 50 kg", "bolus 75 mL", "持續輸注 750 gtt"],
+      ["速算 · 60 kg", "bolus 90 mL", "持續輸注 900 gtt"],
       ["Epinephrine", "<b class='w'>單次 ≤1 µg/kg,成人約 ≤100 µg</b>", "大劑量會降低脂肪乳劑的救援效果"]
     ],
     avoid: [
@@ -6724,6 +7661,7 @@ const CRISIS = [
   },
 
   {
+    checked: "2026-08-09",
     group: "藥物與過敏",
     id: "anaphylaxis",
     name: "過敏性反應",
@@ -6733,7 +7671,7 @@ const CRISIS = [
       "麻醉中最常見的是<b>無法解釋的低血壓與心搏過速</b>;皮膚症狀常被鋪單蓋住而看不到",
       "氣道壓突然升高、支氣管痙攣、通氣困難",
       "EtCO₂ 下降(心輸出量降低)、SpO₂ 下降",
-      "麻醉中最常見誘因:<b>神經肌肉阻斷劑、抗生素、chlorhexidine、乳膠、顯影劑</b>",
+      "麻醉中最常見誘因:<b>神經肌肉阻斷劑、抗生素、chlorhexidine、乳膠製品(如:手套、導尿管)、顯影劑、血液製品</b>",
       "多在給藥後數分鐘內發作;chlorhexidine 與乳膠可能較慢"
     ],
     act: [
@@ -6741,7 +7679,7 @@ const CRISIS = [
       "<b>立刻停止所有可能誘因</b>(抗生素、膠體、乳膠,以及含 chlorhexidine 的消毒或塗層導管)",
       "通知外科團隊,並考慮暫停手術",
       "100% 氧氣、確保氣道;氣道水腫進展很快,<b>該插管就早插管</b>",
-      "<b>給 epinephrine 並依反應滴定</b>,這是唯一能改變預後的藥",
+      "<b class='w'>給 epinephrine 及大量輸液</b>,epinephrine 是唯一能改變預後的藥,依反應滴定",
       "大量晶體液快速輸注,常需要好幾公升",
       "頑固性低血壓改為 epinephrine 持續輸注,並考慮 norepinephrine 或 vasopressin",
       "支氣管痙攣:吸入型 β₂ 促效劑、加深吸入麻醉,必要時 magnesium sulfate"
@@ -6751,7 +7689,10 @@ const CRISIS = [
       ["Epinephrine IM", "<b>成人 500 µg 打大腿外側</b>", "沒有靜脈管路時的首選,每 5 分鐘可重複"],
       ["Epinephrine 輸注", "0.05–0.5 µg/kg/min", "只要需要重複推注,就該開始持續輸注"],
       ["晶體液", "20 mL/kg 快速輸注,可重複", "嚴重者總量常達 3–5 L"],
-      ["Glucagon", "1–2 mg IV,可每 5 分鐘重複", "用於服用乙型阻斷劑、對 epinephrine 反應不佳者"]
+      ["支氣管痙攣時", "<b>Salbutamol 吸入:經氣管內管 4–8 puff,或噴霧 2.5–5 mg</b>", "無效改 epinephrine:吸入(IH)或靜脈(IV)依上表劑量;同時加深吸入麻醉"],
+      ["Glucagon", "1–2 mg IV,可每 5 分鐘重複", "用於服用乙型阻斷劑、對 epinephrine 反應不佳者"],
+      ["Anti-histamine", "Diphenhydramine 25–50 mg IV;或 chlorpheniramine 10 mg IV", "小兒 diphenhydramine 1 mg/kg(單次最多 50 mg);<b class='w'>症狀緩解用,不可取代或延後 epinephrine</b>"],
+      ["Steroid", "Hydrocortisone 100–200 mg IV;或 methylprednisolone 1–2 mg/kg IV", "小兒 hydrocortisone 2–4 mg/kg;<b class='w'>不是急救用藥,起效要數小時</b>"]
     ],
     avoid: [
       "類固醇與抗組織胺<b class='w'>不是急救用藥</b>,絕不可因為給了它們而延後 epinephrine",
@@ -6759,6 +7700,7 @@ const CRISIS = [
     ],
     after: [
       "抽血驗 tryptase:<b>發作後儘快、1–2 小時、以及 24 小時後的基礎值</b>,共三套",
+      "<b>與麻醉主治醫師討論是否外送檢體驗過敏原</b>(紫頭、黃頭)",
       "轉加護病房觀察,注意雙相反應",
       "病歷與病人卡片明確記錄疑似藥物;<b>4–6 週後轉介過敏科做皮膚測試</b>再確認",
       "確認結果出來前,後續麻醉一律避開所有疑似藥物"
@@ -7074,7 +8016,10 @@ function criDia(c, key){
 }
 
 function crisisCardHtml(c){
-  const li = a => a.map(x => `<li>${x}</li>`).join("");
+  /* 條目以 "## " 開頭 → 渲染為分段小標題(無項目符號) */
+  const li = a => a.map(x => x.indexOf("## ") === 0
+    ? `<li class="hd">${x.slice(3)}</li>`
+    : `<li>${x}</li>`).join("");
   return `
     <div class="tool-box cri-card">
       <div class="cri-h">
