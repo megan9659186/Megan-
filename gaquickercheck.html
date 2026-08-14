@@ -3120,7 +3120,7 @@ const SURGERIES = [
     ]
   },
   {
-    updated:"2026-08-13",
+    updated:"2026-08-14",
     specialty:"移植",
     name:"肝臟移植",
     en:"Liver Transplantation (LT)",
@@ -3153,7 +3153,8 @@ const SURGERIES = [
       "外科動作:on NG、拉病人到適當位置及翻身;翻身後重新確認導管深度與所有線路",
       "<b>抽第一次 ABG 與 ROTEM</b>;TEE 視病人情況使用",
       "<b>硬體</b>:超音波機、血氣機、ROTEM 全血分析儀與藍頭試管、濕式溫血槽、輸液加溫器 ×2、syringe pump、電擊器由外科 stand by",
-      "<b class='w'>所有線路都要保護,避免壓瘡</b>"
+      "<b class='w'>所有線路都要保護,避免壓瘡</b>",
+      "<b>TEE</b>:可即時看出右心衰竭、心肌缺氧、心包填塞與<b class='w'>心內血栓</b>;即使有食道靜脈瘤,出血併發症的機率仍低"
     ],
     hemo:[
       "分四段理解:<b>病肝切除期</b> → <b>無肝期</b> → <b>再灌流前準備</b> → <b>新肝期</b>",
@@ -3162,37 +3163,55 @@ const SURGERIES = [
       "無肝期低血壓的來源:沒有手術刺激、腹腔內滲血、體液流失、心輸出與周邊血管阻力同時下降",
       "<b class='w'>Reperfusion 前目標:SBP 140–150、DBP 大於 50 mmHg、CVP 6–8,酸鹼與離子矯正好,volume 不能太多</b>",
       "<b class='w'>再灌流症候群(PRS)</b>:嚴重定義為再灌流後五分鐘內 MAP 下降超過 30% 且持續超過 1 分鐘,可能伴隨 Af、心搏過緩甚至 asystole;輕微為 MAP 或心跳下降未達 30% 且持續不到 5 分鐘<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>成因是<b>冷的、酸的、電解質不平衡且含發炎物質</b>的血液在再灌流後大量回到心臟。血流動力學上會看到 CVP、肺血管阻力與肺動脈壓上升,周邊血管阻力下降,左心每搏輸出與心輸出下降,嚴重時右心衰竭。所以再灌流前要先把酸鹼離子矯正好、把血壓拉高一點、急救藥抽好放手邊。</span>",
-      "血管麻痺:周邊阻力極低,依醫囑用 Levophed;必要時 Bosmin 依稀釋濃度給"
+      "血管麻痺:周邊阻力極低,依醫囑用 Levophed;必要時 Bosmin 依稀釋濃度給",
+      "<b>【教學補充・國際文獻】以下為一般原則,實際作法以本院 protocol 與主治醫師醫囑為準</b>",
+      "<b class='w'>完全夾住下腔靜脈時靜脈回流可下降達五成</b> → 外科常先做<b>試夾</b>觀察反應;不耐受就放開、補足前負荷後再試,直到病人撐得住",
+      "<b>Piggyback 與傳統 caval interposition 的差別</b>:piggyback 保留受贈者下腔靜脈、只需兩個吻合;回顧性研究顯示溫缺血時間較短、急性腎損傷風險較低",
+      "<b>靜脈-靜脈繞道(VVB)</b>:把下腔靜脈與門靜脈血流導回上腔靜脈,可維持前負荷、改善腎灌流並延緩代謝性酸;代價是空氣栓塞、血栓與脫管風險,統合分析未顯示能減少腎衰竭或輸血量,使用率逐年下降",
+      "<b class='w'>再灌流時心內血栓並不罕見</b>:單一中心的 TEE 系列顯示約兩成病人在再灌流時看到心內血栓,且與孤立性右心室功能不全高度相關;大量栓塞可造成心跳停止",
+      "<b>PRS 的危險因子與移植肝品質有關</b>:捐贈者年齡、冷缺血時間、大泡性脂肪變性;發生率超過五成,且數十年來沒有明顯下降"
     ],
     intraop:[
-      "<b class='w'>不熟悉的時候隨時開口問。以下依手冊的三個時期逐段對照。</b>",
-      "<b>【病肝切除期 Dissection】目的是解剖肝門與剝離原有肝臟</b>",
-      "<b>① 外科進度</b>:外科會邊解剖邊綁住部分門靜脈、肝動脈、肝靜脈,<b class='w'>有時會配合 donor 時間保留左或右門靜脈,最後才夾住剪掉</b> → 要一直注意手術進度",
-      "<b>② 脾臟</b>:有時不拿脾臟,但會在脾動脈做結紮,目的是調整門靜脈血流與處理脾腫大;確認這台要不要做脾臟切除",
-      "<b>③ 麻醉深度與抽血</b>:依 BIS 調整深度、依醫囑用肌鬆劑;<b>抽 baseline ABG 與 ROTEM,之後原則上一小時抽一次 ABG</b>",
-      "<b>④ 體液</b>:注意腹水量、失血量、尿量三筆數字;用<b>溫的 Ringer(必要時加 Albumin)</b>補充;此時可能會先叫大量血品回來,依醫囑回溫及輸注",
-      "<b>⑤ 注意 EKG 變化</b>,適時矯正酸血與電解質問題",
-      "<b>【無肝期 Anhepatic】開始:夾住門靜脈;結束:新肝再灌流</b>",
-      "<b>⑥ 順序</b>:hepatic artery → portal vein → hepatic vein → liver out;<b>巡迴會記錄時間</b>",
-      "<b>⑦ liver out 後</b>:<b class='w'>B 型肝炎患者開始給 Hepatec,靜脈滴注超過 30 分鐘,並在無肝期內給完</b>,注意有無過敏反應<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Hepatec 是<b>B 型肝炎免疫球蛋白</b>,用來降低新肝再被 B 型肝炎病毒感染的機會。它是血液製劑,滴注速度不能快,而且要在無肝期這段時間內給完,所以 liver out 一報時間就要開始。給的過程盯著有沒有過敏或輸注反應。</span>",
-      "<b>⑧ 抽血節奏</b>:<b class='w'>無肝期半小時抽一次 ABG</b>;ROTEM 依醫囑,liver out 後 10–15 分鐘抽",
-      "<b>⑨ 輸液輸血</b>:依 FloTrac 與 vital signs 給,注意尿量,必要時給利尿劑;<b class='w'>大量血品輸注前需與主治醫師確認輸注順序與數量</b>",
-      "<b>⑩ 代謝</b>:體溫維持 36 °C 以上;代謝性酸必要時以 NaHCO₃ 治療;<b class='w'>積極補充 Ca 與 Mg、控制高血鉀,並小心 Na 上升太快,輸液可改用 half saline</b>",
-      "<b>⑪ 腦血氧</b>:注意無肝期腦血氧數值有沒有下降",
-      "<b>⑫ 凝血目標</b>:依臨床狀況與 ROTEM 結果叫血;<b class='w'>Hb 大於 9、PLT 不能低、FIBTEM MCF 大於 8 mm、EXTEM MCF 大於 45 mm</b>;注意 fibrinolysis,依醫囑給 tranexamic acid<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>ROTEM 怎麼看:<b>EXTEM MCF</b> 代表整體血塊的最大強度,<b>FIBTEM MCF</b> 把血小板的貢獻擋掉,剩下的主要是纖維蛋白原。所以 FIBTEM 低就補<b>纖維蛋白原或冷凍沉澱品</b>;EXTEM 低但 FIBTEM 還可以,問題多半在<b>血小板</b>。曲線在後段自己塌下去就是纖溶亢進,要考慮抗纖溶藥。</span>",
-      "<b>⑬ 腸脹</b>:shunting 不好的病人腸子可能會脹,需觀察肚子脹大的程度",
-      "<b>⑭ 新肝放到病人身上(WIT 開始)</b>:給 <b>Solu-Medrol</b>,原則上 HCC 與 HCV 500 mg、HBV 1000 mg,依醫囑",
-      "<b>⑮ Reperfusion 步驟(約 30 分鐘)</b>:portal vein 接 IV set,以 <b>1000 mL 冰 L/R 沖出器官保存液</b> → 以 piggyback 方式接 donor 與 recipient 的 hepatic vein 或 IVC → <b class='w'>停止灌就表示 outflow 快縫好了</b> → 接 portal vein(也可能先放 hepatic vein 再接 portal)→ 放 hepatic vein(外科會說 5 分鐘後放)→ 放 portal vein 再灌流",
-      "<b>⑯ 抓時間</b>:<b class='w'>portal vein 通常用兩條線左右各縫半圈,可以抓緊這段時間抽 ABG、補電解質、調血壓</b>",
-      "<b>⑰ Reperfusion 前確認</b>:<b class='w'>Hepatec 與 Solu-Medrol 已給完</b>;依醫囑備好數支 <b>CaCl₂、NaHCO₃、Ephedrine、Levophed 10 mcg/mL</b>,以及 <b>Epinephrine 10 mcg/mL 與 100 mcg/mL 各一支</b>",
-      "<b>【新肝期 Neohepatic】</b>",
-      "<b>⑱ 順序</b>:portal vein 再灌流後 → 開始接 hepatic artery → flow 確認 OK → 膽道吻合 → 關傷口",
-      "<b>⑲ 抽血</b>:依醫囑,<b class='w'>再灌流後 5–10 分鐘抽 ABG</b>,之後原則上一小時抽一次",
-      "<b>⑳ 腦部</b>:<b class='w'>注意腦血氧數值勿過高(小於 80)</b>,必要時使用 Mannitol 降腦壓",
-      "<b>㉑ 顯微鏡下接肝動脈時</b>:外科可能會<b class='w'>要求調慢呼吸速率(RR 6–8 次/分,同時要調高 FiO₂)</b> → 可能造成 CO₂ 蓄積 → 腦血流與腦壓上升 → <b class='w'>原本有肝腦病變者可能加重腦水腫</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>顯微吻合時病人一點點呼吸起伏都會晃動術野,所以外科會希望把呼吸速率降下來。代價是二氧化碳排不掉:CO₂ 上升會讓腦血管擴張、腦血流增加,腦壓跟著上去。做法是<b>同時調高 FiO₂</b>、維持低 CVP 與足夠腦灌流壓、盯著腦血氧不要過高,CO₂ 太高就主動跟外科溝通、調整呼吸器設定。</span>",
-      "<b>㉒ 藥物代謝恢復</b>:<b class='w'>新肝若運作良好,藥物代謝速率會恢復正常</b> → 注意肌鬆劑給予,並觀察麻醉藥是否需要上調",
-      "<b>㉓ 再灌流後凝血障礙</b>:移植肝缺血產生大量活性氧、全身性發炎反應、鬱血內臟釋出 t-PA;<b>視腹腔出血狀況必要時再做一次 ROTEM</b>,確認要補 PLT、Cryo、PRBC 或給 tranexamic acid",
-      "<b>㉔ 膽道吻合前</b>:膽道附近血管可能會 oozing 出血;<b class='w'>如果 Hb 一直輸不上來,主動跟外科溝通出血狀況</b>"
+      "<b class='w'>不熟悉的時候隨時開口問。以下依流程圖的四個時期逐段對照。</b>",
+      "<b>【一、術前準備期】開始:病人進刀房;結束:切皮</b>",
+      "<b>① 保暖與電擊片</b>:溫毯舖到頭板並以 42 °C 預熱;<b class='w'>病人還清醒時就先貼好電擊片與電擊器 3 lead</b>,團隊互相確認",
+      "<b>② 監測與管路</b>:5 Lead EKG、SpO₂ 手指與耳朵、NMT、腦血氧、BIS;<b class='w'>清醒先打一條 A-line</b>,插管做 RSI 準備,之後打另一條 A-line 與粗 IV 或 CVC,<b class='w'>3-way 接最前端、CVP 連續監測</b>",
+      "<b>③ Baseline</b>:抽第一次 ABG 與 ROTEM;<b>詳細擺位、硬體清單與線路保護見上方監測區</b>",
+      "<b>【二、病肝切除期 Dissection】目的是解剖肝門與剝離原有肝臟</b>",
+      "<b>④ 外科進度</b>:外科會邊解剖邊綁住部分門靜脈、肝動脈、肝靜脈,<b class='w'>有時會配合 donor 時間保留左或右門靜脈,最後才夾住剪掉</b> → 要一直注意手術進度",
+      "<b>⑤ 脾臟</b>:有時不拿脾臟,但會在脾動脈做結紮,目的是調整門靜脈血流與處理脾腫大;確認這台要不要做脾臟切除",
+      "<b>⑥ 麻醉深度與抽血</b>:依 BIS 調整深度、依醫囑用肌鬆劑;<b>抽 baseline ABG 與 ROTEM,之後原則上一小時抽一次 ABG</b>",
+      "<b>⑦ 體液</b>:注意腹水量、失血量、尿量三筆數字;用<b>溫的 Ringer(必要時加 Albumin)</b>補充;此時可能會先叫大量血品回來,依醫囑回溫及輸注",
+      "<b>⑧ 注意 EKG 變化</b>,適時矯正酸血與電解質問題",
+      "<b>【三、無肝期 Anhepatic】開始:夾住門靜脈;結束:新肝再灌流</b>",
+      "<b>⑨ 順序</b>:hepatic artery → portal vein → hepatic vein → liver out;<b>巡迴會記錄時間</b>",
+      "<b>⑩ liver out 後</b>:<b class='w'>B 型肝炎患者開始給 Hepatec,靜脈滴注超過 30 分鐘,並在無肝期內給完</b>,注意有無過敏反應<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Hepatec 是<b>B 型肝炎免疫球蛋白</b>,用來降低新肝再被 B 型肝炎病毒感染的機會。它是血液製劑,滴注速度不能快,而且要在無肝期這段時間內給完,所以 liver out 一報時間就要開始。給的過程盯著有沒有過敏或輸注反應。</span>",
+      "<b>⑪ 抽血節奏</b>:<b class='w'>無肝期半小時抽一次 ABG</b>;ROTEM 依醫囑,liver out 後 10–15 分鐘抽",
+      "<b>⑫ 輸液輸血</b>:依 FloTrac 與 vital signs 給,注意尿量,必要時給利尿劑;<b class='w'>大量血品輸注前需與主治醫師確認輸注順序與數量</b>",
+      "<b>⑬ 代謝</b>:體溫維持 36 °C 以上;代謝性酸必要時以 NaHCO₃ 治療;<b class='w'>積極補充 Ca 與 Mg、控制高血鉀,並小心 Na 上升太快,輸液可改用 half saline</b>",
+      "<b>⑭ 腦血氧</b>:注意無肝期腦血氧數值有沒有下降",
+      "<b>⑮ 凝血目標</b>:依臨床狀況與 ROTEM 結果叫血;<b class='w'>Hb 大於 9、PLT 不能低、FIBTEM MCF 大於 8 mm、EXTEM MCF 大於 45 mm</b>;注意 fibrinolysis,依醫囑給 tranexamic acid<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>ROTEM 怎麼看:<b>EXTEM MCF</b> 代表整體血塊的最大強度,<b>FIBTEM MCF</b> 把血小板的貢獻擋掉,剩下的主要是纖維蛋白原。所以 FIBTEM 低就補<b>纖維蛋白原或冷凍沉澱品</b>;EXTEM 低但 FIBTEM 還可以,問題多半在<b>血小板</b>。曲線在後段自己塌下去就是纖溶亢進,要考慮抗纖溶藥。</span>",
+      "<b>⑯ 腸脹</b>:shunting 不好的病人腸子可能會脹,需觀察肚子脹大的程度",
+      "<b>⑰ 新肝放到病人身上(WIT 開始)</b>:給 <b>Solu-Medrol</b>,原則上 HCC 與 HCV 500 mg、HBV 1000 mg,依醫囑",
+      "<b>⑱ Reperfusion 步驟(約 30 分鐘)</b>:portal vein 接 IV set,以 <b>1000 mL 冰 L/R 沖出器官保存液</b> → 以 piggyback 方式接 donor 與 recipient 的 hepatic vein 或 IVC → <b class='w'>停止灌就表示 outflow 快縫好了</b> → 接 portal vein(也可能先放 hepatic vein 再接 portal)→ 放 hepatic vein(外科會說 5 分鐘後放)→ 放 portal vein 再灌流",
+      "<b>⑲ 抓時間</b>:<b class='w'>portal vein 通常用兩條線左右各縫半圈,可以抓緊這段時間抽 ABG、補電解質、調血壓</b>",
+      "<b>⑳ Reperfusion 前確認</b>:<b class='w'>Hepatec 與 Solu-Medrol 已給完</b>;依醫囑備好數支 <b>CaCl₂、NaHCO₃、Ephedrine、Levophed 10 mcg/mL</b>,以及 <b>Epinephrine 10 mcg/mL 與 100 mcg/mL 各一支</b>",
+      "<b>【四、新肝期 Neohepatic】</b>",
+      "<b>㉑ 順序</b>:portal vein 再灌流後 → 開始接 hepatic artery → flow 確認 OK → 膽道吻合 → 關傷口",
+      "<b>㉒ 抽血</b>:依醫囑,<b class='w'>再灌流後 5–10 分鐘抽 ABG</b>,之後原則上一小時抽一次",
+      "<b>㉓ 腦部</b>:<b class='w'>注意腦血氧數值勿過高(小於 80)</b>,必要時使用 Mannitol 降腦壓",
+      "<b>㉔ 顯微鏡下接肝動脈時</b>:外科可能會<b class='w'>要求調慢呼吸速率(RR 6–8 次/分,同時要調高 FiO₂)</b> → 可能造成 CO₂ 蓄積 → 腦血流與腦壓上升 → <b class='w'>原本有肝腦病變者可能加重腦水腫</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>顯微吻合時病人一點點呼吸起伏都會晃動術野,所以外科會希望把呼吸速率降下來。代價是二氧化碳排不掉:CO₂ 上升會讓腦血管擴張、腦血流增加,腦壓跟著上去。做法是<b>同時調高 FiO₂</b>、維持低 CVP 與足夠腦灌流壓、盯著腦血氧不要過高,CO₂ 太高就主動跟外科溝通、調整呼吸器設定。</span>",
+      "<b>㉕ 藥物代謝恢復</b>:<b class='w'>新肝若運作良好,藥物代謝速率會恢復正常</b> → 注意肌鬆劑給予,並觀察麻醉藥是否需要上調",
+      "<b>㉖ 再灌流後凝血障礙</b>:移植肝缺血產生大量活性氧、全身性發炎反應、鬱血內臟釋出 t-PA;<b>視腹腔出血狀況必要時再做一次 ROTEM</b>,確認要補 PLT、Cryo、PRBC 或給 tranexamic acid",
+      "<b>㉗ 膽道吻合前</b>:膽道附近血管可能會 oozing 出血;<b class='w'>如果 Hb 一直輸不上來,主動跟外科溝通出血狀況</b>",
+      "<b>【教學補充・國際文獻】以下為一般原則,實際作法以本院 protocol 與主治醫師醫囑為準</b>",
+      "<b>移植肝開始工作的跡象</b>:<b class='w'>鈣的需求下降、酸血改善、尿量增加、核心體溫回升、開始有膽汁</b>",
+      "<b class='w'>低血鉀不要積極矯正</b>:再灌流時血鉀本來就會上升,術中過度補鉀反而危險",
+      "<b>檸檬酸中毒</b>:無肝期肝臟無法代謝血品中的檸檬酸 → 離子鈣下降,以 CaCl₂ 矯正;離子鎂也會跟著下降,再灌流後多會自行回升",
+      "<b>血鈉上升的安全上限</b>:文獻建議 24 小時內上升不超過 8 mEq/L",
+      "<b>血糖</b>:再灌流後血糖常上升,<b class='w'>大於 180 mg/dL 與手術部位感染增加相關</b>,依醫囑使用胰島素",
+      "<b>纖溶在無肝期就可能開始</b>:肝臟停止製造纖溶酶原活化抑制物,t-PA 失去對抗;再灌流後移植肝內皮釋出 t-PA,纖溶最嚴重",
+      "<b>缺血時間</b>:冷缺血超過 8 小時與移植肝存活下降相關;溫缺血時間一般為 30–50 分鐘"
     ],
     drug:[
       "<b>插管備物與用藥</b>:Trachway 等插管工具;Fentanyl 100 mcg、2% Lidocaine 100 mg、Propofol 200 mg、<b>Rocuronium 50 mg 或 Cisatracurium 10 mg</b>",
@@ -3202,7 +3221,12 @@ const SURGERIES = [
       "<b>膠體與白蛋白</b>:6% HES ×1 瓶;2% Albumin ×10 瓶(病患帶入),加入點滴內輸注或單獨輸入,依醫囑",
       "<b>管路與耗材</b>:粗 line ×4(CVC ×2、周邊 16# ×2)、精密 bag、病房帶入的 IV 20# 給抗生素、亞培 pump set ×2、150 mL set ×2、pumping set ×2、Ranger ×2、假日車(20 與 50 mL 空針、19G 針頭)、N/S ×40 包、Ringer ×10 包",
       "<b class='w'>Reperfusion 前依醫囑抽好放手邊:CaCl₂、NaHCO₃、Ephedrine、Levophed、Epinephrine</b>",
-      "肌鬆:依醫囑使用,以 <b>NMT</b> 導向追加;<b class='w'>無肝期代謝停滯使作用延長,新肝運作後代謝恢復又會變快</b>,不要按時間給"
+      "肌鬆:依醫囑使用,以 <b>NMT</b> 導向追加;<b class='w'>無肝期代謝停滯使作用延長,新肝運作後代謝恢復又會變快</b>,不要按時間給",
+      "<b>【教學補充・國際文獻】以下為一般原則,實際作法以本院 protocol 與主治醫師醫囑為準</b>",
+      "<b>輸血原則</b>:文獻不建議預防性輸注,只在<b class='w'>臨床上有意義的出血</b>時依 ROTEM 或檢驗結果補;出血病人的纖維蛋白原目標約 150–200 mg/dL",
+      "<b>抗纖溶藥</b>:只在有明顯出血且懷疑或已證實纖溶亢進時使用,<b>不做常規預防性給藥</b>",
+      "<b>肌鬆劑選擇</b>:cisatracurium 為器官非依賴性代謝、組織胺釋放少;末期肝病病人的分佈體積較大但肝清除也增加,半衰期與作用時間與常人相近",
+      "<b>吸入性麻醉藥</b>:目前沒有證據顯示哪一種麻醉方式對移植肝功能較好;常見作法是低到中等濃度(0.5–1.0 MAC)搭配合成類鴉片"
     ],
     emergence:[
       "多數<b class='w'>帶管轉 ICU</b>;血流動力學穩定、無明顯凝血病、體溫正常且移植肝功能良好者,可依醫囑考慮早期拔管",
@@ -3213,7 +3237,12 @@ const SURGERIES = [
       "ICU:血流動力學、引流量與出血、乳酸清除、凝血、血糖與電解質",
       "移植肝功能指標:乳酸下降、膽汁量、凝血改善;超音波確認肝動脈與門靜脈血流",
       "免疫抑制、感染預防、腎功能與尿量;必要時腎替代治療",
-      "檢查有無壓瘡:嘴角、鼻孔、所有線路經過的位置"
+      "檢查有無壓瘡:嘴角、鼻孔、所有線路經過的位置",
+      "<b>【教學補充・國際文獻】以下為一般原則,實際作法以本院 protocol 與主治醫師醫囑為準</b>",
+      "<b class='w'>原發性無功能(PNF)</b>:沒有膽汁、血流動力學不穩、持續凝血病與低體溫 → 通常需要緊急再移植",
+      "<b>血管血栓</b>:轉胺酶與膽紅素不往下掉 → 盡快做 Doppler 超音波確認肝動脈與門靜脈血流,必要時再開刀探查",
+      "肺部併發症常見:肺水腫、肋膜積液與肺炎的發生率分別可達 47%、47% 與 38%",
+      "<b>硬膜外止痛</b>因既有凝血病一般不建議;早期拔管與 ERAS 快速康復照護可縮短加護病房天數並降低費用,前提是移植肝功能良好"
     ],
     flags:[
       "再灌流症候群;嚴重者伴心律不整或 asystole",
@@ -3225,14 +3254,20 @@ const SURGERIES = [
       "Hepatec 過敏或輸注反應",
       "急性腎損傷,需術後腎替代治療",
       "移植肝原發性無功能、肝動脈血栓",
-      "低體溫;ETT、NG 與體溫線造成的壓瘡"
+      "低體溫;ETT、NG 與體溫線造成的壓瘡",
+      "再灌流時心內血栓或肺栓塞,大量栓塞可致心跳停止"
     ],
     refs:[
       "Brustia, R., Monsel, A., Skurzak, S., et al. (2022). Guidelines for perioperative care for liver transplantation: Enhanced Recovery After Surgery (ERAS) recommendations. Transplantation, 106(3), 552–561.",
       "Bezinover, D., Mukhtar, A., Wagener, G., et al. (2021). Hemodynamic instability during liver transplantation in patients with end-stage liver disease: A consensus document from ILTS, LICAGE, and SATA. Transplantation, 105(10), 2184–2200.",
-      "Pollok, J. M., Tinguely, P., Berenguer, M., et al. (2023). Enhanced recovery for liver transplantation: Recommendations from the 2022 International Liver Transplantation Society consensus conference. The Lancet Gastroenterology & Hepatology, 8(1), 81–94."
+      "Pollok, J. M., Tinguely, P., Berenguer, M., et al. (2023). Enhanced recovery for liver transplantation: Recommendations from the 2022 International Liver Transplantation Society consensus conference. The Lancet Gastroenterology & Hepatology, 8(1), 81–94.",
+      "Krowka, M. J., Fallon, M. B., Kawut, S. M., et al. (2016). International Liver Transplant Society practice guidelines: Diagnosis and management of hepatopulmonary syndrome and portopulmonary hypertension. Transplantation, 100(7), 1440–1452.",
+      "Bezinover, D., Dirkmann, D., Findlay, J., et al. (2018). Perioperative coagulation management in liver transplant recipients. Transplantation, 102(4), 578–592.",
+      "Leise, M., & Cardenas, A. (2018). Hyponatremia in cirrhosis: Implications for liver transplantation. Liver Transplantation, 24(11), 1612–1621.",
+      "Bekki, Y., Myers, B., Wang, R., et al. (2022). Postreperfusion syndrome in liver transplantation: Outcomes, predictors, and application for recipient selection. Clinical Transplantation, 36(4), e14587.",
+      "Hannon, V., Kothari, R. P., Zhang, L., et al. (2020). The association between vena cava implantation technique and acute kidney injury after liver transplantation. Transplantation, 104(11), e308–e316."
     ],
-    diagram:{ section:"hemo", caption:"肝臟移植四個時期與術中關鍵事項(原創示意圖;時間點、數值與用藥依主治醫師醫囑)", svg:`<svg viewBox="0 0 400 1322" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>肝臟移植四個時期與術中關鍵事項流程圖</title><desc>直式流程圖依序呈現四個時期:術前準備期包含溫毯舖到頭板並預熱、清醒入房先貼電擊片、各項監測、清醒先打動脈導管、插管做快速誘導準備、中心靜脈壓連續監測與第一次血氣及黏彈性檢測;病肝切除期注意腹水引流後血壓下降、靜脈瘤出血、低體溫與翻肝壓迫下腔靜脈,並每小時抽血氣;無肝期自夾住門靜脈開始至新肝再灌流結束,注意低血壓、高血鉀、低血鈣與乳酸上升,半小時抽一次血氣,依黏彈性檢測目標補血品,並給免疫球蛋白與類固醇;再灌流前需把收縮壓維持一百四十至一百五十、舒張壓大於五十、中心靜脈壓六至八並備妥急救藥;新肝期注意再灌流症候群、抽血氣時機、腦血氧不可過高、顯微吻合降低呼吸速率造成腦壓上升與藥物代謝恢復。</desc><defs><marker id="lt-ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#9B948A"/></marker></defs><rect x="8" y="8" width="384" height="1306" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="200" y="40" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="600" fill="#423E39">肝臟移植:四個時期與術中關鍵</text><g transform="translate(20,58)"><rect x="0" y="0" width="360" height="252" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#E9E1D0"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#6E6047">① 術前準備期</text><text x="16" y="66" font-family="sans-serif" font-size="17" fill="#4A443D">溫毯舖到頭板(不只到肩膀),42 °C 預熱</text><text x="16" y="90" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">清醒入房就先貼電擊片與電擊器 3 lead</text><text x="16" y="114" font-family="sans-serif" font-size="17" fill="#4A443D">5 Lead EKG、SpO₂(手指與耳朵)</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">NMT、腦血氧、體溫探頭</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#4A443D">清醒先打 A-line,左右手各一條</text><text x="16" y="186" font-family="sans-serif" font-size="17" fill="#4A443D">插管做 RSI 準備;之後打粗 IV 或 CVC</text><text x="16" y="210" font-family="sans-serif" font-size="17" fill="#4A443D">3-way 接最前端;CVP 連續監測</text><text x="16" y="234" font-family="sans-serif" font-size="17" fill="#726B62">抽第一次 ABG 與 ROTEM</text></g><line x1="200" y1="312" x2="200" y2="330" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,334)"><rect x="0" y="0" width="360" height="180" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#DDE3D9"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#4C5A4C">② 病肝切除期 Dissection</text><text x="16" y="66" font-family="sans-serif" font-size="17" fill="#4A443D">大量腹水引流後血壓會掉</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#4A443D">靜脈瘤多、易出血;低體溫與代謝性酸</text><text x="16" y="114" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">翻肝、拉扯會壓到 IVC → 提醒外科</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">baseline 後原則每小時抽一次 ABG</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#726B62">溫 Ringer(必要時加 Albumin)補體液</text></g><line x1="200" y1="516" x2="200" y2="534" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,538)"><rect x="0" y="0" width="360" height="276" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#DCE0E5"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#4F5865">③ 無肝期 Anhepatic</text><text x="16" y="66" font-family="sans-serif" font-size="17" fill="#4A443D">夾住門靜脈開始,到新肝再灌流結束</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#4A443D">順序:HA → PV → HV → liver out</text><text x="16" y="114" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">低血壓、高血鉀、低血鈣、乳酸上升</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">半小時抽一次 ABG;體溫維持 36 度以上</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#4A443D">小心鈉上升太快,輸液可改 half saline</text><text x="16" y="186" font-family="sans-serif" font-size="17" fill="#726B62">輸血目標:Hb 大於 9、FIBTEM 大於 8</text><text x="16" y="210" font-family="sans-serif" font-size="17" fill="#726B62">EXTEM 大於 45</text><text x="16" y="234" font-family="sans-serif" font-size="17" fill="#726B62">liver out 給 Hepatec</text><text x="16" y="258" font-family="sans-serif" font-size="17" fill="#726B62">新肝上身給 Solu-Medrol</text></g><line x1="200" y1="816" x2="200" y2="834" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,838)"><rect x="0" y="0" width="360" height="180" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.8"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#EAD9D3"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#8F2B20">Reperfusion 前的檢查點</text><text x="16" y="66" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">SBP 140–150、DBP 大於 50、CVP 6–8</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#726B62">酸鹼與離子矯正好,volume 不能太多</text><text x="16" y="114" font-family="sans-serif" font-size="17" fill="#726B62">確認 Hepatec、Solu-Medrol 已給完</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#726B62">備好 CaCl2、NaHCO3、Ephedrine</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#726B62">Levophed 與 Bosmin 依醫囑稀釋備妥</text></g><line x1="200" y1="1020" x2="200" y2="1038" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,1042)"><rect x="0" y="0" width="360" height="204" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#EBDDD7"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#8A6A60">④ 新肝期 Neohepatic</text><text x="16" y="66" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">PRS:MAP 掉超過 30% 且持續超過 1 分鐘</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#4A443D">再灌流後 5–10 分抽 ABG,之後每小時</text><text x="16" y="114" font-family="sans-serif" font-size="17" fill="#4A443D">腦血氧勿過高(小於 80),必要時 Mannitol</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">顯微吻合會降 RR → CO₂ 與腦壓上升</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#4A443D">新肝運作後代謝恢復:注意肌鬆與深度</text><text x="16" y="186" font-family="sans-serif" font-size="17" fill="#726B62">膽道吻合前可能 oozing,Hb 輸不上要說</text></g><text x="200" y="1280" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#8F2B20">時間點、數值與用藥依主治醫師醫囑</text><text x="200" y="1306" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#726B62">不熟悉的時候隨時開口問</text></svg>` },
+    diagram:{ section:"hemo", caption:"肝臟移植四個時期與術中關鍵事項(原創示意圖;時間點、數值與用藥依主治醫師醫囑)", svg:`<svg viewBox="0 0 400 1322" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>肝臟移植四個時期與術中關鍵事項流程圖</title><desc>直式流程圖依序呈現四個時期:術前準備期包含溫毯舖到頭板並預熱、清醒入房先貼電擊片、各項監測、清醒先打動脈導管、插管做快速誘導準備、中心靜脈壓連續監測與第一次血氣及 ROTEM;病肝切除期注意腹水引流後血壓下降、靜脈瘤出血、低體溫與翻肝壓迫下腔靜脈,並每小時抽血氣;無肝期自夾住門靜脈開始至新肝再灌流結束,注意低血壓、高血鉀、低血鈣與乳酸上升,半小時抽一次血氣,依 ROTEM 目標補血品,並給免疫球蛋白與類固醇;再灌流前需把收縮壓維持一百四十至一百五十、舒張壓大於五十、中心靜脈壓六至八並備妥急救藥;新肝期注意再灌流症候群、抽血氣時機、腦血氧不可過高、顯微吻合降低呼吸速率造成腦壓上升與藥物代謝恢復。</desc><defs><marker id="lt-ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#9B948A"/></marker></defs><rect x="8" y="8" width="384" height="1306" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="200" y="40" text-anchor="middle" font-family="sans-serif" font-size="22" font-weight="600" fill="#423E39">肝臟移植:四個時期與術中關鍵</text><g transform="translate(20,58)"><rect x="0" y="0" width="360" height="252" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#E9E1D0"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#6E6047">① 術前準備期</text><text x="16" y="66" font-family="sans-serif" font-size="17" fill="#4A443D">溫毯舖到頭板(不只到肩膀),42 °C 預熱</text><text x="16" y="90" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">清醒入房就先貼電擊片與電擊器 3 lead</text><text x="16" y="114" font-family="sans-serif" font-size="17" fill="#4A443D">5 Lead EKG、SpO₂(手指與耳朵)</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">NMT、腦血氧、體溫探頭</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#4A443D">清醒先打 A-line,左右手各一條</text><text x="16" y="186" font-family="sans-serif" font-size="17" fill="#4A443D">插管做 RSI 準備;之後打粗 IV 或 CVC</text><text x="16" y="210" font-family="sans-serif" font-size="17" fill="#4A443D">3-way 接最前端;CVP 連續監測</text><text x="16" y="234" font-family="sans-serif" font-size="17" fill="#726B62">抽第一次 ABG 與 ROTEM</text></g><line x1="200" y1="312" x2="200" y2="330" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,334)"><rect x="0" y="0" width="360" height="180" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#DDE3D9"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#4C5A4C">② 病肝切除期 Dissection</text><text x="16" y="66" font-family="sans-serif" font-size="17" fill="#4A443D">大量腹水引流後血壓會掉</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#4A443D">靜脈瘤多、易出血;低體溫與代謝性酸</text><text x="16" y="114" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">翻肝、拉扯會壓到 IVC → 提醒外科</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">baseline 後原則每小時抽一次 ABG</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#726B62">溫 Ringer(必要時加 Albumin)補體液</text></g><line x1="200" y1="516" x2="200" y2="534" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,538)"><rect x="0" y="0" width="360" height="276" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#DCE0E5"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#4F5865">③ 無肝期 Anhepatic</text><text x="16" y="66" font-family="sans-serif" font-size="17" fill="#4A443D">夾住門靜脈開始,到新肝再灌流結束</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#4A443D">順序:HA → PV → HV → liver out</text><text x="16" y="114" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">低血壓、高血鉀、低血鈣、乳酸上升</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">半小時抽一次 ABG;體溫維持 36 度以上</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#4A443D">小心鈉上升太快,輸液可改 half saline</text><text x="16" y="186" font-family="sans-serif" font-size="17" fill="#726B62">輸血目標:Hb 大於 9、FIBTEM 大於 8</text><text x="16" y="210" font-family="sans-serif" font-size="17" fill="#726B62">EXTEM 大於 45</text><text x="16" y="234" font-family="sans-serif" font-size="17" fill="#726B62">liver out 給 Hepatec</text><text x="16" y="258" font-family="sans-serif" font-size="17" fill="#726B62">新肝上身給 Solu-Medrol</text></g><line x1="200" y1="816" x2="200" y2="834" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,838)"><rect x="0" y="0" width="360" height="180" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.8"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#EAD9D3"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#8F2B20">Reperfusion 前的檢查點</text><text x="16" y="66" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">SBP 140–150、DBP 大於 50、CVP 6–8</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#726B62">酸鹼與離子矯正好,volume 不能太多</text><text x="16" y="114" font-family="sans-serif" font-size="17" fill="#726B62">確認 Hepatec、Solu-Medrol 已給完</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#726B62">備好 CaCl2、NaHCO3、Ephedrine</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#726B62">Levophed 與 Bosmin 依醫囑稀釋備妥</text></g><line x1="200" y1="1020" x2="200" y2="1038" stroke="#9B948A" stroke-width="2.8" marker-end="url(#lt-ah)"/><g transform="translate(20,1042)"><rect x="0" y="0" width="360" height="204" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="38" rx="11" fill="#EBDDD7"/><text x="16" y="25" font-family="sans-serif" font-size="18" font-weight="600" fill="#8A6A60">④ 新肝期 Neohepatic</text><text x="16" y="66" font-family="sans-serif" font-size="17" font-weight="600" fill="#8F2B20">PRS:MAP 掉超過 30% 且持續超過 1 分鐘</text><text x="16" y="90" font-family="sans-serif" font-size="17" fill="#4A443D">再灌流後 5–10 分抽 ABG,之後每小時</text><text x="16" y="114" font-family="sans-serif" font-size="17" fill="#4A443D">腦血氧勿過高(小於 80),必要時 Mannitol</text><text x="16" y="138" font-family="sans-serif" font-size="17" fill="#4A443D">顯微吻合會降 RR → CO₂ 與腦壓上升</text><text x="16" y="162" font-family="sans-serif" font-size="17" fill="#4A443D">新肝運作後代謝恢復:注意肌鬆與深度</text><text x="16" y="186" font-family="sans-serif" font-size="17" fill="#726B62">膽道吻合前可能 oozing,Hb 輸不上要說</text></g><text x="200" y="1280" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#8F2B20">時間點、數值與用藥依主治醫師醫囑</text><text x="200" y="1306" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#726B62">不熟悉的時候隨時開口問</text></svg>` },
   },
   {
     updated:"2026-08-12",
@@ -3370,10 +3405,29 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v7.9";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v8.1";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-08-14";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-14",
+    note: "肝臟移植術中流程改為四個時期,並精簡教學補充。",
+    items: [
+      { t: "肝臟移植:術中關鍵事項改依術前準備期、病肝切除期、無肝期、新肝期四個時期分段並重新編號,與流程圖一致", en: "Liver Transplantation (LT)" },
+      { t: "肝臟移植:移除術前評估與監測的部分文獻補充內容,以及第七凝血因子的相關敘述", en: "Liver Transplantation (LT)" },
+      { t: "肝臟移植:凝血檢測的寫法統一改為 ROTEM", en: "Liver Transplantation (LT)" }
+    ]
+  },
+  {
+    date: "2026-08-14",
+    note: "肝臟移植補上國際文獻的教學內容。",
+    items: [
+      { t: "肝臟移植:術前評估新增門脈性肺高壓與肝肺症候群的診斷分級、心臟篩檢的限度、肝腎症候群分型、猛爆性肝衰竭腦水腫處理與肝腎同時移植", en: "Liver Transplantation (LT)" },
+      { t: "肝臟移植:術中新增下腔靜脈試夾、piggyback 與傳統術式差異、靜脈-靜脈繞道、再灌流時心內血栓、移植肝開始運作的判斷,以及血鈉、血糖與缺血時間的參考值", en: "Liver Transplantation (LT)" },
+      { t: "肝臟移植:新增輸血與抗纖溶藥的使用原則、肌鬆劑與吸入麻醉藥的選擇,以及原發性無功能與血管血栓的術後警訊", en: "Liver Transplantation (LT)" },
+      { t: "教學補充的內容都有標示,本院實際作法仍以 protocol 與主治醫師醫囑為準" }
+    ]
+  },
   {
     date: "2026-08-14",
     note: "肝臟移植的流程圖放大,手機上看更清楚。",
