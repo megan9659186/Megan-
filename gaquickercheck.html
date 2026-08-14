@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="麻醉速查">
 <meta name="theme-color" content="#FBF8F1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="color-scheme" content="light">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="googlebot" content="noindex,nofollow,noarchive">
@@ -77,9 +80,6 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .chip.study[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
 /* 危機處理 chip:莫蘭迪黃,與科別、學習區 chip 區隔 */
 .chip.crisis{background:var(--ochre-tint);border-color:#D6C9A8;color:#6E6047;font-weight:600}
-.chip.tx{background:var(--clay-tint);border-color:#DCC7BF;color:#8a6a60;font-weight:500}
-.chip.tx:hover{border-color:var(--clay)}
-.chip.tx[aria-pressed="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
 .chip.crisis:hover{border-color:var(--ochre)}
 .chip.crisis[aria-pressed="true"]{background:var(--ochre);border-color:var(--ochre);color:#fff}
 
@@ -3115,231 +3115,6 @@ const SURGERIES = [
       "David, T. E., & Feindel, C. M. (1992). An aortic valve-sparing operation for patients with aortic incompetence and aneurysm of the ascending aorta. The Journal of Thoracic and Cardiovascular Surgery, 103(4), 617–621.",
       "Mastrobuoni, S., Govers, P. J., Veen, K. M., et al. (2023). Valve-sparing aortic root replacement using the reimplantation (David) technique: A systematic review and meta-analysis. Annals of Cardiothoracic Surgery, 12(3)."
     ]
-  },
-  {
-    updated:"2026-08-13",
-    specialty:"移植",
-    name:"肝臟移植",
-    en:"Liver Transplantation (LT)",
-    summary:{ position:"Supine, arms abducted", posType:"supine", time:"參考捷格手術排程時間", blood:"多", airway:"GA / ETT(做 RSI 準備)" },
-    preop:[
-      "評估肝病嚴重度:MELD 分數、腹水量、肝性腦病變分級、食道靜脈瘤、營養與肌少狀態",
-      "<b class='w'>肺部併發症要分清楚:肝肺症候群與門脈性肺高壓方向相反</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>兩者都是肝病造成的肺部問題,但機轉相反。<b>肝肺症候群</b>是肺內血管擴張造成分流與低血氧,病人坐起來反而更喘、血氧更低。<b>門脈性肺高壓</b>是肺動脈壓上升、右心負荷加重,壓力過高者不適合移植,術中要避免缺氧、高碳酸與酸血症等加重肺血管阻力的因素。</span>",
-      "心臟:肝硬化心肌病變表現為靜態心輸出偏高、面對壓力時反應變差、QT 延長",
-      "腎功能:肝腎症候群、利尿劑使用、是否已在透析",
-      "<b class='w'>慢性低血鈉術中不可快速矯正</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>肝硬化病人常有慢性低血鈉,術中大量輸血與輸液會讓血鈉快速上升,上升太快可能造成<b>滲透性脫髓鞘</b>。手冊的作法是無肝期就要小心鈉上升太快,必要時輸液改用 half saline,並把趨勢主動報給主治醫師。</span>",
-      "凝血:<b class='w'>PT 與 INR 不能用來預測出血</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>肝硬化的促凝與抗凝因子同時下降,形成<b>再平衡的止血狀態</b>。PT 與 INR 只反映促凝這一側,既不能預測出血、也不該用來決定要不要預防性輸血漿。本院以 <b>ROTEM</b> 看整體凝血,依結果補特定成分。</span>",
-      "<b class='w'>急診刀、腹水、肝性腦病變 → 視為飽胃</b>",
-      "確認是活體捐贈或屍肝、有沒有要同時做脾臟切除、B 型肝炎病人是否需要 Hepatec"
-    ],
-    airway:[
-      "<b>ETT</b>;<b class='w'>插管做 RSI 準備</b>,備吸引與 Trachway",
-      "腹水使功能肺餘容積下降、肝肺症候群造成低血氧 → 誘導前充分預氧,預期去氧飽和較快",
-      "<b class='w'>注意 ETT、NG 與體溫線不要壓在嘴角與鼻孔造成壓瘡</b>,術中不定時查看",
-      "手術時間長 → 導管確實固定;<b>術後多帶管轉 ICU</b>,翻身與拉病人位置後再確認深度"
-    ],
-    monitor:[
-      "<b class='w'>術前準備期先舖床上型溫毯</b>:<b>要舖到頭板,不要只到肩膀</b>,開 42 °C 預熱;上半身溫毯一定要舖,待外科無菌布單舖好後把透明塑膠布拉出蓋過頭;<b class='w'>術中體溫維持 36 °C 以上</b>",
-      "貼 <b>5 Lead EKG</b>;裝 NIBP、<b>SpO₂(手指與耳朵各一)</b>、NMT、<b>腦血氧 Brain oximeter</b>、BIS 或 Entropy",
-      "<b class='w'>清醒時先打一條 A-line</b>;左右手各一條,一條接 <b>FloTrac</b> 做術中血壓監測,另一條抽血用",
-      "插管後再打另一條 A-line;<b>粗 IV ×2 或 CVC、double lumen 等其他管路</b>;<b class='w'>3-way 接在最前端</b>;<b class='w'>CVP 需連續監測</b>",
-      "CVC 前端接兩個 3-way(給藥、測 level、輸血用);<b class='w'>棕色端接輸液加溫器,勿輸血小板</b>",
-      "<b>儀器擺位</b>:FloTrac + CVP pressure set + BIS 單機架在右側,另一條 A-line set 架在左側;小白加溫器左右各一台,視管路位置移動",
-      "原有周邊點滴接 IV bag,方便補充電解質",
-      "<b class='w'>電擊片在病人一入刀房、還清醒時就先貼好</b>:貼在右上胸與背面適當位置,並貼好電擊器 3 lead EKG,<b class='w'>團隊互相確認有貼好</b>",
-      "外科動作:on NG、拉病人到適當位置及翻身;翻身後重新確認導管深度與所有線路",
-      "<b>抽第一次 ABG 與 ROTEM</b>;TEE 視病人情況使用",
-      "<b>硬體</b>:超音波機、血氣機、ROTEM 全血分析儀與藍頭試管、濕式溫血槽、輸液加溫器 ×2、syringe pump、電擊器由外科 stand by",
-      "<b class='w'>所有線路都要保護,避免壓瘡</b>"
-    ],
-    hemo:[
-      "分四段理解:<b>病肝切除期</b> → <b>無肝期</b> → <b>再灌流前準備</b> → <b>新肝期</b>",
-      "病肝切除期:放腹水使腹內壓驟降、剝離面與側枝血管出血 → 前負荷下降;<b class='w'>翻肝或拉扯過大會壓到 IVC,血壓掉要立刻提醒外科</b>",
-      "無肝期:夾住門靜脈開始;<b class='w'>夾 portal vein 或做 piggyback 時血流動力學會不穩</b>,注意低血壓與心律不整;<b class='w'>若 IVC 上下都夾住,血壓變化更大</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>Piggyback</b> 是只夾住受贈者的肝靜脈或部分夾住下腔靜脈,下腔靜脈仍有部分血流通過,血壓比較撐得住。傳統做法把下腔靜脈上下都夾住,靜脈回流幾乎中斷,血壓掉得又快又深。看到 liver clamp 出現,就是要開始準備的訊號。</span>",
-      "無肝期低血壓的來源:沒有手術刺激、腹腔內滲血、體液流失、心輸出與周邊血管阻力同時下降",
-      "<b class='w'>Reperfusion 前目標:SBP 140–150、DBP 大於 50 mmHg、CVP 6–8,酸鹼與離子矯正好,volume 不能太多</b>",
-      "<b class='w'>再灌流症候群(PRS)</b>:嚴重定義為再灌流後五分鐘內 MAP 下降超過 30% 且持續超過 1 分鐘,可能伴隨 Af、心搏過緩甚至 asystole;輕微為 MAP 或心跳下降未達 30% 且持續不到 5 分鐘<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>成因是<b>冷的、酸的、電解質不平衡且含發炎物質</b>的血液在再灌流後大量回到心臟。血流動力學上會看到 CVP、肺血管阻力與肺動脈壓上升,周邊血管阻力下降,左心每搏輸出與心輸出下降,嚴重時右心衰竭。所以再灌流前要先把酸鹼離子矯正好、把血壓拉高一點、急救藥抽好放手邊。</span>",
-      "血管麻痺:周邊阻力極低,依醫囑用 Levophed;必要時 Bosmin 依稀釋濃度給"
-    ],
-    intraop:[
-      "<b class='w'>不熟悉的時候隨時開口問。以下依手冊的三個時期逐段對照。</b>",
-      "<b>【病肝切除期 Dissection】目的是解剖肝門與剝離原有肝臟</b>",
-      "<b>① 外科進度</b>:外科會邊解剖邊綁住部分門靜脈、肝動脈、肝靜脈,<b class='w'>有時會配合 donor 時間保留左或右門靜脈,最後才夾住剪掉</b> → 要一直注意手術進度",
-      "<b>② 脾臟</b>:有時不拿脾臟,但會在脾動脈做結紮,目的是調整門靜脈血流與處理脾腫大;確認這台要不要做脾臟切除",
-      "<b>③ 麻醉深度與抽血</b>:依 BIS 調整深度、依醫囑用肌鬆劑;<b>抽 baseline ABG 與 ROTEM,之後原則上一小時抽一次 ABG</b>",
-      "<b>④ 體液</b>:注意腹水量、失血量、尿量三筆數字;用<b>溫的 Ringer(必要時加 Albumin)</b>補充;此時可能會先叫大量血品回來,依醫囑回溫及輸注",
-      "<b>⑤ 注意 EKG 變化</b>,適時矯正酸血與電解質問題",
-      "<b>【無肝期 Anhepatic】開始:夾住門靜脈;結束:新肝再灌流</b>",
-      "<b>⑥ 順序</b>:hepatic artery → portal vein → hepatic vein → liver out;<b>巡迴會記錄時間</b>",
-      "<b>⑦ liver out 後</b>:<b class='w'>B 型肝炎患者開始給 Hepatec,靜脈滴注超過 30 分鐘,並在無肝期內給完</b>,注意有無過敏反應<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Hepatec 是<b>B 型肝炎免疫球蛋白</b>,用來降低新肝再被 B 型肝炎病毒感染的機會。它是血液製劑,滴注速度不能快,而且要在無肝期這段時間內給完,所以 liver out 一報時間就要開始。給的過程盯著有沒有過敏或輸注反應。</span>",
-      "<b>⑧ 抽血節奏</b>:<b class='w'>無肝期半小時抽一次 ABG</b>;ROTEM 依醫囑,liver out 後 10–15 分鐘抽",
-      "<b>⑨ 輸液輸血</b>:依 FloTrac 與 vital signs 給,注意尿量,必要時給利尿劑;<b class='w'>大量血品輸注前需與主治醫師確認輸注順序與數量</b>",
-      "<b>⑩ 代謝</b>:體溫維持 36 °C 以上;代謝性酸必要時以 NaHCO₃ 治療;<b class='w'>積極補充 Ca 與 Mg、控制高血鉀,並小心 Na 上升太快,輸液可改用 half saline</b>",
-      "<b>⑪ 腦血氧</b>:注意無肝期腦血氧數值有沒有下降",
-      "<b>⑫ 凝血目標</b>:依臨床狀況與 ROTEM 結果叫血;<b class='w'>Hb 大於 9、PLT 不能低、FIBTEM MCF 大於 8 mm、EXTEM MCF 大於 45 mm</b>;注意 fibrinolysis,依醫囑給 tranexamic acid<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>ROTEM 怎麼看:<b>EXTEM MCF</b> 代表整體血塊的最大強度,<b>FIBTEM MCF</b> 把血小板的貢獻擋掉,剩下的主要是纖維蛋白原。所以 FIBTEM 低就補<b>纖維蛋白原或冷凍沉澱品</b>;EXTEM 低但 FIBTEM 還可以,問題多半在<b>血小板</b>。曲線在後段自己塌下去就是纖溶亢進,要考慮抗纖溶藥。</span>",
-      "<b>⑬ 腸脹</b>:shunting 不好的病人腸子可能會脹,需觀察肚子脹大的程度",
-      "<b>⑭ 新肝放到病人身上(WIT 開始)</b>:給 <b>Solu-Medrol</b>,原則上 HCC 與 HCV 500 mg、HBV 1000 mg,依醫囑",
-      "<b>⑮ Reperfusion 步驟(約 30 分鐘)</b>:portal vein 接 IV set,以 <b>1000 mL 冰 L/R 沖出器官保存液</b> → 以 piggyback 方式接 donor 與 recipient 的 hepatic vein 或 IVC → <b class='w'>停止灌就表示 outflow 快縫好了</b> → 接 portal vein(也可能先放 hepatic vein 再接 portal)→ 放 hepatic vein(外科會說 5 分鐘後放)→ 放 portal vein 再灌流",
-      "<b>⑯ 抓時間</b>:<b class='w'>portal vein 通常用兩條線左右各縫半圈,可以抓緊這段時間抽 ABG、補電解質、調血壓</b>",
-      "<b>⑰ Reperfusion 前確認</b>:<b class='w'>Hepatec 與 Solu-Medrol 已給完</b>;依醫囑備好數支 <b>CaCl₂、NaHCO₃、Ephedrine、Levophed 10 mcg/mL</b>,以及 <b>Epinephrine 10 mcg/mL 與 100 mcg/mL 各一支</b>",
-      "<b>【新肝期 Neohepatic】</b>",
-      "<b>⑱ 順序</b>:portal vein 再灌流後 → 開始接 hepatic artery → flow 確認 OK → 膽道吻合 → 關傷口",
-      "<b>⑲ 抽血</b>:依醫囑,<b class='w'>再灌流後 5–10 分鐘抽 ABG</b>,之後原則上一小時抽一次",
-      "<b>⑳ 腦部</b>:<b class='w'>注意腦血氧數值勿過高(小於 80)</b>,必要時使用 Mannitol 降腦壓",
-      "<b>㉑ 顯微鏡下接肝動脈時</b>:外科可能會<b class='w'>要求調慢呼吸速率(RR 6–8 次/分,同時要調高 FiO₂)</b> → 可能造成 CO₂ 蓄積 → 腦血流與腦壓上升 → <b class='w'>原本有肝腦病變者可能加重腦水腫</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>顯微吻合時病人一點點呼吸起伏都會晃動術野,所以外科會希望把呼吸速率降下來。代價是二氧化碳排不掉:CO₂ 上升會讓腦血管擴張、腦血流增加,腦壓跟著上去。做法是<b>同時調高 FiO₂</b>、維持低 CVP 與足夠腦灌流壓、盯著腦血氧不要過高,CO₂ 太高就主動跟外科溝通、調整呼吸器設定。</span>",
-      "<b>㉒ 藥物代謝恢復</b>:<b class='w'>新肝若運作良好,藥物代謝速率會恢復正常</b> → 注意肌鬆劑給予,並觀察麻醉藥是否需要上調",
-      "<b>㉓ 再灌流後凝血障礙</b>:移植肝缺血產生大量活性氧、全身性發炎反應、鬱血內臟釋出 t-PA;<b>視腹腔出血狀況必要時再做一次 ROTEM</b>,確認要補 PLT、Cryo、PRBC 或給 tranexamic acid",
-      "<b>㉔ 膽道吻合前</b>:膽道附近血管可能會 oozing 出血;<b class='w'>如果 Hb 一直輸不上來,主動跟外科溝通出血狀況</b>"
-    ],
-    drug:[
-      "<b>插管備物與用藥</b>:Trachway 等插管工具;Fentanyl 100 mcg、2% Lidocaine 100 mg、Propofol 200 mg、<b>Rocuronium 50 mg 或 Cisatracurium 10 mg</b>",
-      "<b>血管活性與矯正用藥</b>:EasDopa ×1 包或 Dopamine ×2 amp;<b>Levophed 2 amp</b>(以 D5W 稀釋 10 mcg/mL 一支,整包備);<b>Bosmin ×10 amp 備,需要時再稀釋</b>(0.1 mg/mL 與 0.01 mg/mL 各一支)",
-      "<b>電解質與矯正</b>:<b class='w'>Vitacal ×30–50 amp、Jusomin ×30–50 amp</b>;Mannitol ×2 包;Furosemide ×10 amp;RI ×1 vial;50% Glucose ×10 amp",
-      "<b>類固醇</b>:Methylprednisolone 500 mg ×2 vial",
-      "<b>膠體與白蛋白</b>:6% HES ×1 瓶;2% Albumin ×10 瓶(病患帶入),加入點滴內輸注或單獨輸入,依醫囑",
-      "<b>管路與耗材</b>:粗 line ×4(CVC ×2、周邊 16# ×2)、精密 bag、病房帶入的 IV 20# 給抗生素、亞培 pump set ×2、150 mL set ×2、pumping set ×2、Ranger ×2、假日車(20 與 50 mL 空針、19G 針頭)、N/S ×40 包、Ringer ×10 包",
-      "<b class='w'>Reperfusion 前依醫囑抽好放手邊:CaCl₂、NaHCO₃、Ephedrine、Levophed、Epinephrine</b>",
-      "肌鬆:依醫囑使用,以 <b>NMT</b> 導向追加;<b class='w'>無肝期代謝停滯使作用延長,新肝運作後代謝恢復又會變快</b>,不要按時間給"
-    ],
-    emergence:[
-      "多數<b class='w'>帶管轉 ICU</b>;血流動力學穩定、無明顯凝血病、體溫正常且移植肝功能良好者,可依醫囑考慮早期拔管",
-      "拔管前確認肌鬆完全恢復、體溫回復、酸鹼與意識狀態",
-      "<b>轉送前整理所有管路並確認固定</b>;途中維持監測與升壓藥輸注,交班時逐條說明管路與藥物"
-    ],
-    postop:[
-      "ICU:血流動力學、引流量與出血、乳酸清除、凝血、血糖與電解質",
-      "移植肝功能指標:乳酸下降、膽汁量、凝血改善;超音波確認肝動脈與門靜脈血流",
-      "免疫抑制、感染預防、腎功能與尿量;必要時腎替代治療",
-      "檢查有無壓瘡:嘴角、鼻孔、所有線路經過的位置"
-    ],
-    flags:[
-      "再灌流症候群;嚴重者伴心律不整或 asystole",
-      "無肝期低血壓、高血鉀、低血鈣與乳酸上升",
-      "大量出血、凝血病與纖溶亢進",
-      "鈉離子上升太快造成滲透性脫髓鞘",
-      "二氧化碳蓄積使腦壓上升,肝腦病變者腦水腫加重",
-      "腦血氧過低(無肝期)或過高(新肝期)",
-      "Hepatec 過敏或輸注反應",
-      "急性腎損傷,需術後腎替代治療",
-      "移植肝原發性無功能、肝動脈血栓",
-      "低體溫;ETT、NG 與體溫線造成的壓瘡"
-    ],
-    refs:[
-      "Brustia, R., Monsel, A., Skurzak, S., et al. (2022). Guidelines for perioperative care for liver transplantation: Enhanced Recovery After Surgery (ERAS) recommendations. Transplantation, 106(3), 552–561.",
-      "Bezinover, D., Mukhtar, A., Wagener, G., et al. (2021). Hemodynamic instability during liver transplantation in patients with end-stage liver disease: A consensus document from ILTS, LICAGE, and SATA. Transplantation, 105(10), 2184–2200.",
-      "Pollok, J. M., Tinguely, P., Berenguer, M., et al. (2023). Enhanced recovery for liver transplantation: Recommendations from the 2022 International Liver Transplantation Society consensus conference. The Lancet Gastroenterology & Hepatology, 8(1), 81–94."
-    ],
-    diagram:{ section:"hemo", caption:"肝臟移植四個時期與術中關鍵事項(原創示意圖;時間點、數值與用藥依主治醫師醫囑)", svg:`<svg viewBox="0 0 400 1012" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>肝臟移植四個時期與術中關鍵事項流程圖</title><desc>直式流程圖依序呈現四個時期:術前準備期包含溫毯舖到頭板並預熱、清醒入房先貼電擊片、各項監測、清醒先打動脈導管、插管做快速誘導準備、中心靜脈壓連續監測與第一次血氣及黏彈性檢測;病肝切除期注意腹水引流後血壓下降、靜脈瘤出血、低體溫與翻肝壓迫下腔靜脈,並每小時抽血氣;無肝期自夾住門靜脈開始至新肝再灌流結束,注意低血壓、高血鉀、低血鈣與乳酸上升,半小時抽一次血氣,依黏彈性檢測目標補血品,並給免疫球蛋白與類固醇;再灌流前需把收縮壓維持一百四十至一百五十、舒張壓大於五十、中心靜脈壓六至八並備妥急救藥;新肝期注意再灌流症候群、抽血氣時機、腦血氧不可過高、顯微吻合降低呼吸速率造成腦壓上升與藥物代謝恢復。</desc><defs><marker id="lt-ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#9B948A"/></marker></defs><rect x="8" y="8" width="384" height="996" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="200" y="36" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#423E39">肝臟移植:四個時期與術中關鍵</text><g transform="translate(20,50)"><rect x="0" y="0" width="360" height="184" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="32" rx="11" fill="#E9E1D0"/><text x="16" y="22" font-family="sans-serif" font-size="15" font-weight="600" fill="#6E6047">① 術前準備期</text><text x="16" y="56" font-family="sans-serif" font-size="13" fill="#4A443D">溫毯舖到頭板(不只到肩膀),42 °C 預熱</text><text x="16" y="75" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">清醒入房就先貼電擊片與電擊器 3 lead</text><text x="16" y="94" font-family="sans-serif" font-size="13" fill="#4A443D">5 Lead EKG、SpO₂ 手指與耳朵、NMT、腦血氧</text><text x="16" y="113" font-family="sans-serif" font-size="13" fill="#4A443D">清醒先打 A-line,左右手各一條</text><text x="16" y="132" font-family="sans-serif" font-size="13" fill="#4A443D">插管做 RSI 準備;之後打粗 IV 或 CVC</text><text x="16" y="151" font-family="sans-serif" font-size="13" fill="#4A443D">3-way 接最前端;CVP 連續監測</text><text x="16" y="170" font-family="sans-serif" font-size="13" fill="#726B62">抽第一次 ABG 與 ROTEM</text></g><line x1="200" y1="234" x2="200" y2="248" stroke="#9B948A" stroke-width="2.4" marker-end="url(#lt-ah)"/><g transform="translate(20,252)"><rect x="0" y="0" width="360" height="146" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="32" rx="11" fill="#DDE3D9"/><text x="16" y="22" font-family="sans-serif" font-size="15" font-weight="600" fill="#4C5A4C">② 病肝切除期 Dissection</text><text x="16" y="56" font-family="sans-serif" font-size="13" fill="#4A443D">大量腹水引流後血壓會掉</text><text x="16" y="75" font-family="sans-serif" font-size="13" fill="#4A443D">靜脈瘤多、易出血;低體溫與代謝性酸</text><text x="16" y="94" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">翻肝、拉扯會壓到 IVC → 提醒外科</text><text x="16" y="113" font-family="sans-serif" font-size="13" fill="#4A443D">baseline 後原則每小時抽一次 ABG</text><text x="16" y="132" font-family="sans-serif" font-size="13" fill="#726B62">溫 Ringer(必要時加 Albumin)補體液</text></g><line x1="200" y1="398" x2="200" y2="412" stroke="#9B948A" stroke-width="2.4" marker-end="url(#lt-ah)"/><g transform="translate(20,416)"><rect x="0" y="0" width="360" height="184" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="32" rx="11" fill="#DCE0E5"/><text x="16" y="22" font-family="sans-serif" font-size="15" font-weight="600" fill="#4F5865">③ 無肝期 Anhepatic</text><text x="16" y="56" font-family="sans-serif" font-size="13" fill="#4A443D">夾住門靜脈開始,到新肝再灌流結束</text><text x="16" y="75" font-family="sans-serif" font-size="13" fill="#4A443D">順序:HA → PV → HV → liver out</text><text x="16" y="94" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">低血壓、高血鉀、低血鈣、乳酸上升</text><text x="16" y="113" font-family="sans-serif" font-size="13" fill="#4A443D">半小時抽一次 ABG;體溫維持 36 度以上</text><text x="16" y="132" font-family="sans-serif" font-size="13" fill="#4A443D">小心鈉上升太快,輸液可改 half saline</text><text x="16" y="151" font-family="sans-serif" font-size="13" fill="#726B62">Hb 大於 9、FIBTEM 大於 8、EXTEM 大於 45</text><text x="16" y="170" font-family="sans-serif" font-size="13" fill="#726B62">liver out 給 Hepatec;新肝上身給 Solu-Medrol</text></g><line x1="200" y1="600" x2="200" y2="614" stroke="#9B948A" stroke-width="2.4" marker-end="url(#lt-ah)"/><g transform="translate(20,618)"><rect x="0" y="0" width="360" height="146" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.8"/><rect x="0" y="0" width="360" height="32" rx="11" fill="#EAD9D3"/><text x="16" y="22" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">Reperfusion 前的檢查點</text><text x="16" y="56" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">SBP 140–150、DBP 大於 50、CVP 6–8</text><text x="16" y="75" font-family="sans-serif" font-size="13" fill="#6E5F5A">酸鹼與離子矯正好,volume 不能太多</text><text x="16" y="94" font-family="sans-serif" font-size="13" fill="#6E5F5A">確認 Hepatec、Solu-Medrol 已給完</text><text x="16" y="113" font-family="sans-serif" font-size="13" fill="#6E5F5A">備好 CaCl2、NaHCO3、Ephedrine</text><text x="16" y="132" font-family="sans-serif" font-size="13" fill="#6E5F5A">Levophed 與 Bosmin 依醫囑稀釋備妥</text></g><line x1="200" y1="764" x2="200" y2="778" stroke="#9B948A" stroke-width="2.4" marker-end="url(#lt-ah)"/><g transform="translate(20,782)"><rect x="0" y="0" width="360" height="165" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><rect x="0" y="0" width="360" height="32" rx="11" fill="#EBDDD7"/><text x="16" y="22" font-family="sans-serif" font-size="15" font-weight="600" fill="#8A6A60">④ 新肝期 Neohepatic</text><text x="16" y="56" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">PRS:MAP 掉超過 30% 且持續超過 1 分鐘</text><text x="16" y="75" font-family="sans-serif" font-size="13" fill="#4A443D">再灌流後 5–10 分抽 ABG,之後每小時</text><text x="16" y="94" font-family="sans-serif" font-size="13" fill="#4A443D">腦血氧勿過高(小於 80),必要時 Mannitol</text><text x="16" y="113" font-family="sans-serif" font-size="13" fill="#4A443D">顯微吻合會降 RR → CO₂ 與腦壓上升</text><text x="16" y="132" font-family="sans-serif" font-size="13" fill="#4A443D">新肝運作後代謝恢復:注意肌鬆與深度</text><text x="16" y="151" font-family="sans-serif" font-size="13" fill="#726B62">膽道吻合前可能 oozing,Hb 輸不上要說</text></g><text x="200" y="972" text-anchor="middle" font-family="sans-serif" font-size="14.5" font-weight="700" fill="#8F2B20">時間點、數值與用藥依主治醫師醫囑</text><text x="200" y="994" text-anchor="middle" font-family="sans-serif" font-size="13" fill="#726B62">不熟悉的時候隨時開口問</text></svg>` },
-  },
-  {
-    updated:"2026-08-12",
-    specialty:"移植",
-    name:"腎臟移植",
-    en:"Kidney Transplantation (KT)",
-    summary:{ position:"Supine, both arms abducted", posType:"supine", time:"參考捷格手術排程時間", blood:"少至中", airway:"GA / ETT(快速誘導)" },
-    preop:[
-      "末期腎病常見共病:高血壓、糖尿病、缺血性心臟病、貧血、次發性副甲狀腺亢進、心包積液",
-      "<b class='w'>移植前病人須先做血液透析</b>;監測出血時間,血清肌酸酐小於 10 mg/dL,血鉀維持 4–5 mEq/L(<b class='w'>應小於 5.5 mEq/L</b>)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>接到通知時要問清楚四件事:最後一次透析何時結束、脫了多少水、乾體重多少、透析後的鉀離子。目的是把鉀離子與容積調到可以麻醉的狀態,但<b>不要脫到乾</b>;脫水過頭會讓誘導後低血壓,直接影響移植腎的灌流。</span>",
-      "貧血:血色素低於 9–10 g/dL 者術前以紅血球生成刺激劑矯正;<b class='w'>盡量避免輸血</b>",
-      "心臟評估:心衰竭失代償、不穩定心絞痛、明顯瓣膜疾病或心律不整者需重新評估;肺動脈收縮壓偏高者由心臟科評估",
-      "摘下的移植腎臟,保存技術允許 24–48 小時<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>冷缺血時間越長,新腎發生<b>急性腎小管壞死</b>與延遲移植腎功能的機會越高。活體捐贈因為捐者與受者幾乎同時開刀,冷缺血時間短,術後腎功能通常恢復得快;屍腎則相反,術中更要把灌流顧好。</span>",
-      "<b class='w'>屍腎移植常是臨時通知的急診刀 → 視為飽胃</b>;糖尿病胃輕癱使排空更慢",
-      "<b class='w'>確認禁治療手臂</b>:該側不量血壓、不打針、擺位時墊好並可觸摸確認震顫",
-      "姿勢:平躺、兩臂外展;<b>注意關節壓迫處與眼睛保護</b>",
-      "<b>A-line 與 IV line 須採三消模式消毒</b>"
-    ],
-    airway:[
-      "<b class='w'>採快速誘導之全身氣管內管麻醉</b>,備吸引",
-      "<b class='w'>血鉀偏高時避免 succinylcholine</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>文獻上血鉀小於 5 mEq/L 時 succinylcholine 仍可使用,但末期腎病病人的鉀離子隨時在變,而且本單位以 Nimbex 為主,實務上不需要用到。真正要記得的是:<b>血鉀不明或偏高就不要用</b>。</span>",
-      "貧血與代謝性酸血症使缺氧耐受變差 → 誘導前充分預氧",
-      "<b class='w'>接血管期間手術床會左右轉動</b> → 導管固定要牢,轉動後重新確認深度、呼吸音與氣道壓",
-      "備 <b>Trachway</b>"
-    ],
-    monitor:[
-      "<b>檢查麻醉機</b>",
-      "<b>動脈留置針 one dome</b>;或 two dome(一端測動脈壓、一端測中心靜脈壓),依病情與主麻 VS 決定;<b>若使用 FloTrac 則不需</b>",
-      "<b>Two way CVC 或粗 IV</b>,依麻醉 VS 醫囑;打 CVC 則備 CVC 包、單件無菌衣、超音波機、needle holder ×1",
-      "備一條輸液(N/S 500 mL 接輸血套 + 3way + 延長線)接上 <b>CVC 的棕色端</b>",
-      "亞培 pump ×1 備用;FloTrac 備用",
-      "<b>BIS 或 Entropy</b>(健保給付)、<b>NMT</b>、溫毯機、輸液加溫器(小白)",
-      "標準 ASA 監測 + EtCO₂、體溫、導尿管與尿量;<b class='w'>血壓量在禁治療手臂以外那一側</b>",
-      "動脈導管方便反覆抽血氣:追鉀離子、鈉離子、酸鹼、血糖、血色素"
-    ],
-    hemo:[
-      "核心目標是<b class='w'>維持移植腎的灌流</b>",
-      "<b>中心靜脈壓維持 10–15 mmHg</b>,避免引起肺水腫",
-      "<b class='w'>接動靜脈 reperfusion 前血壓 keep 130–140 mmHg</b>,維持新腎臟足夠血流<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>本單位以收縮壓 130–140 mmHg 為目標。文獻上的說法是把<b>平均動脈壓維持在 80–110 mmHg</b>,平均動脈壓低於 70 mmHg 與延遲移植腎功能相關。另外要知道:中心靜脈壓本身不是可靠的容積指標,判讀時要合併血壓、尿量與心輸出參數一起看。</span>",
-      "<b class='w'>術中避免使用 alpha agonist,以免影響腎臟血流</b>;需要時 Dopamine 依醫囑泡製給予<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>這是本單位的作法,實際用藥依主治醫師醫囑。文獻近年的方向不同:低劑量 dopamine 沒有顯示出腎保護效果,多數回顧在容積補足後仍低血壓時,建議改用小劑量 <b>norepinephrine</b>。兩種說法都知道,現場仍以主治醫師指示為準。</span>",
-      "先接靜脈後接動脈,接合完成後放開血管夾;<b class='w'>此時需積極矯正電解質平衡並監測血鉀濃度</b>",
-      "液體種類依主治醫師指示<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>大型隨機試驗顯示,屍腎移植使用<b>平衡型晶體液</b>比生理食鹽水降低延遲移植腎功能的機率,且未增加高鉀;生理食鹽水氯離子含量高,大量給予容易造成高氯性代謝性酸血症。白蛋白與晶體液相比並沒有顯示額外好處。實務上仍依主治醫師與當台病人的鉀離子狀況決定。</span>"
-    ],
-    intraop:[
-      "<b class='w'>不熟悉的時候隨時開口問。以下依手術步驟逐段對照。</b>",
-      "<b>① 接到通知</b>:問清最後透析時間、脫水量、乾體重、透析後鉀離子;確認禁治療手臂;開始備藥與備醫材",
-      "<b>② 誘導前</b>:檢查麻醉機、溫毯機與輸液加溫器就位;<b>A-line 與 IV line 三消模式消毒</b>",
-      "<b>③ 誘導</b>:快速誘導插管;接上 NMT 與 BIS 或 Entropy;擺位平躺兩臂外展,護眼、關節減壓、禁治療手臂墊好",
-      "<b>④ 導尿管</b>:外科於術前放置並注入抗生素後<b class='w'>夾住</b>,以預防術後泌尿道感染;<b class='w'>在輸尿管接通前不要自行放開</b>;<b class='w'>先問清楚膀胱沖洗液灌了多少,記下來,之後算尿量要扣掉</b>",
-      "<b>⑤ 新腎 on field</b>:<b class='w'>看到新腎上台就開始準備給 Mannitol</b>;撥後腹腔、植入前依醫囑給,滴注時間依醫囑;<b>寡尿可能在利尿期前發生</b>,不要因為沒尿就急著衝輸液<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Mannitol 是滲透性利尿劑,也能清除自由基。作用包括擴張血管內容積、增加腎血流、經前列腺素造成腎血管擴張、增加腎小管內流速以減少細胞腫脹與管型阻塞,用意是減輕缺血再灌流傷害。移植的證據多來自品質較低的研究,但因為潛在好處大於壞處,國際上幾乎是常規作法。<b>過量反而有害</b>:先是容積擴張可能誘發心衰竭與肺水腫,接著強力利尿造成脫水、電解質與酸鹼異常,甚至高滲透壓性腎衰竭。所以一定要配合足夠的輸液,不是給越多越好。</span>",
-      "<b>⑥ 新腎放入、開始接血管</b>:<b class='w'>床會左右轉動</b> → 每次轉之前先顧好管路,轉完<b class='w'>確認氣管內管有沒有滑脫、病人頭位有沒有跑掉</b>,再看呼吸音、氣道壓與 EtCO₂;維持足夠麻醉深度與肌鬆,避免病人移動",
-      "<b>⑦ 注意接血管進度</b>:<b class='w'>聽到「5-0 prolene」表示血管可能快接好了</b> → 這時候就把要稀釋的藥抽起來放旁邊,<b class='w'>同時通知麻醉醫師要開始準備給藥</b>,等外科醫師下 order",
-      "<b>⑧ 血壓</b>:接近放開血管夾時把血壓往醫囑目標拉,並主動回報數字",
-      "<b>⑨ 放開血管夾前</b>:確認血鉀、確認藥物已依順序抽好排列、把血壓報給外科;<b class='w'>藥的順序是 Mannitol → Solu-Medrol → Jusomin → Lasix → Vitacal</b>",
-      "<b>⑩ 放開血管夾後</b>:依外科指示依序給 <b>Solu-Medrol</b>(免疫抑制起始)、<b>Jusomin</b>、<b>Lasix</b>、<b>Vitacal</b>;<b class='w'>每給一支就回報一次,並同步報血壓與心電圖變化;給完藥要 alarm 外科醫師</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>各自的用意:<b>Solu-Medrol</b> 是類固醇,免疫抑制的起始劑量。<b>Jusomin</b> 用來矯正再灌流後的代謝性酸血症,同時把鉀離子往細胞內趕。<b>Lasix</b> 促進利尿,機轉上可對抗抗利尿激素反應、減少腎小管的耗氧;要注意的是給了以後尿量仍少,常預示術後需要腎替代治療,這時要早點講出來。<b>Vitacal</b> 補鈣,用來穩定心肌、對抗高鉀的心電圖變化。</span>",
-      "<b>⑪ 輸尿管接到膀胱</b>:外科接好後會告訴我們放開尿管上的 clamp;<b class='w'>一開始流出來的不是尿,是術前灌的膀胱沖洗液,不能算入尿量</b> → <b class='w'>扣掉沖洗量之後,出來的才開始算 U/O</b>;記錄第一次真正排尿的時間、流速與量,之後固定間隔記錄並回報趨勢<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>這一步最容易出錯。外科術前會把抗生素沖洗液灌進膀胱再夾住尿管,放開的瞬間流出來的量幾乎都是那些沖洗液。<b>沒有扣掉就會把尿量算得太漂亮</b>,可能因此忽略移植腎其實還沒開始工作。所以術前就要問清楚灌了多少、寫在紀錄上,放開尿管後先把這個量倒掉或標記,之後的量才是真正的 U/O。</span>",
-      "<b>⑫ 全程</b>:體溫維持至少 36.5 °C(烘被機、溫毯、溫暖之輸液,避免曝露病人);血糖控制在建議範圍,糖尿病病人定期追蹤",
-      "<b>⑬ 關腹與轉送</b>:確認容積與體溫、整理管路;<b>搬動病人時需注意身上導管之固定</b>",
-      "術中麻醉維持:<b>本院無 N₂O</b>;避免腸脹氣影響手術術野"
-    ],
-    drug:[
-      "<b>藥物準備</b>:Propofol 200 mg/20 mL ×1;<b>Nimbex 10 mg/5 mL ×2–3</b>;Fentanyl 100 μg/2 mL ×2",
-      "<b>備而未用</b>:Mannitol、Solu-Medrol 1000 mg、Jusomin ×4–5、Lasix ×3、Vitacal ×1–2",
-      "<b>Easydopa ×1 備著</b>;或 Dopamine ×2 支(400 mg)加在 D5W 500 mL,以亞培 set 前端加上 3way 排氣",
-      "<b class='w'>上述術中給藥的劑量由外科醫師計算後交付,麻醉科負責依手術進度依序給藥</b>;確認後再抽取藥物",
-      "<b class='w'>Nimbex 是首選肌肉鬆弛劑</b>;以 NMT 導向追加,不按時間給<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>cisatracurium 走 <b>Hofmann elimination</b>,不依賴腎臟排除,代謝不受移植腎功能影響,所以是末期腎病病人的首選。若當台改用 rocuronium 或 vecuronium,作用時間會延長,務必依 NMT 追加;sugammadex 與 rocuronium 結合後的複合物主要由腎臟排除,末期腎病病人清除變慢,不過現有研究顯示用在腎移植病人仍安全有效,重點是逆轉後持續觀察。</span>",
-      "誘導藥選擇<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Propofol 與 thiopental 都安全。<b>缺血性心臟病避免 ketamine</b>(交感刺激);心功能不佳或缺血性心臟病可考慮 etomidate,因為血流動力學穩定。鴉片類方面 fentanyl、alfentanil、sufentanil、remifentanil 都可安全使用。</span>",
-      "<b class='w'>避免使用 Meperidine 與 morphine</b>:活性代謝物會在腎病病人累積 → 改用 fentanyl 類",
-      "<b class='w'>避免 NSAIDs</b>;抗生素與其他藥物依腎功能調整劑量"
-    ],
-    emergence:[
-      "<b class='w'>術後病人送至外科加護病房</b>,依患者狀況決定拔管與否;<b>現行在加護病房傾向提早拔管</b>",
-      "<b class='w'>拔管前確認肌鬆完全恢復</b>:殘餘肌鬆在腎病病人風險更高",
-      "多模式止痛:合併非鴉片類止痛藥與區域阻斷,減少鴉片類用量;鴉片類劑量需下修",
-      "<b>預防術後譫妄</b>:避免常規給 benzodiazepine 與抗膽鹼藥物;年長者術中使用腦波監測",
-      "<b>搬動病人時需注意身上導管之固定</b>"
-    ],
-    postop:[
-      "<b>尿量是最關鍵的指標</b>;交班時說明脫水量、術中輸液量、最後一次鉀離子與血壓目標",
-      "監測電解質(鉀、鈣)、血糖、血壓與容積狀態",
-      "延遲移植腎功能者可能需要術後透析;<b class='w'>給了 Lasix 尿量仍少要提早反映</b>",
-      "術後譫妄篩檢、早期下床、早期恢復進食",
-      "確認禁治療手臂的震顫仍在"
-    ],
-    flags:[
-      "出血",
-      "血管栓塞",
-      "尿道阻塞",
-      "肺膨脹不全",
-      "高鉀血症與心律不整",
-      "移植腎低灌流導致延遲移植腎功能",
-      "膀胱沖洗液誤算成尿量,導致高估移植腎功能",
-      "手術床轉動造成氣管內管滑脫或移位",
-      "Mannitol 過量:脫水、心衰竭與肺水腫、高滲透壓性腎衰竭",
-      "輸液過多造成肺水腫;輸液不足造成移植腎灌流不良",
-      "殘餘肌鬆與再插管",
-      "動靜脈廔管受壓、血栓或功能喪失",
-      "糖尿病病人術中低血糖與胃輕癱造成的吸入性風險",
-      "術後譫妄"
-    ],
-    diagram:{ section:"intraop", caption:"腎臟移植術中給藥順序:劑量由外科醫師計算後交付,麻醉科依手術進度依序給藥(原創示意圖)", svg:`<svg viewBox="0 0 400 848" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>腎臟移植術中給藥順序流程圖</title><desc>直式流程圖依序顯示:新腎 on field 時開始準備並依醫囑給 Mannitol;外科先接靜脈再接動脈,聽到 5-0 prolene 表示血管快接好,可先把藥抽好備妥,血壓拉到醫囑目標後放開血管夾;放開後依外科指示依序給 Solu-Medrol、Jusomin、Lasix、Vitacal;給完藥後通知外科醫師,輸尿管接到膀胱後依指示放開尿管夾,先流出的是膀胱沖洗液必須扣除。圖底標明給藥種類及劑量依病況及外科主治醫師決定,非一定,確認後再抽取藥物。</desc><defs><marker id="kt-ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#9B948A"/></marker></defs><rect x="8" y="8" width="384" height="832" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="200" y="36" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#423E39">術中給藥順序:配合外科步驟</text><g transform="translate(20,50)"><rect x="0" y="0" width="360" height="88" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#8B9A8B"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">1</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Mannitol</text><text x="20" y="61" font-family="sans-serif" font-size="13" fill="#726B62">新腎 on field 就開始準備,依醫囑給</text><text x="20" y="80" font-family="sans-serif" font-size="13" fill="#726B62">滴注時間依醫囑;寡尿可能在利尿期前</text></g><line x1="200" y1="138" x2="200" y2="152" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,156)"><rect x="0" y="0" width="360" height="118" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.8"/><text x="20" y="30" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">外科:先接靜脈 → 再接動脈</text><text x="20" y="52" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">→ 放開血管夾 reperfusion</text><text x="20" y="76" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">聽到 5-0 prolene = 快接好,先把藥抽好</text><text x="20" y="95" font-family="sans-serif" font-size="13" fill="#6E5F5A">接血管時床會左右轉:顧好導管與頭位</text><text x="20" y="111" font-family="sans-serif" font-size="13" fill="#6E5F5A">放開前把血壓拉到醫囑目標並回報</text></g><line x1="200" y1="274" x2="200" y2="288" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,292)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">2</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Solu-Medrol</text><text x="20" y="60" font-family="sans-serif" font-size="13" fill="#726B62">類固醇,免疫抑制起始</text></g><line x1="200" y1="362" x2="200" y2="376" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,380)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">3</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Jusomin</text><text x="20" y="60" font-family="sans-serif" font-size="13" fill="#726B62">矯正酸血症;把鉀離子往細胞內趕</text></g><line x1="200" y1="450" x2="200" y2="464" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,468)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">4</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Lasix</text><text x="20" y="60" font-family="sans-serif" font-size="13" fill="#726B62">促進利尿;給藥後觀察尿液流速與尿量</text></g><line x1="200" y1="538" x2="200" y2="552" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,556)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">5</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Vitacal</text><text x="20" y="60" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">給完藥後要 alarm 外科醫師</text></g><line x1="200" y1="626" x2="200" y2="640" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,644)"><rect x="0" y="0" width="360" height="98" rx="11" fill="#EFF2EC" stroke="#8B9A8B" stroke-width="1.6"/><text x="20" y="30" font-family="sans-serif" font-size="16" font-weight="600" fill="#4C5A4C">輸尿管接到膀胱</text><text x="20" y="54" font-family="sans-serif" font-size="13" fill="#5E6B5E">外科說可以,才放開尿管上的 clamp</text><text x="20" y="73" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">先流出的是膀胱沖洗液,不算尿量</text><text x="20" y="90" font-family="sans-serif" font-size="13" fill="#5E6B5E">扣掉沖洗量之後,才開始算 U/O</text></g><g transform="translate(20,756)"><rect x="0" y="0" width="360" height="72" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="2"/><text x="180" y="30" text-anchor="middle" font-family="sans-serif" font-size="15.5" font-weight="700" fill="#8F2B20">給藥種類及劑量依病況及外科 VS 決定</text><text x="180" y="56" text-anchor="middle" font-family="sans-serif" font-size="15.5" font-weight="700" fill="#8F2B20">非一定;確認後再抽取藥物</text></g></svg>` },
-    refs:[
-      "Kim, H., & Jung, H. (2024). Considerations regarding anesthesia for renal transplantation. Anesthesia and Pain Medicine, 19(1), 5–11.",
-      "Lugo-Baruqui, J. A., Ayyathurai, R., Sriram, A., & Pragatheeshwar, K. D. (2019). Use of mannitol for ischemia reperfusion injury in kidney transplant and partial nephrectomies: Review of literature. Current Urology Reports, 20(1), 6.",
-      "Wagener, G., Bezinover, D., Wang, C., et al. (2021). Fluid management during kidney transplantation: A consensus statement of the Committee on Transplant Anesthesia of the American Society of Anesthesiologists. Transplantation, 105(8), 1677–1684.",
-      "Collins, M. G., Fahim, M. A., Pascoe, E. M., et al. (2023). Balanced crystalloid solution versus saline in deceased donor kidney transplantation (BEST-Fluids): A pragmatic, double-blind, randomised, controlled trial. The Lancet, 402(10396), 105–117.",
-      "Tan, J. H. S., Bhatia, K., Sharma, V., et al. (2023). Enhanced recovery after surgery recommendations for renal transplantation: Guidelines. British Journal of Surgery, 110(1), 57–59.",
-      "Malyala, R., Nguyen, A., Escamilla, E., et al. (2024). Establishing targets for goal-directed anesthesia in renal transplantation: A cohort analysis of high-saliency surgical time courses. American Journal of Transplantation, 24(11), 2055–2065.",
-      "Panhuizen, I. F., Gold, S. J. A., Buerkle, C., et al. (2015). Efficacy, safety and pharmacokinetics of sugammadex 4 mg kg-1 for reversal of deep neuromuscular blockade in patients with severe renal impairment. British Journal of Anaesthesia, 114(5), 777–784."
-    ]
   }
 ];
 
@@ -3367,84 +3142,16 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v7.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-08-13";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v6.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-08-14";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
   {
-    date: "2026-08-13",
-    note: "肝臟移植示意圖整合成四個時期的完整流程。",
+    date: "2026-08-14",
+    note: "Android 手機也可以安裝成 App,開啟時不再顯示網址列。",
     items: [
-      { t: "肝臟移植:示意圖改為術前準備期、病肝切除期、無肝期、新肝期四個時期,含再灌流前檢查點與各期關鍵事項", en: "Liver Transplantation (LT)" },
-      { t: "肝臟移植:電擊片改為病人一入刀房、還清醒時就先貼好", en: "Liver Transplantation (LT)" },
-      { t: "肝臟移植:移除血氣機的斷電敘述", en: "Liver Transplantation (LT)" }
-    ]
-  },
-  {
-    date: "2026-08-13",
-    note: "肝臟移植依本院臨床麻醉照護手冊全面改寫。",
-    items: [
-      { t: "肝臟移植:改成依病肝切除期、無肝期、新肝期的跟刀流程,含外科進度提示、抽血節奏與各階段目標", en: "Liver Transplantation (LT)" },
-      { t: "肝臟移植:術前準備補上溫毯舖法、監測與管路配置、儀器擺放位置與硬體清單;用藥改為本院實際備物清單", en: "Liver Transplantation (LT)" },
-      { t: "肝臟移植:新增再灌流前的血壓與中心靜脈壓目標、備藥清單、凝血目標值,以及顯微吻合降低呼吸速率對腦壓的影響", en: "Liver Transplantation (LT)" },
-      { t: "肝臟移植:示意圖改為直式三期重點圖,手機看得清楚", en: "Liver Transplantation (LT)" }
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "腎臟移植跟刀流程補上現場實際會遇到的細節。",
-    items: [
-      "腎臟移植:新腎上台就開始準備 Mannitol;接血管時手術床會左右轉動,提醒確認氣管內管與頭位",
-      "腎臟移植:聽到 5-0 prolene 表示血管快接好,先抽藥備妥並通知麻醉醫師;給完藥要通知外科醫師",
-      "腎臟移植:放開尿管後先流出的是膀胱沖洗液,不算尿量,要先問清灌入量並扣掉才開始算 U/O(流程圖同步更新)"
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "腎臟移植跟刀流程開頭文字調整。",
-    items: [
-      "腎臟移植:跟刀流程開頭改為提醒不熟悉的時候隨時開口問"
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "腎臟移植改寫成逐步跟刀流程,並補上外文文獻的教學要點。",
-    items: [
-      { t: "腎臟移植:術中管理改成依手術步驟逐段對照的跟刀流程,從接到通知、誘導、撥後腹腔、血管吻合、放開血管夾到輸尿管接通後開尿管", en: "Kidney Transplantation (KT)" },
-      { t: "腎臟移植:流程圖移除藥物劑量,改註明劑量由外科醫師計算後交付、麻醉科依進度依序給藥;圖底警語放大", en: "Kidney Transplantation (KT)" },
-      { t: "腎臟移植:新增各藥物用意與過量風險的說明、誘導藥選擇、術前貧血矯正、體溫與血糖目標、術後譫妄預防", en: "Kidney Transplantation (KT)" }
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "腎臟移植給藥順序流程圖改為直式,手機看得更清楚。",
-    items: [
-      { t: "腎臟移植:給藥順序流程圖改成直式排版,字體放大,手機上不必放大也讀得到", en: "Kidney Transplantation (KT)" }
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "腎臟移植新增給藥順序流程圖。",
-    items: [
-      { t: "腎臟移植:術中管理區塊新增流程圖,依外科步驟畫出 Mannitol、Solu-Medrol、Jusomin、Lasix、Vitacal 的給藥順序與放開血管夾的時機", en: "Kidney Transplantation (KT)" }
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "腎臟移植改以本單位作業說明改寫。",
-    items: [
-      { t: "腎臟移植:全面對齊本單位作法,補上藥物與醫材準備清單、術前透析與檢驗門檻、導尿管與輸尿管接通後的處理、放開血管夾後的給藥順序", en: "Kidney Transplantation (KT)" },
-      { t: "腎臟移植:肌肉鬆弛劑改為以 Nimbex 為首選,並補上避免 Meperidine、避免 alpha agonist、本院無 N2O", en: "Kidney Transplantation (KT)" },
-      { t: "腎臟移植:血壓與中心靜脈壓目標、Mannitol 給法、體溫維持與術後照顧改為本單位數值", en: "Kidney Transplantation (KT)" }
-    ]
-  },
-  {
-    date: "2026-08-12",
-    note: "新增移植科別,收錄兩台移植手術。",
-    items: [
-      { t: "新增科別:移植(排在外區麻醉前面,標籤用灰玫色)", en: "Liver Transplantation (LT)" },
-      { t: "移植新增:肝臟移植(三階段血流動力學示意圖、再灌流症候群、大量輸血與凝血、無肝期補鈣與低血鈉處理)", en: "Liver Transplantation (LT)" },
-      { t: "移植新增:腎臟移植(透析時程與容積、廔管側肢體保護、移植腎灌流與輸液選擇、腎病病人的肌鬆與逆轉)", en: "Kidney Transplantation (KT)" }
+      { t: "Android:用 Chrome 選單的「安裝應用程式」加到主畫面,開啟後即為全螢幕,與 iPhone 一致" },
+      { t: "主畫面圖示改為專屬圖示;已加過舊捷徑的同仁請先刪除,再重新安裝一次" }
     ]
   },
   {
@@ -6156,7 +5863,6 @@ const HOME_CHIP = "首頁";   /* 按「首頁」→ 顯示更新紀錄;按「全
 let activeSpec = HOME_CHIP;   /* 開啟時停在首頁(更新紀錄) */
 let activeId = null;
 
-const TX_SPEC = "移植";           /* 移植科別 chip;色系用灰玫 clay */
 const NORA_SPEC = "外區麻醉";      /* 手術室外麻醉;內容建置中,先開好科別 chip */
 const CALC_CHIP = "麻醉計算機";
 const DRUG_CHIP = "藥物泡法";
@@ -6562,8 +6268,7 @@ function specHasNew(sp){
 function renderChips(){
   el("chips").innerHTML = specialties.map(sp =>{
     const cls = (sp===EXAM_CHIP || sp===QUIZ_CHIP) ? "chip study"
-              : (sp===CRISIS_CHIP) ? "chip crisis"
-              : (sp===TX_SPEC) ? "chip tx" : "chip";
+              : (sp===CRISIS_CHIP) ? "chip crisis" : "chip";
     const isN = specHasNew(sp);
     return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
   }).join("");

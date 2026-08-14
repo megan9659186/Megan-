@@ -1,0 +1,20 @@
+{
+  "name": "各科手術全身麻醉快速查詢",
+  "short_name": "麻醉速查",
+  "description": "科別到手術的全身麻醉臨床速查與教學工具",
+  "lang": "zh-Hant",
+  "dir": "ltr",
+  "start_url": "./gaquickercheck.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#FBF8F1",
+  "theme_color": "#FBF8F1",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
