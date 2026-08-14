@@ -241,6 +241,24 @@ button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
 .d-summary .item.pos .v{display:flex;align-items:center;gap:7px}
 .posico{width:30px;height:14px;flex-shrink:0;color:var(--ink)}
 
+/* ---------- 麻醉方式分區(GA / SA)---------- */
+.vpick{margin-top:18px}
+.vpick-h{font-size:13.5px;color:var(--ink-soft);letter-spacing:.5px;margin-bottom:10px}
+.vopt{display:block;width:100%;text-align:left;cursor:pointer;font-family:inherit;
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--sage);
+  border-radius:11px;padding:15px 17px;margin-bottom:11px;transition:all .15s}
+.vopt:hover{border-color:var(--sage);background:var(--sage-tint)}
+.vopt.v-ga{border-left-color:var(--clay)}
+.vopt.v-ga:hover{border-color:var(--clay);background:var(--clay-tint)}
+.vopt-en{font-family:"Noto Serif TC",serif;font-weight:600;font-size:19px;color:var(--ink);letter-spacing:.2px}
+.vopt-zh{font-size:15px;color:var(--ink-soft);margin-top:1px}
+.vopt-note{font-size:14.5px;color:var(--ink);margin-top:8px;line-height:1.6}
+.vopt-go{font-size:13px;color:var(--sage);margin-top:9px;letter-spacing:.4px}
+.vopt.v-ga .vopt-go{color:var(--clay)}
+.v-crumb{display:inline-block;font-size:12.5px;color:var(--ink-soft);letter-spacing:.4px;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:6px;
+  padding:2px 9px;margin-bottom:8px}
+
 .section{margin-top:22px;padding-left:15px;border-left:3px solid var(--sage);position:relative}
 .section h3{font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .section .dot{width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0}
@@ -2291,49 +2309,171 @@ const SURGERIES = [
   },
   {
     specialty:"婦產科",
-    name:"剖腹產(全身麻醉)",
-    en:"Cesarean Section (GA)",
-    summary:{ position:"Supine · left tilt (LUD)", posType:"supine", time:"參考捷格手術排程時間", blood:"中–多", airway:"GA / RSI・ETT" },
-    preop:[
-      "首選區域麻醉;全麻多用於緊急、區域禁忌或失敗",
-      "<b class='w'>視同飽胃(full stomach)→誤吸風險高</b>;制酸劑/H2 blocker、citrate",
-      "孕婦氣道水腫、Mallampati↑→<b class='w'>困難插管風險增加</b>,備小號 ETT 與困難氣道器材"
+    name:"剖腹產",
+    en:"Cesarean Section (CS)",
+    updated:"2026-08-14",
+    summary:{ position:"Supine · left uterine displacement (LUD)", posType:"supine", time:"參考捷格手術排程時間", blood:"中–多", airway:"SA 或 GA(依緊急度與禁忌分流)" },
+    common:[
+      "<b>麻醉方式分流</b>:非緊急、無區域麻醉禁忌 → 首選脊髓麻醉;Category 1 緊急、區域麻醉禁忌或阻斷失敗 → 全身麻醉<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>剖腹產緊急度常分四級:<b>Category 1</b> 母體或胎兒立即有生命威脅,要求最短時間內娩出;<b>Category 2</b> 母胎狀況不佳但無立即生命威脅;<b>Category 3</b> 需要提早娩出但目前穩定;<b>Category 4</b> 完全擇期。分級只是溝通用語,實際麻醉方式仍依主治醫師判斷與產科團隊共識。</span>",
+      "<b class='w'>孕婦一律視同飽胃(full stomach)</b>;不論選哪一種麻醉,吸引器、喉頭鏡與困難氣道器材都要事先備妥",
+      "<b>子宮左傾(LUD)</b>或左側墊高,減少主動脈腔靜脈壓迫;娩出前避免長時間完全仰臥",
+      "娩出後給子宮收縮劑:oxytocin 稀釋後緩慢給或以滴注方式,<b class='w'>避免快速 bolus</b>(→ 低血壓、心搏過速、心肌缺血)",
+      "常規大口徑靜脈路徑並依醫囑備血;前置或植入性胎盤、多胎、子癇前症等高風險先加開管路、提前知會血庫",
+      "新生兒團隊到場;產婦積極保溫(暖毯、輸液加溫)"
     ],
-    airway:[
-      "<b class='w'>RSI + cricoid pressure</b>;預充氧要足(FRC↓、耗氧↑→去飽和快)",
-      "頭高位誘導利喉鏡;備 videolaryngoscope",
-      "左側子宮移位(LUD)減少主動脈腔靜脈壓迫"
-    ],
-    monitor:[
-      "標準監測;預估失血→大口徑靜脈、備血",
-      "子宮收縮不良/大出血時考慮動脈管"
-    ],
-    hemo:[
-      "<b class='w'>仰臥主動脈腔靜脈壓迫→低血壓</b>,務必左傾",
-      "娩出後子宮收縮劑:oxytocin 緩慢給(快速→低血壓/心搏過速);產後出血風險"
-    ],
-    intraop:[
-      "娩出前麻醉宜淺以免胎兒抑制,但需防<b class='w'>術中知曉</b>→建議 BIS/呼氣末麻醉濃度監測",
-      "娩出後加深麻醉、給鴉片;積極保溫"
-    ],
-    drug:[
-      "誘導 propofol + rocuronium(RSI);維持吸入或 TIVA;娩出前避免長效鴉片",
-      "oxytocin;必要時 carbetocin/麥角/前列腺素(氣喘者慎用 carboprost)"
-    ],
-    emergence:[
-      "飽胃→<b class='w'>清醒、氣道保護反射恢復後才拔管</b>"
-    ],
-    postop:[
-      "multimodal(TAP block、paracetamol、NSAID)減鴉片利哺乳;PONV 預防",
-      "子宮收縮與出血監測"
-    ],
-    flags:[
-      "誤吸(Mendelson syndrome)",
-      "困難/失敗插管(產科氣道)",
-      "產後大出血、子宮收縮乏力",
-      "主動脈腔靜脈壓迫低血壓、術中知曉、羊水栓塞"
+    variants:[
+      {
+        cls:"v-ga",
+        name:"剖腹產(全身麻醉)",
+        en:"Cesarean Section (GA)",
+        note:"用於 Category 1 緊急、區域麻醉禁忌或阻斷失敗。重點在 RSI、困難氣道與術中知曉。",
+        summary:{ position:"Supine · left tilt (LUD) · ramped for induction", posType:"supine", time:"參考捷格手術排程時間", blood:"中–多", airway:"GA / RSI・ETT" },
+        preop:[
+          "適應症:Category 1 緊急剖腹產、區域麻醉禁忌(凝血異常、血小板過低、穿刺部位感染、產婦拒絕)、脊髓或硬脊膜外阻斷失敗與不足",
+          "<b class='w'>視同飽胃</b>;依主治醫師指示給制酸劑(sodium citrate)與 H2 blocker 或 PPI,時間允許時併用 metoclopramide",
+          "氣道評估必做:Mallampati、開口度、頸圍、門齒;<b class='w'>孕期黏膜水腫,產程中 Mallampati 分級還會再上升</b>",
+          "與產科團隊確認緊急度與時間壓力、預估失血、胎兒狀況,並確認新生兒團隊已到位"
+        ],
+        airway:[
+          "<b class='w'>Rapid sequence induction(RSI)</b>;預充氧要足:密合面罩、100% 氧氣三分鐘,或八次 vital capacity 呼吸",
+          "<b>FRC 下降、耗氧上升 → 去飽和極快</b>,誘導前把所有器材與人力先就位",
+          "誘導採<b>頭高 ramped 姿勢</b>(耳屏與胸骨切跡同高),改善喉鏡視野並延長安全呼吸暫停時間",
+          "<b class='w'>備小一號氣管內管(6.0–7.0)</b>:氣道黏膜水腫、容易出血;避免經鼻操作",
+          "第一次插管就用 <b>videolaryngoscope</b>;備 bougie、第二代 supraglottic airway 與 front-of-neck access 器材",
+          "cricoid pressure 依主治醫師指示施行;<b>若妨礙通氣或喉鏡視野應先放鬆</b>",
+          "插管失敗 → 依產科失敗插管流程處理,<b class='w'>維持氧合優先於再次嘗試插管</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>產科失敗插管流程的核心是<b>先決定要不要叫醒</b>:插管失敗但面罩或聲門上呼吸道能維持氧合時,依母胎狀況決定喚醒產婦改行區域麻醉,或在維持氧合下繼續手術。<b>無法插管也無法通氣</b>時立即進行環甲膜切開等頸前氣道處置,同時考慮以 sugammadex 逆轉肌鬆。整個過程只有一個優先順序:母體氧合。</span>"
+        ],
+        monitor:[
+          "標準監測 + 定量肌鬆監測(TOF)",
+          "<b>建議加測麻醉深度</b>:以呼氣末吸入麻醉濃度確認,必要時加 BIS;<b class='w'>產科全麻的術中知曉發生率明顯高於一般手術</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>英國一項針對產科全麻的多中心前瞻研究,以主動、重複詢問的方式收案,發現術中知曉的盛行率約 <b>0.39%,大約每 256 例一例</b>,遠高於一般手術族群。主要原因是誘導到娩出這段時間刻意維持較淺的麻醉、以及緊急情況下的流程壓縮。這也是產科全麻要特別重視麻醉深度監測與術後回訪的理由。</span>",
+          "至少一條大口徑靜脈;預期大出血(前置或植入性胎盤)再加一條並考慮動脈導管",
+          "體溫、尿量;產後密切記錄出血量"
+        ],
+        hemo:[
+          "<b class='w'>主動脈腔靜脈壓迫會造成低血壓</b>;維持左傾 15 度以上或手動子宮左推",
+          "誘導與插管的交感反應會使血壓劇升;<b class='w'>子癇前症產婦要先鈍化</b>,以 labetalol 等短效藥物依主治醫師指示處理,降低腦出血風險",
+          "娩出後 oxytocin 稀釋緩慢給;<b class='w'>快速推注會造成低血壓與心搏過速</b>",
+          "產後出血備援:第二線子宮收縮劑、tranexamic acid、備血與大量輸血流程"
+        ],
+        intraop:[
+          "娩出前維持足夠麻醉深度,但避免過深壓抑胎兒;<b class='w'>不可為顧慮胎兒而讓麻醉過淺,這是術中知曉的主要來源</b>",
+          "娩出前吸入麻醉一般維持 <b>0.75 MAC 以上</b>,以呼氣末濃度確認;<b>本院未配置 nitrous oxide</b>",
+          "<b>娩出前避免長效鴉片</b>;若因母體血行不穩或子癇前症需先給,務必事先告知新生兒團隊",
+          "娩出後加深麻醉、給鴉片(必要時併 benzodiazepine,依主治醫師指示),並可提高吸入濃度",
+          "娩出後注意子宮收縮與出血量,高濃度吸入麻醉會抑制子宮收縮"
+        ],
+        drug:[
+          "誘導:propofol 2–2.5 mg/kg;血行不穩時考慮 etomidate 或 ketamine,依主治醫師指示",
+          "肌鬆:<b>rocuronium 1.0–1.2 mg/kg</b>(本院 NMB 標準),<b class='w'>備 sugammadex 16 mg/kg 供無法插管無法通氣時緊急回復</b>",
+          "維持:sevoflurane 或 desflurane;<b>本院無 nitrous oxide</b>",
+          "子宮收縮劑:oxytocin 為主;必要時 carbetocin、methylergometrine(<b class='w'>高血壓、子癇前症禁用</b>)、carboprost(<b class='w'>氣喘禁用</b>)",
+          "抗生素切皮前給;止吐藥依需要"
+        ],
+        emergence:[
+          "<b class='w'>飽胃 → 完全清醒、氣道保護反射恢復、TOF ratio 達 0.9 以上才拔管</b>",
+          "以 sugammadex 回復肌鬆(本院標準);拔管前備妥吸引器",
+          "採頭高或側躺姿勢拔管;<b class='w'>拔管期是誤吸的高風險時段</b>",
+          "拔管後續觀察上呼吸道阻塞與殘餘肌鬆"
+        ],
+        postop:[
+          "多模式止痛:paracetamol 加 NSAID(無禁忌時)為基礎,再加 TAP block 或 quadratus lumborum block;<b>減少鴉片有利哺乳與早期下床</b>",
+          "PONV 預防;鴉片使用者注意鎮靜與呼吸速率",
+          "子宮收縮、惡露與出血量密切監測",
+          "<b class='w'>全身麻醉後務必回訪詢問有無術中記憶</b>;有疑慮者記錄並及早轉介心理支持"
+        ],
+        flags:[
+          "誤吸(Mendelson syndrome)",
+          "困難或失敗插管、無法插管也無法通氣",
+          "術中知曉(產科全麻風險最高)",
+          "產後大出血、子宮收縮乏力",
+          "主動脈腔靜脈壓迫造成低血壓",
+          "羊水栓塞",
+          "新生兒呼吸抑制"
+        ],
+        refs:[
+          "Mushambi, M. C., Kinsella, S. M., Popat, M., et al. (2015). Obstetric Anaesthetists' Association and Difficult Airway Society guidelines for the management of difficult and failed tracheal intubation in obstetrics. Anaesthesia, 70(11), 1286–1306.",
+          "Odor, P. M., Bampoe, S., Lucas, D. N., Moonesinghe, S. R., Andrade, J., & Pandit, J. J. (2021). Incidence of accidental awareness during general anaesthesia in obstetrics: A multicentre, prospective cohort study. Anaesthesia, 76(6), 759–776.",
+          "Odor, P. M., Bampoe, S., Moonesinghe, S. R., Andrade, J., Pandit, J. J., & Lucas, D. N. (2021). General anaesthetic and airway management practice for obstetric surgery in England: A prospective, multicentre observational study. Anaesthesia, 76(4), 460–471.",
+          "Apfelbaum, J. L., Hawkins, J. L., Agarkar, M., et al. (2016). Practice guidelines for obstetric anesthesia: An updated report by the American Society of Anesthesiologists Task Force on Obstetric Anesthesia and the Society for Obstetric Anesthesia and Perinatology. Anesthesiology, 124(2), 270–300."
+        ]
+      },
+      {
+        cls:"v-sa",
+        name:"剖腹產(脊髓麻醉)",
+        en:"Cesarean Section (SA)",
+        note:"非緊急剖腹產的首選。重點在阻斷高度、低血壓處置與鴉片相關副作用。",
+        summary:{ position:"Sitting or lateral for block → supine with LUD", posType:"supine", time:"參考捷格手術排程時間", blood:"中", airway:"SA / 自主呼吸(隨時可轉 GA)" },
+        preop:[
+          "確認無禁忌:產婦拒絕、凝血異常或抗凝藥未停、血小板過低、穿刺部位感染、未矯正的低血容或敗血症、部分心臟疾病(嚴重主動脈瓣狹窄、肺高壓)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>血小板數值<b>沒有一個絕對安全的門檻</b>可以直接決定能不能做。實務上要合併看數值的<b>趨勢</b>(急速下降比單一低值更危險)、<b>病因</b>(妊娠性血小板低下與 HELLP、DIC 風險不同)以及有沒有<b>臨床出血表現</b>。最終仍依主治醫師判斷。</span>",
+          "確認禁食狀況與制酸劑;<b class='w'>即使做區域麻醉仍視同飽胃</b>,因為隨時可能轉全身麻醉",
+          "術前解釋:阻斷過程、<b>術中會保持清醒</b>、可能出現牽扯感、噁心、肩痛與發抖",
+          "<b class='w'>全身麻醉的器材與藥物必須事前備妥</b>,阻斷失敗或高位阻斷時要能立刻使用"
+        ],
+        airway:[
+          "保留自主呼吸;<b class='w'>面罩、喉頭鏡、氣管內管與吸引器仍須備妥並在手邊</b>",
+          "<b class='w'>高位阻斷或全脊髓麻醉</b>的徵象:手部麻木無力、呼吸費力、講話變小聲、噁心躁動、意識改變 → 立即支持通氣、必要時插管並積極升壓<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>局部麻醉藥往頭端擴散過高時,依序阻斷肋間肌(呼吸變淺、咳嗽無力)、上肢(手麻無力)、心臟交感神經 T1–T4(心搏過緩、低血壓),最高影響到腦幹造成意識喪失與呼吸停止,也就是<b>全脊髓麻醉</b>。處置重點是<b>維持氧合與循環</b>:給氧、必要時插管與正壓通氣、升壓劑與輸液、保持子宮左傾,阻斷會隨時間自行退去。</span>",
+          "給氧依主治醫師指示;<b>不需要為了提升胎兒氧合而常規給高濃度氧氣</b>"
+        ],
+        monitor:[
+          "標準監測;<b class='w'>阻斷後到娩出前建議每分鐘量一次血壓</b>,穩定後再拉長間隔",
+          "以冷覺或針刺確認阻斷高度,目標達 <b>T4</b>;高度不足會有牽扯痛與轉全麻的風險<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>剖腹產不只切皮要不痛,還要蓋住<b>子宮與腹膜被牽拉的內臟感覺</b>。這些內臟傳入神經沿交感神經進入脊髓的範圍大約在 <b>T4 到 T10</b>,所以阻斷高度只到 T10(肚臍)並不夠,常見的做法是確認達到 <b>T4,大約乳頭高度</b>。</span>",
+          "至少一條大口徑靜脈;高風險再加",
+          "體溫與寒顫觀察;新生兒團隊到場"
+        ],
+        hemo:[
+          "<b class='w'>脊髓麻醉後低血壓非常常見</b>:交感阻斷造成周邊血管阻力下降與靜脈回流減少;目標維持收縮壓在<b>基準值的 90% 以上</b>",
+          "<b>建議阻斷完成後即開始 phenylephrine 預防性滴注</b>,再依血壓滴定;比等血壓掉了才補救更能減少噁心嘔吐與胎兒酸血症",
+          "同時進行晶體液 <b>co-load</b>(阻斷後立即快速輸注),效果優於事前 pre-load",
+          "低血壓合併<b>心搏過緩</b>時改用 ephedrine,或依主治醫師指示給 atropine、glycopyrrolate;<b class='w'>嚴重心搏過緩合併低血壓要警覺可能進展為心跳停止</b>",
+          "<b class='w'>阻斷後完全仰臥會加重低血壓</b>,務必維持子宮左傾"
+        ],
+        intraop:[
+          "阻斷擺位:坐姿或側臥;穿刺點取 L3-4 或以下,<b class='w'>不高於 L3-4 以免傷及脊髓圓錐</b>",
+          "全程無菌;肥胖或觸摸不到骨性標記時可用超音波定位",
+          "<b>牽扯不適與噁心</b>常見:先確認血壓與阻斷高度是否足夠,再依主治醫師指示給靜脈輔助藥",
+          "阻斷不全的處理階梯:追加靜脈鴉片或 ketamine → 請外科局部浸潤 → <b class='w'>仍持續疼痛就果斷轉全身麻醉,不可讓產婦忍痛</b>",
+          "娩出後積極保溫;發抖常見,注意與寒顫、輸血反應區分"
+        ],
+        drug:[
+          "常見配方(<b>實際劑量依主治醫師指示</b>):0.5% hyperbaric bupivacaine 約 9–12 mg,加 fentanyl 10–25 µg,可再加 morphine 100–150 µg",
+          "<b>加入 intrathecal 鴉片</b>可改善術中舒適並延長術後止痛;morphine 約可提供 12–24 小時鎮痛",
+          "升壓劑:<b>phenylephrine 為第一線</b>,ephedrine 用於合併心搏過緩;<b class='w'>血管收縮劑與血管擴張劑不可放在同一區</b>",
+          "娩出後 oxytocin 稀釋緩慢給;必要時第二線子宮收縮劑",
+          "止吐藥與抗癢藥(鴉片相關搔癢)備用"
+        ],
+        emergence:[
+          "手術結束確認血行穩定、出血量與子宮收縮無虞後轉出",
+          "轉出前確認升壓劑已停或穩定、疼痛控制到位、阻斷高度開始下降",
+          "<b class='w'>中途轉全身麻醉者,依全麻的清醒拔管標準處理</b>"
+        ],
+        postop:[
+          "<b class='w'>給過 intrathecal morphine 者需依規定監測呼吸速率與鎮靜程度,一般 12–24 小時</b>;臨床顯著呼吸抑制罕見(文獻估計約每萬例個位數),但肥胖、睡眠呼吸中止、併用全身鴉片者風險較高",
+          "多模式止痛:paracetamol 加 NSAID 為基礎;未給 intrathecal morphine 者可加 TAP block",
+          "常見副作用:搔癢、噁心嘔吐、尿滯留",
+          "剖腹產術後加速康復:早期進食、早期下床、及早移除導尿管、血栓預防",
+          "<b class='w'>注意硬脊膜穿刺後頭痛(PDPH)</b>與任何持續的神經症狀,發現即回報並記錄"
+        ],
+        flags:[
+          "脊髓麻醉後低血壓與心搏過緩,嚴重者可致心跳停止",
+          "高位阻斷或全脊髓麻醉造成呼吸衰竭",
+          "阻斷不全或失敗而需轉全身麻醉",
+          "硬脊膜穿刺後頭痛(PDPH)",
+          "Intrathecal 鴉片相關呼吸抑制、搔癢、尿滯留",
+          "產後大出血、子宮收縮乏力、羊水栓塞",
+          "硬脊膜外血腫或膿瘍(罕見但需及早辨識)"
+        ],
+        refs:[
+          "Kinsella, S. M., Carvalho, B., Dyer, R. A., et al. (2018). International consensus statement on the management of hypotension with vasopressors during caesarean section under spinal anaesthesia. Anaesthesia, 73(1), 71–92.",
+          "Bollag, L., Lim, G., Sultan, P., et al. (2021). Society for Obstetric Anesthesia and Perinatology: Consensus statement and recommendations for enhanced recovery after cesarean. Anesthesia & Analgesia, 132(5), 1362–1377.",
+          "Sharawi, N., Carvalho, B., Habib, A. S., Blake, L., Mhyre, J. M., & Sultan, P. (2018). A systematic review evaluating neuraxial morphine and diamorphine-associated respiratory depression after cesarean delivery. Anesthesia & Analgesia, 127(6), 1385–1395.",
+          "Bauchat, J. R., Weiniger, C. F., Sultan, P., et al. (2019). Society for Obstetric Anesthesia and Perinatology consensus statement: Monitoring recommendations for prevention and detection of respiratory depression associated with administration of neuraxial morphine for cesarean delivery analgesia. Anesthesia & Analgesia, 129(2), 458–474.",
+          "Apfelbaum, J. L., Hawkins, J. L., Agarkar, M., et al. (2016). Practice guidelines for obstetric anesthesia: An updated report by the American Society of Anesthesiologists Task Force on Obstetric Anesthesia and the Society for Obstetric Anesthesia and Perinatology. Anesthesiology, 124(2), 270–300."
+        ]
+      }
     ],
     refs:[
+      "Apfelbaum, J. L., Hawkins, J. L., Agarkar, M., et al. (2016). Practice guidelines for obstetric anesthesia: An updated report by the American Society of Anesthesiologists Task Force on Obstetric Anesthesia and the Society for Obstetric Anesthesia and Perinatology. Anesthesiology, 124(2), 270–300.",
+      "Kinsella, S. M., Carvalho, B., Dyer, R. A., et al. (2018). International consensus statement on the management of hypotension with vasopressors during caesarean section under spinal anaesthesia. Anaesthesia, 73(1), 71–92.",
       "Mushambi, M. C., Kinsella, S. M., Popat, M., et al. (2015). Obstetric Anaesthetists' Association and Difficult Airway Society guidelines for the management of difficult and failed tracheal intubation in obstetrics. Anaesthesia, 70(11), 1286–1306."
     ]
   },
@@ -3432,10 +3572,21 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v8.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v8.9";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-08-14";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-14",
+    note: "剖腹產改成全身麻醉與脊髓麻醉兩個區塊,點進去先選麻醉方式。",
+    items: [
+      { t: "剖腹產:改為一張卡,點進去先看到全身麻醉與脊髓麻醉兩大區塊,再各自點進去查", en: "Cesarean Section (CS)" },
+      { t: "剖腹產:新增脊髓麻醉整套內容(阻斷高度、低血壓與升壓處置、常用配方、術後止痛與監測)", en: "Cesarean Section (CS)" },
+      { t: "剖腹產:全身麻醉內容重新改寫並補齊(快速誘導與困難氣道、術中知曉、甦醒拔管、術後回訪)", en: "Cesarean Section (CS)" },
+      { t: "剖腹產:新增兩種麻醉方式共同適用的重點,放在選擇畫面下方", en: "Cesarean Section (CS)" },
+      { t: "剖腹產:文獻補到兩區各四到五篇", en: "Cesarean Section (CS)" }
+    ]
+  },
   {
     date: "2026-08-14",
     note: "腎臟移植部分用詞與重複內容整理。",
@@ -6312,6 +6463,17 @@ const el = id => document.getElementById(id);
 const HOME_CHIP = "首頁";   /* 按「首頁」→ 顯示更新紀錄;按「全部」→ 列出所有手術 */
 let activeSpec = HOME_CHIP;   /* 開啟時停在首頁(更新紀錄) */
 let activeId = null;
+let activeVar = null;   /* 目前檢視的麻醉方式分區索引;null = 尚未選擇 */
+
+/* 目前檢視中的卡片:有麻醉方式分區時回傳合併後的分區物件 */
+function curCard(){
+  if(activeId == null) return null;
+  const b = SURGERIES[activeId];
+  if(b && b.variants && activeVar != null && b.variants[activeVar]){
+    return Object.assign({}, b, b.variants[activeVar]);
+  }
+  return b;
+}
 
 const TX_SPEC = "移植";           /* 移植科別 chip;色系用灰玫 clay */
 const NORA_SPEC = "外區麻醉";      /* 手術室外麻醉;內容建置中,先開好科別 chip */
@@ -6357,7 +6519,10 @@ let META = { lastExport: 0, snoozeUntil: 0 };
 function noteKey(s){ return String(s.en || s.name || "").trim().toLowerCase().replace(/\s+/g," "); }
 function blankNote(){ return { text:"", photos:[], ts:0 }; }
 function getNote(s){ return NOTES[noteKey(s)] || blankNote(); }
-function hasNote(s){ const n = NOTES[noteKey(s)]; return !!(n && (n.text.trim() || n.photos.length)); }
+function hasNote(s){
+  const chk = x => { const n = NOTES[noteKey(x)]; return !!(n && (n.text.trim() || n.photos.length)); };
+  return chk(s) || (s.variants || []).some(chk);
+}
 
 /* ---------- 儲存層 ---------- */
 let idbFailed = false;
@@ -6525,7 +6690,7 @@ async function addPhotos(input){
   const files = Array.from(input.files || []).filter(f => /^image\//.test(f.type));
   input.value = "";
   if(!files.length || activeId == null) return;
-  const s = SURGERIES[activeId], key = noteKey(s), note = getNote(s);
+  const s = curCard(), key = noteKey(s), note = getNote(s);
   note.photos = note.photos.slice();
   setNoteStatus("處理照片中…");
   for(const f of files){
@@ -6541,7 +6706,7 @@ async function addPhotos(input){
 
 function renderPhotos(){
   const g = el("phGrid"); if(g == null || activeId == null) return;
-  const photos = getNote(SURGERIES[activeId]).photos;
+  const photos = getNote(curCard()).photos;
   const empty = el("phEmpty");
   if(empty) empty.style.display = photos.length ? "none" : "block";
   g.innerHTML = photos.map((p, i) =>
@@ -6555,7 +6720,7 @@ function escHtml(t){ return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;","<
 /* ---------- 照片放大檢視:可加圖說、刪除 ---------- */
 function openLightbox(i){
   if(activeId == null) return;
-  const note = getNote(SURGERIES[activeId]);
+  const note = getNote(curCard());
   const p = note.photos[i]; if(!p) return;
   closeLightbox();
   const d = document.createElement("div");
@@ -6573,7 +6738,7 @@ function openLightbox(i){
   d.addEventListener("click", e => { if(e.target === d) closeLightbox(); });
   el("lbClose").onclick = closeLightbox;
   el("lbSave").onclick = async () => {
-    const s = SURGERIES[activeId], n = getNote(s);
+    const s = curCard(), n = getNote(s);
     n.photos = n.photos.slice();
     n.photos[i] = Object.assign({}, n.photos[i], { cap: el("lbCap").value.trim() });
     await saveNote(noteKey(s), n, "圖說已儲存");
@@ -6581,7 +6746,7 @@ function openLightbox(i){
   };
   el("lbDel").onclick = async () => {
     if(!confirm("確定刪除這張照片?此動作無法復原。")) return;
-    const s = SURGERIES[activeId], n = getNote(s);
+    const s = curCard(), n = getNote(s);
     n.photos = n.photos.filter((_, k) => k !== i);
     await saveNote(noteKey(s), n, "照片已刪除");
     renderPhotos(); closeLightbox();
@@ -6800,7 +6965,7 @@ function renderSetList(chip){
 function showQuiz(chip, id){
   const set = bankOf(chip).find(s=>s.id===id);
   if(!set) return;
-  activeId = null;
+  activeId = null; activeVar = null;
   QUIZ_STATE = { set, pick: new Array(set.questions.length).fill(-1), done:false };
   renderQuiz();
   el("app").classList.add("stage-detail");
@@ -8675,9 +8840,13 @@ function posIcon(type){
   return icons[type] || icons.supine;
 }
 
-function showDetail(id){
+function showDetail(id, vi){
   activeId = id;
-  const s = SURGERIES[id];
+  const base = SURGERIES[id];
+  const vars = (base && base.variants && base.variants.length) ? base.variants : null;
+  activeVar = (vars && vi != null && vars[vi]) ? vi : null;
+  if(vars && activeVar == null){ showVariantPick(id); return; }
+  const s = vars ? Object.assign({}, base, vars[activeVar]) : base;
   const sum = s.summary;
   const sections = SECTION_DEFS.filter(d=>s[d.key] && s[d.key].length).map(d=>{
     const isMon = d.key==="monitor";
@@ -8694,9 +8863,11 @@ function showDetail(id){
     </div>`;
   }).join("");
 
+  const backTxt = vars ? "← 返回麻醉方式" : "← 返回清單";
   el("detail").innerHTML = `
-    <button class="back" id="backBtn">← 返回清單</button>
+    <button class="back" id="backBtn">${backTxt}</button>
     <div class="d-head">
+      ${vars ? `<div class="v-crumb">${base.en}　${base.name}</div>` : ""}
       <div class="d-title">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
       <div class="d-title-zh">${s.name}</div>
       <div class="d-en">${s.specialty}</div>
@@ -8724,9 +8895,10 @@ function showDetail(id){
     <div class="disclaimer">
       本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
     </div>
-    <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
-  el("backBtn").onclick = goBack;
-  el("backBtnBottom").onclick = goBack;
+    <button class="back back-bottom" id="backBtnBottom" type="button">${backTxt}</button>`;
+  const back = vars ? (() => showDetail(id)) : goBack;
+  el("backBtn").onclick = back;
+  el("backBtnBottom").onclick = back;
   bindNoteBox(s);
   el("app").classList.add("stage-detail");
   renderList();
@@ -8734,8 +8906,72 @@ function showDetail(id){
   window.scrollTo(0,0);
 }
 
+/* 有麻醉方式分區的手術:先顯示分區選擇頁(GA / SA) */
+function showVariantPick(id){
+  const s = SURGERIES[id];
+  const sum = s.summary;
+  const opts = s.variants.map((v,i)=>`
+    <button class="vopt ${v.cls||""}" type="button" data-vi="${i}">
+      <div class="vopt-en">${v.en}</div>
+      <div class="vopt-zh">${v.name}</div>
+      ${v.note ? `<div class="vopt-note">${v.note}</div>` : ""}
+      <div class="vopt-go">查看重點 →</div>
+    </button>`).join("");
+  const common = (s.common && s.common.length) ? `
+    <div class="section">
+      <h3><span class="dot"></span>共同重點(兩種麻醉方式皆適用)</h3>
+      <ul>${li(s.common)}</ul>
+    </div>` : "";
+  el("detail").innerHTML = `
+    <button class="back" id="backBtn">← 返回清單</button>
+    <div class="d-head">
+      <div class="d-title">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
+      <div class="d-title-zh">${s.name}</div>
+      <div class="d-en">${s.specialty}</div>
+      <div class="d-summary">
+        <div class="item pos"><div class="k">Position</div><div class="v">${posIcon(sum.posType)}<span>${sum.position||"—"}</span></div></div>
+        <div class="item"><div class="k">預估時間</div><div class="v">${sum.time||"—"}</div></div>
+        <div class="item"><div class="k">預估失血</div><div class="v">${sum.blood||"—"}</div></div>
+        <div class="item"><div class="k">麻醉方式</div><div class="v">${sum.airway||"—"}</div></div>
+      </div>
+    </div>
+    <div class="vpick">
+      <div class="vpick-h">選擇麻醉方式,再點進去看該方式的重點</div>
+      ${opts}
+    </div>
+    ${common}
+    ${s.refs && s.refs.length ? `
+      <div class="refs-box">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">${s.refs.length}</span></summary>
+          <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
+        </details>
+      </div>` : ""}
+    <div class="disclaimer">
+      本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
+    </div>
+    <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
+  el("detail").querySelectorAll(".vopt").forEach(b=>{
+    b.onclick = () => showDetail(id, +b.dataset.vi);
+  });
+  el("backBtn").onclick = goBack;
+  el("backBtnBottom").onclick = goBack;
+  el("app").classList.add("stage-detail");
+  renderList();
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+/* 往回一層:分區內頁 → 分區選擇頁 → 清單 */
+function stepBack(){
+  const b = (activeId != null) ? SURGERIES[activeId] : null;
+  if(b && b.variants && activeVar != null){ showDetail(activeId); return; }
+  goBack();
+}
+
 /* 返回清單:收起詳情、回到頁面頂端 */
 function goBack(){
+  activeVar = null;
   el("app").classList.remove("stage-detail");
   el("detail").scrollTop = 0;
   window.scrollTo(0,0);
@@ -8775,7 +9011,7 @@ function goBack(){
     live = false;
     const t = e.changedTouches[0];
     const dx = t.clientX - x0, dy = t.clientY - y0;
-    if(dx > SWIPE_X && Math.abs(dy) < SWIPE_Y) goBack();
+    if(dx > SWIPE_X && Math.abs(dy) < SWIPE_Y) stepBack();
   }, { passive:true });
 })();
 
