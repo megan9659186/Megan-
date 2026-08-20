@@ -301,7 +301,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 <button class="today-btn" id="todayBtn" onclick="goToday()">回到今日 ↩</button>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
-
 <!-- 積休 年休 延年休 餘額總覽 -->
 <div class="hours-summary">
   <div class="hs-card jiji">
@@ -370,7 +369,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     <span class="nts-label">hr</span>
   </div>
 </div>
-
 <!-- 夜班津貼 -->
 <div class="allow-wrap">
   <div class="allow-header">
@@ -409,7 +407,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
   </div>
   <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270；天災假＋8 只加積休、不計加班費</div>
 </div>
-
 <!-- 重訓課統計 -->
 <div class="allow-wrap">
   <div class="allow-header">
@@ -431,7 +428,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     </div>
   </div>
 </div>
-
 <!-- 快速選單：點日期後先問要幹嘛 -->
 <div class="quick-overlay" id="quickOverlay" onclick="if(event.target===this)closeQuickActions()">
   <div class="quick-sheet">
@@ -450,7 +446,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
   </div>
 </div>
-
 <!-- 換號碼班（整週）浮層 -->
 <div class="hours-overlay" id="weekOverlay" onclick="if(event.target===this)closeWeekSheet()">
   <div class="hours-sheet">
@@ -475,7 +470,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     </div>
   </div>
 </div>
-
 <!-- 修改當天班別浮層 -->
 <div class="hours-overlay" id="dayOverlay" onclick="if(event.target===this)closeDaySheet()">
   <div class="hours-sheet">
@@ -497,7 +491,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     </div>
   </div>
 </div>
-
 <!-- 行程／圖片浮層 -->
 <div class="hours-overlay" id="planOverlay" onclick="if(event.target===this)closePlanSheet()">
   <div class="hours-sheet">
@@ -521,7 +514,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     </div>
   </div>
 </div>
-
 <!-- 重訓課浮層 -->
 <div class="hours-overlay" id="gymOverlay" onclick="if(event.target===this)closeGymSheet()">
   <div class="hours-sheet">
@@ -543,7 +535,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     </div>
   </div>
 </div>
-
 <!-- 時數輸入浮層 -->
 <div class="hours-overlay" id="hoursOverlay" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="hours-sheet">
@@ -611,13 +602,13 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 <div class="sec-title" id="recTitle" onclick="toggleRecList()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>換班・行程紀錄</span><span id="recToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'Libre Franklin',sans-serif;font-weight:400">展開 ﹀</span></div>
 <ul class="rec-list" id="recList" style="display:none"></ul>
 <script>
-const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF'],36:['D','D','D','D','D','OFF','OFF']};
+const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['12-8 4','12-8 1','12-8 2','12-8 3','12-8 4','OFF','E2'],15:['12-8 2','12-8 3','12-8 4','12-8 1','12-8 2','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 4','12-8 1','12-8 2','12-8 3','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 4','12-8 1','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF'],36:['D','D','D','D','D','OFF','OFF']};
 const ANC=new Date(2026,5,8);
 const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#c8826a','#a07860','#d4a090','#b8906a','#c8a890','#907060'];
 const ME={w1:22};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
-const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','OFF'];
+const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','12-8 4','OFF'];
 const DZ=['日','一','二','三','四','五','六'];
 function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function ad(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
@@ -987,7 +978,7 @@ function getNum(date){const v=wS[monKey(date)];if(!v)return nf(ME.w1,wo(date));r
 function getShift(date){
   const key=dk(date);if(dS[key])return{s:dS[key],h:HOL[key]||null,dm:true,holD:false};
   const num=getNum(date),idx=(date.getDay()+6)%7;let s=SCH[num][idx];const h=HOL[key];let holD=false;
-  if(h&&date.getDay()!==0&&date.getDay()!==6){const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3',"D'OFF"];if(mo.includes(s)){s='OFF';}else if(s==='D1'||s==='D2')holD=true;}
+  if(h&&date.getDay()!==0&&date.getDay()!==6){const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3','12-8 4',"D'OFF"];if(mo.includes(s)){s='OFF';}else if(s==='D1'||s==='D2')holD=true;}
   return{s,h:h||null,dm:false,holD};
 }
 function sc(s,holD){
