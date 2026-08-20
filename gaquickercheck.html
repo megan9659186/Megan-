@@ -3412,15 +3412,12 @@ const SURGERIES = [
     en:"Kidney Transplantation (KT)",
     summary:{ position:"Supine, both arms abducted", posType:"supine", time:"參考捷格手術排程時間", blood:"少至中", airway:"GA / ETT(快速誘導)" },
     preop:[
-      "末期腎病常見共病:高血壓、糖尿病、缺血性心臟病、貧血、次發性副甲狀腺亢進、心包積液",
-      "<b class='w'>移植前病人須先做血液透析</b>;監測出血時間,血清肌酸酐小於 10 mg/dL,血鉀維持 4–5 mEq/L(<b class='w'>應小於 5.5 mEq/L</b>)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>接到通知時要問清楚四件事:最後一次透析何時結束、脫了多少水、乾體重多少、透析後的鉀離子。目的是把鉀離子與容積調到可以麻醉的狀態,但<b>不要脫到乾</b>;脫水過頭會讓誘導後低血壓,直接影響移植腎的灌流。</span>",
-      "貧血:血色素低於 9–10 g/dL 者術前以紅血球生成刺激劑矯正;<b class='w'>盡量避免輸血</b>",
-      "心臟評估:心衰竭失代償、不穩定心絞痛、明顯瓣膜疾病或心律不整者需重新評估;肺動脈收縮壓偏高者由心臟科評估",
-      "摘下的移植腎臟,保存技術允許 24–48 小時<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>冷缺血時間越長,新腎發生<b>急性腎小管壞死</b>與延遲移植腎功能的機會越高。活體捐贈因為捐者與受者幾乎同時開刀,冷缺血時間短,術後腎功能通常恢復得快;cadaver 則相反,術中更要把灌流顧好。</span>",
-      "<b class='w'>cadaver 移植常是臨時通知的急診刀 → 視為飽胃</b>",
-      "<b class='w'>確認禁治療手臂</b>:該側不量血壓、不打針、擺位時墊好並可觸摸確認震顫",
-      "姿勢:平躺、兩臂外展;<b>注意關節壓迫處與眼睛保護</b>",
-      "<b>A-line 與 IV line 須採三消模式消毒</b>"
+      "<b class='w'>確認最後透析時間、脫水量、乾體重及透析後血鉀</b>;維持適當容積,避免脫水過度",
+      "<b class='w'>血鉀應小於 5.5 mEq/L</b>;確認酸鹼、電解質、血糖及凝血狀態",
+      "快速評估心肺共病:高血壓、糖尿病、缺血性心臟病、心衰竭、瓣膜疾病及心律不整",
+      "確認貧血程度;<b class='w'>盡量避免輸血</b>",
+      "<b class='w'>cadaver 移植視為飽胃</b>;確認禁治療手臂,該側不量血壓、不打針並保護瘻管",
+      "<b>A-line 與 IV line 採三消模式消毒</b>"
     ],
     airway:[
       "<b class='w'>採快速誘導之全身氣管內管麻醉</b>,備吸引",
@@ -3447,31 +3444,23 @@ const SURGERIES = [
       "液體種類依主治醫師指示<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>大型隨機試驗顯示,cadaver 移植使用<b>平衡型晶體液</b>比生理食鹽水降低延遲移植腎功能的機率,且未增加高鉀;生理食鹽水氯離子含量高,大量給予容易造成高氯性代謝性酸血症。白蛋白與晶體液相比並沒有顯示額外好處。實務上仍依主治醫師與當台病人的鉀離子狀況決定。</span>"
     ],
     intraop:[
-      "<b class='w'>不熟悉的時候隨時開口問。以下依手術步驟逐段對照。</b>",
-      "<b>① 接到通知</b>:問清最後透析時間、脫水量、乾體重、透析後鉀離子;確認禁治療手臂;開始備藥與備醫材",
-      "<b>② 誘導前</b>:溫毯機與輸液加溫器就位;<b>A-line 與 IV line 三消模式消毒</b>",
-      "<b>③ 誘導</b>:快速誘導插管;接上 NMT 與 BIS 或 Entropy;擺位平躺兩臂外展,護眼、關節減壓、禁治療手臂墊好",
-      "<b>④ 導尿管</b>:外科於術前放置並注入抗生素後<b class='w'>夾住</b>,以預防術後泌尿道感染;<b class='w'>在輸尿管接通前不要自行放開</b>;<b class='w'>先問清楚膀胱沖洗液灌了多少,記下來,之後算尿量要扣掉</b>",
-      "<b>⑤ 新腎 on field</b>:<b class='w'>看到新腎上台就開始準備給 Mannitol</b>;撥後腹腔、植入前依醫囑給,滴注時間依醫囑;<b>寡尿可能在利尿期前發生</b>,不要因為沒尿就急著衝輸液<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Mannitol 是滲透性利尿劑,也能清除自由基。作用包括擴張血管內容積、增加腎血流、經前列腺素造成腎血管擴張、增加腎小管內流速以減少細胞腫脹與管型阻塞,用意是減輕缺血再灌流傷害。移植的證據多來自品質較低的研究,但因為潛在好處大於壞處,國際上幾乎是常規作法。<b>過量反而有害</b>:先是容積擴張可能誘發心衰竭與肺水腫,接著強力利尿造成脫水、電解質與酸鹼異常,甚至高滲透壓性腎衰竭。所以一定要配合足夠的輸液,不是給越多越好。</span>",
-      "<b>⑥ 新腎放入、開始接血管</b>:<b class='w'>床會左右轉動</b> → 每次轉之前先顧好管路,轉完<b class='w'>確認氣管內管有沒有滑脫、病人頭位有沒有跑掉</b>,再看呼吸音、氣道壓與 EtCO₂;維持足夠麻醉深度與肌鬆,避免病人移動",
-      "<b>⑦ 注意接血管進度</b>:<b class='w'>聽到「5-0 prolene」表示血管可能快接好了</b> → 這時候就把要稀釋的藥抽起來放旁邊,<b class='w'>同時通知麻醉醫師要開始準備給藥</b>,等外科醫師下 order",
-      "<b>⑧ 血壓</b>:接近放開血管夾時把血壓往醫囑目標拉,並主動回報數字",
-      "<b>⑨ 放開血管夾前</b>:確認血鉀、確認藥物已依順序抽好排列、把血壓報給外科;<b class='w'>藥的順序是 Mannitol → Solu-Medrol → Jusomin → Lasix → Vitacal</b>",
-      "<b>⑩ 放開血管夾後</b>:依外科指示依序給 <b>Solu-Medrol</b>(免疫抑制起始)、<b>Jusomin</b>、<b>Lasix</b>、<b>Vitacal</b>;<b class='w'>每給一支就回報一次,並同步報血壓與心電圖變化;給完藥要 alarm 外科醫師</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>各自的用意:<b>Solu-Medrol</b> 是類固醇,免疫抑制的起始劑量。<b>Jusomin</b> 用來矯正再灌流後的代謝性酸血症,同時把鉀離子往細胞內趕。<b>Lasix</b> 促進利尿,機轉上可對抗抗利尿激素反應、減少腎小管的耗氧;要注意的是給了以後尿量仍少,常預示術後需要腎替代治療,這時要早點講出來。<b>Vitacal</b> 補鈣,用來穩定心肌、對抗高鉀的心電圖變化。</span>",
-      "<b>⑪ 輸尿管接到膀胱</b>:外科接好後會告訴我們放開尿管上的 clamp;<b class='w'>一開始流出來的不是尿,是術前灌的膀胱沖洗液,不能算入尿量</b> → <b class='w'>扣掉沖洗量之後,出來的才開始算 U/O</b>;記錄第一次真正排尿的時間、流速與量,之後固定間隔記錄並回報趨勢<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>這一步最容易出錯。外科術前會把抗生素沖洗液灌進膀胱再夾住尿管,放開的瞬間流出來的量幾乎都是那些沖洗液。<b>沒有扣掉就會把尿量算得太漂亮</b>,可能因此忽略移植腎其實還沒開始工作。所以術前就要問清楚灌了多少、寫在紀錄上,放開尿管後先把這個量倒掉或標記,之後的量才是真正的 U/O。</span>",
-      "<b>⑫ 全程</b>:體溫維持至少 36.5 °C(烘被機、溫毯、溫暖之輸液,避免曝露病人);血糖控制在建議範圍,糖尿病病人定期追蹤",
-      "<b>⑬ 關腹與轉送</b>:確認容積與體溫、整理管路;<b>搬動病人時需注意身上導管之固定</b>",
-      "術中麻醉維持:<b>本院無 N₂O</b>;避免腸脹氣影響手術術野"
+      "<span class='pbar pbar-a'>一、準備與誘導</span>",
+      "<span class='ptit ptit-a'><i>①</i>接到通知</span><span class='pdet'>確認最後透析、脫水量、乾體重、血鉀及禁治療手臂;備藥、備醫材、保暖設備就位</span>",
+      "<span class='ptit ptit-a'><i>②</i>誘導與擺位</span><span class='pdet'><b class='w'>A-line、IV line 三消;快速誘導插管</b>;接 NMT、BIS／Entropy;平躺兩臂外展,護眼與保護瘻管</span>",
+      "<span class='ptit ptit-a'><i>③</i>導尿管</span><span class='pdet'>記錄膀胱沖洗量並維持 clamp;<b class='w'>輸尿管接通前不可自行放開</b></span>",
+      "<span class='pbar pbar-b'>二、新腎上台與血管吻合</span>",
+      "<span class='ptit ptit-b'><i>④</i>新腎 on field</span><span class='pdet'><b class='w'>開始準備 Mannitol</b>,依醫囑於植入前給予;勿因暫時寡尿過度輸液</span>",
+      "<span class='ptit ptit-b'><i>⑤</i>接血管</span><span class='pdet'>先靜脈、後動脈;床左右轉動時顧好管路,轉後重查 ETT 深度、呼吸音、氣道壓與 EtCO₂</span>",
+      "<span class='ptit ptit-b'><i>⑥</i>5-0 prolene 訊號</span><span class='pdet'><b class='w'>血管快接好:通知麻醉醫師、依醫囑備妥藥物</b>;確認血鉀並將血壓調至醫囑目標</span>",
+      "<span class='pbar pbar-c'>三、放開血管夾 Reperfusion</span>",
+      "<span class='ptit ptit-c'><i>⑦</i>放夾前確認</span><span class='pdet'>回報血壓與血鉀;確認藥物順序:<b class='w'>Mannitol → Solu-Medrol → Jusomin → Lasix → Vitacal</b></span>",
+      "<span class='ptit ptit-c'><i>⑧</i>放夾後給藥</span><span class='pdet'>依外科醫囑逐一給藥;<b class='w'>每給一支即回報,同步觀察血壓與 ECG,給完通知外科</b></span>",
+      "<span class='pbar pbar-d'>四、輸尿管接通與收尾</span>",
+      "<span class='ptit ptit-d'><i>⑨</i>開始計算尿量</span><span class='pdet'>外科指示後才放開 clamp;<b class='w'>先扣除膀胱沖洗液,之後才算真正 U/O</b>,記錄首次排尿與趨勢</span>",
+      "<span class='ptit ptit-d'><i>⑩</i>全程與轉送</span><span class='pdet'>維持體溫至少 36.5 °C、監測血糖;關腹前確認容積、體溫及管路固定</span>"
     ],
     drug:[
-      "<b>藥物準備</b>:Propofol 200 mg/20 mL ×1;<b>Nimbex 10 mg/5 mL ×2–3</b>;Fentanyl 100 μg/2 mL ×2",
-      "<b>備而未用</b>:Mannitol、Solu-Medrol 1000 mg、Jusomin ×4–5、Lasix ×3、Vitacal ×1–2",
-      "<b>Easydopa ×1 備著</b>;或 Dopamine ×2 支(400 mg)加在 D5W 500 mL,以亞培 set 前端加上 3way 排氣",
-      "<b class='w'>上述術中給藥的劑量由外科醫師計算後交付,麻醉科負責依手術進度依序給藥</b>;確認後再抽取藥物",
-      "<b class='w'>Nimbex 是首選肌肉鬆弛劑</b>;以 NMT 導向追加,不按時間給<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>cisatracurium 走 <b>Hofmann elimination</b>,不依賴腎臟排除,代謝不受移植腎功能影響,所以是末期腎病病人的首選。若當台改用 rocuronium 或 vecuronium,作用時間會延長,務必依 NMT 追加;sugammadex 與 rocuronium 結合後的複合物主要由腎臟排除,末期腎病病人清除變慢,不過現有研究顯示用在腎移植病人仍安全有效,重點是逆轉後持續觀察。</span>",
-      "誘導藥選擇<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Propofol 與 thiopental 都安全。<b>缺血性心臟病避免 ketamine</b>(交感刺激);心功能不佳或缺血性心臟病可考慮 etomidate,因為血流動力學穩定。鴉片類方面 fentanyl、alfentanil、sufentanil、remifentanil 都可安全使用。</span>",
-      "<b class='w'>避免使用 Meperidine 與 morphine</b>:活性代謝物會在腎病病人累積 → 改用 fentanyl 類",
-      "<b class='w'>避免 NSAIDs</b>;抗生素與其他藥物依腎功能調整劑量"
+      "備藥參考最新腎臟移植麻醉手冊"
     ],
     emergence:[
       "<b class='w'>術後病人送至外科加護病房</b>,依患者狀況決定拔管與否;<b>現行在加護病房傾向提早拔管</b>",
@@ -3503,7 +3492,6 @@ const SURGERIES = [
       "糖尿病病人術中低血糖",
       "術後譫妄"
     ],
-    diagram:{ section:"intraop", caption:"腎臟移植術中給藥順序:劑量由外科醫師計算後交付,麻醉科依手術進度依序給藥(原創示意圖)", svg:`<svg viewBox="0 0 400 848" width="100%" role="img" xmlns="http://www.w3.org/2000/svg"><title>腎臟移植術中給藥順序流程圖</title><desc>直式流程圖依序顯示:新腎 on field 時開始準備並依醫囑給 Mannitol;外科先接靜脈再接動脈,聽到 5-0 prolene 表示血管快接好,可先把藥抽好備妥,血壓拉到醫囑目標後放開血管夾;放開後依外科指示依序給 Solu-Medrol、Jusomin、Lasix、Vitacal;給完藥後通知外科醫師,輸尿管接到膀胱後依指示放開尿管夾,先流出的是膀胱沖洗液必須扣除。圖底標明給藥種類及劑量依病況及外科主治醫師決定,非一定,確認後再抽取藥物。</desc><defs><marker id="kt-ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M1 1L9 5L1 9Z" fill="#9B948A"/></marker></defs><rect x="8" y="8" width="384" height="832" rx="16" fill="#F4F1EB" stroke="#E0D9CD" stroke-width="1"/><text x="200" y="36" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="600" fill="#423E39">術中給藥順序:配合外科步驟</text><g transform="translate(20,50)"><rect x="0" y="0" width="360" height="88" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#8B9A8B"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">1</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Mannitol</text><text x="20" y="61" font-family="sans-serif" font-size="13" fill="#726B62">新腎 on field 就開始準備,依醫囑給</text><text x="20" y="80" font-family="sans-serif" font-size="13" fill="#726B62">滴注時間依醫囑;寡尿可能在利尿期前</text></g><line x1="200" y1="138" x2="200" y2="152" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,156)"><rect x="0" y="0" width="360" height="118" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="1.8"/><text x="20" y="30" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">外科:先接靜脈 → 再接動脈</text><text x="20" y="52" font-family="sans-serif" font-size="15" font-weight="600" fill="#8F2B20">→ 放開血管夾 reperfusion</text><text x="20" y="76" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">聽到 5-0 prolene = 快接好,先把藥抽好</text><text x="20" y="95" font-family="sans-serif" font-size="13" fill="#6E5F5A">接血管時床會左右轉:顧好導管與頭位</text><text x="20" y="111" font-family="sans-serif" font-size="13" fill="#6E5F5A">放開前把血壓拉到醫囑目標並回報</text></g><line x1="200" y1="274" x2="200" y2="288" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,292)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">2</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Solu-Medrol</text><text x="20" y="60" font-family="sans-serif" font-size="13" fill="#726B62">類固醇,免疫抑制起始</text></g><line x1="200" y1="362" x2="200" y2="376" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,380)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">3</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Jusomin</text><text x="20" y="60" font-family="sans-serif" font-size="13" fill="#726B62">矯正酸血症;把鉀離子往細胞內趕</text></g><line x1="200" y1="450" x2="200" y2="464" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,468)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">4</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Lasix</text><text x="20" y="60" font-family="sans-serif" font-size="13" fill="#726B62">促進利尿;給藥後觀察尿液流速與尿量</text></g><line x1="200" y1="538" x2="200" y2="552" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,556)"><rect x="0" y="0" width="360" height="70" rx="11" fill="#FBF8F3" stroke="#E0D9CD" stroke-width="1.4"/><circle cx="34" cy="30" r="15" fill="#B8968C"/><text x="34" y="35" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="600" fill="#FBF8F1">5</text><text x="60" y="36" font-family="sans-serif" font-size="16" font-weight="600" fill="#423E39">Vitacal</text><text x="20" y="60" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">給完藥後要 alarm 外科醫師</text></g><line x1="200" y1="626" x2="200" y2="640" stroke="#9B948A" stroke-width="2.4" marker-end="url(#kt-ah)"/><g transform="translate(20,644)"><rect x="0" y="0" width="360" height="98" rx="11" fill="#EFF2EC" stroke="#8B9A8B" stroke-width="1.6"/><text x="20" y="30" font-family="sans-serif" font-size="16" font-weight="600" fill="#4C5A4C">輸尿管接到膀胱</text><text x="20" y="54" font-family="sans-serif" font-size="13" fill="#5E6B5E">外科說可以,才放開尿管上的 clamp</text><text x="20" y="73" font-family="sans-serif" font-size="13" font-weight="600" fill="#8F2B20">先流出的是膀胱沖洗液,不算尿量</text><text x="20" y="90" font-family="sans-serif" font-size="13" fill="#5E6B5E">扣掉沖洗量之後,才開始算 U/O</text></g><g transform="translate(20,756)"><rect x="0" y="0" width="360" height="72" rx="11" fill="#F1E2DD" stroke="#C0392B" stroke-width="2"/><text x="180" y="30" text-anchor="middle" font-family="sans-serif" font-size="15.5" font-weight="700" fill="#8F2B20">給藥種類及劑量依病況及外科 VS 決定</text><text x="180" y="56" text-anchor="middle" font-family="sans-serif" font-size="15.5" font-weight="700" fill="#8F2B20">非一定;確認後再抽取藥物</text></g></svg>` },
     refs:[
       "Kim, H., & Jung, H. (2024). Considerations regarding anesthesia for renal transplantation. Anesthesia and Pain Medicine, 19(1), 5–11.",
       "Lugo-Baruqui, J. A., Ayyathurai, R., Sriram, A., & Pragatheeshwar, K. D. (2019). Use of mannitol for ischemia reperfusion injury in kidney transplant and partial nephrectomies: Review of literature. Current Urology Reports, 20(1), 6.",
