@@ -28,7 +28,7 @@
 }
 @keyframes hup{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 24px 12px;font-size:16px}
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 24px 12px;font-size:17px}
 /* NAV */
 .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .nav h2{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:400;color:var(--ink);letter-spacing:-0.3px}
@@ -37,11 +37,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .today-btn{display:none;margin:0 auto 10px;padding:6px 18px;background:transparent;color:var(--ink2);border:1px solid var(--border2);border-radius:99px;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
 .today-btn:active{background:var(--surface2)}
 /* GRID */
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:0;background:var(--bg)}
-.dh{text-align:center;font-size:11px;color:var(--ink3);padding:4px 0 6px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase}
-.cell{position:relative;background:var(--surface);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0;min-height:116px;display:flex;flex-direction:column;overflow:visible;cursor:pointer;transition:background 0.1s}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;background:var(--bg);width:100%}
+.dh{min-width:0;text-align:center;font-size:13px;color:var(--ink3);padding:5px 0 7px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.cell{position:relative;min-width:0;width:100%;background:var(--surface);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0;min-height:142px;display:flex;flex-direction:column;overflow:visible;cursor:pointer;transition:background 0.1s}
 .cell:nth-child(7n){border-right:none}
-.cell.empty{background:var(--bg);border-color:transparent;cursor:default;min-height:116px}
+.cell.empty{background:var(--bg);border-color:transparent;cursor:default;min-height:142px}
 /* badge 防裁切 */
 .grid#grid{overflow:visible;margin-top:8px}
 .cell.today{background:#fdfaf7}
@@ -82,18 +82,21 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-left{border-left:2px solid var(--zc)!important}
 .cell.z-right{border-right:2px solid var(--zc)!important}
 /* BADGE */
-.badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
-.top{background:transparent;flex:0 0 auto;min-height:29px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:3px}
-.hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
-.memo-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--ink2);font-weight:600;line-height:1;letter-spacing:0}
-.dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.badge{position:absolute;top:-8px;left:-8px;width:23px;height:23px;background:var(--accent);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
+.top{background:transparent;flex:0 0 auto;min-height:36px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
+.hol-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--red);font-weight:700;line-height:1;letter-spacing:0}
+.memo-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--ink2);font-weight:700;line-height:1;letter-spacing:0}
+.dn{font-size:25px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
-.bot{flex:0 0 auto;min-height:27px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:500;padding:2px 1px 3px;letter-spacing:0.1px}
+.bot{flex:0 0 auto;min-width:0;display:flex;flex-direction:column;align-items:stretch;font-size:14px;font-weight:600;padding:0;letter-spacing:0.1px}
+.shift-main{min-width:0;min-height:34px;padding:7px 2px 6px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hours-tags,.swap-tags{min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-top:1px solid rgba(70,60,50,.18)}
+.hours-tags:empty,.swap-tags:empty{display:none}
 /* 月曆行程：直接顯示在每天格子內 */
-.cell-plans{flex:1 1 auto;min-height:43px;padding:4px 3px 3px;display:flex;flex-direction:column;gap:3px;overflow:hidden;background:rgba(255,255,255,0.72)}
-.cell-plan{font-size:9px;line-height:1.25;color:var(--event-ink,#5f5143);background:var(--event-bg,#f0ece4);border-left:3px solid var(--event,#8a6a30);border-radius:2px;padding:2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:500}
+.cell-plans{flex:1 1 auto;min-width:0;width:100%;min-height:48px;padding:5px 3px 4px;display:flex;flex-direction:column;gap:4px;overflow:hidden;background:rgba(255,255,255,0.72)}
+.cell-plan{display:block;min-width:0;width:100%;max-width:100%;font-size:11px;line-height:1.3;color:var(--event-ink,#5f5143);background:var(--event-bg,#f0ece4);border-left:3px solid var(--event,#8a6a30);border-radius:3px;padding:3px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:600}
 .cell-plan.done{opacity:.45;text-decoration:line-through}
-.cell-plan-more{font-size:8px;line-height:1.1;color:var(--ink3);padding-left:4px}
+.cell-plan-more{font-size:10px;line-height:1.2;color:var(--ink3);padding-left:4px;font-weight:600}
 .cell-plan-empty{flex:1}
 /* SHIFT COLOURS */
 .sD{background:#ede9e2;color:#3a3228}
@@ -151,7 +154,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-card.jiji{background:#f0f7f2;border-color:#c8ddd0}
 .hs-card.nian{background:#f2f0f8;border-color:#ccc8dc}
 .hs-card.yan{background:#fdf6e8;border-color:#e0cc90}
-.hs-card-label{font-size:10px;font-weight:600;letter-spacing:.6px;margin-bottom:3px;text-transform:uppercase}
+.hs-card-label{font-size:14px;font-weight:700;letter-spacing:.8px;margin-bottom:4px;text-transform:uppercase}
 .hs-card.jiji .hs-card-label{color:#4a7a5a}
 .hs-card.nian .hs-card-label{color:#6a5a90}
 .hs-card.yan  .hs-card-label{color:#8a6800}
@@ -190,7 +193,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 .zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 /* hbadge */
-.hbadge{display:block;font-size:8px;font-weight:600;padding:1px 3px;border-radius:3px;line-height:1.35;text-align:center;margin-top:1px;letter-spacing:0}
+.hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:2px 4px;border-radius:4px;line-height:1.35;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bot.overtime{color:#8b2020!important;font-weight:600}
 .hb-j-p{background:#d8edd8;color:#1a4a2a}
 .hb-j-m{background:#f0ddd8;color:#7a2018}
@@ -1297,24 +1300,29 @@ function render(){
     const isHolD=holD;
     const he=hD[key];
     const isDayMod=!!dS[key];
-    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){bot.style.color='#a83232';bot.style.fontWeight='700';}
+    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);
+    const shiftMain=document.createElement('div');shiftMain.className='shift-main';shiftMain.textContent=s;
+    const hoursTags=document.createElement('div');hoursTags.className='hours-tags';
+    const swapTags=document.createElement('div');swapTags.className='swap-tags';
+    if(isDayMod){shiftMain.style.color='#a83232';shiftMain.style.fontWeight='700';}
+    bot.appendChild(shiftMain);bot.appendChild(hoursTags);bot.appendChild(swapTags);
     if(he){
-      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};bot.appendChild(b);}
-      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};bot.appendChild(b);}
-      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};bot.appendChild(b);}
-      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';bot.appendChild(b);}
-      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};bot.appendChild(b);}
-      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};bot.appendChild(b);}
-      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};bot.appendChild(b);}
-      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};bot.appendChild(b);}
-      if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';bot.appendChild(b);}
+      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};hoursTags.appendChild(b);}
+      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};hoursTags.appendChild(b);}
+      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};hoursTags.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';hoursTags.appendChild(b);}
+      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};hoursTags.appendChild(b);}
+      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};hoursTags.appendChild(b);}
+      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};hoursTags.appendChild(b);}
+      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};hoursTags.appendChild(b);}
+      if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';hoursTags.appendChild(b);}
     }
     if(wS[mk]){
       const wv=wS[mk],lg=(typeof wv==='object'&&wv.log&&wv.log.length)?wv.log[wv.log.length-1]:null;
       const b=document.createElement('span');b.className='hbadge hb-swap';
-      b.textContent='⇄'+((lg&&lg.who)?lg.who.slice(0,3):'換班');bot.appendChild(b);
+      b.textContent='⇄'+((lg&&lg.who)?lg.who.slice(0,3):'換班');swapTags.appendChild(b);
     }
-    if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';bot.appendChild(b);}
+    if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';swapTags.appendChild(b);}
     const planArea=document.createElement('div');planArea.className='cell-plans';
     const dayPlans=pS[key]?(Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key])):[];
     if(dayPlans.length){
