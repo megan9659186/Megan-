@@ -53,7 +53,10 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 /* 換班預告條 */
 .swap-bar{display:none;margin-top:10px;background:var(--surface);border:1px solid #e0d2b4;border-radius:var(--radius);overflow:hidden}
 .swap-bar.show{display:block}
-.swap-bar-head{padding:9px 14px 7px;font-size:12px;font-weight:600;color:#8a6a30;letter-spacing:0.5px;border-bottom:1px solid #f0e6d2;display:flex;justify-content:space-between;align-items:center}
+.swap-bar-head{padding:11px 14px;font-size:12px;font-weight:600;color:#8a6a30;letter-spacing:0.5px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.swap-bar-head.open{border-bottom:1px solid #f0e6d2}
+.swap-bar-head:active{background:#fdf8ef}
+.swap-bar-toggle{font-size:12px;color:var(--ink3);font-weight:400;letter-spacing:0}
 .swap-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer}
 .swap-item:last-child{border-bottom:none}
 .swap-item:active{background:#fdf8ef}
@@ -65,6 +68,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .swap-x{flex-shrink:0;width:34px;height:34px;-webkit-tap-highlight-color:transparent;border:1px solid var(--border2);border-radius:50%;background:var(--surface);color:var(--ink3);font-size:14px;line-height:1;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;padding:0}
 .swap-x:active{background:var(--red-soft);color:var(--red);border-color:#e0c0b8}
 .swap-item.confirming{background:var(--red-soft)}
+.swap-empty{padding:16px 14px;text-align:center;font-size:13px;color:var(--ink3)}
 .swap-ask{flex:1;font-size:13px;color:var(--red);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .swap-yes{flex-shrink:0;padding:8px 14px;border:none;border-radius:var(--radius-sm);background:var(--red);color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
 .swap-no{flex-shrink:0;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -1435,7 +1439,14 @@ function jumpToWeek(mk){
   render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();
   try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
 }
-let swapConfirmKey=null;
+let swapConfirmKey=null,swapBarOpen=false;
+try{swapBarOpen=localStorage.getItem('megan_swapbar_open')==='1';}catch(e){}
+function toggleSwapBar(){
+  swapBarOpen=!swapBarOpen;
+  if(!swapBarOpen)swapConfirmKey=null;
+  try{localStorage.setItem('megan_swapbar_open',swapBarOpen?'1':'0');}catch(e){}
+  renderSwapBar();
+}
 function askCancelWeekSwap(mk,ev){
   if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
   swapConfirmKey=mk;renderSwapBar();
@@ -1454,9 +1465,12 @@ function renderSwapBar(){
   const bar=document.getElementById('swapBar');if(!bar)return;
   const n=new Date(),curMon=ad(n,-((n.getDay()+6)%7));
   const keys=Object.keys(wS).filter(mk=>kd(mk)>=curMon).sort();
-  if(!keys.length){bar.className='swap-bar';bar.innerHTML='';swapConfirmKey=null;return;}
+  if(!keys.length)swapConfirmKey=null;
   if(swapConfirmKey&&keys.indexOf(swapConfirmKey)<0)swapConfirmKey=null;
-  let h='<div class="swap-bar-head"><span>\u21c4 \u5df2\u7d04\u597d\u7684\u63db\u73ed\u9031</span><span style="color:var(--ink3);font-weight:400">'+keys.length+' \u9031</span></div>';
+  let h='<div class="swap-bar-head'+(swapBarOpen?' open':'')+'" onclick="toggleSwapBar()">'
+    +'<span>\u21c4 \u5df2\u7d04\u597d\u7684\u63db\u73ed\u9031\uff08'+keys.length+' \u9031\uff09</span>'
+    +'<span class="swap-bar-toggle">'+(swapBarOpen?'\u6536\u5408 \ufe3f':'\u5c55\u958b \ufe40')+'</span></div>';
+  if(!swapBarOpen){bar.className='swap-bar show';bar.innerHTML=h;return;}
   keys.slice(0,8).forEach(mk=>{
     const d=kd(mk),wv=wS[mk];
     const fin=(typeof wv==='object')?wv.final:wv;
@@ -1477,6 +1491,7 @@ function renderSwapBar(){
         +'<button type="button" class="swap-x" onclick="askCancelWeekSwap(\''+mk+'\',event)">\u2715</button></div>';
     }
   });
+  if(!keys.length)h+='<div class="swap-empty">\u5c1a\u672a\u767b\u8a18\u672a\u4f86\u7684\u63db\u73ed</div>';
   bar.className='swap-bar show';bar.innerHTML=h;
 }
 function delRec(type,key,logIdx){
