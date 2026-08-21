@@ -46,7 +46,6 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .grid#grid{overflow:visible;margin-top:8px}
 .cell.today{background:#fdfaf7}
 .cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
-.cell.swapped{background:#fbf4e8}
 .cell.swapped .badge{background:#d4b896;color:#6a4828}
 .hb-swap{background:#e8dcc0;color:#6a4828}
 .who-row{display:flex;gap:6px;align-items:center;margin-top:6px}
@@ -63,6 +62,12 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .swap-flow{flex:1;font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .swap-who{font-size:12px;font-weight:600;color:#6a4828;background:#f3e8d2;padding:3px 9px;border-radius:99px;white-space:nowrap;max-width:96px;overflow:hidden;text-overflow:ellipsis}
 .swap-who.none{background:var(--surface2);color:var(--ink3);font-weight:400}
+.swap-x{flex-shrink:0;width:34px;height:34px;-webkit-tap-highlight-color:transparent;border:1px solid var(--border2);border-radius:50%;background:var(--surface);color:var(--ink3);font-size:14px;line-height:1;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;padding:0}
+.swap-x:active{background:var(--red-soft);color:var(--red);border-color:#e0c0b8}
+.swap-item.confirming{background:var(--red-soft)}
+.swap-ask{flex:1;font-size:13px;color:var(--red);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swap-yes{flex-shrink:0;padding:8px 14px;border:none;border-radius:var(--radius-sm);background:var(--red);color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.swap-no{flex-shrink:0;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
 .cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
 .plan-pin{position:absolute;top:1px;right:2px;font-size:10px;line-height:1;z-index:6;pointer-events:none}
 .cell.selected{background:#f5f0eb!important}
@@ -1422,7 +1427,6 @@ function updateWhoDelBtn(){
 function delSwapName(){
   const sel=document.getElementById('weekWho'),v=sel.value;
   if(!v||v==='__new')return;
-  if(!confirm('從名字清單移除「'+v+'」？\n（已儲存的換班紀錄不受影響）'))return;
   swapNames=swapNames.filter(n=>n!==v);saveSwapNames();renderWhoSel('');
 }
 function esc(t){return String(t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -1431,22 +1435,47 @@ function jumpToWeek(mk){
   render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();
   try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
 }
+let swapConfirmKey=null;
+function askCancelWeekSwap(mk,ev){
+  if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+  swapConfirmKey=mk;renderSwapBar();
+}
+function abortCancelWeekSwap(ev){
+  if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+  swapConfirmKey=null;renderSwapBar();
+}
+function doCancelWeekSwap(mk,ev){
+  if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+  delete wS[mk];delete nS[mk];
+  swapConfirmKey=null;
+  save();render();renderRecList();refreshAllow();renderSwapBar();
+}
 function renderSwapBar(){
   const bar=document.getElementById('swapBar');if(!bar)return;
   const n=new Date(),curMon=ad(n,-((n.getDay()+6)%7));
   const keys=Object.keys(wS).filter(mk=>kd(mk)>=curMon).sort();
-  if(!keys.length){bar.className='swap-bar';bar.innerHTML='';return;}
-  let h='<div class="swap-bar-head"><span>⇄ 已約好的換班週</span><span style="color:var(--ink3);font-weight:400">'+keys.length+' 週</span></div>';
+  if(!keys.length){bar.className='swap-bar';bar.innerHTML='';swapConfirmKey=null;return;}
+  if(swapConfirmKey&&keys.indexOf(swapConfirmKey)<0)swapConfirmKey=null;
+  let h='<div class="swap-bar-head"><span>\u21c4 \u5df2\u7d04\u597d\u7684\u63db\u73ed\u9031</span><span style="color:var(--ink3);font-weight:400">'+keys.length+' \u9031</span></div>';
   keys.slice(0,8).forEach(mk=>{
     const d=kd(mk),wv=wS[mk];
     const fin=(typeof wv==='object')?wv.final:wv;
     const lg=(typeof wv==='object'&&wv.log&&wv.log.length)?wv.log[wv.log.length-1]:null;
     const who=(lg&&lg.who)?lg.who:'';
     const isThis=(dk(d)===dk(curMon));
-    h+='<div class="swap-item" onclick="jumpToWeek(\''+mk+'\')">'
-      +'<span class="swap-when">'+(d.getMonth()+1)+'/'+d.getDate()+(isThis?' 本週':' 那週')+'</span>'
-      +'<span class="swap-flow">'+numLabel(nf(ME.w1,wo(d)))+' → '+numLabel(fin)+'</span>'
-      +'<span class="swap-who'+(who?'':' none')+'">'+(who?'⇄ '+esc(who):'未填對象')+'</span></div>';
+    const when=(d.getMonth()+1)+'/'+d.getDate()+(isThis?' \u672c\u9031':' \u90a3\u9031');
+    if(swapConfirmKey===mk){
+      h+='<div class="swap-item confirming">'
+        +'<span class="swap-ask">\u53d6\u6d88\u63db\u73ed\uff0c\u6539\u56de '+numLabel(nf(ME.w1,wo(d)))+'\uff1f</span>'
+        +'<button type="button" class="swap-yes" onclick="doCancelWeekSwap(\''+mk+'\',event)">\u78ba\u5b9a</button>'
+        +'<button type="button" class="swap-no" onclick="abortCancelWeekSwap(event)">\u8fd4\u56de</button></div>';
+    }else{
+      h+='<div class="swap-item" onclick="jumpToWeek(\''+mk+'\')">'
+        +'<span class="swap-when">'+when+'</span>'
+        +'<span class="swap-flow">'+numLabel(nf(ME.w1,wo(d)))+' \u2192 '+numLabel(fin)+'</span>'
+        +'<span class="swap-who'+(who?'':' none')+'">'+(who?'\u21c4 '+esc(who):'\u672a\u586b\u5c0d\u8c61')+'</span>'
+        +'<button type="button" class="swap-x" onclick="askCancelWeekSwap(\''+mk+'\',event)">\u2715</button></div>';
+    }
   });
   bar.className='swap-bar show';bar.innerHTML=h;
 }
