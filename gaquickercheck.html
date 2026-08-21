@@ -370,7 +370,24 @@ button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
 .tool-sub{font-size:13.5px;line-height:1.7;color:var(--ink-soft);margin-top:4px}
 .tool-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
 .tool-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin-bottom:11px}
+.tool-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:700;color:var(--ink-soft)}
+.tool-det>summary::-webkit-details-marker{display:none}
+.tool-det>summary::after{content:'▾';margin-left:auto;font-size:12px;opacity:.65;transition:transform .18s}
+.tool-det[open]>summary{margin-bottom:11px}
+.tool-det[open]>summary::after{transform:rotate(180deg)}
+.dw-tbl .pill{font-size:14px;padding:3px 10px;border-radius:6px}
+.tool-det.sm{margin-top:10px}
+.tool-det.sm>summary{font-size:13px;font-weight:600}
+.tool-det.sm>summary::after{font-size:11px}
+.tool-det.sm[open]>summary{margin-bottom:6px}
+.tool-det.sm .calc-note{margin-top:0}
 .calc-form{display:flex;flex-wrap:wrap;gap:11px}
+.calc-seg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 2px}
+.calc-seg button{font:inherit;font-size:14.5px;font-weight:600;color:var(--ink-soft);background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;padding:8px 18px;cursor:pointer}
+.calc-seg button[aria-pressed="true"]{background:var(--sage-tint);border-color:#BFCBBD;color:var(--ink)}
+.calc-seg .seg-hint{font-size:12px;color:var(--ink-soft)}
 .calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 120px;min-width:110px}
 .calc-f label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
 .calc-f input,.calc-f select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);
@@ -3529,10 +3546,45 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v9.1";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-08-20";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v9.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-08-21";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-08-21",
+    note: "麻醉計算機的說明改成點開才看。",
+    items: [
+      "麻醉計算機:TIVA 模型選擇的使用情境兩張表改成收合,需要時再點開",
+      "麻醉計算機:4-2-1 法則與預估失血量下方的小字說明改成收合",
+      "麻醉計算機:「失血預估」改名為「預估失血量」"
+    ]
+  },
+  {
+    date: "2026-08-21",
+    note: "麻醉計算機版面精簡。",
+    items: [
+      "麻醉計算機:「各名詞在算什麼」改成預設收起來,需要時再點開",
+      "麻醉計算機:常用藥物該用哪個體重刪除 thiopental、sufentanil、vecuronium、局部麻醉劑最大安全劑量、預防性抗生素、低分子量肝素與潮氣容積設定",
+      "麻醉計算機:表格中依據體重的英文標示放大,比較好認"
+    ]
+  },
+  {
+    date: "2026-08-21",
+    note: "TIVA 模型選擇可以自己切換 Marsh 與 Schnider。",
+    items: [
+      "麻醉計算機:TIVA 模型選擇新增 Marsh 與 Schnider 切換鈕,機器沒有 Schnider 時可直接改看 Marsh",
+      "麻醉計算機:切到 Marsh 會直接顯示該輸入的公斤數,體重過重時自動改成校正體重並提示不要用實際體重"
+    ]
+  },
+  {
+    date: "2026-08-21",
+    note: "麻醉計算機新增 TIVA 模型選擇。",
+    items: [
+      "麻醉計算機:新增「TIVA 模型選擇」,輸入年齡身高體重後直接顯示該用 Marsh 還是 Schnider、走血漿還是效應室靶控、幫浦要輸入哪一個體重",
+      "麻醉計算機:附年長、肥胖、體重過重到公式失真與未滿 16 歲的情境對照表,以及常用目標濃度參考",
+      "麻醉計算機:基本資料新增年齡欄位"
+    ]
+  },
   {
     date: "2026-08-20",
     note: "肝臟移植再精簡,只留臨床上用得到的部分。",
@@ -7152,7 +7204,7 @@ function reviewProgressHtml(){
    IBW(Devine)、PBW(ARDSNet)、AdjBW、LBW(Janmahasatian)、
    BMI、BSA(Mosteller);另附各類藥物該用哪個體重的對照表。
    ============================================================ */
-const CALC_STATE = { sex:"M", ht:170, wt:70 };
+const CALC_STATE = { sex:"M", age:45, ht:170, wt:70 };
 const FLUID_STATE = { wt:70, npo:8 };
 const EBV_STATE = { wt:70, grp:"75", hb0:13, hbT:8 };
 
@@ -7207,31 +7259,126 @@ function bmiBand(b){
   return "重度肥胖";
 }
 
+/* ------------------------------------------------------------
+   TIVA propofol TCI 模型選擇
+   Marsh 只吃體重;Schnider 吃年齡、身高、體重與性別(內建 James 淨體重公式)。
+   James 公式在 BMI 過高時會反轉(男約 42、女約 35),此時算出的淨體重不減反增,
+   幫浦速率被推高,有過量風險。
+   ------------------------------------------------------------ */
+const TIVA_CAP = { M:42, F:35 };
+const TIVA_STATE = { model:null };   /* null = 跟著建議走;"marsh" / "schnider" = 使用者自選 */
+
+function tivaPick(sex, age, ht, wt){
+  const r = calcAll(sex, ht, wt);
+  if(!r || !(age>0) || !isFinite(age)) return null;
+  const bmi = r.bmi;
+  const james = sex==="F"
+    ? 1.07*wt - 148*Math.pow(wt/ht, 2)
+    : 1.10*wt - 128*Math.pow(wt/ht, 2);
+  const cap = sex==="F" ? TIVA_CAP.F : TIVA_CAP.M;
+  const o = {
+    bmi, james, cap,
+    inverted: bmi >= cap,
+    adj: Math.round(r.adj),
+    tbw: Math.round(wt),
+    obese: bmi >= 30,
+    old: age >= 65,
+    child: age < 16
+  };
+  o.rec = o.child ? "none" : (o.inverted ? "marsh" : ((o.obese || o.old) ? "schnider" : "both"));
+  return o;
+}
+
+/* 目前要顯示哪個模型:使用者自選優先,否則跟著建議 */
+function tivaModelOf(o){
+  if(TIVA_STATE.model) return TIVA_STATE.model;
+  return (o && o.rec === "marsh") ? "marsh" : "schnider";
+}
+
+/* 產生四格內容 [標題, 數值, 說明] 與注意事項 */
+function tivaView(o, model){
+  const marsh = model === "marsh";
+  const name = marsh ? "Marsh" : "Schnider";
+  if(!o) return {
+    rows: [["模型", name, "請先輸入年齡、身高與體重"],
+           ["靶控模式", "—", "—"],
+           ["幫浦輸入體重", "—", "—"],
+           [marsh ? "校正體重 AdjBW" : "LBM(Schnider 內建)", "—", "—"]],
+    warn: ""
+  };
+  const na = o.rec === "none";
+  let fit, warn = "";
+  if(na){
+    fit = "未滿 16 歲,兩個模型都不適用";
+    warn = "改用小兒 TCI 模型(Paedfusor、Kataria),或改人工輸注並全程監測麻醉深度";
+  } else if(o.rec === "both"){
+    fit = "本例兩者皆可,依機器預設";
+  } else if(o.rec === "marsh"){
+    fit = marsh ? "本例建議選這個" : "本例不建議用 Schnider";
+    if(!marsh) warn = "BMI 已超過 " + o.cap + ",Schnider 的淨體重公式會反轉、輸注速率反而被推高;請改 Marsh 加校正體重,機器有 Eleveld 則優先用 Eleveld";
+  } else {
+    fit = marsh ? "本例建議 Schnider;機器沒有時才用 Marsh" : "本例建議選這個";
+  }
+  const wtV = na ? "—" : ((marsh && o.obese) ? o.adj + " kg" : o.tbw + " kg");
+  const wtH = na ? "—"
+    : (marsh
+        ? (o.obese
+            ? "校正體重 AdjBW;直接輸實際體重 " + o.tbw + " kg 會過量"
+            : "實際體重,磅秤上的數字")
+        : "實際體重,機器自己用身高年齡換算淨體重");
+  const rows = [
+    ["模型", name, fit],
+    ["靶控模式", marsh ? "Cp 血漿" : "Ce 效應室",
+      marsh ? "原始 Marsh 走血漿靶控;機器若為 modified Marsh 才走 Ce"
+            : "中央室小,走血漿靶控誘導會偏慢"],
+    ["幫浦輸入體重", wtV, wtH],
+    marsh
+      ? ["校正體重 AdjBW", na ? "—" : o.adj + " kg",
+         "IBW + 0.4 ×(實際 − IBW);BMI 到 30 以上就輸這個"]
+      : ["LBM(Schnider 內建)", na ? "—" : o.james.toFixed(1) + " kg",
+         o.inverted ? "已過反轉點(BMI " + o.cap + "),數值不可信"
+                    : "James 公式;BMI 到 " + o.cap + " 就會反轉"]
+  ];
+  if(!warn && !na){
+    if(marsh && o.obese)      warn = "Marsh 只吃體重,肥胖者一定要改輸校正體重 " + o.adj + " kg,不要用實際體重";
+    else if(marsh && o.old)   warn = "Marsh 沒有年齡項,老年人同樣目標濃度會偏深,先降 20–40% 再慢慢加";
+    else if(o.old)            warn = "老年人目標濃度先降 20–40%,誘導慢一點,注意低血壓";
+    else if(o.obese)          warn = "肥胖者誘導後容易低血壓與呼吸道問題,目標濃度慢慢往上加";
+  }
+  return { rows, warn };
+}
+
+function tivaWarnHtml(v){
+  const base = "模型只是起點,仍要依血壓、心跳與麻醉深度(BIS 或類似指標)滴定;TIVA 全程確認靜脈通路暢通、沒有外滲。";
+  if(!v) return base;
+  return (v.warn ? "<b class='w'>注意</b>:" + v.warn + "。" : "") + base;
+}
+
 const DOSE_WEIGHT = [
   { d:"Propofol(誘導)",            w:"LBW",  cls:"s", n:"用實際體重會過量,容易低血壓" },
   { d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  n:"清除率隨體重上升;仍需依反應滴定" },
-  { d:"Thiopental(誘導)",          w:"LBW",  cls:"s", n:"維持追加改用實際體重" },
-  { d:"Fentanyl / Sufentanil",       w:"LBW",  cls:"s", n:"依實際體重給會明顯過量" },
+  { d:"Fentanyl",                    w:"LBW",  cls:"s", n:"依實際體重給會明顯過量" },
   { d:"Remifentanil",                w:"LBW",  cls:"s", n:"TCI 亦以 LBW 或 IBW 設定" },
   { d:"Morphine",                    w:"IBW",  cls:"b", n:"肥胖者呼吸抑制風險高,小量滴定" },
-  { d:"Rocuronium / Vecuronium",     w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長" },
-  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同上" },
+  { d:"Rocuronium",                  w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長" },
+  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同 rocuronium,用實際體重會延長作用時間" },
   { d:"Succinylcholine",             w:"TBW",  cls:"",  n:"血漿膽鹼酯酶活性隨體重增加" },
   { d:"Sugammadex",                  w:"TBW",  cls:"",  n:"依仿單以實際體重計算" },
   { d:"Neostigmine",                 w:"TBW",  cls:"",  n:"有單次最大劑量上限" },
   { d:"Dexmedetomidine",             w:"AdjBW",cls:"",  n:"" },
   { d:"Midazolam(單次)",           w:"TBW",  cls:"",  n:"重複給藥改用 IBW,脂溶性高易蓄積" },
-  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限" },
-  { d:"局部麻醉劑最大安全劑量",       w:"LBW",  cls:"s", n:"以實際體重換算會超過安全上限" },
-  { d:"預防性抗生素",                 w:"TBW",  cls:"",  n:"體重大者需提高劑量" },
-  { d:"低分子量肝素(預防劑量)",     w:"TBW",  cls:"",  n:"依各藥品分級建議" },
-  { d:"潮氣容積設定",                 w:"PBW",  cls:"b", n:"6–8 mL/kg PBW,與實際體重無關" }
+  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限" }
 ];
 
 function calcHtml(){
   const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
   const f = (x,n=1) => x==null ? "—" : x.toFixed(n);
   const newTag = isNewItem({ updated:"2026-08-04" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  const tv = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
+  const tvM = tivaModelOf(tv);
+  const tvV = tivaView(tv, tvM);
+  const tvNew = isNewItem({ updated:"2026-08-21" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   const fr = fluidCalc(FLUID_STATE.wt, FLUID_STATE.npo);
   const ebvPerKg = parseFloat(EBV_STATE.grp);
@@ -7240,7 +7387,7 @@ function calcHtml(){
   <div class="tool-wrap">
     <div>
       <div class="tool-head">麻醉計算機</div>
-      <div class="tool-sub">體重過重的病人,不同藥物要用不同的體重去算。輸入身高體重後對照下方表格取用;另附 4-2-1 維持輸液與失血預估。結果僅供輔助,實際劑量與輸液仍需依病人狀況與臨床反應調整。</div>
+      <div class="tool-sub">體重過重的病人,不同藥物要用不同的體重去算。輸入年齡身高體重後對照下方表格取用;另附 TIVA 模型選擇、4-2-1 維持輸液與預估失血量。結果僅供輔助,實際劑量與輸液仍需依病人狀況與臨床反應調整。</div>
     </div>
 
     <div class="tool-box">
@@ -7252,6 +7399,10 @@ function calcHtml(){
             <option value="M"${CALC_STATE.sex==="M"?" selected":""}>男</option>
             <option value="F"${CALC_STATE.sex==="F"?" selected":""}>女</option>
           </select>
+        </div>
+        <div class="calc-f">
+          <label for="cAge">年齡(歲)</label>
+          <input id="cAge" type="number" inputmode="numeric" min="0" max="120" step="1" value="${CALC_STATE.age}">
         </div>
         <div class="calc-f">
           <label for="cHt">身高(cm)</label>
@@ -7299,6 +7450,47 @@ function calcHtml(){
     </div>
 
     <div class="tool-box">
+      <h3 class="th-new">TIVA 模型選擇(propofol TCI)${tvNew}</h3>
+      <div class="calc-seg" id="tSeg">
+        <button type="button" data-m="marsh" aria-pressed="${tvM==="marsh"}">Marsh</button>
+        <button type="button" data-m="schnider" aria-pressed="${tvM==="schnider"}">Schnider</button>
+        <span class="seg-hint">已依上方年齡體重預選,可自行切換</span>
+      </div>
+      <div class="calc-out" id="tOut">
+        ${tvV.rows.map((x,i)=>`
+        <div class="calc-cell${i===0?" hi":""}">
+          <div class="k">${x[0]}</div>
+          <div class="v">${x[1]}</div>
+          <div class="h">${x[2]}</div>
+        </div>`).join("")}
+      </div>
+      <div class="calc-note" id="tWarn">${tivaWarnHtml(tvV)}</div>
+
+      <details class="tool-det">
+        <summary>使用情境</summary>
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>模型</th><th>機器用到的資料</th><th>靶控</th><th>什麼時候選它</th></tr>
+          <tr><td><b>Marsh</b></td><td>只有體重</td><td>Cp 血漿</td><td>一般成人;機器只有這個模型時</td></tr>
+          <tr><td><b>Schnider</b></td><td>年齡、身高、體重、性別</td><td>Ce 效應室</td><td>年長、肥胖,或想走效應室靶控時</td></tr>
+        </table>
+      </div>
+
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>情境</th><th>選誰</th><th>為什麼</th></tr>
+          <tr><td>一般成人,BMI 未達 30</td><td>兩者皆可</td><td>差異不大,依機器預設;兩個模型都輸實際體重</td></tr>
+          <tr><td>65 歲以上</td><td><b>Schnider</b></td><td>Marsh 沒有年齡項,同樣目標濃度會偏深</td></tr>
+          <tr><td>BMI 30 以上、未到反轉點</td><td><b>Schnider</b></td><td>有淨體重校正;機器沒有 Schnider 時改用 Marsh,並輸校正體重</td></tr>
+          <tr><td>男 BMI ≥ 42、女 ≥ 35</td><td><b>Marsh + 校正體重</b></td><td>Schnider 的淨體重公式在此反轉,速率反而被推高;有 Eleveld 就選 Eleveld</td></tr>
+          <tr><td>未滿 16 歲</td><td>都不適用</td><td>改用小兒模型(Paedfusor、Kataria)</td></tr>
+        </table>
+      </div>
+      <div class="calc-note">常用目標濃度僅供起步參考:意識消失多落在 <b>Ce 2.5–3.5 µg/mL</b>;維持併用 remifentanil 約 <b>2.5–3.5</b>、單用 propofol 約 <b>3–6</b>;降到 <b>1.0–1.8</b> 附近多會甦醒。老年、低血容與心功能差者全部往下修。Remifentanil 的 Minto 模型同樣需要年齡與身高體重,體重以 LBW 設定。實際可用的模型與名稱以本院幫浦機型為準。</div>
+      </details>
+    </div>
+
+    <div class="tool-box">
       <h3 class="th-new">4-2-1 法則(維持輸液)${newTag}</h3>
       <div class="calc-form">
         <div class="calc-f">
@@ -7332,11 +7524,14 @@ function calcHtml(){
           <div class="h">缺失量的四分之一 + 維持量</div>
         </div>
       </div>
+      <details class="tool-det sm">
+        <summary>說明</summary>
       <div class="calc-note">維持量算法:前 10 kg 每公斤 4 mL/hr、第 11–20 kg 每公斤 2 mL/hr、超過 20 kg 每公斤 1 mL/hr。禁食缺失量的分次補法為傳統作法;現行禁食規範已放寬(清流質術前 2 小時、輕食 6 小時),多數病人實際缺失有限,<b>請依血壓、心跳、尿量與失血量調整,不必機械式補足</b>。失血與第三間隙流失另外計算。</div>
+      </details>
     </div>
 
     <div class="tool-box">
-      <h3 class="th-new">失血預估(EBV 與可容許失血量)${newTag}</h3>
+      <h3 class="th-new">預估失血量${newTag}</h3>
       <div class="calc-form">
         <div class="calc-f">
           <label for="bWt">體重(kg)</label>
@@ -7379,11 +7574,15 @@ function calcHtml(){
           <div class="h">血壓開始下降,積極評估輸血</div>
         </div>
       </div>
+      <details class="tool-det sm">
+        <summary>說明</summary>
       <div class="calc-note">ABL 以目前 Hb 為分母計算,屬於較保守的估法;若改用手術前後的平均 Hb 為分母(Gross 公式),算出來的容許量會略高。<b>輸血決策不是只看數字</b>,還要合併出血速度、心肺共病與臨床徵象;一般穩定、非活動性出血的病人多以 Hb 7–8 g/dL 為輸血門檻。孕婦血容量增加約三到四成、肥胖病人每公斤血容量偏低,估計值都會失真。</div>
+      </details>
     </div>
 
     <div class="tool-box">
-      <h3>各名詞在算什麼</h3>
+      <details class="tool-det">
+        <summary>各名詞在算什麼</summary>
       <div class="tool-scroll">
         <table class="tool-tbl">
           <tr><th>名詞</th><th>意思</th><th>公式</th></tr>
@@ -7396,12 +7595,13 @@ function calcHtml(){
         </table>
       </div>
       <div class="calc-note">肥胖病人身上,脂肪組織血流低、但脂溶性藥物會蓄積,所以<b>單次誘導劑量</b>看的是初期分布容積與心輸出量(用 LBW),<b>持續輸注</b>看的是清除率(較接近實際體重),<b>肌鬆劑</b>幾乎不分布到脂肪(用 IBW)。</div>
+      </details>
     </div>
 
     <div class="tool-box">
       <h3>常用藥物該用哪個體重</h3>
       <div class="tool-scroll">
-        <table class="tool-tbl">
+        <table class="tool-tbl dw-tbl">
           <tr><th>藥物</th><th>依據體重</th><th>備註</th></tr>
           ${DOSE_WEIGHT.map(x=>`<tr><td>${x.d}</td><td><span class="pill ${x.cls}">${x.w}</span></td><td>${x.n||"—"}</td></tr>`).join("")}
         </table>
@@ -7412,7 +7612,7 @@ function calcHtml(){
     <div class="tool-box">
       <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
         <details class="refs-det">
-          <summary><span>文獻出處　References</span><span class="refs-num">7</span></summary>
+          <summary><span>文獻出處　References</span><span class="refs-num">12</span></summary>
           <ol>
             <li>Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280.</li>
             <li>Holliday, M. A., &amp; Segar, W. E. (1957). The maintenance need for water in parenteral fluid therapy. Pediatrics, 19(5), 823–832.</li>
@@ -7421,6 +7621,11 @@ function calcHtml(){
             <li>Janmahasatian, S., Duffull, S. B., Ash, S., et al. (2005). Quantification of lean bodyweight. Clinical Pharmacokinetics, 44(10), 1051–1065.</li>
             <li>Nightingale, C. E., Margarson, M. P., Shearer, E., et al. (2015). Peri-operative management of the obese surgical patient 2015. Anaesthesia, 70(7), 859–876.</li>
             <li>The Acute Respiratory Distress Syndrome Network. (2000). Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome. New England Journal of Medicine, 342(18), 1301–1308.</li>
+            <li>Absalom, A. R., Mani, V., De Smet, T., &amp; Struys, M. M. R. F. (2009). Pharmacokinetic models for propofol: Defining and illuminating the devil in the detail. British Journal of Anaesthesia, 103(1), 26–37.</li>
+            <li>Schnider, T. W., Minto, C. F., Gambus, P. L., et al. (1998). The influence of method of administration and covariates on the pharmacokinetics of propofol in adult volunteers. Anesthesiology, 88(5), 1170–1182.</li>
+            <li>Marsh, B., White, M., Morton, N., &amp; Kenny, G. N. C. (1991). Pharmacokinetic model driven infusion of propofol in children. British Journal of Anaesthesia, 67(1), 41–48.</li>
+            <li>Eleveld, D. J., Colin, P., Absalom, A. R., &amp; Struys, M. M. R. F. (2018). Pharmacokinetic-pharmacodynamic model for propofol for broad application in anaesthesia and sedation. British Journal of Anaesthesia, 120(5), 942–959.</li>
+            <li>Nimmo, A. F., Absalom, A. R., Bagshaw, O., et al. (2019). Guidelines for the safe practice of total intravenous anaesthesia (TIVA): Joint guidelines from the Association of Anaesthetists and the Society for Intravenous Anaesthesia. Anaesthesia, 74(2), 211–224.</li>
           </ol>
         </details>
       </div>
@@ -7433,11 +7638,37 @@ function calcHtml(){
 }
 
 function wireCalc(){
+  const updTiva = () => {
+    const box = el("tOut"); if(!box) return;
+    const o = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
+    const m = tivaModelOf(o);
+    const v = tivaView(o, m);
+    box.querySelectorAll(".calc-cell").forEach((c,i)=>{
+      const row = v.rows[i]; if(!row) return;
+      const k = c.querySelector(".k"); if(k) k.textContent = row[0];
+      const val = c.querySelector(".v"); if(val) val.textContent = row[1];
+      const h = c.querySelector(".h"); if(h) h.textContent = row[2];
+    });
+    const seg = el("tSeg");
+    if(seg) seg.querySelectorAll("button").forEach(b=>{
+      b.setAttribute("aria-pressed", b.dataset.m === m ? "true" : "false");
+    });
+    const w = el("tWarn");
+    if(w) w.innerHTML = tivaWarnHtml(v);
+  };
+
+  const seg = el("tSeg");
+  if(seg) seg.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{ TIVA_STATE.model = b.dataset.m; updTiva(); });
+  });
+
   const upd = () => {
     const sex = el("cSex").value;
+    const age = parseFloat(el("cAge").value);
     const ht = parseFloat(el("cHt").value);
     const wt = parseFloat(el("cWt").value);
     CALC_STATE.sex = sex;
+    if(age>=0 && isFinite(age)) CALC_STATE.age = age;
     if(ht>0) CALC_STATE.ht = ht;
     if(wt>0) CALC_STATE.wt = wt;
     const r = calcAll(sex, ht, wt);
@@ -7458,8 +7689,9 @@ function wireCalc(){
       if(u) v.appendChild(u);
       if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
     });
+    updTiva();
   };
-  ["cSex","cHt","cWt"].forEach(id=>{
+  ["cSex","cAge","cHt","cWt"].forEach(id=>{
     const n = el(id);
     if(n){ n.addEventListener("input", upd); n.addEventListener("change", upd); }
   });
