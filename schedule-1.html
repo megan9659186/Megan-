@@ -60,6 +60,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .badge{position:absolute;top:-7px;left:-7px;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
 .top{background:transparent;flex:0 0 auto;min-height:30px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
 .hol-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--red);font-weight:600;line-height:1;letter-spacing:0}
+.memo-name{position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:7px;color:var(--ink2);font-weight:600;line-height:1;letter-spacing:0}
 .dn{font-size:22px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
 .bot{flex:1 1 auto;min-height:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:500;padding:2px 1px 3px;letter-spacing:0.2px}
@@ -647,6 +648,8 @@ const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#8a9ea8','#a89bb0','#b8a878','#8fa68a','#b8a898','#9aabba'];
 const ME={w1:16};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
+const HOLD={'2027-01-01':'元旦','2027-02-04':'小年夜','2027-02-05':'除夕','2027-02-06':'初一','2027-02-07':'初二','2027-02-08':'初三','2027-02-09':'春節補假','2027-02-10':'春節補假','2027-02-28':'228','2027-03-01':'228補假','2027-04-04':'兒童節','2027-04-05':'清明節','2027-04-06':'兒童節補假','2027-04-30':'勞動節補假','2027-05-01':'勞動節','2027-06-09':'端午節','2027-09-15':'中秋節','2027-09-28':'教師節','2027-10-10':'國慶日','2027-10-11':'國慶補假','2027-10-25':'光復節','2027-12-24':'行憲補假','2027-12-25':'行憲紀念日','2027-12-31':'元旦補假'};
+const MEMO={'2026-03-03':'元宵節','2026-03-08':'婦女節','2026-03-12':'國父逝世','2026-03-29':'青年節','2026-05-10':'母親節','2026-07-15':'解嚴紀念','2026-08-08':'父親節','2026-09-03':'軍人節','2026-11-12':'國父誕辰','2027-02-20':'元宵節','2027-03-08':'婦女節','2027-03-12':'國父逝世','2027-03-29':'青年節','2027-05-09':'母親節','2027-07-15':'解嚴紀念','2027-08-08':'父親節/七夕','2027-08-16':'中元節','2027-09-03':'軍人節','2027-10-08':'重陽節','2027-11-12':'國父誕辰'};
 const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','12-8 4','OFF'];
 const DZ=['日','一','二','三','四','五','六'];
 function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -1113,9 +1116,9 @@ function importBackup(e){
 }
 function getNum(date){const v=wS[monKey(date)];if(!v)return nf(ME.w1,wo(date));return typeof v==='object'?v.final:v;}
 function getShift(date){
-  const key=dk(date);if(dS[key])return{s:dS[key],h:HOL[key]||null,dm:true,holD:false};
-  const num=getNum(date),idx=(date.getDay()+6)%7;let s=SCH[num][idx];const h=HOL[key];let holD=false;
-  if(h&&date.getDay()!==0&&date.getDay()!==6){const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3','12-8 4',"D'OFF"];if(mo.includes(s)){s='OFF';}else if(s==='D1'||s==='D2')holD=true;}
+  const key=dk(date);if(dS[key])return{s:dS[key],h:HOL[key]||HOLD[key]||null,dm:true,holD:false};
+  const num=getNum(date),idx=(date.getDay()+6)%7;let s=SCH[num][idx];const hc=HOL[key],h=hc||HOLD[key];let holD=false;
+  if(hc&&date.getDay()!==0&&date.getDay()!==6){const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3','12-8 4',"D'OFF"];if(mo.includes(s)){s='OFF';}else if(s==='D1'||s==='D2')holD=true;}
   return{s,h:h||null,dm:false,holD};
 }
 function sc(s,holD){
@@ -1166,7 +1169,8 @@ function render(){
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
     if(h){const holDiv=document.createElement('div');holDiv.className='hol-name';holDiv.textContent=h;top.appendChild(holDiv);}
-    const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
+    else if(MEMO[key]){const mDiv=document.createElement('div');mDiv.className='memo-name';mDiv.textContent=MEMO[key];top.appendChild(mDiv);}
+    const isHolD=holD;
     const he=hD[key];
     const isDayMod=!!dS[key];
     const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;if(isDayMod){bot.style.color='#a83232';bot.style.fontWeight='700';}
@@ -1202,7 +1206,7 @@ function showQuickActions(key){
   pendingKey=key;
   const date=kd(key),dow=date.getDay();
   const{s,h}=getShift(date);
-  document.getElementById('quickDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）'+(h?'　🎌 '+h:'');
+  document.getElementById('quickDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）'+(h?'　🎌 '+h:(MEMO[key]?'　'+MEMO[key]:''));
   document.getElementById('quickShift').textContent='目前班別：'+s;
   document.getElementById('quickOverlay').classList.add('open');
 }
@@ -1222,7 +1226,7 @@ function quickAction(action){
 function openWeekSheet(key){
   selKey=key;const date=kd(key),mk=monKey(date);
   const{s:curShift,h}=getShift(date);
-  document.getElementById('weekDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）'+(h?'　🎌 '+h:'');
+  document.getElementById('weekDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）'+(h?'　🎌 '+h:(MEMO[key]?'　'+MEMO[key]:''));
   document.getElementById('weekShift').textContent='目前班別：'+curShift;
   const wv=wS[mk];const curFinal=wv?(typeof wv==='object'?wv.final:wv):'';
   document.getElementById('numSel').value=curFinal||'';document.getElementById('preview').style.display='none';
@@ -1238,7 +1242,9 @@ function openDaySheet(key){
   document.getElementById('dayDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
   document.getElementById('dayShift').textContent='目前班別：'+curShift;
   const dayHolEl=document.getElementById('dayHol');
-  if(h){dayHolEl.textContent='🎌 '+h;dayHolEl.style.display='block';}else{dayHolEl.style.display='none';}
+  if(h){dayHolEl.textContent='🎌 '+h;dayHolEl.style.color='';dayHolEl.style.display='block';}
+  else if(MEMO[key]){dayHolEl.textContent=MEMO[key];dayHolEl.style.color='var(--ink2)';dayHolEl.style.display='block';}
+  else{dayHolEl.style.display='none';}
   renderShiftBtns(dS[key]||curShift);
   document.getElementById('dayNote').value=nS[key]||'';
   const otherTrackRow=document.getElementById('otherTrackRow');
