@@ -83,19 +83,21 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-right{border-right:2px solid var(--zc)!important}
 /* BADGE */
 .badge{position:absolute;top:-8px;left:-8px;width:23px;height:23px;background:var(--accent);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
-.top{background:transparent;flex:0 0 auto;min-height:36px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:4px}
+.top{background:transparent;flex:0 0 auto;min-height:28px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:1px}
 .hol-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--red);font-weight:700;line-height:1;letter-spacing:0}
 .memo-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--ink2);font-weight:700;line-height:1;letter-spacing:0}
-.dn{font-size:25px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.dn{font-size:21px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
 .dn.holiday{color:var(--red)}
 .bot{flex:0 0 auto;min-width:0;display:flex;flex-direction:column;align-items:stretch;font-size:14px;font-weight:600;padding:0;letter-spacing:0.1px}
-.shift-main{min-width:0;min-height:34px;padding:7px 2px 6px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hours-tags,.swap-tags{min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;border-top:1px solid rgba(70,60,50,.18)}
+.shift-main{min-width:0;min-height:28px;padding:3px 2px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hours-tags,.swap-tags{min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 1px;border-top:1px solid rgba(70,60,50,.18)}
 .hours-tags:empty,.swap-tags:empty{display:none}
 /* 月曆行程：直接顯示在每天格子內 */
-.cell-plans{flex:1 1 auto;min-width:0;width:100%;min-height:48px;padding:5px 3px 4px;display:flex;flex-direction:column;gap:4px;overflow:hidden;background:rgba(255,255,255,0.72)}
+.cell-plans{flex:1 1 auto;min-width:0;width:100%;min-height:58px;padding:5px 3px 4px;display:flex;flex-direction:column;gap:3px;overflow:hidden;background:rgba(255,255,255,0.72)}
 .cell-plan{display:block;min-width:0;width:100%;max-width:100%;font-size:11px;line-height:1.3;color:var(--event-ink,#5f5143);background:var(--event-bg,#f0ece4);border-left:3px solid var(--event,#8a6a30);border-radius:3px;padding:3px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:600}
 .cell-plan.done{opacity:.45;text-decoration:line-through}
+.cell-plan.observance{--event:#b86f6b;--event-bg:#f5e3e1;--event-ink:#733d39;font-weight:700}
+.cell-plan.observance.memo{--event:#96938f;--event-bg:#ecebea;--event-ink:#514e4a}
 .cell-plan-more{font-size:10px;line-height:1.2;color:var(--ink3);padding-left:4px;font-weight:600}
 .cell-plan-empty{flex:1}
 /* SHIFT COLOURS */
@@ -193,7 +195,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 .zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 /* hbadge */
-.hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:2px 4px;border-radius:4px;line-height:1.35;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:1px 3px;border-radius:4px;line-height:1.2;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bot.overtime{color:#8b2020!important;font-weight:600}
 .hb-j-p{background:#d8edd8;color:#1a4a2a}
 .hb-j-m{background:#f0ddd8;color:#7a2018}
@@ -1295,8 +1297,6 @@ function render(){
     }
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
-    if(h){const holDiv=document.createElement('div');holDiv.className='hol-name';holDiv.textContent=h;top.appendChild(holDiv);}
-    else if(MEMO[key]){const mDiv=document.createElement('div');mDiv.className='memo-name';mDiv.textContent=MEMO[key];top.appendChild(mDiv);}
     const isHolD=holD;
     const he=hD[key];
     const isDayMod=!!dS[key];
@@ -1325,9 +1325,12 @@ function render(){
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';swapTags.appendChild(b);}
     const planArea=document.createElement('div');planArea.className='cell-plans';
     const dayPlans=pS[key]?(Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key])):[];
+    const observance=h||MEMO[key];
+    if(observance){const obs=document.createElement('div');obs.className='cell-plan observance'+(h?'':' memo');obs.textContent=observance;obs.title=observance;planArea.appendChild(obs);}
+    const planLimit=observance?2:3;
     if(dayPlans.length){
-      dayPlans.slice(0,2).forEach(it=>{const row=document.createElement('div');row.className='cell-plan'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=it.text;row.title=it.text;row.onclick=function(ev){ev.stopPropagation();openPlanSheet(key);};planArea.appendChild(row);});
-      if(dayPlans.length>2){const more=document.createElement('div');more.className='cell-plan-more';more.textContent='＋'+(dayPlans.length-2)+' 項';planArea.appendChild(more);}
+      dayPlans.slice(0,planLimit).forEach(it=>{const row=document.createElement('div');row.className='cell-plan'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=it.text;row.title=it.text;row.onclick=function(ev){ev.stopPropagation();openPlanSheet(key);};planArea.appendChild(row);});
+      if(dayPlans.length>planLimit){const more=document.createElement('div');more.className='cell-plan-more';more.textContent='＋'+(dayPlans.length-planLimit)+' 項';planArea.appendChild(more);}
     }else{const emptyPlan=document.createElement('div');emptyPlan.className='cell-plan-empty';planArea.appendChild(emptyPlan);}
     // 📷 標記（同步讀 localStorage）
     if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top='13px';pp.textContent='📷';cell.appendChild(pp);}
