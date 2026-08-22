@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17241f" />
+    <meta name="description" content="A calm, searchable companion for reviewing vocabulary from Macbeth." />
+    <title>Words of Macbeth</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav aria-label="Main navigation">
+        <a class="brand" href="#top" aria-label="Words of Macbeth home"><span>W</span> Words of Macbeth</a>
+        <a class="about-link" href="#about">About</a>
+      </nav>
+      <div class="hero-copy" id="top">
+        <p class="eyebrow">A reading companion</p>
+        <h1>Speak the speech,<br /><em>understand the words.</em></h1>
+        <p class="intro">A personal glossary for the language, places, and poetry of Shakespeare’s <cite>Macbeth</cite>.</p>
+      </div>
+      <div class="search-wrap">
+        <label for="search">Search the glossary</label>
+        <div class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="search" type="search" placeholder="Search a word, meaning, or quotation…" autocomplete="off" />
+          <kbd>⌘ K</kbd>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="study-dashboard" aria-labelledby="study-heading">
+        <div>
+          <p class="eyebrow dark">Your progress</p>
+          <h2 id="study-heading">Make the words yours.</h2>
+        </div>
+        <div class="progress-panel">
+          <div class="progress-copy"><strong id="known-count">0</strong> known <span>of <span id="progress-total">20</span></span></div>
+          <div class="progress-track" role="progressbar" aria-label="Vocabulary progress" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><span id="progress-fill"></span></div>
+        </div>
+      </section>
+
+      <div class="mode-tabs" role="tablist" aria-label="Study modes">
+        <button class="mode-tab active" role="tab" aria-selected="true" data-mode="browse">Browse</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-mode="flashcards">Flashcards</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-mode="quiz">Quick quiz</button>
+      </div>
+
+      <section id="browse-mode" class="mode-panel collection" aria-labelledby="collection-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow dark">Today’s reading</p>
+            <h2 id="collection-heading">Act I vocabulary</h2>
+          </div>
+          <p id="count" class="count" aria-live="polite"></p>
+        </div>
+        <div id="vocabulary-list" class="vocabulary-list"></div>
+        <div id="empty" class="empty" hidden>
+          <p>No words found.</p>
+          <button type="button" id="clear-search">Clear search</button>
+        </div>
+      </section>
+
+      <section id="flashcards-mode" class="mode-panel study-mode" hidden aria-labelledby="flashcards-heading">
+        <div class="study-heading-row">
+          <div><p class="eyebrow dark">Study mode</p><h2 id="flashcards-heading">Flashcards</h2></div>
+          <p id="flashcard-position" class="count"></p>
+        </div>
+        <button id="flashcard" class="flashcard" type="button" aria-live="polite">
+          <span class="flashcard-label">Word</span>
+          <strong id="flashcard-term"></strong>
+          <span id="flashcard-pronunciation" class="flashcard-pronunciation"></span>
+          <span id="flashcard-answer" class="flashcard-answer" hidden></span>
+          <span id="flashcard-hint" class="flashcard-hint">Tap to reveal the meaning</span>
+        </button>
+        <div class="study-actions">
+          <button id="card-learning" class="button secondary" type="button">Still learning</button>
+          <button id="card-known" class="button primary" type="button">I know this</button>
+          <button id="next-card" class="button text-button" type="button">Next word →</button>
+        </div>
+      </section>
+
+      <section id="quiz-mode" class="mode-panel study-mode" hidden aria-labelledby="quiz-heading">
+        <div class="study-heading-row">
+          <div><p class="eyebrow dark">Five questions</p><h2 id="quiz-heading">Quick quiz</h2></div>
+          <p id="quiz-position" class="count"></p>
+        </div>
+        <div id="quiz-card" class="quiz-card">
+          <p class="quiz-prompt">Which word matches this meaning?</p>
+          <h3 id="quiz-meaning"></h3>
+          <div id="quiz-options" class="quiz-options"></div>
+          <p id="quiz-feedback" class="quiz-feedback" aria-live="polite"></p>
+          <button id="next-question" class="button primary" type="button" hidden>Next question →</button>
+        </div>
+        <div id="quiz-result" class="quiz-result" hidden>
+          <p class="eyebrow dark">Session complete</p>
+          <strong id="quiz-score"></strong>
+          <p id="quiz-message"></p>
+          <button id="restart-quiz" class="button primary" type="button">Try another quiz</button>
+        </div>
+      </section>
+
+      <aside class="reading-note">
+        <span aria-hidden="true">“</span>
+        <blockquote>Look like the innocent flower,<br />But be the serpent under’t.</blockquote>
+        <cite>Lady Macbeth · Act I, Scene V</cite>
+      </aside>
+
+      <section id="about" class="about">
+        <p class="eyebrow dark">Keep reading</p>
+        <h2>A glossary that grows with the play.</h2>
+        <p>Each entry pairs a clear meaning with the moment that gives it life. Add new terms to the simple list in <code>script.js</code> after each reading session. Your known and learning marks stay on this device.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Made for close reading · <span id="total-footer"></span> terms and counting</p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
