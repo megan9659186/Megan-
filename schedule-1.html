@@ -94,7 +94,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .hours-tags:empty,.swap-tags:empty{display:none}
 /* 月曆行程：直接顯示在每天格子內 */
 .cell-plans{flex:1 1 auto;min-width:0;width:100%;min-height:0;padding:4px 3px 3px;display:flex;flex-direction:column;gap:3px;overflow:hidden;background:rgba(255,255,255,0.72)}
-.cell-plan{display:block;min-width:0;width:100%;max-width:100%;font-size:11px;line-height:1.3;color:var(--event-ink,#5f5143);background:var(--event-bg,#f0ece4);border-left:3px solid var(--event,#8a6a30);border-radius:3px;padding:3px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:600}
+.cell-plan{display:block;min-width:0;width:100%;max-width:100%;font-size:10px;line-height:1.2;color:var(--event-ink,#5f5143);background:var(--event-bg,#f0ece4);border-left:3px solid var(--event,#8a6a30);border-radius:4px;padding:1px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:600}
 .cell-plan.done{opacity:.45;text-decoration:line-through}
 .cell-plan.observance{--event:#b86f6b;--event-bg:#f5e3e1;--event-ink:#733d39;font-weight:700}
 .cell-plan.observance.memo{--event:#96938f;--event-bg:#ecebea;--event-ink:#514e4a}
@@ -311,10 +311,13 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 .plan-cat-edit{border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:11px;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .plan-cat-settings{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;margin-bottom:9px}
 .plan-cat-settings.show{display:block}
+.plan-cat-hint{font-size:14px;line-height:1.45;color:var(--ink2);padding:3px 3px 8px}
 .plan-cat-setting{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)}
 .plan-cat-setting:last-child{border-bottom:none}
 .plan-cat-color{width:28px;height:28px;border:0;background:transparent;padding:0;cursor:pointer}
 .plan-cat-name{flex:1;min-width:0;padding:7px 9px;border:1px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--ink);font-size:13px;font-family:'DM Sans',sans-serif}
+.plan-cat-delete{width:30px;height:30px;flex-shrink:0;border:1px solid #e0c8c4;border-radius:50%;background:var(--surface);color:var(--red);font-size:15px;cursor:pointer}
+.plan-cat-add{width:100%;margin-top:8px;padding:9px;border:1px dashed var(--border2);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 .plan-cat-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 4px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
 .plan-cat-btn .cat-dot{width:9px;height:9px;border-radius:50%;background:var(--event);flex-shrink:0}
 .plan-cat-btn.active{border-color:var(--event);background:var(--event-bg);color:var(--event-ink);box-shadow:inset 0 0 0 1px var(--event)}
@@ -326,6 +329,24 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 .event-sport{--event:#72927a;--event-bg:#e5eee7;--event-ink:#3d5c44}
 .event-fun{--event:#b98fb8;--event-bg:#f2e7f1;--event-ink:#694c68}
 .event-important{--event:#b86f6b;--event-bg:#f5e3e1;--event-ink:#733d39}
+/* 行程面板閱讀尺寸：只放大文字與色點，不改排列 */
+#planOverlay .hs-date{font-size:21px}
+#planOverlay .hs-shift{font-size:15px}
+#planOverlay .field-label{font-size:15px}
+#planOverlay .plan-text{font-size:16px}
+#planOverlay .plan-check{width:22px;height:22px}
+#planOverlay .plan-item-cat{width:22px;height:22px}
+#planOverlay .plan-del{font-size:19px}
+#planOverlay .plan-cat-edit{font-size:14px}
+#planOverlay .plan-cat-btn{font-size:14px}
+#planOverlay .plan-cat-btn .cat-dot{width:13px;height:13px}
+#planOverlay .plan-cat-name{font-size:15px}
+#planOverlay .plan-cat-color{width:34px;height:34px}
+#planOverlay .plan-add-input{font-size:16px}
+#planOverlay .plan-add-btn{font-size:20px}
+#planOverlay .photo-upload-btn{font-size:16px}
+#planOverlay .photo-count{font-size:14px}
+#planOverlay .hs-btn-cancel{font-size:16px}
 /* 圖片區 */
 .photo-section{margin-top:10px}
 .photo-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
@@ -1065,10 +1086,10 @@ const DEFAULT_PLAN_CATS=[
   {id:'important',label:'重要',color:'#b86f6b'}
 ];
 let PLAN_CATS=DEFAULT_PLAN_CATS.map(c=>({...c}));
-try{const s=localStorage.getItem('megan_plan_cats');if(s){const saved=JSON.parse(s);PLAN_CATS=DEFAULT_PLAN_CATS.map(d=>{const x=saved.find(c=>c.id===d.id)||{};return{id:d.id,label:(x.label||d.label).slice(0,8),color:/^#[0-9a-f]{6}$/i.test(x.color||'')?x.color:d.color};});}}catch(e){}
+try{const s=localStorage.getItem('megan_plan_cats');if(s){const saved=JSON.parse(s);if(Array.isArray(saved)&&saved.length){PLAN_CATS=saved.filter(c=>c&&/^[a-z0-9_-]+$/i.test(c.id||'')).map(c=>{const d=DEFAULT_PLAN_CATS.find(x=>x.id===c.id);return{id:c.id,label:String(c.label||(d&&d.label)||'分類').slice(0,8),color:/^#[0-9a-f]{6}$/i.test(c.color||'')?c.color:((d&&d.color)||'#96938f')};});}}}catch(e){}
 let selectedPlanCat='personal';
-function planCat(id){return PLAN_CATS.some(c=>c.id===id)?id:'personal';}
-function catData(id){return PLAN_CATS.find(c=>c.id===planCat(id))||PLAN_CATS[1];}
+function planCat(id){return PLAN_CATS.some(c=>c.id===id)?id:(PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id);}
+function catData(id){return PLAN_CATS.find(c=>c.id===planCat(id))||PLAN_CATS[0];}
 function softColor(hex){
   const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
   return `rgb(${Math.round(r*.18+255*.82)},${Math.round(g*.18+255*.82)},${Math.round(b*.18+255*.82)})`;
@@ -1086,13 +1107,31 @@ function togglePlanCatSettings(){
 }
 function renderPlanCatSettings(){
   const el=document.getElementById('planCatSettings');if(!el)return;
-  el.innerHTML=PLAN_CATS.map(c=>`<div class="plan-cat-setting"><input class="plan-cat-color" type="color" value="${c.color}" aria-label="${escapeHtml(c.label)}顏色" onchange="updatePlanCat('${c.id}',null,this.value)"><input class="plan-cat-name" maxlength="8" value="${escapeHtml(c.label)}" aria-label="分類名稱" onchange="updatePlanCat('${c.id}',this.value,null)"></div>`).join('');
+  el.innerHTML='<div class="plan-cat-hint">點左側色塊可開啟完整選色器，不限原本六種顏色；月曆會自動搭配柔和底色。</div>'+PLAN_CATS.map(c=>`<div class="plan-cat-setting"><input class="plan-cat-color" type="color" value="${c.color}" aria-label="${escapeHtml(c.label)}顏色" onchange="updatePlanCat('${c.id}',null,this.value)"><input class="plan-cat-name" maxlength="8" value="${escapeHtml(c.label)}" aria-label="分類名稱" onchange="updatePlanCat('${c.id}',this.value,null)">${c.id.startsWith('custom_')?`<button type="button" class="plan-cat-delete" onclick="deletePlanCat('${c.id}')" aria-label="刪除${escapeHtml(c.label)}">✕</button>`:''}</div>`).join('')+'<button type="button" class="plan-cat-add" onclick="addPlanCat()">＋ 新增分類</button>';
 }
 function updatePlanCat(id,label,color){
   const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;
-  if(label!==null)PLAN_CATS[idx].label=label.trim()||DEFAULT_PLAN_CATS[idx].label;
+  const fallback=DEFAULT_PLAN_CATS.find(c=>c.id===id);
+  if(label!==null)PLAN_CATS[idx].label=label.trim()||(fallback?fallback.label:'自訂分類');
   if(color!==null&&/^#[0-9a-f]{6}$/i.test(color))PLAN_CATS[idx].color=color;
   try{localStorage.setItem('megan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
+  renderPlanCats();renderPlanCatSettings();renderPlanList();render();
+}
+function addPlanCat(){
+  const colors=['#7a9ab0','#8aa080','#b990b5','#c19068','#7f7aa8','#b86f6b'];
+  const id='custom_'+Date.now().toString(36);
+  PLAN_CATS.push({id,label:'新分類',color:colors[(PLAN_CATS.length-DEFAULT_PLAN_CATS.length)%colors.length]});
+  selectedPlanCat=id;
+  try{localStorage.setItem('megan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
+  renderPlanCats();renderPlanCatSettings();
+}
+function deletePlanCat(id){
+  if(!id.startsWith('custom_'))return;
+  const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;
+  const replacement=PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id;
+  Object.keys(pS).forEach(key=>{const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);arr.forEach(it=>{if(it.cat===id)it.cat=replacement;});pS[key]=arr;});
+  PLAN_CATS.splice(idx,1);if(selectedPlanCat===id)selectedPlanCat=replacement;
+  try{localStorage.setItem('megan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}save();
   renderPlanCats();renderPlanCatSettings();renderPlanList();render();
 }
 // ── 圖片：用 localStorage 存 base64 ──
@@ -1319,8 +1358,9 @@ function render(){
     }
     if(wS[mk]){
       const wv=wS[mk],lg=(typeof wv==='object'&&wv.log&&wv.log.length)?wv.log[wv.log.length-1]:null;
-      const b=document.createElement('span');b.className='hbadge hb-swap';
-      b.textContent='⇄'+((lg&&lg.who)?lg.who.slice(0,3):'換班');swapTags.appendChild(b);
+      const swapFinal=typeof wv==='object'?wv.final:wv;
+      const showSwapTag=key>=tk&&(swapFinal==='?'||swapFinal===''||swapFinal==null);
+      if(showSwapTag){const b=document.createElement('span');b.className='hbadge hb-swap';b.textContent='⇄'+((lg&&lg.who)?lg.who.slice(0,3):'換班');swapTags.appendChild(b);}
     }
     if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';swapTags.appendChild(b);}
     const planArea=document.createElement('div');planArea.className='cell-plans';
