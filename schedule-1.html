@@ -1115,7 +1115,7 @@ function updatePlanCat(id,label,color){
   if(label!==null)PLAN_CATS[idx].label=label.trim()||(fallback?fallback.label:'自訂分類');
   if(color!==null&&/^#[0-9a-f]{6}$/i.test(color))PLAN_CATS[idx].color=color;
   try{localStorage.setItem('megan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
-  renderPlanCats();renderPlanCatSettings();renderPlanList();render();
+  renderPlanCats();renderPlanList();render();
 }
 function addPlanCat(){
   const colors=['#7a9ab0','#8aa080','#b990b5','#c19068','#7f7aa8','#b86f6b'];
