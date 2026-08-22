@@ -232,6 +232,11 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .quick-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
 .quick-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
 .quick-shift{font-size:12px;color:var(--ink3);margin-top:2px}
+.quick-plan-preview{display:none;padding:10px 18px 2px;max-height:150px;overflow-y:auto}
+.quick-plan-preview.show{display:flex;flex-direction:column;gap:5px}
+.quick-plan-item{width:100%;font-size:14px;line-height:1.35;font-weight:600;color:var(--event-ink,#4a3828);background:var(--event-bg,#f4ead8);border-left:4px solid var(--event,#978b7e);border-radius:5px;padding:6px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.quick-plan-item.observance{--event:#a64f3c;--event-bg:#f3e3dc;--event-ink:#6e3528}
+.quick-plan-item.observance.memo{--event:#978b7e;--event-bg:#eee9e3;--event-ink:#574b40}
 .quick-body{padding:14px 18px 6px;display:flex;flex-direction:column;gap:8px}
 .quick-btn{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;transition:background 0.1s}
 .quick-btn:active{background:var(--surface2)}
@@ -492,6 +497,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="quick-date" id="quickDate"></div>
       <div class="quick-shift" id="quickShift"></div>
     </div>
+    <div class="quick-plan-preview" id="quickPlanPreview"></div>
     <div class="quick-body">
       <button class="quick-btn" onclick="quickAction('week')"><span class="qi">🔄</span>換號碼班（整週）</button>
       <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
@@ -565,13 +571,13 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     <div class="hs-body" style="max-height:72vh;overflow-y:auto">
       <div class="field-label">📌 當天的事／行程</div>
       <ul class="plan-list" id="planList"></ul>
-      <div class="plan-cat-head"><div class="field-label">選擇事件顏色</div><button type="button" class="plan-cat-edit" onclick="togglePlanCatSettings()">自訂分類</button></div>
-      <div class="plan-cats" id="planCats"></div>
-      <div class="plan-cat-settings" id="planCatSettings"></div>
       <div class="plan-add-row">
         <input class="plan-add-input" id="planAddInput" type="text" placeholder="新增行程…" onkeydown="if(event.key==='Enter')addPlanItem()">
         <button class="plan-add-btn" onclick="addPlanItem()">＋</button>
       </div>
+      <div class="plan-cat-head"><div class="field-label">選擇事件顏色</div><button type="button" class="plan-cat-edit" onclick="togglePlanCatSettings()">自訂分類</button></div>
+      <div class="plan-cats" id="planCats"></div>
+      <div class="plan-cat-settings" id="planCatSettings"></div>
       <div class="field-label" style="margin-top:18px">📷 附加圖片</div>
       <div class="photo-thumbs" id="photoThumbs"></div>
       <div class="photo-count" id="photoCount"></div>
@@ -1214,7 +1220,16 @@ function showQuickActions(key){
   const{s,h}=getShift(date);
   document.getElementById('quickDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）'+(h?'　🎌 '+h:(MEMO[key]?'　'+MEMO[key]:''));
   document.getElementById('quickShift').textContent='目前班別：'+s;
+  renderQuickPlanPreview(key);
   document.getElementById('quickOverlay').classList.add('open');
+}
+function renderQuickPlanPreview(key){
+  const el=document.getElementById('quickPlanPreview');if(!el)return;el.innerHTML='';
+  const date=kd(key),{h}=getShift(date),obs=h||MEMO[key];
+  const items=pS[key]?(Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key])):[];
+  if(obs){const row=document.createElement('div');row.className='quick-plan-item observance'+(h?'':' memo');row.textContent=obs;row.onclick=()=>quickAction('plan');el.appendChild(row);}
+  items.forEach(it=>{const row=document.createElement('div');row.className='quick-plan-item'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=(it.done?'✓ ':'')+it.text;row.onclick=()=>quickAction('plan');el.appendChild(row);});
+  el.classList.toggle('show',!!(obs||items.length));
 }
 function closeQuickActions(){
   document.getElementById('quickOverlay').classList.remove('open');
