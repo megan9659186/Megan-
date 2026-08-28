@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>週讀紀錄簿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3A3F3C; --ink-soft:#6B716C; --ink-faint:#9AA09A;
+  --mist:#E7E9E3; --surface:#F4F5F1; --line:#D3D6CD;
+  --sage:#87998A; --slate:#7D8CA0;
+  --ochre:#B09B6C; --ochre-pale:#DED3B8;
+  --radius:3px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--mist);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px 96px}
+
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 10px}
+h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:clamp(28px,5vw,40px);letter-spacing:.04em;margin:0 0 6px}
+.sub{color:var(--ink-soft);font-size:14px;margin:0 0 28px;max-width:46em}
+
+/* sync bar */
+.sync{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:11px 14px;margin-bottom:28px;
+}
+.sync-txt{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-soft);flex:1;min-width:180px}
+.sync-txt b{font-weight:500;color:var(--ink)}
+.sync.dirty{border-color:var(--ochre);background:var(--ochre-pale)}
+.sync.dirty .sync-txt{color:#7A6534}
+.sync.dirty .sync-txt b{color:#5E4E23}
+
+/* week strip */
+.strip-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.strip-title{font-family:"Noto Serif TC",serif;font-size:15px;letter-spacing:.06em}
+.counts{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);display:flex;gap:18px;flex-wrap:wrap}
+.counts b{font-weight:500;color:var(--ink)}
+.strip{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;background:var(--surface);border:1px solid var(--line);padding:12px;border-radius:var(--radius)}
+.wk{position:relative;aspect-ratio:1/1.6;display:flex;flex-direction:column;border:0;padding:0;background:none;cursor:pointer;gap:2px}
+.wk span{flex:1;background:#DFE2DA;border-radius:1px;transition:background .2s ease}
+.wk .lit.on{background:var(--sage)}
+.wk .econ.on{background:var(--slate)}
+.wk:hover span{background:#CDD1C8}
+.wk:hover .lit.on{background:var(--sage)}
+.wk:hover .econ.on{background:var(--slate)}
+.wk.now::after{content:"";position:absolute;inset:-3px;border:1px solid var(--ochre);border-radius:2px}
+.wk.sel::after{content:"";position:absolute;inset:-3px;border:1.5px solid var(--ink);border-radius:2px}
+.wk:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.strip-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-soft);margin-top:10px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:1px;margin-right:6px;vertical-align:-1px}
+
+/* controls */
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:36px 0 4px}
+.tab{font-family:"Noto Sans TC",sans-serif;font-size:13px;background:none;border:1px solid var(--line);color:var(--ink-soft);padding:6px 14px;border-radius:var(--radius);cursor:pointer;transition:all .15s ease}
+.tab:hover{border-color:var(--ink-faint);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--mist)}
+.search{flex:1;min-width:180px;font-family:"Noto Sans TC",sans-serif;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:7px 12px;color:var(--ink)}
+.search:focus{outline:none;border-color:var(--ink-faint)}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
+.tagchip{font-family:"IBM Plex Mono",monospace;font-size:11px;background:none;border:1px solid var(--line);color:var(--ink-soft);padding:3px 9px;border-radius:20px;cursor:pointer}
+.tagchip[aria-pressed="true"]{background:var(--ochre-pale);border-color:var(--ochre);color:var(--ink)}
+.tagchip em{font-style:normal;color:var(--ink-faint);margin-left:5px}
+
+/* entries */
+.list{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--sage);border-radius:var(--radius);overflow:hidden}
+.card.econ{border-left-color:var(--slate)}
+.card-head{width:100%;text-align:left;background:none;border:0;cursor:pointer;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;font-family:inherit;color:inherit}
+.card-head:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.meta{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-faint);white-space:nowrap;padding-top:3px}
+.local{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ochre);margin-left:5px;vertical-align:2px}
+.card-title{font-family:"Noto Serif TC",serif;font-size:15px;line-height:1.55;margin:0 0 4px}
+.card-line{font-size:12px;color:var(--ink-soft)}
+.body{padding:0 18px 18px;display:none}
+.card.open .body{display:block}
+.field{margin-top:14px}
+.label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:3px}
+.val{font-size:13.5px;color:var(--ink);white-space:pre-wrap}
+.pico{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px}
+.pico dt{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-faint);padding-top:4px}
+.pico dd{margin:0}
+.idea{background:var(--ochre-pale);border-radius:var(--radius);padding:12px 14px;margin-top:14px}
+.idea .label{color:#8A7644}
+.vocab{list-style:none;padding:0;margin:0;font-size:13.5px}
+.vocab li{padding:5px 0;border-bottom:1px dashed var(--line)}
+.vocab b{font-weight:500;font-family:"IBM Plex Mono",monospace;font-size:13px}
+.en{font-family:Georgia,serif;font-size:14px;line-height:1.75}
+.tags{margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tag{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-soft);background:var(--mist);padding:2px 8px;border-radius:20px}
+.del{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-faint);background:none;border:1px solid var(--line);border-radius:20px;padding:2px 10px;cursor:pointer}
+.del:hover{color:#9B5F52;border-color:#C4A79E}
+.empty{border:1px dashed var(--line);border-radius:var(--radius);padding:40px 24px;text-align:center;color:var(--ink-soft);font-size:14px}
+
+/* composer */
+details.composer{margin-top:40px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+details.composer > summary{cursor:pointer;padding:14px 18px;font-family:"Noto Serif TC",serif;font-size:15px;list-style:none}
+details.composer > summary::-webkit-details-marker{display:none}
+details.composer > summary::before{content:"＋　";color:var(--ink-faint)}
+details.composer[open] > summary::before{content:"−　"}
+.form{padding:4px 18px 20px;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
+label.f{display:block}
+label.f > span{display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+input,select,textarea{width:100%;font-family:"Noto Sans TC",sans-serif;font-size:13px;color:var(--ink);background:var(--mist);border:1px solid var(--line);border-radius:var(--radius);padding:7px 10px;font-weight:300}
+textarea{resize:vertical;min-height:60px;line-height:1.6}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ink-faint)}
+.hint{font-size:11.5px;color:var(--ink-faint);margin-top:6px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{font-family:"Noto Sans TC",sans-serif;font-size:13px;cursor:pointer;background:var(--ink);color:var(--mist);border:1px solid var(--ink);padding:8px 18px;border-radius:var(--radius)}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn.small{font-size:12px;padding:5px 12px}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.4;cursor:default}
+.notice{font-family:"IBM Plex Mono",monospace;font-size:11px;color:#8A7644;background:var(--ochre-pale);border-radius:var(--radius);padding:8px 12px;margin-bottom:20px}
+footer{margin-top:56px;font-size:11.5px;color:var(--ink-faint);border-top:1px solid var(--line);padding-top:16px;line-height:1.9}
+@media(max-width:640px){
+  .wrap{padding:28px 16px 72px}
+  .strip{grid-template-columns:repeat(13,1fr)}
+  .card-head{flex-direction:column;gap:6px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Weekly reading log</p>
+  <h1>週讀紀錄簿</h1>
+  <p class="sub">每週一篇醫學文獻、一篇經濟學人。左半格是文獻，右半格是經濟學人，填滿代表那週兩篇都讀了。點任一週可篩選。</p>
+
+  <div id="notice" class="notice" style="display:none"></div>
+
+  <div class="sync" id="sync">
+    <div class="sync-txt" id="syncTxt"></div>
+    <button class="btn small ghost" id="export">匯出 notes.json</button>
+    <button class="btn small ghost" id="clear">已上傳，清除暫存</button>
+  </div>
+
+  <div class="strip-head">
+    <div class="strip-title"><span id="yearLabel">2026</span> 年　52 週</div>
+    <div class="counts" id="counts"></div>
+  </div>
+  <div class="strip" id="strip"></div>
+  <div class="strip-legend">
+    <span><i class="dot" style="background:var(--sage)"></i>文獻</span>
+    <span><i class="dot" style="background:var(--slate)"></i>經濟學人</span>
+    <span><i class="dot" style="background:#DFE2DA"></i>未紀錄</span>
+    <span id="weekFilterNote"></span>
+  </div>
+
+  <div class="bar">
+    <button class="tab" data-view="all" aria-selected="true">全部</button>
+    <button class="tab" data-view="lit" aria-selected="false">文獻</button>
+    <button class="tab" data-view="econ" aria-selected="false">經濟學人</button>
+    <button class="tab" data-view="idea" aria-selected="false">研究點子</button>
+    <button class="tab" data-view="vocab" aria-selected="false">單字表</button>
+    <input class="search" id="q" type="search" placeholder="搜尋標題、內容、標籤…">
+  </div>
+  <div class="tagrow" id="tagrow"></div>
+
+  <div class="list" id="list"></div>
+
+  <details class="composer">
+    <summary>新增一筆紀錄</summary>
+    <div class="form">
+      <div class="row">
+        <label class="f"><span>類型</span>
+          <select id="f-type"><option value="lit">醫學文獻</option><option value="econ">經濟學人</option></select>
+        </label>
+        <label class="f"><span>日期</span><input id="f-date" type="date"></label>
+      </div>
+      <label class="f" style="margin-top:12px"><span>標題</span><input id="f-title" type="text" placeholder="原文標題"></label>
+
+      <div id="lit-fields">
+        <div class="row">
+          <label class="f"><span>期刊</span><input id="f-journal" type="text" placeholder="Anesthesiology / BJA / A&amp;A …"></label>
+          <label class="f"><span>年份</span><input id="f-year" type="number" placeholder="2026"></label>
+          <label class="f"><span>研究設計</span>
+            <select id="f-design"><option>RCT</option><option>SRMA</option><option>Cohort</option><option>Case-control</option><option>Narrative review</option><option>Other</option></select>
+          </label>
+          <label class="f"><span>PMID</span><input id="f-pmid" type="text"></label>
+        </div>
+        <div class="row">
+          <label class="f"><span>P 族群</span><input id="f-p" type="text"></label>
+          <label class="f"><span>I 介入</span><input id="f-i" type="text"></label>
+          <label class="f"><span>C 對照</span><input id="f-c" type="text"></label>
+          <label class="f"><span>O 結果</span><input id="f-o" type="text"></label>
+        </div>
+        <label class="f" style="margin-top:12px"><span>主要結果（含效果量與 CI）</span><textarea id="f-key"></textarea></label>
+        <label class="f" style="margin-top:12px"><span>方法學品質（RoB 2／AMSTAR 2，一句話）</span><textarea id="f-quality"></textarea></label>
+        <label class="f" style="margin-top:12px"><span>對我臨床的意義</span><textarea id="f-clinical"></textarea></label>
+        <div class="row">
+          <label class="f"><span>延伸研究問題</span><textarea id="f-idea"></textarea></label>
+          <label class="f"><span>可行途徑</span>
+            <select id="f-route"><option value="">（無）</option><option>SRMA</option><option>TriNetX</option><option>院內回溯</option><option>前瞻收案</option></select>
+          </label>
+        </div>
+      </div>
+
+      <div id="econ-fields" style="display:none">
+        <div class="row">
+          <label class="f"><span>Section</span><input id="f-section" type="text" placeholder="Asia / Finance &amp; economics …"></label>
+          <label class="f"><span>連結</span><input id="f-url" type="url"></label>
+        </div>
+        <div class="row">
+          <label class="f"><span>主張 Claim</span><textarea id="f-claim"></textarea></label>
+          <label class="f"><span>證據 Evidence</span><textarea id="f-evidence"></textarea></label>
+          <label class="f"><span>反方 Counter</span><textarea id="f-counter"></textarea></label>
+        </div>
+        <label class="f" style="margin-top:12px"><span>生字／搭配詞（一行一個，用 ｜ 分隔字詞與解釋）</span><textarea id="f-vocab" placeholder="dependency ratio｜扶養比"></textarea></label>
+        <label class="f" style="margin-top:12px"><span>英文摘要（80–100 字）</span><textarea id="f-en"></textarea></label>
+        <label class="f" style="margin-top:12px"><span>中文筆記</span><textarea id="f-zh"></textarea></label>
+      </div>
+
+      <label class="f" style="margin-top:12px"><span>標籤（逗號分隔）</span><input id="f-tags" type="text" placeholder="liver-transplant, hemodynamics"></label>
+
+      <div class="actions">
+        <button class="btn" id="add">存入這筆</button>
+        <span class="hint" id="formHint">存入後就留在這台裝置的瀏覽器裡，重新整理不會消失。</span>
+      </div>
+    </div>
+  </details>
+
+  <footer>
+    這台裝置新增的紀錄會即時存在瀏覽器裡（標記為 <span class="local"></span> 待上傳）。<br>
+    要讓另一台裝置看到、或做長期備份時，按「匯出 notes.json」上傳到 repo，再按「已上傳，清除暫存」。
+  </footer>
+</div>
+
+<script>
+const KEY = "weekly-reading-log-v1";
+const SEED = [
+  {"id":"seed-lit","date":"2026-08-28","type":"lit","title":"（範例）Remimazolam versus propofol for induction in patients with cirrhosis","journal":"British Journal of Anaesthesia","year":2026,"design":"RCT","pico":{"p":"Child-Pugh B/C 肝硬化成人","i":"Remimazolam","c":"Propofol TCI","o":"誘導後低血壓、甦醒時間"},"keyResult":"誘導後低血壓 18% vs 34%（RR 0.53, 95% CI 0.34–0.82）。","quality":"RoB 2：some concerns，未盲。","clinical":"肝移植誘導期血流動力學不穩是常見問題，值得院內討論。","idea":{"question":"ESLD 病人 remimazolam 是否降低誘導後低血壓與升壓藥使用？","route":"SRMA"},"tags":["liver-transplant","remimazolam"]},
+  {"id":"seed-econ","date":"2026-08-28","type":"econ","title":"（範例）The economics of an ageing Asia","section":"Asia","claim":"亞洲多國老化速度快過所得成長，長照財源會先於退休金出現缺口。","evidence":"扶養比推估與長照支出佔 GDP 的跨國比較。","counter":"若同時放寬移工與提升生產力，缺口可被部分吸收。","vocab":[{"term":"dependency ratio","note":"扶養比"},{"term":"fiscal headroom","note":"財政餘裕"}],"enSummary":"The article argues that several Asian economies are ageing faster than they are growing rich, so long-term care financing will come under strain before pension systems do.","zhNotes":"台灣長照 2.0 的財源結構與文中模式接近。","tags":["health-policy","ageing"]}
+];
+
+let base = [];                      // 來自 repo 的 notes.json
+let local = { pending: [], deleted: [] };  // 這台裝置的暫存
+let entries = [];
+let view = "all", tagFilter = null, weekFilter = null, query = "";
+const YEAR = new Date().getFullYear();
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function isoWeek(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  if (isNaN(d)) return null;
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
+  const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  return { year: t.getUTCFullYear(), week: Math.ceil(((t - y0) / 86400000 + 1) / 7) };
+}
+
+function loadLocal(){
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) local = Object.assign({ pending: [], deleted: [] }, JSON.parse(raw));
+  } catch (e) { /* 無痕模式或封鎖儲存，維持空值 */ }
+}
+function saveLocal(){
+  try { localStorage.setItem(KEY, JSON.stringify(local)); }
+  catch (e) {
+    document.getElementById("formHint").textContent = "瀏覽器不允許本機儲存（可能是無痕模式），請改用匯出功能保存。";
+  }
+}
+
+function merge(){
+  const seen = new Set();
+  entries = [...base, ...local.pending]
+    .filter(e => !local.deleted.includes(e.id))
+    .filter(e => (seen.has(e.id) ? false : seen.add(e.id)));
+}
+
+async function load(){
+  loadLocal();
+  try {
+    const r = await fetch("notes.json", { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    base = await r.json();
+  } catch (e) {
+    base = local.pending.length ? [] : SEED;
+    const n = document.getElementById("notice");
+    n.textContent = local.pending.length
+      ? "讀不到 notes.json，目前只顯示這台裝置的暫存紀錄。"
+      : "讀不到 notes.json，目前顯示的是範例資料。把 notes.json 放在同一層目錄即可。";
+    n.style.display = "block";
+  }
+  render();
+}
+
+function render(){ merge(); renderSync(); renderStrip(); renderTags(); renderList(); }
+
+function renderSync(){
+  const n = local.pending.length, d = local.deleted.length;
+  const bar = document.getElementById("sync");
+  const dirty = n + d > 0;
+  bar.classList.toggle("dirty", dirty);
+  document.getElementById("syncTxt").innerHTML = dirty
+    ? `本機有 <b>${n}</b> 筆新紀錄${d ? `、<b>${d}</b> 筆刪除` : ""}尚未上傳到 repo`
+    : `已與 repo 同步　共 <b>${entries.length}</b> 筆`;
+  document.getElementById("clear").disabled = !dirty;
+}
+
+function renderStrip(){
+  document.getElementById("yearLabel").textContent = YEAR;
+  const map = {};
+  entries.forEach(e => {
+    const w = isoWeek(e.date);
+    if (w && w.year === YEAR) (map[w.week] ||= {})[e.type] = true;
+  });
+  const nowWeek = isoWeek(new Date().toISOString().slice(0,10))?.week;
+  const strip = document.getElementById("strip");
+  strip.innerHTML = "";
+  for (let w = 1; w <= 52; w++){
+    const b = document.createElement("button");
+    b.className = "wk" + (w === nowWeek ? " now" : "") + (weekFilter === w ? " sel" : "");
+    b.title = `第 ${w} 週`;
+    b.setAttribute("aria-label", `第 ${w} 週`);
+    b.innerHTML = `<span class="lit${map[w]?.lit ? " on" : ""}"></span><span class="econ${map[w]?.econ ? " on" : ""}"></span>`;
+    b.onclick = () => { weekFilter = weekFilter === w ? null : w; render(); };
+    strip.appendChild(b);
+  }
+  const lit = Object.values(map).filter(x => x.lit).length;
+  const econ = Object.values(map).filter(x => x.econ).length;
+  const both = Object.values(map).filter(x => x.lit && x.econ).length;
+  const ideas = entries.filter(e => e.idea?.question).length;
+  document.getElementById("counts").innerHTML =
+    `文獻 <b>${lit}</b>/52　經濟學人 <b>${econ}</b>/52　兩篇齊全 <b>${both}</b> 週　研究點子 <b>${ideas}</b>`;
+  document.getElementById("weekFilterNote").textContent = weekFilter ? `　篩選中：第 ${weekFilter} 週（再點一次取消）` : "";
+}
+
+function renderTags(){
+  const counts = {};
+  entries.forEach(e => (e.tags || []).forEach(t => counts[t] = (counts[t] || 0) + 1));
+  const row = document.getElementById("tagrow");
+  row.innerHTML = "";
+  Object.entries(counts).sort((a,b) => b[1] - a[1]).forEach(([t, n]) => {
+    const b = document.createElement("button");
+    b.className = "tagchip";
+    b.setAttribute("aria-pressed", tagFilter === t);
+    b.innerHTML = esc(t) + "<em>" + n + "</em>";
+    b.onclick = () => { tagFilter = tagFilter === t ? null : t; render(); };
+    row.appendChild(b);
+  });
+}
+
+function match(e){
+  if (weekFilter){
+    const w = isoWeek(e.date);
+    if (!w || w.year !== YEAR || w.week !== weekFilter) return false;
+  }
+  if (tagFilter && !(e.tags || []).includes(tagFilter)) return false;
+  if ((view === "lit" || view === "econ") && e.type !== view) return false;
+  if (view === "idea" && !e.idea?.question) return false;
+  if (query && !JSON.stringify(e).toLowerCase().includes(query.toLowerCase())) return false;
+  return true;
+}
+
+function renderList(){
+  const list = document.getElementById("list");
+  const rows = entries.filter(match).sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+  list.innerHTML = "";
+
+  if (view === "vocab"){
+    const items = rows.filter(e => e.type === "econ").flatMap(e => (e.vocab || []).map(v => ({...v, src: e.title, date: e.date})));
+    if (!items.length){ list.innerHTML = `<div class="empty">還沒有收錄單字。在經濟學人筆記裡填「生字／搭配詞」就會出現在這裡。</div>`; return; }
+    list.innerHTML = `<div class="card"><div class="body" style="display:block;padding:18px">
+      <div class="label">累積 ${items.length} 個詞</div>
+      <ul class="vocab">${items.map(v => `<li><b>${esc(v.term)}</b> — ${esc(v.note)}
+        <div style="font-size:11px;color:var(--ink-faint)">${esc(v.date)}　${esc(v.src)}</div></li>`).join("")}</ul>
+    </div></div>`;
+    return;
+  }
+
+  if (!rows.length){
+    list.innerHTML = `<div class="empty">這個條件下還沒有紀錄。<br>換個篩選條件，或往下新增一筆。</div>`;
+    return;
+  }
+
+  rows.forEach(e => {
+    const w = isoWeek(e.date);
+    const isLocal = local.pending.some(p => p.id === e.id);
+    const card = document.createElement("article");
+    card.className = "card" + (e.type === "econ" ? " econ" : "");
+    const line = e.type === "lit"
+      ? [e.journal, e.year, e.design].filter(Boolean).join("　·　")
+      : [e.section, "The Economist"].filter(Boolean).join("　·　");
+    card.innerHTML = `
+      <button class="card-head">
+        <span class="meta">${esc(e.date)}${isLocal ? '<span class="local" title="尚未上傳"></span>' : ""}<br>W${w ? String(w.week).padStart(2,"0") : "--"}</span>
+        <span style="flex:1">
+          <h3 class="card-title">${esc(e.title)}</h3>
+          <span class="card-line">${esc(line)}</span>
+        </span>
+      </button>
+      <div class="body">
+        ${e.type === "lit" ? litBody(e) : econBody(e)}
+        <div class="tags">${(e.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join("")}
+          <button class="del">刪除</button></div>
+      </div>`;
+    card.querySelector(".card-head").onclick = () => card.classList.toggle("open");
+    card.querySelector(".del").onclick = () => {
+      if (!confirm("刪除這筆紀錄？")) return;
+      local.pending = local.pending.filter(p => p.id !== e.id);
+      if (base.some(b => b.id === e.id)) local.deleted.push(e.id);
+      saveLocal(); render();
+    };
+    list.appendChild(card);
+  });
+}
+
+const field = (label, val) => val ? `<div class="field"><div class="label">${label}</div><div class="val">${esc(val)}</div></div>` : "";
+
+function litBody(e){
+  const p = e.pico || {};
+  const pico = (p.p || p.i || p.c || p.o) ? `<div class="field"><div class="label">PICO</div><dl class="pico">
+      ${p.p ? `<dt>P</dt><dd>${esc(p.p)}</dd>` : ""}
+      ${p.i ? `<dt>I</dt><dd>${esc(p.i)}</dd>` : ""}
+      ${p.c ? `<dt>C</dt><dd>${esc(p.c)}</dd>` : ""}
+      ${p.o ? `<dt>O</dt><dd>${esc(p.o)}</dd>` : ""}</dl></div>` : "";
+  const idea = e.idea?.question ? `<div class="idea"><div class="label">延伸研究問題${e.idea.route ? "　·　" + esc(e.idea.route) : ""}</div>
+      <div class="val">${esc(e.idea.question)}</div></div>` : "";
+  const pmid = e.pmid ? `<div class="field"><div class="label">PMID</div><div class="val">
+      <a href="https://pubmed.ncbi.nlm.nih.gov/${esc(e.pmid)}/" target="_blank" rel="noopener" style="color:var(--sage)">${esc(e.pmid)}</a></div></div>` : "";
+  return pico + field("主要結果", e.keyResult) + field("方法學品質", e.quality) + field("臨床意義", e.clinical) + idea + pmid;
+}
+
+function econBody(e){
+  const vocab = (e.vocab || []).length ? `<div class="field"><div class="label">生字</div>
+      <ul class="vocab">${e.vocab.map(v => `<li><b>${esc(v.term)}</b> — ${esc(v.note)}</li>`).join("")}</ul></div>` : "";
+  const en = e.enSummary ? `<div class="field"><div class="label">English summary</div><div class="en">${esc(e.enSummary)}</div></div>` : "";
+  const link = e.url ? `<div class="field"><div class="label">來源</div><div class="val"><a href="${esc(e.url)}" target="_blank" rel="noopener" style="color:var(--slate)">開啟原文</a></div></div>` : "";
+  return field("主張", e.claim) + field("證據", e.evidence) + field("反方觀點", e.counter) + vocab + en + field("中文筆記", e.zhNotes) + link;
+}
+
+/* controls */
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === b));
+  view = b.dataset.view;
+  renderList();
+});
+document.getElementById("q").oninput = e => { query = e.target.value; renderList(); };
+document.getElementById("f-type").onchange = e => {
+  const lit = e.target.value === "lit";
+  document.getElementById("lit-fields").style.display = lit ? "" : "none";
+  document.getElementById("econ-fields").style.display = lit ? "none" : "";
+};
+document.getElementById("f-date").value = new Date().toISOString().slice(0,10);
+
+const v = id => document.getElementById(id).value.trim();
+
+document.getElementById("add").onclick = () => {
+  const type = v("f-type"), title = v("f-title"), date = v("f-date");
+  const hint = document.getElementById("formHint");
+  if (!title || !date){ hint.textContent = "標題和日期是必填的。"; return; }
+  const tags = v("f-tags").split(",").map(s => s.trim()).filter(Boolean);
+  let e = { id: date + "-" + type + "-" + Math.random().toString(36).slice(2,6), date, type, title, tags };
+  if (type === "lit"){
+    Object.assign(e, {
+      journal: v("f-journal"), year: Number(v("f-year")) || undefined, design: v("f-design"), pmid: v("f-pmid"),
+      pico: { p: v("f-p"), i: v("f-i"), c: v("f-c"), o: v("f-o") },
+      keyResult: v("f-key"), quality: v("f-quality"), clinical: v("f-clinical")
+    });
+    if (v("f-idea")) e.idea = { question: v("f-idea"), route: v("f-route") };
+  } else {
+    Object.assign(e, {
+      section: v("f-section"), url: v("f-url"),
+      claim: v("f-claim"), evidence: v("f-evidence"), counter: v("f-counter"),
+      vocab: v("f-vocab").split("\n").map(l => l.split(/[｜|]/)).filter(a => a[0]?.trim())
+             .map(a => ({ term: a[0].trim(), note: (a[1] || "").trim() })),
+      enSummary: v("f-en"), zhNotes: v("f-zh")
+    });
+  }
+  local.pending.push(e);
+  saveLocal();
+  render();
+  hint.textContent = "已存入這台裝置。要讓另一台看到，記得匯出上傳。";
+  ["f-title","f-journal","f-pmid","f-p","f-i","f-c","f-o","f-key","f-quality","f-clinical","f-idea",
+   "f-section","f-url","f-claim","f-evidence","f-counter","f-vocab","f-en","f-zh","f-tags"]
+   .forEach(id => document.getElementById(id).value = "");
+};
+
+document.getElementById("export").onclick = () => {
+  const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "notes.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+document.getElementById("clear").onclick = () => {
+  if (!confirm("確定 notes.json 已經上傳到 repo 了嗎？清除後這台裝置的暫存就會刪掉，改以 repo 的版本為準。")) return;
+  local = { pending: [], deleted: [] };
+  saveLocal();
+  location.reload();
+};
+
+load();
+</script>
+</body>
+</html>
