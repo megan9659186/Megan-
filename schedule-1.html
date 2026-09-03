@@ -223,7 +223,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-row-label.j{color:#4a7a5a}
 .hs-row-label.n{color:#6a5a90}
 .hs-row-label.y{color:#8a6800}
-.hs-row-label.s{color:#5a4a78}
+.hs-row-label.s{color:#5a4a78;white-space:normal;line-height:1.25;letter-spacing:0}
 .hs-selwrap{display:flex;gap:6px;flex:1}
 .hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hdir.ot{border-color:#c8a860;color:#6a4800;background:#fdf5e0}
@@ -280,6 +280,16 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hw-label{color:#7a2018!important}
 .hb-hw{background:#f5d5c8;color:#7a2018}
 .hb-sick{background:#e2dcec;color:#463265}
+.hb-gong{background:#d8e6dd;color:#1e4a35}
+/* 截止日餘額查詢 */
+.bal-detail{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2px 14px}
+.bal-line{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--ink2)}
+.bal-line:last-child{border-bottom:none}
+.bal-line b{font-family:'Libre Baskerville',serif;font-weight:400;color:var(--ink);font-size:16px;white-space:nowrap}
+.bal-line.sum{color:var(--ink);font-weight:600}
+.bal-line b.plus{color:#1a4a2a}
+.bal-line b.minus{color:#7a2018}
+.bal-note{font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.5}
 /* 追蹤同事班別 */
 .other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
 .other-row.show{display:flex}
@@ -558,6 +568,7 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
       <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
       <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
+      <button class="quick-btn" onclick="quickAction('bal')"><span class="qi">📊</span>查詢截止當日餘額（積休／年休）</button>
     </div>
     <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
   </div>
@@ -649,6 +660,39 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
   </div>
 </div>
 
+<!-- 截止日餘額查詢浮層 -->
+<div class="hours-overlay" id="balOverlay" onclick="if(event.target===this)closeBalSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="balDate"></div>
+      <div class="hs-shift" id="balSub"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="hours-summary" style="margin-top:0">
+        <div class="hs-card jiji">
+          <div class="hs-card-label">積　休</div>
+          <div class="hs-card-val" id="balJiji">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+        <div class="hs-card nian">
+          <div class="hs-card-label">年　休</div>
+          <div class="hs-card-val" id="balNian">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+        <div class="hs-card yan">
+          <div class="hs-card-label">延年休</div>
+          <div class="hs-card-val" id="balYan">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+      </div>
+      <div class="bal-detail" id="balDetail"></div>
+      <div class="bal-note">＊ 只計算「該日（含當日）以前」已登記的時數紀錄；之後的加班／拿時間不列入。</div>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeBalSheet()">關閉</button>
+    </div>
+  </div>
+</div>
+
 <!-- 時數輸入浮層 -->
 <div class="hours-overlay" id="hoursOverlay" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="hours-sheet">
@@ -696,12 +740,13 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
         </div>
       </div>
       <div class="hs-row">
-        <span class="hs-row-label s">事病</span>
+        <span class="hs-row-label s">事病公假</span>
         <div class="hs-selwrap">
           <select class="hhrs sk none" id="sickType" onchange="updateSickStyle()">
             <option value="">無</option>
             <option value="事">事假</option>
             <option value="病">病假</option>
+            <option value="公">公假</option>
           </select>
         </div>
       </div>
@@ -873,6 +918,43 @@ function refreshBalance(){
   document.getElementById('yanFill').style.width=yanPct+'%';
   document.getElementById('yanNums').textContent='已用 '+fmtH(yanU)+' / '+yanTotal+' hr';
 }
+function calcBalanceUntil(cutKey){
+  let addJ=0,takeJ=0,extraJ=0,nianU=0,yanU=0,cnt=0;
+  for(const k in hD){
+    if(k>cutKey)continue;
+    const e=hD[k];let used=false;
+    if(e.jiji>0){if(e.jijiDir==='+')addJ+=e.jiji;else takeJ+=e.jiji;used=true;}
+    if(e.tz){extraJ+=e.tz;used=true;}
+    if(e.hw){extraJ+=e.hw;used=true;}
+    if(e.nian>0){nianU+=e.nian;used=true;}
+    if(e.yan>0){yanU+=e.yan;used=true;}
+    if(e.sick)used=true;
+    if(used)cnt++;
+  }
+  return{addJ,takeJ,extraJ,jiji:jijiInit+addJ+extraJ-takeJ,nianU,nianB:nianTotal-nianU,yanU,yanB:yanTotal-yanU,cnt};
+}
+function openBalSheet(key){
+  selKey=key;
+  const date=kd(key),r=calcBalanceUntil(key),{s}=getShift(date);
+  document.getElementById('balDate').textContent='截止 '+(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）　'+s;
+  document.getElementById('balSub').textContent='含當日，共 '+r.cnt+' 筆時數紀錄';
+  document.getElementById('balJiji').textContent=fmtH(r.jiji);
+  document.getElementById('balNian').textContent=fmtH(r.nianB);
+  document.getElementById('balYan').textContent=fmtH(r.yanB);
+  let h='';
+  h+='<div class="bal-line"><span>積休初始</span><b>'+fmtH(jijiInit)+'</b></div>';
+  h+='<div class="bal-line"><span>加班累計</span><b class="plus">＋'+fmtH(r.addJ)+'</b></div>';
+  if(r.extraJ>0)h+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(r.extraJ)+'</b></div>';
+  h+='<div class="bal-line"><span>拿時間累計</span><b class="minus">－'+fmtH(r.takeJ)+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止當日積休</span><b>'+fmtH(r.jiji)+' hr</b></div>';
+  h+='<div class="bal-line"><span>年休已用</span><b class="minus">'+fmtH(r.nianU)+' / '+nianTotal+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止當日年休</span><b>'+fmtH(r.nianB)+' hr</b></div>';
+  h+='<div class="bal-line"><span>延休已用</span><b class="minus">'+fmtH(r.yanU)+' / '+yanTotal+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止當日延休</span><b>'+fmtH(r.yanB)+' hr</b></div>';
+  document.getElementById('balDetail').innerHTML=h;
+  document.getElementById('balOverlay').classList.add('open');
+}
+function closeBalSheet(){document.getElementById('balOverlay').classList.remove('open');}
 function openHoursSheet(){
   if(!selKey)return;
   const date=kd(selKey);const{s}=getShift(date);
@@ -1355,7 +1437,7 @@ function render(){
       if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};hoursTags.appendChild(b);}
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};hoursTags.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};hoursTags.appendChild(b);}
-      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';hoursTags.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge '+(he.sick==='公'?'hb-gong':'hb-sick');b.textContent=he.sick+'假';hoursTags.appendChild(b);}
       if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};hoursTags.appendChild(b);}
       if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};hoursTags.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};hoursTags.appendChild(b);}
@@ -1416,6 +1498,7 @@ function quickAction(action){
   else if(action==='day')openDaySheet(key);
   else if(action==='plan')openPlanSheet(key);
   else if(action==='hours'){selKey=key;openHoursSheet();}
+  else if(action==='bal')openBalSheet(key);
 }
 function openWeekSheet(key){
   selKey=key;const date=kd(key),mk=monKey(date);
@@ -1502,7 +1585,7 @@ function confirmDayAction(){
   save();renderRecList();render();refreshAllow();closeDaySheet();
 }
 function closeAllSheets(){
-  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay','balOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
   selKey=null;pendingKey=null;
 }
 function renderRecList(){
