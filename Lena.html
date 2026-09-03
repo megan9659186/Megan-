@@ -402,6 +402,14 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 .gym-item.done .gym-name{opacity:0.4;text-decoration:line-through}
 .gym-dur{font-size:12px;color:var(--ink2);flex-shrink:0;white-space:nowrap}
 .gym-del{background:none;border:none;color:var(--pink-mid);font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
+.gym-cal{background:none;border:none;font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.gym-cal:active{opacity:0.5}
+.gym-alarm-row{display:flex;align-items:center;gap:8px;margin:2px 0 10px;padding:9px 12px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border)}
+.gym-alarm-row .gal{font-size:12px;color:var(--ink2);flex-shrink:0}
+.gym-alarm-sel{flex:1;min-width:0;padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--surface);color:var(--ink);font-family:'Libre Franklin',sans-serif;appearance:none;-webkit-appearance:none}
+.gym-cal-all{width:100%;margin-top:10px;padding:11px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--pink-pale);color:var(--pink-deep);font-size:14px;font-weight:600;cursor:pointer;font-family:'Libre Franklin',sans-serif}
+.gym-cal-all:active{opacity:0.75}
+.gym-cal-hint{font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5}
 .gym-add-row{display:flex;gap:6px;margin-top:6px}
 .gym-add-time{flex:0 0 88px;min-width:0;padding:8px 4px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--surface);color:var(--ink);font-family:'Libre Franklin',sans-serif}
 .gym-add-name{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;background:var(--surface);color:var(--ink);font-family:'Libre Franklin',sans-serif}
@@ -615,6 +623,10 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="allow-cell-val" id="gymHrsVal">0 hr</div>
     </div>
   </div>
+  <div class="allow-note" style="padding:10px 12px">
+    <button class="gym-cal-all" style="margin-top:0" onclick="exportGymMonth()">📅 本月課程一次加入 iPhone 行事曆</button>
+    <div class="gym-cal-hint" style="margin-top:6px">重複匯出同一堂課不會變兩筆，行事曆會直接更新時間。請用 Safari 開啟本網頁再匯出。</div>
+  </div>
 </div>
 
 <!-- 快速選單：點日期後先問要幹嘛 -->
@@ -733,8 +745,22 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="hs-shift" id="gymShift"></div>
     </div>
     <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="gym-alarm-row">
+        <span class="gal">⏰ 行事曆提醒</span>
+        <select class="gym-alarm-sel" id="gymAlarmSel" onchange="saveGymAlarm()">
+          <option value="0">課程開始時</option>
+          <option value="10">提前 10 分鐘</option>
+          <option value="15">提前 15 分鐘</option>
+          <option value="30" selected>提前 30 分鐘</option>
+          <option value="60">提前 1 小時</option>
+          <option value="120">提前 2 小時</option>
+          <option value="1440">前一天同一時間</option>
+        </select>
+      </div>
       <div class="field-label">🏋️ 當天課表</div>
       <ul class="gym-list" id="gymList"></ul>
+      <button class="gym-cal-all" id="gymCalAll" onclick="exportGymDay()">📅 全部加入 iPhone 行事曆</button>
+      <div class="gym-cal-hint">按 📅 會下載行事曆檔，iPhone 點開後選「加入全部」，提醒由系統發出。請用 Safari 開這個網頁匯出（主畫面 App 版下載檔案可能失敗）。</div>
       <div class="gym-add-row">
         <input class="gym-add-time" id="gymAddTime" type="time">
         <input class="gym-add-name" id="gymAddName" type="text" placeholder="課程／學員…" onkeydown="if(event.key==='Enter')addGymItem()">
@@ -1486,6 +1512,7 @@ function openGymSheet(key){
   const{s}=getShift(date);
   document.getElementById('gymDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
   updateGymShiftLine(s);
+  const alarmSel=document.getElementById('gymAlarmSel');if(alarmSel)alarmSel.value=String(gymAlarm);
   renderGymList();
   document.getElementById('gymOverlay').classList.add('open');
   setTimeout(()=>{const inp=document.getElementById('gymAddName');if(inp)inp.focus();},300);
@@ -1503,6 +1530,7 @@ function renderGymList(){
     ${it.t?'<span class="gym-time">'+it.t+'</span>':''}
     <span class="gym-name">${(it.name||'').replace(/</g,'&lt;')}</span>
     <span class="gym-dur">${it.min}分</span>
+    <button class="gym-cal" onclick="exportGymItem(${i})" title="加入行事曆">📅</button>
     <button class="gym-del" onclick="deleteGymItem(${i})">✕</button>
   </li>`).join('');
 }
@@ -1526,6 +1554,75 @@ function deleteGymItem(idx){
   const arr=[...gS[selKey]];arr.splice(idx,1);
   if(arr.length)gS[selKey]=arr;else delete gS[selKey];
   save();renderGymList();const{s}=getShift(kd(selKey));updateGymShiftLine(s);render();refreshGym();renderRecList();
+}
+// ── 匯出行事曆（.ics）：由 iPhone 系統發提醒 ──
+let gymAlarm=30;
+try{const v=localStorage.getItem('lena_gym_alarm');if(v!==null&&!isNaN(parseInt(v)))gymAlarm=parseInt(v);}catch(e){}
+function saveGymAlarm(){
+  const el=document.getElementById('gymAlarmSel');if(!el)return;
+  gymAlarm=parseInt(el.value);if(isNaN(gymAlarm))gymAlarm=30;
+  try{localStorage.setItem('lena_gym_alarm',String(gymAlarm));}catch(e){}
+}
+function icsEsc(t){return String(t||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function icsStamp(d){
+  function p(n){return String(n).padStart(2,'0');}
+  return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'T'+p(d.getHours())+p(d.getMinutes())+'00';
+}
+function ensureGid(dateKey,it){
+  if(!it.gid){it.gid='g'+dateKey.replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,8);save();}
+  return it.gid;
+}
+function buildGymEvents(dateKey,items){
+  const out=[];
+  items.forEach((it,i)=>{
+    if(!it.t)return;
+    const d=kd(dateKey),hm=it.t.split(':');
+    const st=new Date(d.getFullYear(),d.getMonth(),d.getDate(),parseInt(hm[0])||0,parseInt(hm[1])||0);
+    const en=new Date(st.getTime()+(parseInt(it.min)||60)*60000);
+    const uid=ensureGid(dateKey,it)+'@lena.schedule';
+    let ev='BEGIN:VEVENT\r\nUID:'+uid+'\r\nDTSTAMP:'+icsStamp(new Date())+'\r\nDTSTART:'+icsStamp(st)+'\r\nDTEND:'+icsStamp(en)+
+      '\r\nSUMMARY:'+icsEsc('🏋️ 重訓課－'+(it.name||'課程'))+
+      '\r\nDESCRIPTION:'+icsEsc('時長 '+(it.min||60)+' 分鐘')+'\r\n';
+    ev+='BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:'+icsEsc('重訓課－'+(it.name||'課程'))+
+      '\r\nTRIGGER:'+(gymAlarm===0?'PT0M':'-PT'+gymAlarm+'M')+'\r\nEND:VALARM\r\n';
+    ev+='END:VEVENT\r\n';
+    out.push(ev);
+  });
+  return out;
+}
+function downloadICS(events,fname){
+  if(!events.length){alert('這堂課還沒填時間，填了時間才能加入行事曆');return;}
+  const ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Lena Schedule//TW//\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\n'+events.join('')+'END:VCALENDAR\r\n';
+  try{
+    const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=fname;a.rel='noopener';
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},2000);
+  }catch(e){alert('匯出失敗，請改用 Safari 開啟本網頁再試一次');}
+}
+function exportGymItem(idx){
+  if(!selKey||!gS[selKey])return;
+  const it=gS[selKey][idx];if(!it)return;
+  downloadICS(buildGymEvents(selKey,[it]),'gym-'+selKey+'.ics');
+}
+function exportGymDay(){
+  if(!selKey)return;
+  const arr=gS[selKey]||[];
+  if(!arr.length){alert('這天還沒有課');return;}
+  downloadICS(buildGymEvents(selKey,arr),'gym-'+selKey+'.ics');
+}
+function exportGymMonth(){
+  let evs=[],n=0;
+  Object.keys(gS).sort().forEach(key=>{
+    const d=kd(key);if(d.getFullYear()!==cy||d.getMonth()!==cm)return;
+    const arr=gS[key]||[];if(!arr.length)return;
+    n+=arr.length;
+    evs=evs.concat(buildGymEvents(key,arr));
+  });
+  if(!n){alert('本月還沒有課');return;}
+  if(!evs.length){alert('本月的課都還沒填時間，填了時間才能加入行事曆');return;}
+  downloadICS(evs,'gym-'+cy+'-'+String(cm+1).padStart(2,'0')+'.ics');
 }
 function refreshGym(){
   let tot=0,done=0,mins=0;
@@ -1552,7 +1649,7 @@ function save(){
   try{localStorage.setItem('lena_gym',JSON.stringify(gS));}catch(e){}
 }
 function exportBackup(){
-  const keys=['lena_wswaps','lena_dswaps','lena_notes','lena_plans','lena_plan_cats','lena_gym','lena_other','lena_other_name','lena_hours','lena_hours_cfg','lena_allow_adj','lena_allow_confirmed','lena_swap_names'];
+  const keys=['lena_wswaps','lena_dswaps','lena_notes','lena_plans','lena_plan_cats','lena_gym','lena_gym_alarm','lena_other','lena_other_name','lena_hours','lena_hours_cfg','lena_allow_adj','lena_allow_confirmed','lena_swap_names'];
   const data={_version:1,_exported:new Date().toISOString()};
   keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v;});
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -1570,7 +1667,7 @@ function importBackup(e){
       const data=JSON.parse(ev.target.result);
       if(!data._version){alert('格式不符，請選擇正確的備份檔');return;}
       if(!confirm('匯入後將覆蓋目前所有資料，確定繼續？'))return;
-      const keys=['lena_wswaps','lena_dswaps','lena_notes','lena_plans','lena_plan_cats','lena_gym','lena_other','lena_other_name','lena_hours','lena_hours_cfg','lena_allow_adj','lena_allow_confirmed','lena_swap_names'];
+      const keys=['lena_wswaps','lena_dswaps','lena_notes','lena_plans','lena_plan_cats','lena_gym','lena_gym_alarm','lena_other','lena_other_name','lena_hours','lena_hours_cfg','lena_allow_adj','lena_allow_confirmed','lena_swap_names'];
       keys.forEach(k=>{if(data[k]!==undefined)localStorage.setItem(k,data[k]);else localStorage.removeItem(k);});
       alert('匯入成功！即將重新載入。');location.reload();
     }catch(err){alert('匯入失敗：'+err.message);}
