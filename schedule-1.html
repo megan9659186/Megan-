@@ -290,6 +290,13 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .bal-line b.plus{color:#1a4a2a}
 .bal-line b.minus{color:#7a2018}
 .bal-note{font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.5}
+.bal-range{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.bal-date{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;text-align:center}
+.bal-date-sep{font-size:13px;color:var(--ink3);flex-shrink:0}
+.bal-chips{display:flex;gap:5px;margin-bottom:14px}
+.bal-chip{flex:1;padding:7px 2px;border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.bal-chip:active{background:var(--surface2)}
+.bal-sec{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:0.3px;margin:16px 0 6px;padding-left:2px}
 /* 追蹤同事班別 */
 .other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
 .other-row.show{display:flex}
@@ -568,7 +575,7 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
       <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
       <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
-      <button class="quick-btn" onclick="quickAction('bal')"><span class="qi">📊</span>查詢截止當日餘額（積休／年休）</button>
+      <button class="quick-btn" onclick="quickAction('bal')"><span class="qi">📊</span>查詢餘額（可自訂起訖日）</button>
     </div>
     <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
   </div>
@@ -669,6 +676,19 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="hs-shift" id="balSub"></div>
     </div>
     <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">查詢區間（起 － 訖）</div>
+      <div class="bal-range">
+        <input class="bal-date" id="balStart" type="date" onchange="renderBal()">
+        <span class="bal-date-sep">－</span>
+        <input class="bal-date" id="balEnd" type="date" onchange="renderBal()">
+      </div>
+      <div class="bal-chips">
+        <button class="bal-chip" onclick="balQuick('zone')">本區間</button>
+        <button class="bal-chip" onclick="balQuick('month')">本月</button>
+        <button class="bal-chip" onclick="balQuick('year')">今年</button>
+        <button class="bal-chip" onclick="balQuick('all')">全部</button>
+      </div>
+      <div class="bal-sec" id="balCardSec">截止訖日餘額</div>
       <div class="hours-summary" style="margin-top:0">
         <div class="hs-card jiji">
           <div class="hs-card-label">積　休</div>
@@ -686,8 +706,11 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
           <div class="hs-card-unit">小時</div>
         </div>
       </div>
+      <div class="bal-sec" id="balRangeSec">區間內增減</div>
+      <div class="bal-detail" id="balRangeDetail"></div>
+      <div class="bal-sec" id="balCumSec">截止訖日累計</div>
       <div class="bal-detail" id="balDetail"></div>
-      <div class="bal-note">＊ 只計算「該日（含當日）以前」已登記的時數紀錄；之後的加班／拿時間不列入。</div>
+      <div class="bal-note">＊ 上方三張卡與「累計」是從最初算到<b>訖日</b>（含當日）的餘額；「區間內增減」只算起～訖之間的紀錄。起訖日可自行修改。</div>
       <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeBalSheet()">關閉</button>
     </div>
   </div>
@@ -918,40 +941,81 @@ function refreshBalance(){
   document.getElementById('yanFill').style.width=yanPct+'%';
   document.getElementById('yanNums').textContent='已用 '+fmtH(yanU)+' / '+yanTotal+' hr';
 }
-function calcBalanceUntil(cutKey){
-  let addJ=0,takeJ=0,extraJ=0,nianU=0,yanU=0,cnt=0;
+function calcRange(aKey,bKey){
+  let addJ=0,takeJ=0,extraJ=0,nianU=0,yanU=0,cnt=0;const leave={};
   for(const k in hD){
-    if(k>cutKey)continue;
+    if(k<aKey||k>bKey)continue;
     const e=hD[k];let used=false;
     if(e.jiji>0){if(e.jijiDir==='+')addJ+=e.jiji;else takeJ+=e.jiji;used=true;}
     if(e.tz){extraJ+=e.tz;used=true;}
     if(e.hw){extraJ+=e.hw;used=true;}
     if(e.nian>0){nianU+=e.nian;used=true;}
     if(e.yan>0){yanU+=e.yan;used=true;}
-    if(e.sick)used=true;
+    if(e.sick){leave[e.sick]=(leave[e.sick]||0)+1;used=true;}
     if(used)cnt++;
   }
-  return{addJ,takeJ,extraJ,jiji:jijiInit+addJ+extraJ-takeJ,nianU,nianB:nianTotal-nianU,yanU,yanB:yanTotal-yanU,cnt};
+  return{addJ,takeJ,extraJ,net:addJ+extraJ-takeJ,nianU,yanU,cnt,leave};
+}
+function calcBalanceUntil(cutKey){
+  const r=calcRange('0000-01-01',cutKey);
+  return{addJ:r.addJ,takeJ:r.takeJ,extraJ:r.extraJ,jiji:jijiInit+r.net,nianU:r.nianU,nianB:nianTotal-r.nianU,yanU:r.yanU,yanB:yanTotal-r.yanU,cnt:r.cnt,leave:r.leave};
+}
+function balMD(key){const d=kd(key);return(d.getMonth()+1)+'/'+d.getDate();}
+function earliestHourKey(){const ks=Object.keys(hD).sort();return ks.length?ks[0]:null;}
+function balQuick(kind){
+  const eEl=document.getElementById('balEnd'),sEl=document.getElementById('balStart');
+  const b=eEl.value||dk(new Date()),d=kd(b);
+  let a=b;
+  if(kind==='zone')a=dk(zoneStart(absZoneNum(d)));
+  else if(kind==='month')a=dk(new Date(d.getFullYear(),d.getMonth(),1));
+  else if(kind==='year')a=dk(new Date(d.getFullYear(),0,1));
+  else if(kind==='all')a=earliestHourKey()||b;
+  if(a>b)a=b;
+  eEl.value=b;sEl.value=a;renderBal();
+}
+function renderBal(){
+  const sEl=document.getElementById('balStart'),eEl=document.getElementById('balEnd');
+  let b=eEl.value||dk(new Date()),a=sEl.value||b;
+  if(a>b){const t=a;a=b;b=t;}
+  sEl.value=a;eEl.value=b;
+  const cum=calcBalanceUntil(b),rg=calcRange(a,b);
+  const dEnd=kd(b);
+  document.getElementById('balDate').textContent=balMD(a)+' － '+balMD(b)+'（訖：週'+DZ[dEnd.getDay()]+'）';
+  document.getElementById('balSub').textContent='區間內 '+rg.cnt+' 筆　／　截止訖日累計 '+cum.cnt+' 筆';
+  document.getElementById('balCardSec').textContent='截止 '+balMD(b)+' 的餘額';
+  document.getElementById('balRangeSec').textContent='區間內增減（'+balMD(a)+' － '+balMD(b)+'）';
+  document.getElementById('balCumSec').textContent='截止 '+balMD(b)+' 累計';
+  document.getElementById('balJiji').textContent=fmtH(cum.jiji);
+  document.getElementById('balNian').textContent=fmtH(cum.nianB);
+  document.getElementById('balYan').textContent=fmtH(cum.yanB);
+  let g='';
+  g+='<div class="bal-line"><span>加班</span><b class="plus">＋'+fmtH(rg.addJ)+'</b></div>';
+  if(rg.extraJ>0)g+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(rg.extraJ)+'</b></div>';
+  g+='<div class="bal-line"><span>拿時間</span><b class="minus">－'+fmtH(rg.takeJ)+'</b></div>';
+  g+='<div class="bal-line sum"><span>積休淨增減</span><b class="'+(rg.net<0?'minus':'plus')+'">'+(rg.net<0?'－':'＋')+fmtH(Math.abs(rg.net))+' hr</b></div>';
+  g+='<div class="bal-line"><span>年休使用</span><b class="minus">－'+fmtH(rg.nianU)+' hr</b></div>';
+  g+='<div class="bal-line"><span>延休使用</span><b class="minus">－'+fmtH(rg.yanU)+' hr</b></div>';
+  const lv=['事','病','公'].filter(k=>rg.leave[k]);
+  if(lv.length)g+='<div class="bal-line"><span>事病公假</span><b>'+lv.map(k=>k+'假 '+rg.leave[k]+' 天').join('　')+'</b></div>';
+  document.getElementById('balRangeDetail').innerHTML=g;
+  let h='';
+  h+='<div class="bal-line"><span>積休初始</span><b>'+fmtH(jijiInit)+'</b></div>';
+  h+='<div class="bal-line"><span>加班累計</span><b class="plus">＋'+fmtH(cum.addJ)+'</b></div>';
+  if(cum.extraJ>0)h+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(cum.extraJ)+'</b></div>';
+  h+='<div class="bal-line"><span>拿時間累計</span><b class="minus">－'+fmtH(cum.takeJ)+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日積休</span><b>'+fmtH(cum.jiji)+' hr</b></div>';
+  h+='<div class="bal-line"><span>年休已用</span><b class="minus">'+fmtH(cum.nianU)+' / '+nianTotal+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日年休</span><b>'+fmtH(cum.nianB)+' hr</b></div>';
+  h+='<div class="bal-line"><span>延休已用</span><b class="minus">'+fmtH(cum.yanU)+' / '+yanTotal+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日延休</span><b>'+fmtH(cum.yanB)+' hr</b></div>';
+  document.getElementById('balDetail').innerHTML=h;
 }
 function openBalSheet(key){
   selKey=key;
-  const date=kd(key),r=calcBalanceUntil(key),{s}=getShift(date);
-  document.getElementById('balDate').textContent='截止 '+(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）　'+s;
-  document.getElementById('balSub').textContent='含當日，共 '+r.cnt+' 筆時數紀錄';
-  document.getElementById('balJiji').textContent=fmtH(r.jiji);
-  document.getElementById('balNian').textContent=fmtH(r.nianB);
-  document.getElementById('balYan').textContent=fmtH(r.yanB);
-  let h='';
-  h+='<div class="bal-line"><span>積休初始</span><b>'+fmtH(jijiInit)+'</b></div>';
-  h+='<div class="bal-line"><span>加班累計</span><b class="plus">＋'+fmtH(r.addJ)+'</b></div>';
-  if(r.extraJ>0)h+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(r.extraJ)+'</b></div>';
-  h+='<div class="bal-line"><span>拿時間累計</span><b class="minus">－'+fmtH(r.takeJ)+'</b></div>';
-  h+='<div class="bal-line sum"><span>截止當日積休</span><b>'+fmtH(r.jiji)+' hr</b></div>';
-  h+='<div class="bal-line"><span>年休已用</span><b class="minus">'+fmtH(r.nianU)+' / '+nianTotal+'</b></div>';
-  h+='<div class="bal-line sum"><span>截止當日年休</span><b>'+fmtH(r.nianB)+' hr</b></div>';
-  h+='<div class="bal-line"><span>延休已用</span><b class="minus">'+fmtH(r.yanU)+' / '+yanTotal+'</b></div>';
-  h+='<div class="bal-line sum"><span>截止當日延休</span><b>'+fmtH(r.yanB)+' hr</b></div>';
-  document.getElementById('balDetail').innerHTML=h;
+  const d=kd(key);
+  document.getElementById('balEnd').value=key;
+  document.getElementById('balStart').value=dk(zoneStart(absZoneNum(d)));
+  renderBal();
   document.getElementById('balOverlay').classList.add('open');
 }
 function closeBalSheet(){document.getElementById('balOverlay').classList.remove('open');}
