@@ -8,143 +8,418 @@
 <meta name="apple-mobile-web-app-title" content="Cow排班">
 <link rel="apple-touch-icon" href="Cow.png">
 <title>Cow 排班</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── Cow 橙黃暖色主題 ── */
-/* 主色：#b86020 深橙棕  強調：#e8950a 橙黃  底色：#fdf3e4 奶油  卡片：#fae8c8  邊框：#d9a86a  輔助文字：#8a6038 */
+:root{
+  --bg:#fdf3e4;
+  --surface:#fffaf3;
+  --surface2:#fae8c8;
+  --border:#ecd9bc;
+  --border2:#d9a86a;
+  --ink:#3a2008;
+  --ink2:#8a6038;
+  --ink3:#b09068;
+  --accent:#b86020;
+  --accent2:#8a4a18;
+  --red:#c03020;
+  --red-soft:#f8e6dc;
+  --radius:12px;
+  --radius-sm:8px;
+}
+@keyframes hup{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#3a2008;background:#fdf3e4;padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 12px 12px;font-size:18px}
-.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.nav h2{font-size:25px;font-weight:600;color:#b86020}
-.nav button{background:#b86020;color:#fff;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:18px}
-/* ── 月曆（格子内字體不動，只改顏色） ── */
-.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.dh{text-align:center;font-size:14px;color:#b88040;padding:4px 0;font-weight:600}
-.cell{position:relative;background:#fdf8f0;border:0.5px solid #d9a86a;border-radius:0;min-height:70px;display:flex;flex-direction:column;overflow:visible;cursor:pointer}
-.cell.empty{background:transparent;border-color:transparent;cursor:default}
-.cell.today .dn{background:#b86020;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.cell.swapped .badge{background:#e8950a}
-.cell.has-note::after{content:'•';position:absolute;top:2px;right:4px;font-size:10px;color:#b88040;z-index:5}
-.cell.selected .top{background:#fce4c0!important}
-.cell.selected .dn{color:#8a3000!important}
-.cell.selected .bot{background:#faecd8!important}
-.cell.other-working{background:#f0f4fc!important}
-.cell.other-working .bot{background:#dde8f8!important}
-.cell.z-top{border-top:3px solid var(--zc)!important}
-.cell.z-bottom{border-bottom:3px solid var(--zc)!important}
-.cell.z-left{border-left:3px solid var(--zc)!important}
-.cell.z-right{border-right:3px solid var(--zc)!important}
-.badge{position:absolute;top:-7px;left:-7px;width:22px;height:22px;background:#b86020;color:#fff;border-radius:50%;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;z-index:10}
-.top{background:#fff8f0;flex:0 0 50%;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:10px}
-.hol-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:8px;color:#c03020;font-weight:600;line-height:1}
-.dn{font-size:21px;font-weight:600;color:#3a2008}
-.dn.holiday{color:#c03020}
-.bot{flex:0 0 50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;padding:2px;flex-direction:column}
-/* 班別配色：調整為橙黃系，但保留各班視覺區分 */
+body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 24px 12px;font-size:17px}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.nav h2{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:400;color:var(--ink);letter-spacing:-0.3px}
+.nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.nav button:active{background:var(--surface2)}
+.today-btn{display:none;margin:0 auto 10px;padding:6px 18px;background:transparent;color:var(--ink2);border:1px solid var(--border2);border-radius:99px;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.today-btn:active{background:var(--surface2)}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;background:var(--bg);width:100%}
+.dh{min-width:0;text-align:center;font-size:13px;color:var(--ink3);padding:5px 0 7px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.cell{position:relative;min-width:0;width:100%;height:118px;min-height:0;background:var(--surface);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0;display:flex;flex-direction:column;overflow:visible;cursor:pointer;transition:background 0.1s}
+.cell:nth-child(7n){border-right:none}
+.cell.empty{background:var(--bg);border-color:transparent;cursor:default;height:118px;min-height:0}
+/* badge 防裁切 */
+.grid#grid{overflow:visible;margin-top:6px;grid-auto-rows:118px}
+.cell.today{background:#fdf0d8}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.cell.swapped .badge{background:#d4b896;color:#6a4828}
+.hb-swap{background:#e8dcc0;color:#6a4828}
+.who-row{display:flex;gap:6px;align-items:center;margin-top:6px}
+.who-del{width:38px;height:38px;flex-shrink:0;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink3);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 換班預告條 */
+.swap-bar{display:none;margin-top:10px;background:var(--surface);border:1px solid #e0d2b4;border-radius:var(--radius);overflow:hidden}
+.swap-bar.show{display:block}
+.swap-bar-head{padding:11px 14px;font-size:15px;font-weight:600;color:#8a6a30;letter-spacing:0.5px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.swap-bar-head.open{border-bottom:1px solid #f0e6d2}
+.swap-bar-head:active{background:#fdf0dc}
+.swap-bar-toggle{font-size:14px;color:var(--ink3);font-weight:400;letter-spacing:0}
+.swap-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer}
+.swap-item:last-child{border-bottom:none}
+.swap-item:active{background:#fdf0dc}
+.swap-item.past{opacity:0.45}
+.swap-when{font-size:15px;color:var(--ink);font-weight:500;white-space:nowrap}
+.swap-flow{flex:1;font-size:14px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swap-who{font-size:14px;font-weight:600;color:#6a4828;background:#f3e8d2;padding:3px 9px;border-radius:99px;white-space:nowrap;max-width:96px;overflow:hidden;text-overflow:ellipsis}
+.swap-who.none{background:var(--surface2);color:var(--ink3);font-weight:400}
+.swap-x{flex-shrink:0;width:34px;height:34px;-webkit-tap-highlight-color:transparent;border:1px solid var(--border2);border-radius:50%;background:var(--surface);color:var(--ink3);font-size:14px;line-height:1;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;padding:0}
+.swap-x:active{background:var(--red-soft);color:var(--red);border-color:#e0c0b8}
+.swap-item.confirming{background:var(--red-soft)}
+.swap-empty{padding:16px 14px;text-align:center;font-size:15px;color:var(--ink3)}
+.swap-ask{flex:1;font-size:14px;color:var(--red);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swap-yes{flex-shrink:0;padding:8px 14px;border:none;border-radius:var(--radius-sm);background:var(--red);color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.swap-no{flex-shrink:0;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.cell.has-note::after{content:'·';position:absolute;top:3px;right:5px;font-size:14px;color:var(--ink3);z-index:5;line-height:1}
+.plan-pin{position:absolute;top:1px;right:2px;font-size:10px;line-height:1;z-index:6;pointer-events:none}
+.cell.selected{background:#fae8c8!important}
+.cell.selected .bot{opacity:0.8}
+.cell.other-working{background:#f0f4f8!important}
+.cell.z-top{border-top:2px solid var(--zc)!important}
+.cell.z-bottom{border-bottom:2px solid var(--zc)!important}
+.cell.z-left{border-left:2px solid var(--zc)!important}
+.cell.z-right{border-right:2px solid var(--zc)!important}
+/* BADGE */
+.badge{position:absolute;top:-8px;left:-8px;width:23px;height:23px;background:var(--accent);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
+.top{background:transparent;flex:0 0 auto;min-height:28px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:1px}
+.hol-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--red);font-weight:700;line-height:1;letter-spacing:0}
+.memo-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--ink2);font-weight:700;line-height:1;letter-spacing:0}
+.dn{font-size:21px;font-weight:400;color:var(--ink);font-family:'Libre Baskerville',serif}
+.dn.holiday{color:var(--red)}
+.bot{flex:0 0 auto;min-width:0;display:flex;flex-direction:column;align-items:stretch;font-size:14px;font-weight:600;padding:0;letter-spacing:0.1px}
+.shift-main{min-width:0;min-height:22px;padding:0 2px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.hours-tags,.swap-tags{min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 1px;border-top:1px solid rgba(70,60,50,.18);background:var(--surface)}
+.hours-tags:empty,.swap-tags:empty{display:none}
+/* 月曆行程：直接顯示在每天格子內 */
+.cell-plans{flex:1 1 auto;min-width:0;width:100%;min-height:0;padding:4px 3px 3px;display:flex;flex-direction:column;gap:3px;overflow:hidden;background:rgba(255,255,255,0.72)}
+.cell-plan{display:block;min-width:0;width:100%;max-width:100%;font-size:10px;line-height:1.2;color:var(--event-ink,#5f5143);background:var(--event-bg,#f0ece4);border-left:3px solid var(--event,#8a6a30);border-radius:4px;padding:1px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:600}
+.cell-plan.done{opacity:.45;text-decoration:line-through}
+.cell-plan.observance{--event:#b86f6b;--event-bg:#f5e3e1;--event-ink:#733d39;font-weight:700}
+.cell-plan.observance.memo{--event:#96938f;--event-bg:#ecebea;--event-ink:#514e4a}
+.cell-plan-more{font-size:10px;line-height:1.2;color:var(--ink3);padding-left:4px;font-weight:600}
+.cell-plan-empty{flex:1}
+/* SHIFT COLOURS */
 .sD{background:#faecd8;color:#6a3808}
 .sDhol{background:#e8c898;color:#4a2000}
 .sE{background:#c8d8e8;color:#203858}
 .sN{background:#e8d888;color:#504010}
 .sOFF{background:#e8b0a8;color:#680808}
 .s12{background:#b8cca8;color:#203018}
-/* ── Panel ── */
-.panel{background:#fdf8f0;border:1px solid #d9a86a;border-radius:12px;padding:16px;margin-top:14px;display:none}
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:12px;display:none}
 .panel.open{display:block}
-.panel-title{font-size:19px;font-weight:600;margin-bottom:4px;color:#b86020}
-.panel-sub{font-size:16px;color:#8a6038;margin-bottom:4px}
-.panel-hol{font-size:16px;color:#c03020;font-weight:600;margin-bottom:10px;display:none}
-.tabs{display:flex;gap:6px;margin-bottom:14px}
-.tab-btn{flex:1;padding:9px;border:1px solid #d9a86a;border-radius:8px;background:transparent;font-size:16px;cursor:pointer;color:#8a6038}
-.tab-btn.active{background:#b86020;color:#fff;border-color:#b86020}
-.field-label{font-size:16px;color:#8a6038;margin-bottom:5px}
-select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;background:#fff8f0;color:#3a2008;font-size:18px;appearance:none}
+.panel-title{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400;margin-bottom:3px;color:var(--ink)}
+.panel-sub{font-size:13px;color:var(--ink2);margin-bottom:4px;font-weight:400}
+.panel-hol{font-size:13px;color:var(--red);font-weight:500;margin-bottom:10px;display:none}
+.plan-field{background:#fdf4e4;border:1px solid #e8d0a8;border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px}
+.plan-field .field-label{margin-bottom:6px;color:#8a6a30}
+.plan-field .note-area{margin-top:0;min-height:50px;background:#fffaf0;border-color:#e0d2b4}
+.tabs{display:flex;gap:1px;margin-bottom:16px;background:var(--surface2);border-radius:var(--radius-sm);padding:3px}
+.tab-btn{flex:1;padding:8px;border:none;border-radius:6px;background:transparent;font-size:13px;cursor:pointer;color:var(--ink2);font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.field-label{font-size:12px;color:var(--ink3);margin-bottom:6px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
+select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:15px;appearance:none;font-family:'DM Sans',sans-serif;font-weight:400}
 .preview-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:10px}
-.pg-head{text-align:center;background:#b86020;color:#fff;border-radius:4px;font-size:10px;padding:3px 1px;font-weight:600}
-.pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:10px;font-weight:600}
-.shift-btns{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.sb{padding:7px 11px;border-radius:8px;border:1px solid #d9a86a;font-size:15px;cursor:pointer;font-weight:600}
-.sb.active{border:2px solid #b86020}
-.note-area{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;font-size:18px;background:#fff8f0;color:#3a2008;margin-top:6px;min-height:70px;resize:none;font-family:inherit}
-.confirm-btn{width:100%;padding:13px;background:#b86020;color:#fff;border:none;border-radius:8px;font-size:19px;font-weight:600;cursor:pointer;margin-top:14px}
-.cancel-btn{width:100%;padding:10px;background:transparent;color:#8a6038;border:1px solid #d9a86a;border-radius:8px;font-size:16px;cursor:pointer;margin-top:8px}
-.sec-title{font-size:19px;font-weight:600;color:#b86020;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid #d9a86a}
+.pg-head{text-align:center;background:var(--accent);color:#fff;border-radius:4px;font-size:9px;padding:3px 1px;font-weight:500;letter-spacing:0.3px}
+.pg-cell{text-align:center;padding:5px 1px;border-radius:4px;font-size:9px;font-weight:500}
+.shift-btns{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.sb{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border2);font-size:12px;cursor:pointer;font-weight:500;background:var(--surface);color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all 0.1s}
+.sb.active{border-color:var(--accent)!important;box-shadow:0 0 0 2px var(--accent)}
+.sb.sD{background:#faecd8;color:#6a3808;border-color:#e0c898}
+.sb.sDhol{background:#e8c898;color:#4a2000;border-color:#d0a860}
+.sb.sE{background:#c8d8e8;color:#203858;border-color:#a8c0d8}
+.sb.sN{background:#e8d888;color:#504010;border-color:#d0bc60}
+.sb.sOFF{background:#e8b0a8;color:#680808;border-color:#d09088}
+.sb.s12{background:#b8cca8;color:#203018;border-color:#a0b890}
+.note-area{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:15px;background:var(--surface);color:var(--ink);margin-top:6px;min-height:70px;resize:none;font-family:'DM Sans',sans-serif;font-weight:400}
+.confirm-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:16px;font-weight:500;cursor:pointer;margin-top:16px;font-family:'DM Sans',sans-serif;letter-spacing:0.2px;transition:opacity 0.1s}
+.confirm-btn:active{opacity:0.85}
+.cancel-btn{width:100%;padding:11px;background:transparent;color:var(--ink3);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif}
+.sec-title{font-family:'Libre Baskerville',serif;font-size:18px;font-weight:400;color:var(--ink);margin:20px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
 .rec-list{list-style:none}
-.rec-item{padding:10px 0;border-bottom:0.5px solid #e8c898}
+.rec-item{padding:12px 0;border-bottom:1px solid var(--border)}
 .rec-item:last-child{border:none}
 .rec-item-head{display:flex;align-items:center;gap:8px}
-.rec-tag{font-size:13px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
-.rec-tag.week{background:#fce4c0;color:#8a3800}
-.rec-tag.day{background:#fdf0d8;color:#7a4010}
-.rec-desc{flex:1;font-size:16px}
-.rec-del{background:none;border:none;color:#d07858;font-size:20px;cursor:pointer;padding:0 4px}
-.rec-note{font-size:15px;color:#8a6038;margin-top:4px;padding-left:4px;border-left:2px solid #d9a86a}
-.empty-msg{font-size:16px;color:#8a6038;text-align:center;padding:18px 0}
+.rec-tag{font-size:10px;padding:3px 8px;border-radius:4px;font-weight:600;white-space:nowrap;letter-spacing:0.3px;text-transform:uppercase}
+.rec-tag.week{background:var(--surface2);color:var(--ink2)}
+.rec-tag.day{background:#f0ece4;color:var(--accent2)}
+.rec-tag.plan{background:#f3ecdd;color:#7a5a20}
+.rec-desc{flex:1;font-size:13px;color:var(--ink);font-weight:400}
+.rec-del{background:none;border:none;color:var(--ink3);font-size:16px;cursor:pointer;padding:0 4px}
+.rec-note{font-size:12px;color:var(--ink2);margin-top:5px;padding-left:10px;border-left:2px solid var(--border2)}
+.empty-msg{font-size:13px;color:var(--ink3);text-align:center;padding:20px 0}
 /* ── 時數功能 ── */
-.hours-summary{display:flex;gap:8px;margin-top:10px}
-.hs-card{flex:1;border-radius:10px;padding:10px 12px;border:1px solid #d9a86a}
-.hs-card.jiji{background:#fcecd8;border-color:#d9903a}
-.hs-card.nian{background:#fef4d8;border-color:#e0b840}
-.hs-card-label{font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
-.hs-card.jiji .hs-card-label{color:#8a4010}
-.hs-card.nian .hs-card-label{color:#7a5800}
-.hs-card-val{font-size:26px;font-weight:700;line-height:1}
-.hs-card.jiji .hs-card-val{color:#b86020}
-.hs-card.nian .hs-card-val{color:#a07000}
-.hs-card-unit{font-size:13px;color:#8a6038;margin-top:2px}
-.nian-bar-row{display:flex;align-items:center;gap:8px;background:#fdf8f0;border:1px solid #d9a86a;border-radius:10px;padding:10px 14px;margin-top:8px}
-.nbl{font-size:14px;font-weight:700;color:#c07820;width:28px;flex-shrink:0}
-.nbt{flex:1;height:6px;background:#ead8b8;border-radius:99px;overflow:hidden}
-.nbf{height:100%;background:#c87830;border-radius:99px;transition:width 0.4s}
-.nbn{font-size:13px;color:#8a6038;white-space:nowrap;min-width:80px;text-align:right}
+.hours-summary{display:flex;gap:6px;margin-top:10px}
+.hs-card{flex:1;border-radius:var(--radius-sm);padding:8px 9px;border:1px solid var(--border);background:var(--surface)}
+.hs-card.jiji{background:#f0f7f2;border-color:#c8ddd0}
+.hs-card.nian{background:#f2f0f8;border-color:#ccc8dc}
+.hs-card.yan{background:#fdf6e8;border-color:#e0cc90}
+.hs-card-label{font-size:14px;font-weight:700;letter-spacing:.8px;margin-bottom:4px;text-transform:uppercase}
+.hs-card.jiji .hs-card-label{color:#4a7a5a}
+.hs-card.nian .hs-card-label{color:#6a5a90}
+.hs-card.yan  .hs-card-label{color:#8a6800}
+.hs-card-val{font-family:'Libre Baskerville',serif;font-size:21px;font-weight:400;line-height:1}
+.hs-card.jiji .hs-card-val{color:#1a4a2a}
+.hs-card.nian .hs-card-val{color:#3a2a70}
+.hs-card.yan  .hs-card-val{color:#8a6800}
+.hs-card-unit{font-size:10px;color:var(--ink3);margin-top:2px}
+/* 年休/延年休進度條 */
+.nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
+.nbl{font-size:13px;font-weight:600;color:var(--ink3);width:28px;flex-shrink:0;letter-spacing:0.3px}
+.nbt{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.nbf{height:100%;background:var(--accent);border-radius:99px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.nbf.yan-bar{background:#c8a030}
+.nbn{font-size:13px;color:var(--ink3);white-space:nowrap;min-width:80px;text-align:right}
+/* 設定 */
 .hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap}
-.nts-group{display:flex;align-items:center;gap:5px}
-.nts-label{font-size:13px;color:#8a6038}
-.nts-input{width:60px;padding:3px 6px;border:1px solid #d9a86a;border-radius:6px;font-size:15px;font-weight:600;color:#8a3800;background:#fff8f0;text-align:center;font-family:inherit}
-.nts-input.jiji-color{color:#b86020}
-.hbadge{display:block;font-size:8px;font-weight:700;padding:1px 3px;border-radius:3px;line-height:1.4;text-align:center;margin-top:1px}
-.hb-j-p{background:#fce4c0;color:#8a4010}
-.hb-j-m{background:#f8e0d8;color:#a02010}
-.hb-n-m{background:#f8e0d8;color:#a02010}
-.hours-trigger-btn{width:100%;padding:10px;background:#fae8c8;color:#8a5020;border:1px solid #d9a86a;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
-.hours-trigger-btn.has-data{background:#fcd8a0;color:#8a3800;border-color:#c87830}
-/* ── 時數浮層 ── */
-.hours-overlay{display:none;position:fixed;inset:0;background:rgba(58,32,8,0.35);z-index:300;align-items:flex-end;justify-content:center}
+.nts-group{display:flex;align-items:center;gap:6px}
+.nts-label{font-size:13px;color:var(--ink3)}
+.nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
+.nts-input.jiji-color{color:#1a4a2a}
+/* 本區間積休明細 */
+.zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px 8px}
+.zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:10px}
+.zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.zone-rec-nav button:active{background:var(--surface2)}
+.zone-rec-title{font-size:13px;font-weight:600;color:#4a7a5a}
+.zone-rec-range{text-align:center;font-size:11px;color:var(--ink3);margin-top:1px;margin-bottom:3px}
+.zone-today-btn{display:none;margin:0 auto 6px;padding:2px 10px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
+.zone-today-btn:active{background:var(--surface2)}
+.zone-rec-summary{display:flex;gap:6px}
+.zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:11px 8px;text-align:center;border:1px solid var(--border)}
+.zone-rec-box.add{background:#f0f7f2;border-color:#c8ddd0}
+.zone-rec-box.take{background:#faf0ee;border-color:#e0c8c4}
+.zone-rec-box-label{font-size:13px;font-weight:700;color:var(--ink3);margin-bottom:4px}
+.zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+/* hbadge */
+.hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:1px 3px;border-radius:4px;line-height:1.2;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bot.overtime{color:#8b2020!important;font-weight:600}
+.hb-j-p{background:#d8edd8;color:#1a4a2a}
+.hb-j-m{background:#f0ddd8;color:#7a2018}
+.hb-n-m{background:#f0ddd8;color:#7a2018}
+.hb-y-m{background:#fdf0c8;color:#8a6800}
+.hb-other{background:#dde4ec;color:#1a3050}
+.hbadge.tappable{cursor:pointer}
+.hbadge.tappable:active{opacity:0.6}
+.hbadge.confirmed{box-shadow:inset 0 0 0 1px #4a7a90;font-weight:700}
+/* hours trigger btn */
+.hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
+.hours-trigger-btn.has-data{background:#f0f7f2;color:#1a4a2a;border-color:#c8ddd0}
+/* 浮層 */
+.hours-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:300;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .hours-overlay.open{display:flex}
-.hours-sheet{background:#fdf3e4;border-radius:18px 18px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.2s ease}
-@keyframes hup{from{transform:translateY(50px);opacity:0}to{transform:translateY(0);opacity:1}}
-.hs-handle{padding:10px 0 0;display:flex;justify-content:center}
-.hs-handle-bar{width:36px;height:4px;background:#d9a86a;border-radius:99px}
-.hs-head{padding:10px 16px 10px;border-bottom:1px solid #d9a86a}
-.hs-date{font-size:17px;font-weight:600;color:#b86020}
-.hs-shift{font-size:14px;color:#8a6038;margin-top:2px}
-.hs-body{padding:14px 16px 16px}
-.hs-row{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.hs-row-label{font-size:15px;font-weight:700;width:28px;flex-shrink:0}
-.hs-row-label.j{color:#b86020}
-.hs-row-label.n{color:#a07000}
+.hours-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
+.hs-handle{padding:12px 0 0;display:flex;justify-content:center}
+.hs-handle-bar{width:36px;height:3px;background:var(--border2);border-radius:99px}
+.hs-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.hs-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
+.hs-shift{font-size:12px;color:var(--ink3);margin-top:2px}
+.hs-body{padding:16px 18px 18px}
+.hs-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.hs-row-label{font-size:12px;font-weight:600;width:28px;flex-shrink:0;letter-spacing:0.3px;text-transform:uppercase}
+.hs-row-label.j{color:#4a7a5a}
+.hs-row-label.n{color:#6a5a90}
+.hs-row-label.y{color:#8a6800}
+.hs-row-label.s{color:#5a4a78;white-space:normal;line-height:1.25;letter-spacing:0}
 .hs-selwrap{display:flex;gap:6px;flex:1}
-.hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid #d9a86a;border-radius:8px;padding:9px 6px 9px 10px;font-size:16px;font-weight:700;background:#fff8f0;color:#3a2008;font-family:inherit;cursor:pointer}
-.hdir.ot{border-color:#c87830;color:#7a3800;background:#fce8c0}
-.hdir.jm{border-color:#d09080;color:#900808;background:#f8e0d8}
-.hdir.nm{border-color:#d09080;color:#900808;background:#f8e0d8}
-.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid #d9a86a;border-radius:8px;padding:9px 10px;font-size:16px;font-weight:600;background:#fff8f0;color:#3a2008;font-family:inherit;cursor:pointer}
-.hs-btns{display:flex;gap:8px;margin-top:4px}
-.hs-btn-clear{padding:10px 12px;border:1px solid #d09080;border-radius:8px;background:#f8e0d8;color:#900808;font-size:15px;cursor:pointer;font-family:inherit}
-.hs-btn-cancel{flex:1;padding:10px;border:1px solid #d9a86a;border-radius:8px;background:transparent;color:#8a6038;font-size:16px;cursor:pointer;font-family:inherit}
-.hs-btn-save{flex:2;padding:10px;border:none;border-radius:8px;background:#b86020;color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
-.hcustom{width:100%;padding:9px 12px;border:1px solid #c87830;border-radius:8px;font-size:17px;font-weight:600;background:#fce8c0;color:#7a3800;font-family:inherit;outline:none}
-/* ── 夜班津貼 ── */
-.allow-wrap{margin-top:10px;background:#fdf8f0;border:1px solid #d9a86a;border-radius:10px;overflow:hidden}
-.allow-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px}
-.allow-title{font-size:14px;font-weight:700;color:#7a4010;letter-spacing:1px}
-.allow-month-total{font-size:15px;font-weight:700;color:#b86020}
-.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #e8c898}
-.allow-cell{padding:8px 10px;border-right:1px solid #e8c898;border-bottom:1px solid #e8c898}
+.hdir{flex:0 0 96px;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;font-weight:500;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hdir.ot{border-color:#c8a860;color:#6a4800;background:#fdf5e0}
+.hdir.jm{border-color:#d0a8a0;color:#7a2018;background:#faf0ee}
+.hdir.nm{border-color:#d0a8a0;color:#7a2018;background:#faf0ee}
+.hdir.ym{border-color:#e0cc90;color:#8a6800;background:#fdf6e0}
+.hhrs.sk{border-color:#c0b4d4;color:#463265;background:#f4f0fa;font-weight:500}
+.hhrs.sk.none{border-color:var(--border2);color:var(--ink3);background:var(--surface);font-weight:400}
+.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
+.hs-btns{display:flex;gap:8px;margin-top:6px}
+.hs-btn-clear{padding:11px 14px;border:1px solid #e0c8c4;border-radius:var(--radius-sm);background:#faf0ee;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hs-btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.hs-btn-save{flex:2;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 快速選單 */
+.quick-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:280;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.quick-overlay.open{display:flex}
+.quick-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
+.quick-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.quick-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
+.quick-shift{font-size:12px;color:var(--ink3);margin-top:2px}
+.quick-plan-preview{display:none;padding:10px 18px 2px;max-height:150px;overflow-y:auto}
+.quick-plan-preview.show{display:flex;flex-direction:column;gap:5px}
+.quick-plan-item{width:100%;font-size:14px;line-height:1.35;font-weight:600;color:var(--event-ink,#4f4740);background:var(--event-bg,#f0ece4);border-left:4px solid var(--event,#96938f);border-radius:5px;padding:6px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.quick-plan-item.observance{--event:#b86f6b;--event-bg:#f5e3e1;--event-ink:#733d39}
+.quick-plan-item.observance.memo{--event:#96938f;--event-bg:#ecebea;--event-ink:#514e4a}
+.quick-body{padding:14px 18px 6px;display:flex;flex-direction:column;gap:8px}
+.quick-btn{display:flex;align-items:center;gap:10px;width:100%;padding:14px 16px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:left;transition:background 0.1s}
+.quick-btn:active{background:var(--surface2)}
+.quick-btn .qi{font-size:18px;flex-shrink:0;width:22px;text-align:center}
+.quick-cancel{width:calc(100% - 36px);margin:8px 18px 4px;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink3);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 12-8 津貼 */
+.allow12-row{display:none;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f0f7f2;border:1px solid #c8ddd0}
+.allow12-row.show{display:flex}
+.allow12-row.no-allow{background:#faf0ee;border-color:#e0c8c4}
+.allow12-toggle{width:18px;height:18px;cursor:pointer;accent-color:var(--accent);flex-shrink:0}
+.allow12-label{font-size:13px;font-weight:500;color:#1a4a2a;flex:1;cursor:pointer}
+.allow12-row.no-allow .allow12-label{color:var(--red)}
+/* 天災假 */
+.tz-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#fdf6e8;border:1px solid #e0cc90}
+.tz-label{color:#8a6800!important}
+.chk-head{display:flex;align-items:center;gap:10px}
+.mode-btns{display:none;gap:6px;margin-top:10px}
+.mode-btns.show{display:flex}
+.mbtn{flex:1;padding:9px 8px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink2);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.mbtn.active{border-color:#8a6800;background:#fdeebc;color:#7a5a00;font-weight:600;box-shadow:inset 0 0 0 1px #8a6800}
+.mbtn.cash.active{border-color:#463265;background:#e6dcf5;color:#463265;box-shadow:inset 0 0 0 1px #463265}
+.hw-row .mbtn.active{border-color:#7a2018;background:#f5d5c8;color:#7a2018;box-shadow:inset 0 0 0 1px #7a2018}
+.hw-row .mbtn.cash.active{border-color:#463265;background:#e6dcf5;color:#463265;box-shadow:inset 0 0 0 1px #463265}
+.hb-hwc{background:#e6dcf5;color:#463265}
+.hb-tz{background:#fdeebc;color:#7a5a00}
+.hb-tzc{background:#e6dcf5;color:#463265}
+/* 週末國定假日補時數 */
+.hw-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#faf0ee;border:1px solid #e0c8c4}
+.hw-label{color:#7a2018!important}
+.hb-hw{background:#f5d5c8;color:#7a2018}
+.hb-sick{background:#e2dcec;color:#463265}
+.hb-gong{background:#d8e6dd;color:#1e4a35}
+/* 截止日餘額查詢 */
+.bal-detail{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2px 14px}
+.bal-line{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--ink2)}
+.bal-line:last-child{border-bottom:none}
+.bal-line b{font-family:'Libre Baskerville',serif;font-weight:400;color:var(--ink);font-size:16px;white-space:nowrap}
+.bal-line.sum{color:var(--ink);font-weight:600}
+.bal-line b.plus{color:#1a4a2a}
+.bal-line b.minus{color:#7a2018}
+.bal-note{font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.5}
+.bal-range{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.bal-date{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;text-align:center}
+.bal-date-sep{font-size:13px;color:var(--ink3);flex-shrink:0}
+.bal-chips{display:flex;gap:5px;margin-bottom:14px}
+.bal-chip{flex:1;padding:7px 2px;border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.bal-chip:active{background:var(--surface2)}
+.bal-sec{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:0.3px;margin:16px 0 6px;padding-left:2px}
+/* 追蹤同事班別 */
+.other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
+.other-row.show{display:flex}
+.other-row-label{font-size:13px;font-weight:600;color:#2a4060;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.other-day-btns{display:flex;gap:4px;flex-shrink:0}
+.odb{padding:6px 14px;border:1px solid #c0ccd6;border-radius:6px;background:var(--surface);color:#5a7080;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.1s}
+.odb.active.on{background:#2a4060;color:#fff;border-color:#2a4060}
+.odb.active.off{background:#d0ccc4;color:#3a3530;border-color:#c0b8b0}
+/* 批次輸入模式 */
+.other-edit-trigger{width:100%;padding:10px;background:#eef2f5;color:#2a4060;border:1px solid #d0dce6;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif;display:none}
+.other-edit-trigger.show{display:block}
+.other-edit-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:2px solid #2a4060;padding:12px 16px calc(env(safe-area-inset-bottom,0px) + 12px);align-items:center;gap:8px;box-shadow:0 -4px 24px rgba(0,0,0,0.14)}
+.other-edit-bar.show{display:flex}
+.oeb-label{flex:1;font-size:13px;color:#2a4060;font-weight:600;line-height:1.4;min-width:0}
+.oeb-hint{display:block;font-size:11px;color:#7a9ab0;font-weight:400;margin-top:1px}
+.oeb-cancel{padding:9px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+.oeb-save{padding:9px 18px;border:none;border-radius:var(--radius-sm);background:#2a4060;color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+body.other-edit-mode .cell:not(.empty){cursor:pointer}
+body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
+/* 行程多則 */
+.plan-list{list-style:none;margin-bottom:8px}
+.plan-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.plan-item:last-child{border:none}
+.plan-check{width:18px;height:18px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--accent)}
+.plan-text{flex:1;font-size:14px;color:var(--ink);line-height:1.5;word-break:break-all}
+.plan-item.done .plan-text{opacity:0.4;text-decoration:line-through}
+.plan-del{background:none;border:none;color:var(--ink3);font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
+.plan-add-row{display:flex;gap:6px;margin-top:4px}
+.plan-add-input{flex:1;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif}
+.plan-add-btn{padding:9px 14px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500}
+.plan-cats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:7px 0 9px}
+.plan-cat-head{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.plan-cat-head .field-label{margin:0}
+.plan-cat-edit{border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:11px;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan-cat-settings{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;margin-bottom:9px}
+.plan-cat-settings.show{display:block}
+.plan-cat-hint{font-size:14px;line-height:1.45;color:var(--ink2);padding:3px 3px 8px}
+.plan-cat-setting{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--border)}
+.plan-cat-setting:last-child{border-bottom:none}
+.plan-cat-color{width:28px;height:28px;border:0;background:transparent;padding:0;cursor:pointer}
+.plan-cat-name{flex:1;min-width:0;padding:7px 9px;border:1px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--ink);font-size:13px;font-family:'DM Sans',sans-serif}
+.plan-cat-delete{width:30px;height:30px;flex-shrink:0;border:1px solid #e0c8c4;border-radius:50%;background:var(--surface);color:var(--red);font-size:15px;cursor:pointer}
+.plan-cat-add{width:100%;margin-top:8px;padding:9px;border:1px dashed var(--border2);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan-cat-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 4px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan-cat-btn .cat-dot{width:9px;height:9px;border-radius:50%;background:var(--event);flex-shrink:0}
+.plan-cat-btn.active{border-color:var(--event);background:var(--event-bg);color:var(--event-ink);box-shadow:inset 0 0 0 1px var(--event)}
+.plan-item{border-left:3px solid var(--event,#b6a58f);padding-left:7px}
+.plan-item-cat{width:18px;height:18px;flex-shrink:0;margin-top:2px;border:0;border-radius:50%;background:var(--event);cursor:pointer;box-shadow:0 0 0 2px var(--event-bg),0 0 0 3px var(--event);font-size:0}
+.event-work{--event:#6f8795;--event-bg:#e6edf0;--event-ink:#344d5b}
+.event-personal{--event:#96938f;--event-bg:#ecebea;--event-ink:#514e4a}
+.event-study{--event:#79aeca;--event-bg:#e4f0f6;--event-ink:#345b70}
+.event-sport{--event:#72927a;--event-bg:#e5eee7;--event-ink:#3d5c44}
+.event-fun{--event:#b98fb8;--event-bg:#f2e7f1;--event-ink:#694c68}
+.event-important{--event:#b86f6b;--event-bg:#f5e3e1;--event-ink:#733d39}
+/* 行程面板閱讀尺寸：只放大文字與色點，不改排列 */
+#planOverlay .hs-date{font-size:21px}
+#planOverlay .hs-shift{font-size:15px}
+#planOverlay .field-label{font-size:15px}
+#planOverlay .plan-text{font-size:16px}
+#planOverlay .plan-check{width:22px;height:22px}
+#planOverlay .plan-item-cat{width:22px;height:22px}
+#planOverlay .plan-del{font-size:19px}
+#planOverlay .plan-cat-edit{font-size:14px}
+#planOverlay .plan-cat-btn{font-size:14px}
+#planOverlay .plan-cat-btn .cat-dot{width:13px;height:13px}
+#planOverlay .plan-cat-name{font-size:15px}
+#planOverlay .plan-cat-color{width:34px;height:34px}
+#planOverlay .plan-add-input{font-size:16px}
+#planOverlay .plan-add-btn{font-size:20px}
+#planOverlay .photo-upload-btn{font-size:16px}
+#planOverlay .photo-count{font-size:14px}
+#planOverlay .hs-btn-cancel{font-size:16px}
+/* 圖片區 */
+.photo-section{margin-top:10px}
+.photo-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.photo-thumb-wrap{position:relative;width:72px;height:72px;border-radius:8px;overflow:visible}
+.photo-thumb{width:72px;height:72px;object-fit:cover;border-radius:8px;cursor:pointer;display:block}
+.photo-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#c0392b;color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:10}
+.photo-upload-btn{display:flex;align-items:center;gap:6px;padding:9px 14px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.photo-count{font-size:11px;color:var(--ink3);margin-top:4px}
+/* 燈箱 */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center;flex-direction:column}
+.lightbox.open{display:flex}
+.lightbox-img{max-width:96vw;max-height:80vh;object-fit:contain;border-radius:8px}
+.lightbox-nav{display:flex;align-items:center;gap:24px;margin-top:16px}
+.lb-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:28px;width:48px;height:48px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-close{position:absolute;top:env(safe-area-inset-top,16px);right:16px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-counter{color:rgba(255,255,255,0.7);font-size:13px;min-width:48px;text-align:center}
+/* 備份匯出入 */
+.backup-row{display:flex;gap:8px;margin-top:10px}
+.backup-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
+.backup-btn.export{background:#f0f7f2;color:#1a4a2a;border:1px solid #c8ddd0}
+.backup-btn.export:active{background:#ddeee5}
+.backup-btn.import{background:#f2f0f8;color:#3a2a70;border:1px solid #ccc8dc}
+.backup-btn.import:active{background:#e4e0f0}
+/* 夜班津貼 */
+.allow-wrap{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.allow-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.allow-header:active{background:var(--surface2)}
+.allow-head-right{display:flex;align-items:center;gap:10px}
+.allow-toggle{font-size:13px;color:var(--ink3);transition:transform .2s ease}
+.allow-wrap.open .allow-toggle{transform:rotate(180deg)}
+.allow-body{display:none;border-top:1px solid var(--border)}
+.allow-wrap.open .allow-body{display:block}
+.allow-title{font-size:14px;font-weight:600;color:var(--ink3);letter-spacing:1px;text-transform:uppercase}
+.allow-month-total{font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:var(--ink)}
+.allow-grid{display:grid;grid-template-columns:1fr 1fr 1fr}
+.allow-cell{padding:10px 12px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
 .allow-cell:nth-child(3n){border-right:none}
-.allow-cell-label{font-size:12px;color:#8a6038;margin-bottom:3px;letter-spacing:0.5px}
-.allow-cell-val{font-size:16px;font-weight:700;color:#b86020}
-.allow-cell-count{font-size:12px;color:#a87848;margin-top:1px}
-.allow-note{font-size:12px;color:#a87848;padding:6px 14px 8px;border-top:1px solid #e8c898}
-.allow-manual{width:100%;margin-top:5px;padding:3px 6px;border:1px solid #d9a86a;border-radius:5px;font-size:13px;background:#fdf8f0;color:#b86020;font-family:inherit;box-sizing:border-box}
+.allow-cell-label{font-size:12px;color:var(--ink3);margin-bottom:4px;letter-spacing:0.3px}
+.allow-cell-val{font-family:'Libre Baskerville',serif;font-size:19px;font-weight:400;color:var(--ink)}
+.allow-cell-count{font-size:12px;color:var(--ink3);margin-top:1px}
+.allow-cell-count.manual{color:#8a6800;cursor:pointer;font-weight:600}
+.allow-cnt-row{display:flex;align-items:center;gap:4px;margin-top:5px}
+.allow-cnt{flex:1;min-width:0;padding:4px 6px;border:1px solid var(--border2);border-radius:5px;font-size:13px;font-weight:600;text-align:center;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
+.allow-cnt.manual{border-color:#c8a860;background:#fdf5e0;color:#6a4800}
+.allow-cnt-unit{font-size:11px;color:var(--ink3);flex-shrink:0}
+.allow-confirm{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:99px;border:1px dashed var(--border2);color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif}
+.allow-confirm:active{opacity:0.6}
+.allow-confirm.confirmed{border:1px solid #4a7a90;background:#eaf2f5;color:#2a5a70;font-weight:600}
+.allow-confirm.hidden{display:none}
+.allow-note{font-size:12px;color:var(--ink3);padding:8px 16px 10px;border-top:1px solid var(--border)}
+.allow-manual{width:100%;margin-top:6px;padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--surface2);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -153,10 +428,13 @@ select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;b
   <h2 id="title"></h2>
   <button onclick="next()">&#8250;</button>
 </div>
+<button class="today-btn" id="todayBtn" onclick="goToday()">回到今日 ↩</button>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
+<button class="other-edit-trigger" id="otherEditTrigger" onclick="enterOtherEditMode()"></button>
+<div class="swap-bar" id="swapBar"></div>
 
-<!-- 積休 年休 餘額總覽 -->
+<!-- 積休 年休 延年休 餘額總覽 -->
 <div class="hours-summary">
   <div class="hs-card jiji">
     <div class="hs-card-label">積　休</div>
@@ -168,16 +446,54 @@ select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;b
     <div class="hs-card-val" id="nianBalVal">0</div>
     <div class="hs-card-unit">小時</div>
   </div>
+  <div class="hs-card yan">
+    <div class="hs-card-label">延年休</div>
+    <div class="hs-card-val" id="yanBalVal">0</div>
+    <div class="hs-card-unit">小時</div>
+  </div>
 </div>
+<!-- 本區間（按4週區間分組顯示加班/拿時間） -->
+<div class="zone-rec-card">
+  <div class="zone-rec-nav">
+    <button onclick="prevZoneRec()">&#8249;</button>
+    <span class="zone-rec-title">本區間</span>
+    <button onclick="nextZoneRec()">&#8250;</button>
+  </div>
+  <div class="zone-rec-range" id="zoneRecRange"></div>
+  <button class="zone-today-btn" id="zoneTodayBtn" onclick="goTodayZone()">回到本期 ↩</button>
+  <div class="zone-rec-summary">
+    <div class="zone-rec-box add">
+      <div class="zone-rec-box-label">本區間加班</div>
+      <div class="zone-rec-box-val" id="zoneAddVal">0</div>
+    </div>
+    <div class="zone-rec-box take">
+      <div class="zone-rec-box-label">本區間拿時間</div>
+      <div class="zone-rec-box-val" id="zoneTakeVal">0</div>
+    </div>
+  </div>
+</div>
+<!-- 年休進度條 -->
 <div class="nian-bar-row">
   <span class="nbl">年休</span>
   <div class="nbt"><div class="nbf" id="nianFill" style="width:0%"></div></div>
-  <span class="nbn" id="nianNums">已用 0 / 72 hr</span>
+  <span class="nbn" id="nianNums">已用 0 / 52 hr</span>
 </div>
+<!-- 延年休進度條 -->
+<div class="nian-bar-row">
+  <span class="nbl" style="color:#c8a030">延休</span>
+  <div class="nbt"><div class="nbf yan-bar" id="yanFill" style="width:0%"></div></div>
+  <span class="nbn" id="yanNums">已用 0 / 0 hr</span>
+</div>
+<!-- 設定：年休總額 + 延年休 + 積休初始 -->
 <div class="hours-settings">
   <div class="nts-group">
     <span class="nts-label">年休總額：</span>
-    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" value="52" onchange="saveSettings()">
+    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" value="0" onchange="saveSettings()">
+    <span class="nts-label">hr</span>
+  </div>
+  <div class="nts-group">
+    <span class="nts-label">延年休：</span>
+    <input class="nts-input" id="yanTotalInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
   <div class="nts-group">
@@ -185,69 +501,219 @@ select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;b
     <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
+  <div class="nts-group" style="flex-basis:100%;margin-top:4px">
+    <span class="nts-label">輸入</span>
+    <input class="nts-input" id="otherNameInput" type="text" style="width:80px;font-size:13px;text-align:left" placeholder="暱稱" onchange="saveOtherName()">
+    <span class="nts-label">上班日</span>
+    <span class="nts-label" style="color:var(--ink3);font-size:11px">（在月曆上顯示對方是否有班）</span>
+  </div>
+</div>
+
+<!-- 備份 -->
+<div class="backup-row">
+  <button class="backup-btn export" onclick="exportBackup()">⬇ 匯出備份</button>
+  <button class="backup-btn import" onclick="document.getElementById('importFile').click()">⬆ 匯入備份</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
 </div>
 
 <!-- 夜班津貼 -->
-<div class="allow-wrap">
-  <div class="allow-header">
+<div class="allow-wrap" id="allowWrap">
+  <div class="allow-header" onclick="toggleAllowance()" role="button" aria-expanded="false">
     <span class="allow-title">夜班津貼</span>
-    <span class="allow-month-total" id="allowTotal">本月 $0</span>
+    <span class="allow-head-right"><span class="allow-month-total" id="allowTotal">本月 $0</span><span class="allow-toggle">⌄</span></span>
   </div>
+  <div class="allow-body" id="allowBody">
   <div class="allow-grid">
     <div class="allow-cell">
       <div class="allow-cell-label">12-8 班 $270</div>
       <div class="allow-cell-val" id="allow12Val">$0</div>
-      <div class="allow-cell-count" id="allow12Count">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allow12Cnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allow12Count" onclick="resetAllowCnt('12')">0 班</div>
       <input class="allow-manual" id="allow12Adj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allow12ConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">E 班 $560／包班 $640</div>
+      <div class="allow-cell-label">E 班 $560／包班 $660</div>
       <div class="allow-cell-val" id="allowEVal">$0</div>
-      <div class="allow-cell-count" id="allowECount">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allowECnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allowECount" onclick="resetAllowCnt('E')">0 班</div>
       <input class="allow-manual" id="allowEAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowEConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
-      <div class="allow-cell-label">N 班 $770／包班 $960</div>
+      <div class="allow-cell-label">N 班 $770／包班 $940</div>
       <div class="allow-cell-val" id="allowNVal">$0</div>
-      <div class="allow-cell-count" id="allowNCount">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allowNCnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allowNCount" onclick="resetAllowCnt('N')">0 班</div>
       <input class="allow-manual" id="allowNAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowNConfirmPill">核對</div>
     </div>
     <div class="allow-cell">
       <div class="allow-cell-label">D班加班 $270</div>
       <div class="allow-cell-val" id="allowDotVal">$0</div>
-      <div class="allow-cell-count" id="allowDotCount">0 班</div>
+      <div class="allow-cnt-row"><input class="allow-cnt" id="allowDotCnt" type="number" min="0" step="1" inputmode="numeric" onchange="saveAllowAdj()"><span class="allow-cnt-unit">班</span></div>
+      <div class="allow-cell-count" id="allowDotCount" onclick="resetAllowCnt('Dot')">0 班</div>
+      <input class="allow-manual" id="allowDotAdj" type="number" step="any" placeholder="手動調整 $" onchange="saveAllowAdj()">
+      <div class="allow-confirm hidden" id="allowDotConfirmPill">核對</div>
     </div>
   </div>
-  <div class="allow-note" id="allowNote">＊ 依當月班別自動計算，D班加班≥1.5hr 計入 $270</div>
+  <div class="allow-note" id="allowNote">＊ 班數依當月班別自動帶入，可直接於欄位改成實際班數（點下方「↺ 還原」回自動值）；D班加班≥1.5hr 計入 $270；天災假給時數＋8 只加積休、不計加班費；天災假代金另由醫院計算，與此區津貼分開</div>
+  </div>
 </div>
 
-<div class="panel" id="panel">
-  <div class="panel-title" id="panelTitle"></div>
-  <div class="panel-sub" id="panelSub"></div>
-  <div class="panel-hol" id="panelHol"></div>
-  <div class="tabs">
-    <button class="tab-btn active" id="tabWeek" onclick="switchTab('week')">換號碼班（整週）</button>
-    <button class="tab-btn" id="tabDay" onclick="switchTab('day')">修改當天班別</button>
-  </div>
-  <div id="formWeek">
-    <div class="field-label">換成哪個號碼班</div>
-    <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
-    <div id="preview" style="display:none">
-      <div class="field-label" style="margin-top:10px">換後班表預覽：</div>
-      <div class="preview-grid" id="previewGrid"></div>
+<!-- 快速選單：點日期後先問要幹嘛 -->
+<div class="quick-overlay" id="quickOverlay" onclick="if(event.target===this)closeQuickActions()">
+  <div class="quick-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="quick-head">
+      <div class="quick-date" id="quickDate"></div>
+      <div class="quick-shift" id="quickShift"></div>
     </div>
-    <div class="field-label" style="margin-top:14px">備註</div>
-    <textarea class="note-area" id="weekNote" placeholder="例：和同事換班"></textarea>
+    <div class="quick-plan-preview" id="quickPlanPreview"></div>
+    <div class="quick-body">
+      <button class="quick-btn" onclick="quickAction('week')"><span class="qi">🔄</span>換號碼班（整週）</button>
+      <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
+      <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
+      <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
+      <button class="quick-btn" onclick="quickAction('bal')"><span class="qi">📊</span>查詢餘額（可自訂起訖日）</button>
+    </div>
+    <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
   </div>
-  <div id="formDay" style="display:none">
-    <div class="field-label">選擇班別</div>
-    <div class="shift-btns" id="shiftBtns"></div>
-    <div class="field-label" style="margin-top:14px">備註</div>
-    <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
+</div>
+
+<!-- 換號碼班（整週）浮層 -->
+<div class="hours-overlay" id="weekOverlay" onclick="if(event.target===this)closeWeekSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="weekDate"></div>
+      <div class="hs-shift" id="weekShift"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">換成哪個號碼班</div>
+      <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
+      <div id="preview" style="display:none">
+        <div class="field-label" style="margin-top:10px">換後班表預覽：</div>
+        <div class="preview-grid" id="previewGrid"></div>
+      </div>
+      <div class="field-label" style="margin-top:14px">跟誰換</div>
+      <div class="who-row">
+        <select class="hhrs" id="weekWho" style="flex:1" onchange="onWhoChange()"></select>
+        <button class="who-del" id="whoDelBtn" onclick="delSwapName()" title="從清單移除">✕</button>
+      </div>
+      <div class="field-label" style="margin-top:14px">備註</div>
+      <textarea class="note-area" id="weekNote" placeholder="例：她幫我上，我還她週末"></textarea>
+      <div class="hs-btns">
+        <button class="hs-btn-cancel" onclick="closeWeekSheet()">取消</button>
+        <button class="hs-btn-save" onclick="confirmWeekAction()">確認</button>
+      </div>
+    </div>
   </div>
-  <button class="confirm-btn" onclick="confirmAction()">確認</button>
-  <button class="cancel-btn" onclick="closePanel()">取消</button>
-  <button class="hours-trigger-btn" id="hoursTriggerBtn" onclick="openHoursSheet()">⏱ 記錄時數（積休／年休）</button>
+</div>
+
+<!-- 修改當天班別浮層 -->
+<div class="hours-overlay" id="dayOverlay" onclick="if(event.target===this)closeDaySheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="dayDate"></div>
+      <div class="hs-shift" id="dayShift"></div>
+      <div class="panel-hol" id="dayHol" style="margin-top:4px"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">選擇班別</div>
+      <div class="shift-btns" id="shiftBtns"></div>
+      <div class="field-label" style="margin-top:14px">備註</div>
+      <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
+      <div class="other-row" id="otherTrackRow" style="margin-top:14px">
+        <span class="other-row-label" id="otherPersonLabel">同事</span>
+        <div class="other-day-btns">
+          <button class="odb on" id="odbOn" onclick="setOtherDay(true)">有班</button>
+          <button class="odb off" id="odbOff" onclick="setOtherDay(false)">休息</button>
+        </div>
+      </div>
+      <div class="hs-btns">
+        <button class="hs-btn-cancel" onclick="closeDaySheet()">取消</button>
+        <button class="hs-btn-save" onclick="confirmDayAction()">確認</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 行程／圖片浮層 -->
+<div class="hours-overlay" id="planOverlay" onclick="if(event.target===this)closePlanSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="planDate"></div>
+      <div class="hs-shift" id="planShift"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">📌 當天的事／行程</div>
+      <ul class="plan-list" id="planList"></ul>
+      <div class="plan-add-row">
+        <input class="plan-add-input" id="planAddInput" type="text" placeholder="新增行程…" onkeydown="if(event.key==='Enter')addPlanItem()">
+        <button class="plan-add-btn" onclick="addPlanItem()">＋</button>
+      </div>
+      <div class="plan-cat-head"><div class="field-label">選擇事件顏色</div><button type="button" class="plan-cat-edit" onclick="togglePlanCatSettings()">自訂分類</button></div>
+      <div class="plan-cats" id="planCats"></div>
+      <div class="plan-cat-settings" id="planCatSettings"></div>
+      <div class="field-label" style="margin-top:18px">📷 附加圖片</div>
+      <div class="photo-thumbs" id="photoThumbs"></div>
+      <div class="photo-count" id="photoCount"></div>
+      <label class="photo-upload-btn"><span>＋ 選擇圖片</span><input type="file" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)"></label>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closePlanSheet()">完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- 截止日餘額查詢浮層 -->
+<div class="hours-overlay" id="balOverlay" onclick="if(event.target===this)closeBalSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="balDate"></div>
+      <div class="hs-shift" id="balSub"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">查詢區間（起 － 訖）</div>
+      <div class="bal-range">
+        <input class="bal-date" id="balStart" type="date" onchange="renderBal()">
+        <span class="bal-date-sep">－</span>
+        <input class="bal-date" id="balEnd" type="date" onchange="renderBal()">
+      </div>
+      <div class="bal-chips">
+        <button class="bal-chip" onclick="balQuick('zone')">本區間</button>
+        <button class="bal-chip" onclick="balQuick('month')">本月</button>
+        <button class="bal-chip" onclick="balQuick('year')">今年</button>
+        <button class="bal-chip" onclick="balQuick('all')">全部</button>
+      </div>
+      <div class="bal-sec" id="balCardSec">截止訖日餘額</div>
+      <div class="hours-summary" style="margin-top:0">
+        <div class="hs-card jiji">
+          <div class="hs-card-label">積　休</div>
+          <div class="hs-card-val" id="balJiji">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+        <div class="hs-card nian">
+          <div class="hs-card-label">年　休</div>
+          <div class="hs-card-val" id="balNian">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+        <div class="hs-card yan">
+          <div class="hs-card-label">延年休</div>
+          <div class="hs-card-val" id="balYan">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+      </div>
+      <div class="bal-sec" id="balRangeSec">區間內增減</div>
+      <div class="bal-detail" id="balRangeDetail"></div>
+      <div class="bal-sec" id="balCumSec">截止訖日累計</div>
+      <div class="bal-detail" id="balDetail"></div>
+      <div class="bal-note">＊ 上方三張卡與「累計」是從最初算到<b>訖日</b>（含當日）的餘額；「區間內增減」只算起～訖之間的紀錄。起訖日可自行修改。</div>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeBalSheet()">關閉</button>
+    </div>
+  </div>
 </div>
 
 <!-- 時數輸入浮層 -->
@@ -267,22 +733,9 @@ select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;b
               <option value="+">加班</option>
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="jijiHrs" onchange="toggleCustom('jiji')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option>
-              <option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option>
-              <option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option>
-              <option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option>
-              <option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option>
-              <option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="jijiHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="jijiMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="jijiCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
       </div>
       <div class="hs-row">
@@ -292,23 +745,60 @@ select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;b
             <select class="hdir nm" id="nianDir" style="pointer-events:none;opacity:0.6">
               <option value="-">拿時間</option>
             </select>
-            <select class="hhrs" id="nianHrs" onchange="toggleCustom('nian')">
-              <option value="0">不填</option>
-              <option value="0.5">0.5 hr</option>
-              <option value="1">1 hr</option>
-              <option value="1.5">1.5 hr</option>
-              <option value="2">2 hr</option>
-              <option value="2.5">2.5 hr</option>
-              <option value="3">3 hr</option>
-              <option value="3.5">3.5 hr</option>
-              <option value="4">4 hr</option>
-              <option value="4.5">4.5 hr</option>
-              <option value="5">5 hr</option>
-              <option value="custom">自訂…</option>
-            </select>
+            <select class="hhrs" id="nianHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="nianMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
           </div>
-          <input class="hcustom" type="number" id="nianCustom" min="0.5" max="99" step="0.5" placeholder="輸入時數（hr）" style="display:none">
         </div>
+      </div>
+      <div class="hs-row">
+        <span class="hs-row-label y">延休</span>
+        <div class="hs-selwrap" style="flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <select class="hdir ym" id="yanDir" style="pointer-events:none;opacity:0.6">
+              <option value="-">拿時間</option>
+            </select>
+            <select class="hhrs" id="yanHrs"><option value="0">0 hr</option><option value="1">1 hr</option><option value="2">2 hr</option><option value="3">3 hr</option><option value="4">4 hr</option><option value="5">5 hr</option><option value="6">6 hr</option><option value="7">7 hr</option><option value="8">8 hr</option><option value="9">9 hr</option><option value="10">10 hr</option><option value="11">11 hr</option><option value="12">12 hr</option></select>
+            <select class="hhrs" id="yanMin"><option value="0">0 分</option><option value="5">5 分</option><option value="10">10 分</option><option value="15">15 分</option><option value="20">20 分</option><option value="25">25 分</option><option value="30">30 分</option><option value="35">35 分</option><option value="40">40 分</option><option value="45">45 分</option><option value="50">50 分</option><option value="55">55 分</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="hs-row">
+        <span class="hs-row-label s">事病公假</span>
+        <div class="hs-selwrap">
+          <select class="hhrs sk none" id="sickType" onchange="updateSickStyle()">
+            <option value="">無</option>
+            <option value="事">事假</option>
+            <option value="病">病假</option>
+            <option value="公">公假</option>
+          </select>
+        </div>
+      </div>
+      <!-- 天災假出勤 -->
+      <div class="tz-row">
+        <div class="chk-head">
+          <input type="checkbox" class="allow12-toggle" id="tzCheck" onchange="updateModeRow('tz')">
+          <label class="allow12-label tz-label" for="tzCheck">🌀 天災假出勤</label>
+        </div>
+        <div class="mode-btns" id="tzModeBtns">
+          <button class="mbtn active" id="tzModeHr" onclick="setMode('tz','hr')">給時數 ＋8 hr</button>
+          <button class="mbtn cash" id="tzModeCash" onclick="setMode('tz','cash')">給代金</button>
+        </div>
+      </div>
+      <!-- 週末國定假日補時數（僅六日假日顯示） -->
+      <div class="hw-row" id="hwRow">
+        <div class="chk-head">
+          <input type="checkbox" class="allow12-toggle" id="hwCheck" onchange="updateModeRow('hw')">
+          <label class="allow12-label hw-label" for="hwCheck" id="hwCheckLabel">🎌 國定假日出勤</label>
+        </div>
+        <div class="mode-btns" id="hwModeBtns">
+          <button class="mbtn active" id="hwModeHr" onclick="setMode('hw','hr')">給時數 ＋8 hr</button>
+          <button class="mbtn cash" id="hwModeCash" onclick="setMode('hw','cash')">給代金</button>
+        </div>
+      </div>
+      <!-- 12-8 津貼勾選 -->
+      <div class="allow12-row" id="allow12Row">
+        <input type="checkbox" class="allow12-toggle" id="allow12Check" checked onchange="updateAllow12Style()">
+        <label class="allow12-label" for="allow12Check" id="allow12CheckLabel">✓ 計入 12-8 津貼（$270）</label>
       </div>
       <div class="hs-btns">
         <button class="hs-btn-clear" onclick="clearHoursForm()">清除</button>
@@ -318,247 +808,657 @@ select{width:100%;padding:10px 12px;border:1px solid #d9a86a;border-radius:8px;b
     </div>
   </div>
 </div>
-<div class="sec-title">換班紀錄</div>
-<ul class="rec-list" id="recList"></ul>
+<div class="sec-title" id="recTitle" onclick="toggleRecList()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between"><span>換班・行程紀錄</span><span id="recToggleIcon" style="font-size:13px;color:var(--ink3);font-family:'DM Sans',sans-serif;font-weight:400">展開 ﹀</span></div>
+<ul class="rec-list" id="recList" style="display:none"></ul>
 <script>
-const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['D','D','D','D','D','OFF','E2'],15:['12-8 2','12-8 3','12-8 1','12-8 2','12-8 3','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 1','12-8 2','12-8 3','12-8 1','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 1','12-8 2','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF']};
-
-// ── Cow 專屬設定 ──
-// 錨點 2026/06/08 = 人員24 的 w1=16
-// Cow 6/1（週一，weekOffset=-1）起始號碼班 11
-// 反推 w1：nf(w1,-1)=11 → ((w1-2)%35+35)%35+1=11 → w1=12
+const SCH={1:['D2','D','D5','D','D7','OFF','N2'],2:['N1','N2','OFF','OFF','N2','N1','OFF'],3:['E3','E3','E3','E3','E3','OFF','E1'],4:['E4','E4','E4','E4','E4','OFF','OFF'],5:['D10','D8','D2','D','D4','D1','OFF'],6:['E1','E1','E1','E1','E1','OFF','N1'],7:['N2','N1','N1','N2','OFF','OFF','OFF'],8:['D4','D6','D','D10','D3','OFF','OFF'],9:['E2','E2','E2','E2','E2','E2','OFF'],10:['D5','D','D6','D2','DB1','D2','OFF'],11:['DB1','D7','D1','D8','D5','OFF','OFF'],12:['D3','DB1','N2','N1','N1','N2','OFF'],13:['OFF','D10','D3','D7','D1','OFF','OFF'],14:['12-8 4','12-8 1','12-8 2','12-8 3','12-8 4','OFF','E2'],15:['12-8 2','12-8 3','12-8 4','12-8 1','12-8 2','OFF','OFF'],16:['D7','D4','D9','DB1','D2','OFF','D2'],17:['D','D3','D10','D1','D9','OFF','OFF'],18:['12-8 3','12-8 4','12-8 1','12-8 2','12-8 3','E1','OFF'],19:['12-8 1','12-8 2','12-8 3','12-8 4','12-8 1','OFF','OFF'],20:['D1','D9','D4','D9','D6','OFF','OFF'],21:['D9','D','DB1','D6','D8','OFF','D1'],22:['D','D','D','D','D','OFF','OFF'],23:['OFF','OFF','OFF','OFF','OFF','OFF','OFF'],24:["D'OFF",'D','D','D','D','OFF','OFF'],25:['D','D','D','D','D','OFF','OFF'],26:['D8','D2','D7','D4','D','OFF.B','OFF'],27:['D6','D1','D8','D3','D10','OFF','OFF'],28:['D','D5','D','D5','D','OFF','OFF'],29:['D11','D11','D11','D11','D11','OFF','OFF'],30:['D','D','D','D','D','OFF','OFF'],31:['D12','D12','D12','D12','D12','OFF','OFF'],32:['D','D','D','D','D','OFF','OFF'],33:['D','D','D','D','D','OFF','OFF'],34:['D','D','D','D','D','OFF','OFF'],35:['D','D','D','D','D','OFF','OFF'],36:['D','D','D','D','D','OFF','OFF']};
 const ANC=new Date(2026,5,8);
 const ZONE_ANC=new Date(2026,5,8);
 const ZONE_COLORS=['#8a9ea8','#a89bb0','#b8a878','#8fa68a','#b8a898','#9aabba'];
-const ME={w1:12};  // Cow 的 w1
-const LS_PREFIX='cow_';  // localStorage 前綴，與 megan_ 隔離
-
+const ME={w1:12};
 const HOL={'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'};
-const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','OFF'];
+const HOLD={'2027-01-01':'元旦','2027-02-04':'小年夜','2027-02-05':'除夕','2027-02-06':'初一','2027-02-07':'初二','2027-02-08':'初三','2027-02-09':'初四','2027-02-10':'初五','2027-02-28':'228','2027-04-04':'兒童節','2027-04-05':'清明節','2027-05-01':'勞動節','2027-06-09':'端午節','2027-09-15':'中秋節','2027-09-28':'教師節','2027-10-10':'國慶日','2027-10-25':'光復節','2027-12-25':'行憲紀念日'};
+const MEMO={'2027-03-01':'228補假','2027-04-06':'兒童節補假','2027-04-30':'勞動節補假','2027-10-11':'國慶補假','2027-12-24':'行憲補假','2027-12-31':'元旦補假','2026-03-03':'元宵節','2026-03-08':'婦女節','2026-03-12':'國父逝世','2026-03-29':'青年節','2026-05-10':'母親節','2026-07-15':'解嚴紀念','2026-08-08':'父親節','2026-09-03':'軍人節','2026-11-12':'國父誕辰','2027-02-20':'元宵節','2027-03-08':'婦女節','2027-03-12':'國父逝世','2027-03-29':'青年節','2027-05-09':'母親節','2027-07-15':'解嚴紀念','2027-08-08':'父親節/七夕','2027-08-16':'中元節','2027-09-03':'軍人節','2027-10-08':'重陽節','2027-11-12':'國父誕辰'};
+const COMMON=['D','D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E1','E2','E3','E4','N1','N2','12-8 1','12-8 2','12-8 3','12-8 4','OFF','D?','?'];
 const DZ=['日','一','二','三','四','五','六'];
-
 function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function ad(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function kd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
 function wo(date){const dow=date.getDay(),mon=ad(date,-((dow+6)%7));return Math.round((mon-ANC)/(7*86400000))}
-function nf(w,woff){return((w-1+woff)%35+35)%35+1}
+function nf(w,woff){return((w-1+woff)%36+36)%36+1}
+function numLabel(n){return n==='?'?'白班（未定）':'N.'+n;}
 function monKey(date){return dk(ad(date,-((date.getDay()+6)%7)))}
 function getZoneIdx(date){return(((Math.floor((date-ZONE_ANC)/86400000/28))%6)+6)%6;}
 function getZoneColor(date){return ZONE_COLORS[getZoneIdx(date)];}
-
+function absZoneNum(date){return Math.floor((date-ZONE_ANC)/86400000/28);}
+function zoneStart(absNum){return ad(ZONE_ANC,absNum*28);}
+function zoneEnd(absNum){return ad(zoneStart(absNum),27);}
 let wS={},dS={},nS={};
-try{const s=localStorage.getItem(LS_PREFIX+'wswaps');if(s)wS=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem(LS_PREFIX+'dswaps');if(s)dS=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem(LS_PREFIX+'notes');if(s)nS=JSON.parse(s);}catch(e){}
-
+try{const s=localStorage.getItem('cow_wswaps');if(s)wS=JSON.parse(s);}catch(e){}
+try{const s=localStorage.getItem('cow_dswaps');if(s)dS=JSON.parse(s);}catch(e){}
+try{const s=localStorage.getItem('cow_notes');if(s)nS=JSON.parse(s);}catch(e){}
+let pS={};
+try{const s=localStorage.getItem('cow_plans');if(s)pS=JSON.parse(s);}catch(e){}
+let oD={};
+try{const s=localStorage.getItem('cow_other');if(s)oD=JSON.parse(s);}catch(e){}
+let otherName='';
+try{const s=localStorage.getItem('cow_other_name');if(s)otherName=s;}catch(e){}
+let otherEditMode=false,otherEditSnapshot=null;
+function saveOtherName(){
+  const v=document.getElementById('otherNameInput').value.trim();
+  otherName=v;
+  try{localStorage.setItem('cow_other_name',v);}catch(e){}
+  const row=document.getElementById('otherTrackRow');
+  if(row){row.classList.toggle('show',!!v);const lbl=document.getElementById('otherPersonLabel');if(lbl)lbl.textContent=v||'同事';}
+  render();
+}
+function enterOtherEditMode(){
+  if(!otherName){
+    const n=prompt('請輸入同事暱稱：');
+    if(!n||!n.trim())return;
+    otherName=n.trim();
+    try{localStorage.setItem('cow_other_name',otherName);}catch(e){}
+    const inp=document.getElementById('otherNameInput');if(inp)inp.value=otherName;
+  }
+  otherEditMode=true;otherEditSnapshot=JSON.stringify(oD);
+  closeAllSheets();
+  document.body.classList.add('other-edit-mode');
+  const bar=document.getElementById('otherEditBar');if(bar)bar.classList.add('show');
+  const lbl=document.getElementById('oebLabel');if(lbl)lbl.innerHTML=otherName+' 的上班日<span class="oeb-hint">點格子 = 有班，再點 = 清除</span>';
+  render();
+}
+function toggleOtherDay(key){
+  if(oD[key]===true)delete oD[key];else oD[key]=true;
+  render();
+}
+function saveOtherEdit(){
+  otherEditMode=false;otherEditSnapshot=null;
+  document.body.classList.remove('other-edit-mode');
+  const bar=document.getElementById('otherEditBar');if(bar)bar.classList.remove('show');
+  save();render();
+}
+function cancelOtherEdit(){
+  if(otherEditSnapshot!==null)oD=JSON.parse(otherEditSnapshot);
+  otherEditMode=false;otherEditSnapshot=null;
+  document.body.classList.remove('other-edit-mode');
+  const bar=document.getElementById('otherEditBar');if(bar)bar.classList.remove('show');
+  render();
+}
+function updateOtherTrigger(){
+  const btn=document.getElementById('otherEditTrigger');if(!btn)return;
+  if(otherEditMode){btn.className='other-edit-trigger';return;}
+  btn.className='other-edit-trigger show';
+  btn.textContent=otherName?'📅 輸入 '+otherName+' 的上班日':'📅 輸入上班日';
+}
+function setOtherDay(val){
+  if(!selKey)return;
+  if(oD[selKey]===val)delete oD[selKey];else oD[selKey]=val;
+  save();render();updateOtherBtns();
+}
+function updateOtherBtns(){
+  if(!selKey)return;
+  const v=oD[selKey];
+  const on=document.getElementById('odbOn'),off=document.getElementById('odbOff');
+  if(on){on.classList.toggle('active',v===true);}
+  if(off){off.classList.toggle('active',v===false);}
+}
 // ── 時數資料 ──
 let hD={};
-let nianTotal=52, jijiInit=0;
-try{const s=localStorage.getItem(LS_PREFIX+'hours');if(s)hD=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem(LS_PREFIX+'hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal)||52;jijiInit=parseFloat(c.jijiInit)||0;}}catch(e){}
-function saveHours(){try{localStorage.setItem(LS_PREFIX+'hours',JSON.stringify(hD));}catch(e){}}
+let nianTotal=0,yanTotal=0,jijiInit=0;
+try{const s=localStorage.getItem('cow_hours');if(s)hD=JSON.parse(s);}catch(e){}
+try{const s=localStorage.getItem('cow_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal);if(isNaN(nianTotal))nianTotal=0;yanTotal=parseFloat(c.yanTotal);if(isNaN(yanTotal))yanTotal=0;jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;}}catch(e){}
+function saveHours(){try{localStorage.setItem('cow_hours',JSON.stringify(hD));}catch(e){}}
+function toggleHoursConfirm(key,type){
+  const e=hD[key];if(!e)return;
+  const f=type+'Confirmed';
+  e[f]=!e[f];
+  saveHours();render();
+}
 function saveSettings(){
-  nianTotal=parseFloat(document.getElementById('nianTotalInput').value)||52;
-  jijiInit=parseFloat(document.getElementById('jijiInitInput').value)||0;
-  try{localStorage.setItem(LS_PREFIX+'hours_cfg',JSON.stringify({nianTotal,jijiInit}));}catch(e){}
+  const nv=document.getElementById('nianTotalInput').value;
+  const yv=document.getElementById('yanTotalInput').value;
+  const jv=document.getElementById('jijiInitInput').value;
+  nianTotal=nv===''?0:parseFloat(nv);if(isNaN(nianTotal))nianTotal=0;
+  yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
+  jijiInit=jv===''?0:parseFloat(jv);if(isNaN(jijiInit))jijiInit=0;
+  try{localStorage.setItem('cow_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
   refreshBalance();
 }
-function calcJijiBalance(){
-  let bal=jijiInit;
-  for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);}
-  return bal;
-}
-function calcNianUsed(){
-  let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;
-}
+function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;if(e.hw)bal+=e.hw;}return bal;}
+function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
+function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
 function refreshBalance(){
-  const jijiB=calcJijiBalance();
-  const nianU=calcNianUsed();
-  const nianB=nianTotal-nianU;
-  document.getElementById('jijiBalVal').textContent=jijiB;
-  document.getElementById('nianBalVal').textContent=nianB;
+  const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
+  const yanU=calcYanUsed(),yanB=yanTotal-yanU;
+  function r2(v){return parseFloat(v.toFixed(2));}
+  document.getElementById('jijiBalVal').textContent=r2(jijiB);
+  document.getElementById('nianBalVal').textContent=r2(nianB);
+  document.getElementById('yanBalVal').textContent=r2(yanB);
   const pct=Math.min(100,nianTotal>0?Math.round(nianU/nianTotal*100):0);
   document.getElementById('nianFill').style.width=pct+'%';
-  document.getElementById('nianNums').textContent='已用 '+nianU+' / '+nianTotal+' hr';
+  document.getElementById('nianNums').textContent='已用 '+fmtH(nianU)+' / '+nianTotal+' hr';
+  const yanPct=Math.min(100,yanTotal>0?Math.round(yanU/yanTotal*100):0);
+  document.getElementById('yanFill').style.width=yanPct+'%';
+  document.getElementById('yanNums').textContent='已用 '+fmtH(yanU)+' / '+yanTotal+' hr';
 }
+function calcRange(aKey,bKey){
+  let addJ=0,takeJ=0,extraJ=0,nianU=0,yanU=0,cnt=0;const leave={};
+  for(const k in hD){
+    if(k<aKey||k>bKey)continue;
+    const e=hD[k];let used=false;
+    if(e.jiji>0){if(e.jijiDir==='+')addJ+=e.jiji;else takeJ+=e.jiji;used=true;}
+    if(e.tz){extraJ+=e.tz;used=true;}
+    if(e.hw){extraJ+=e.hw;used=true;}
+    if(e.nian>0){nianU+=e.nian;used=true;}
+    if(e.yan>0){yanU+=e.yan;used=true;}
+    if(e.sick){leave[e.sick]=(leave[e.sick]||0)+1;used=true;}
+    if(used)cnt++;
+  }
+  return{addJ,takeJ,extraJ,net:addJ+extraJ-takeJ,nianU,yanU,cnt,leave};
+}
+function calcBalanceUntil(cutKey){
+  const r=calcRange('0000-01-01',cutKey);
+  return{addJ:r.addJ,takeJ:r.takeJ,extraJ:r.extraJ,jiji:jijiInit+r.net,nianU:r.nianU,nianB:nianTotal-r.nianU,yanU:r.yanU,yanB:yanTotal-r.yanU,cnt:r.cnt,leave:r.leave};
+}
+function balMD(key){const d=kd(key);return(d.getMonth()+1)+'/'+d.getDate();}
+function earliestHourKey(){const ks=Object.keys(hD).sort();return ks.length?ks[0]:null;}
+function balQuick(kind){
+  const eEl=document.getElementById('balEnd'),sEl=document.getElementById('balStart');
+  const b=eEl.value||dk(new Date()),d=kd(b);
+  let a=b;
+  if(kind==='zone')a=dk(zoneStart(absZoneNum(d)));
+  else if(kind==='month')a=dk(new Date(d.getFullYear(),d.getMonth(),1));
+  else if(kind==='year')a=dk(new Date(d.getFullYear(),0,1));
+  else if(kind==='all')a=earliestHourKey()||b;
+  if(a>b)a=b;
+  eEl.value=b;sEl.value=a;renderBal();
+}
+function renderBal(){
+  const sEl=document.getElementById('balStart'),eEl=document.getElementById('balEnd');
+  let b=eEl.value||dk(new Date()),a=sEl.value||b;
+  if(a>b){const t=a;a=b;b=t;}
+  sEl.value=a;eEl.value=b;
+  const cum=calcBalanceUntil(b),rg=calcRange(a,b);
+  const dEnd=kd(b);
+  document.getElementById('balDate').textContent=balMD(a)+' － '+balMD(b)+'（訖：週'+DZ[dEnd.getDay()]+'）';
+  document.getElementById('balSub').textContent='區間內 '+rg.cnt+' 筆　／　截止訖日累計 '+cum.cnt+' 筆';
+  document.getElementById('balCardSec').textContent='截止 '+balMD(b)+' 的餘額';
+  document.getElementById('balRangeSec').textContent='區間內增減（'+balMD(a)+' － '+balMD(b)+'）';
+  document.getElementById('balCumSec').textContent='截止 '+balMD(b)+' 累計';
+  document.getElementById('balJiji').textContent=fmtH(cum.jiji);
+  document.getElementById('balNian').textContent=fmtH(cum.nianB);
+  document.getElementById('balYan').textContent=fmtH(cum.yanB);
+  let g='';
+  g+='<div class="bal-line"><span>加班</span><b class="plus">＋'+fmtH(rg.addJ)+'</b></div>';
+  if(rg.extraJ>0)g+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(rg.extraJ)+'</b></div>';
+  g+='<div class="bal-line"><span>拿時間</span><b class="minus">－'+fmtH(rg.takeJ)+'</b></div>';
+  g+='<div class="bal-line sum"><span>積休淨增減</span><b class="'+(rg.net<0?'minus':'plus')+'">'+(rg.net<0?'－':'＋')+fmtH(Math.abs(rg.net))+' hr</b></div>';
+  g+='<div class="bal-line"><span>年休使用</span><b class="minus">－'+fmtH(rg.nianU)+' hr</b></div>';
+  g+='<div class="bal-line"><span>延休使用</span><b class="minus">－'+fmtH(rg.yanU)+' hr</b></div>';
+  const lv=['事','病','公'].filter(k=>rg.leave[k]);
+  if(lv.length)g+='<div class="bal-line"><span>事病公假</span><b>'+lv.map(k=>k+'假 '+rg.leave[k]+' 天').join('　')+'</b></div>';
+  document.getElementById('balRangeDetail').innerHTML=g;
+  let h='';
+  h+='<div class="bal-line"><span>積休初始</span><b>'+fmtH(jijiInit)+'</b></div>';
+  h+='<div class="bal-line"><span>加班累計</span><b class="plus">＋'+fmtH(cum.addJ)+'</b></div>';
+  if(cum.extraJ>0)h+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(cum.extraJ)+'</b></div>';
+  h+='<div class="bal-line"><span>拿時間累計</span><b class="minus">－'+fmtH(cum.takeJ)+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日積休</span><b>'+fmtH(cum.jiji)+' hr</b></div>';
+  h+='<div class="bal-line"><span>年休已用</span><b class="minus">'+fmtH(cum.nianU)+' / '+nianTotal+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日年休</span><b>'+fmtH(cum.nianB)+' hr</b></div>';
+  h+='<div class="bal-line"><span>延休已用</span><b class="minus">'+fmtH(cum.yanU)+' / '+yanTotal+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日延休</span><b>'+fmtH(cum.yanB)+' hr</b></div>';
+  document.getElementById('balDetail').innerHTML=h;
+}
+function openBalSheet(key){
+  selKey=key;
+  const d=kd(key);
+  document.getElementById('balEnd').value=key;
+  document.getElementById('balStart').value=dk(zoneStart(absZoneNum(d)));
+  renderBal();
+  document.getElementById('balOverlay').classList.add('open');
+}
+function closeBalSheet(){document.getElementById('balOverlay').classList.remove('open');}
 function openHoursSheet(){
   if(!selKey)return;
-  const date=kd(selKey);
-  const{s}=getShift(date);
+  const date=kd(selKey);const{s}=getShift(date);
   document.getElementById('hsDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
   document.getElementById('hsShift').textContent='班別：'+s;
   const e=hD[selKey]||{};
   document.getElementById('jijiDir').value=e.jijiDir||'+';
-  const jv=e.jiji||0;
-  const jSel=document.getElementById('jijiHrs');
-  const jCustom=document.getElementById('jijiCustom');
-  if(jv>0&&jv<=5&&jv*2===Math.round(jv*2)){jSel.value=jv;jCustom.style.display='none';}
-  else if(jv>5||jv%0.5!==0){jSel.value='custom';jCustom.style.display='block';jCustom.value=jv||'';}
-  else{jSel.value=0;jCustom.style.display='none';}
-  const nv=e.nian||0;
-  const nSel=document.getElementById('nianHrs');
-  const nCustom=document.getElementById('nianCustom');
-  if(nv>0&&nv<=5&&nv*2===Math.round(nv*2)){nSel.value=nv;nCustom.style.display='none';}
-  else if(nv>5||nv%0.5!==0){nSel.value='custom';nCustom.style.display='block';nCustom.value=nv||'';}
-  else{nSel.value=0;nCustom.style.display='none';}
+  setHM('jiji',e.jiji);
+  setHM('nian',e.nian);
+  setHM('yan',e.yan);
+  document.getElementById('sickType').value=(typeof e.sick==='string'?e.sick:'');
+  updateSickStyle();
+  document.getElementById('tzCheck').checked=!!(e.tz||e.tzCash);
+  setMode('tz',e.tzCash?'cash':'hr');updateModeRow('tz');
+  // 國定假日補時數：跟天災假一樣永遠顯示，手動勾選
+  document.getElementById('hwCheck').checked=!!(e.hw||e.hwCash);
+  setMode('hw',e.hwCash?'cash':'hr');updateModeRow('hw');
   updateHDir('jiji');
+  const is128=s.startsWith('12-8');
+  const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check');
+  if(is128){allow12Row.classList.add('show');const sv=e.allow12!==undefined?e.allow12:true;allow12Check.checked=sv;updateAllow12Style();}
+  else{allow12Row.classList.remove('show');allow12Check.checked=true;}
   document.getElementById('hoursOverlay').classList.add('open');
 }
-function toggleCustom(type){
-  const sel=document.getElementById(type+'Hrs');
-  const inp=document.getElementById(type+'Custom');
-  if(sel.value==='custom'){inp.style.display='block';inp.focus();}
-  else{inp.style.display='none';}
+function fmtH(v){return parseFloat(v.toFixed(2));}
+function setHM(type,v){
+  v=v||0;
+  let h=Math.floor(v),m=Math.round((v-h)*60);
+  m=Math.round(m/5)*5;
+  if(m>=60){h++;m=0;}
+  if(h>12)h=12;
+  document.getElementById(type+'Hrs').value=h;
+  document.getElementById(type+'Min').value=m;
 }
-function getHoursVal(type){
-  const sel=document.getElementById(type+'Hrs');
-  if(sel.value==='custom'){const v=parseFloat(document.getElementById(type+'Custom').value);return isNaN(v)?0:v;}
-  return parseFloat(sel.value)||0;
+function getHoursVal(type){const h=parseFloat(document.getElementById(type+'Hrs').value)||0;const m=parseFloat(document.getElementById(type+'Min').value)||0;return h+m/60;}
+function updateHDir(type){if(type!=='jiji')return;const sel=document.getElementById('jijiDir'),v=sel.value;sel.className='hdir '+(v==='+'?'ot':'jm');}
+function updateSickStyle(){
+  const sel=document.getElementById('sickType');if(!sel)return;
+  sel.classList.toggle('none',!sel.value);
 }
-function updateHDir(type){
-  if(type!=='jiji')return;
-  const sel=document.getElementById('jijiDir'),v=sel.value;
-  sel.className='hdir '+(v==='+'?'ot':'jm');
+function updateAllow12Style(){
+  const check=document.getElementById('allow12Check'),row=document.getElementById('allow12Row'),label=document.getElementById('allow12CheckLabel');
+  if(check.checked){row.classList.remove('no-allow');label.textContent='✓ 計入 12-8 津貼（$270）';}
+  else{row.classList.add('no-allow');label.textContent='✕ 不計入 12-8 津貼';}
+}
+function setMode(kind,v){
+  document.getElementById(kind+'ModeHr').classList.toggle('active',v==='hr');
+  document.getElementById(kind+'ModeCash').classList.toggle('active',v==='cash');
+}
+function getMode(kind){
+  return document.getElementById(kind+'ModeCash').classList.contains('active')?'cash':'hr';
+}
+function updateModeRow(kind){
+  const on=document.getElementById(kind+'Check').checked;
+  document.getElementById(kind+'ModeBtns').classList.toggle('show',on);
+  if(!on)setMode(kind,'hr');
 }
 function clearHoursForm(){
   document.getElementById('jijiDir').value='+';
-  document.getElementById('jijiHrs').value=0;
-  document.getElementById('jijiCustom').style.display='none';
-  document.getElementById('nianHrs').value=0;
-  document.getElementById('nianCustom').style.display='none';
-  updateHDir('jiji');
+  setHM('jiji',0);setHM('nian',0);setHM('yan',0);
+  document.getElementById('sickType').value='';updateSickStyle();
+  document.getElementById('tzCheck').checked=false;updateModeRow('tz');
+  document.getElementById('hwCheck').checked=false;updateModeRow('hw');
+  document.getElementById('allow12Check').checked=true;updateHDir('jiji');updateAllow12Style();
 }
 function saveHoursEntry(){
-  const jh=getHoursVal('jiji');
-  const jd=document.getElementById('jijiDir').value;
-  const nh=getHoursVal('nian');
-  if(jh===0&&nh===0){delete hD[selKey];}
-  else{hD[selKey]={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-'};}
-  saveHours();refreshBalance();refreshAllow();
-  render();
-  document.getElementById('hoursOverlay').classList.remove('open');
-  updateHoursBtnStyle();
-  document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function updateHoursBtnStyle(){
-  const btn=document.getElementById('hoursTriggerBtn');
-  if(!btn||!selKey)return;
-  const e=hD[selKey];
-  const hasData=e&&(e.jiji>0||e.nian>0);
-  btn.className='hours-trigger-btn'+(hasData?' has-data':'');
-  if(hasData){
-    const parts=[];
-    if(e.jiji>0)parts.push(e.jijiDir==='+'?'加班+'+e.jiji:'拿時間－'+e.jiji);
-    if(e.nian>0)parts.push('年休－'+e.nian);
-    btn.textContent='⏱ '+parts.join('　');
-  }else{
-    btn.textContent='⏱ 記錄時數（積休／年休）';
+  const jh=getHoursVal('jiji'),jd=document.getElementById('jijiDir').value;
+  const nh=getHoursVal('nian'),yh=getHoursVal('yan');
+  const sk=document.getElementById('sickType').value;
+  const tzOn=document.getElementById('tzCheck').checked,tzM=getMode('tz');
+  const tz=tzOn&&tzM==='hr',tzCash=tzOn&&tzM==='cash';
+  const hwOn=document.getElementById('hwCheck').checked,hwM=getMode('hw');
+  const hw=hwOn&&hwM==='hr',hwCash=hwOn&&hwM==='cash';
+  const allow12Row=document.getElementById('allow12Row'),allow12Check=document.getElementById('allow12Check'),is128=allow12Row.classList.contains('show');
+  const prev=hD[selKey]||{};
+  if(jh===0&&nh===0&&yh===0&&!sk&&!tz&&!tzCash&&!hw&&!hwCash&&(!is128||allow12Check.checked)){delete hD[selKey];}
+  else{
+    const entry={jiji:jh,jijiDir:jd,nian:nh,nianDir:'-',yan:yh,yanDir:'-'};
+    if(sk)entry.sick=sk;
+    if(tz)entry.tz=8;
+    if(tzCash)entry.tzCash=true;
+    if(hw)entry.hw=8;
+    if(hwCash)entry.hwCash=true;
+    if(is128)entry.allow12=allow12Check.checked;
+    if(prev.jiji===jh&&prev.jijiDir===jd&&prev.jijiConfirmed)entry.jijiConfirmed=true;
+    if(prev.nian===nh&&prev.nianConfirmed)entry.nianConfirmed=true;
+    if(prev.yan===yh&&prev.yanConfirmed)entry.yanConfirmed=true;
+    if(prev.tz===8&&tz&&prev.tzConfirmed)entry.tzConfirmed=true;
+    if(prev.hw===8&&hw&&prev.hwConfirmed)entry.hwConfirmed=true;
+    if(prev.tzCash&&tzCash&&prev.tzCashConfirmed)entry.tzCashConfirmed=true;
+    if(prev.hwCash&&hwCash&&prev.hwCashConfirmed)entry.hwCashConfirmed=true;
+    hD[selKey]=entry;
   }
+  saveHours();refreshBalance();refreshAllow();renderZoneRecList();render();
+  document.getElementById('hoursOverlay').classList.remove('open');
 }
-
 // ── 夜班津貼 ──
 let allowAdj={};
-try{const s=localStorage.getItem(LS_PREFIX+'allow_adj');if(s)allowAdj=JSON.parse(s);}catch(e){}
-function saveAllowAdj(){
+try{const s=localStorage.getItem('cow_allow_adj');if(s)allowAdj=JSON.parse(s);}catch(e){}
+let allowConfirmed={};
+try{const s=localStorage.getItem('cow_allow_confirmed');if(s)allowConfirmed=JSON.parse(s);}catch(e){}
+function saveAllowConfirmed(){try{localStorage.setItem('cow_allow_confirmed',JSON.stringify(allowConfirmed));}catch(e){}}
+function toggleAllowConfirm(type,amt){
   const ym=cy*100+(cm+1);
-  const a12=parseFloat(document.getElementById('allow12Adj').value)||0;
-  const aE=parseFloat(document.getElementById('allowEAdj').value)||0;
-  const aN=parseFloat(document.getElementById('allowNAdj').value)||0;
-  if(a12===0&&aE===0&&aN===0)delete allowAdj[ym];
-  else allowAdj[ym]={a12,aE,aN};
-  try{localStorage.setItem(LS_PREFIX+'allow_adj',JSON.stringify(allowAdj));}catch(e){}
+  const rec=allowConfirmed[ym]?{...allowConfirmed[ym]}:{};
+  if(rec[type]===amt)delete rec[type];else rec[type]=amt;
+  if(Object.keys(rec).length)allowConfirmed[ym]=rec;else delete allowConfirmed[ym];
+  saveAllowConfirmed();
+  refreshAllow();
+}
+function renderAllowConfirmPill(elId,type,amt){
+  const el=document.getElementById(elId);if(!el)return;
+  el.classList.remove('hidden');
+  const ym=cy*100+(cm+1),rec=allowConfirmed[ym]||{};
+  const isConfirmed=rec[type]===amt;
+  el.textContent=isConfirmed?'✓ 已核對':'核對';
+  el.classList.toggle('confirmed',isConfirmed);
+  el.onclick=function(){toggleAllowConfirm(type,amt);};
+}
+function toggleAllowance(){
+  const wrap=document.getElementById('allowWrap');if(!wrap)return;
+  const open=!wrap.classList.contains('open');
+  wrap.classList.toggle('open',open);
+  const head=wrap.querySelector('.allow-header');if(head)head.setAttribute('aria-expanded',open?'true':'false');
+  try{localStorage.setItem('cow_allow_open',open?'1':'0');}catch(e){}
+}
+function readAllowMoney(id){
+  const el=document.getElementById(id);if(!el)return 0;
+  const v=(el.value||'').trim();if(v==='')return 0;
+  const n=parseFloat(v);return isNaN(n)?0:n;
+}
+function readAllowCnt(id,autoV){
+  const el=document.getElementById(id);if(!el)return undefined;
+  const v=(el.value||'').trim();if(v==='')return undefined;
+  let n=parseInt(v,10);if(isNaN(n)||n<0)return undefined;
+  return n===autoV?undefined:n;
+}
+function saveAllowAdj(){
+  const ym=cy*100+(cm+1),auto=calcAllow();
+  const a12=readAllowMoney('allow12Adj'),aE=readAllowMoney('allowEAdj'),aN=readAllowMoney('allowNAdj'),aDot=readAllowMoney('allowDotAdj');
+  const n12=readAllowCnt('allow12Cnt',auto.c12),nE=readAllowCnt('allowECnt',auto.cE),nN=readAllowCnt('allowNCnt',auto.cN),nDot=readAllowCnt('allowDotCnt',auto.cDot);
+  const rec={};
+  if(a12)rec.a12=a12;if(aE)rec.aE=aE;if(aN)rec.aN=aN;if(aDot)rec.aDot=aDot;
+  if(n12!==undefined)rec.n12=n12;if(nE!==undefined)rec.nE=nE;if(nN!==undefined)rec.nN=nN;if(nDot!==undefined)rec.nDot=nDot;
+  if(Object.keys(rec).length)allowAdj[ym]=rec;else delete allowAdj[ym];
+  try{localStorage.setItem('cow_allow_adj',JSON.stringify(allowAdj));}catch(e){}
+  refreshAllow();
+}
+function resetAllowCnt(k){
+  const ym=cy*100+(cm+1),rec=allowAdj[ym];
+  const f={'12':'n12','E':'nE','N':'nN','Dot':'nDot'}[k];
+  if(!rec||rec[f]===undefined)return;
+  delete rec[f];
+  if(Object.keys(rec).length)allowAdj[ym]=rec;else delete allowAdj[ym];
+  try{localStorage.setItem('cow_allow_adj',JSON.stringify(allowAdj));}catch(e){}
   refreshAllow();
 }
 function calcAllow(){
   const totalDays=new Date(cy,cm+1,0).getDate();
   let c12=0,cE=0,cN=0,cDot=0;
   for(let d=1;d<=totalDays;d++){
-    const date=new Date(cy,cm,d);
-    const{s}=getShift(date);
-    const dow=date.getDay();
-    if(s.startsWith('12-8'))c12++;
+    const date=new Date(cy,cm,d),{s}=getShift(date),dow=date.getDay(),key=dk(date);
+    if(s.startsWith('12-8')){const he=hD[key];if(!(he&&he.allow12===false))c12++;}
     else if(s.startsWith('E'))cE++;
     else if(s.startsWith('N'))cN++;
-    if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){
-      const key=dk(date);
-      const he=hD[key];
-      if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;
-    }
+    if(dow>=1&&dow<=5&&s.startsWith('D')&&s!=='DB1'){const he=hD[key];if(he&&he.jijiDir==='+'&&he.jiji>=1.5)cDot++;}
   }
-  const rateE=cE>=15?640:560;
-  const rateN=cN>=15?960:770;
-  return{c12,cE,cN,cDot,rateE,rateN};
+  return{c12,cE,cN,cDot};
+}
+function setAllowCntBox(inputId,countId,val,autoVal,isManual,extra){
+  const inp=document.getElementById(inputId);
+  if(inp){inp.value=val;inp.classList.toggle('manual',isManual);}
+  const cnt=document.getElementById(countId);
+  if(cnt){
+    cnt.textContent='自動 '+autoVal+' 班'+(extra||'')+(isManual?'　↺ 還原':'');
+    cnt.classList.toggle('manual',isManual);
+  }
 }
 function refreshAllow(){
-  const{c12,cE,cN,cDot,rateE,rateN}=calcAllow();
-  const ym=cy*100+(cm+1);
-  const adj=allowAdj[ym]||{};
-  const adj12=adj.a12||0, adjE=adj.aE||0, adjN=adj.aN||0;
-  const a12=c12*270+adj12, aE=cE*rateE+adjE, aN=cN*rateN+adjN, aDot=cDot*270;
-  const total=a12+aE+aN+aDot;
-  const labelE='E 班 $'+(cE>=15?'640（包班）':'560')+(cE>=15?' ✓':'');
-  const labelN='N 班 $'+(cN>=15?'960（包班）':'770')+(cN>=15?' ✓':'');
+  const auto=calcAllow();
+  const ym=cy*100+(cm+1),adj=allowAdj[ym]||{};
+  const m12=adj.n12!==undefined,mE=adj.nE!==undefined,mN=adj.nN!==undefined,mDot=adj.nDot!==undefined;
+  const c12=m12?adj.n12:auto.c12,cE=mE?adj.nE:auto.cE,cN=mN?adj.nN:auto.cN,cDot=mDot?adj.nDot:auto.cDot;
+  const rateE=cE>=15?660:560,rateN=cN>=15?940:770;
+  const adj12=adj.a12||0,adjE=adj.aE||0,adjN=adj.aN||0,adjDot=adj.aDot||0;
+  const a12=c12*270+adj12,aE=cE*rateE+adjE,aN=cN*rateN+adjN,aDot=cDot*270+adjDot,total=a12+aE+aN+aDot;
+  const labelE='　$'+(cE>=15?'660（包班）✓':'560');
+  const labelN='　$'+(cN>=15?'940（包班）✓':'770');
   document.getElementById('allow12Val').textContent='$'+a12;
-  document.getElementById('allow12Count').textContent=c12+' 班';
   document.getElementById('allowEVal').textContent='$'+aE;
-  document.getElementById('allowECount').textContent=cE+' 班　'+labelE;
   document.getElementById('allowNVal').textContent='$'+aN;
-  document.getElementById('allowNCount').textContent=cN+' 班　'+labelN;
   document.getElementById('allowDotVal').textContent='$'+aDot;
-  document.getElementById('allowDotCount').textContent=cDot+' 班';
-  document.getElementById('allow12Adj').value=adj12||'';
-  document.getElementById('allowEAdj').value=adjE||'';
-  document.getElementById('allowNAdj').value=adjN||'';
+  setAllowCntBox('allow12Cnt','allow12Count',c12,auto.c12,m12,'');
+  setAllowCntBox('allowECnt','allowECount',cE,auto.cE,mE,labelE);
+  setAllowCntBox('allowNCnt','allowNCount',cN,auto.cN,mN,labelN);
+  setAllowCntBox('allowDotCnt','allowDotCount',cDot,auto.cDot,mDot,'');
+  document.getElementById('allow12Adj').value=adj12||'';document.getElementById('allowEAdj').value=adjE||'';document.getElementById('allowNAdj').value=adjN||'';document.getElementById('allowDotAdj').value=adjDot||'';
   document.getElementById('allowTotal').textContent='本月 $'+total;
+  renderAllowConfirmPill('allow12ConfirmPill','a12',a12);
+  renderAllowConfirmPill('allowEConfirmPill','aE',aE);
+  renderAllowConfirmPill('allowNConfirmPill','aN',aN);
+  renderAllowConfirmPill('allowDotConfirmPill','aDot',aDot);
 }
-
-function autoClean(){
+// ── pS 升格：純字串 → [{text,done}] ──
+function upgradePlan(v){
+  if(!v)return[];
+  if(Array.isArray(v))return v;
+  // 舊格式純字串
+  return v.split(/\n/).filter(s=>s.trim()).map(s=>({text:s.trim(),done:false,cat:'personal'}));
+}
+const DEFAULT_PLAN_CATS=[
+  {id:'work',label:'工作',color:'#6f8795'},
+  {id:'personal',label:'個人',color:'#96938f'},
+  {id:'study',label:'學習',color:'#79aeca'},
+  {id:'sport',label:'運動',color:'#72927a'},
+  {id:'fun',label:'玩樂',color:'#b98fb8'},
+  {id:'important',label:'重要',color:'#b86f6b'}
+];
+let PLAN_CATS=DEFAULT_PLAN_CATS.map(c=>({...c}));
+try{const s=localStorage.getItem('cow_plan_cats');if(s){const saved=JSON.parse(s);if(Array.isArray(saved)&&saved.length){PLAN_CATS=saved.filter(c=>c&&/^[a-z0-9_-]+$/i.test(c.id||'')).map(c=>{const d=DEFAULT_PLAN_CATS.find(x=>x.id===c.id);return{id:c.id,label:String(c.label||(d&&d.label)||'分類').slice(0,8),color:/^#[0-9a-f]{6}$/i.test(c.color||'')?c.color:((d&&d.color)||'#96938f')};});}}}catch(e){}
+let selectedPlanCat='personal';
+function planCat(id){return PLAN_CATS.some(c=>c.id===id)?id:(PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id);}
+function catData(id){return PLAN_CATS.find(c=>c.id===planCat(id))||PLAN_CATS[0];}
+function softColor(hex){
+  const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  return `rgb(${Math.round(r*.18+255*.82)},${Math.round(g*.18+255*.82)},${Math.round(b*.18+255*.82)})`;
+}
+function eventStyle(id){const c=catData(id);return `--event:${c.color};--event-bg:${softColor(c.color)};--event-ink:#3f3934`;}
+function selectPlanCat(id){selectedPlanCat=planCat(id);renderPlanCats();}
+function renderPlanCats(){
+  const el=document.getElementById('planCats');if(!el)return;
+  el.innerHTML=PLAN_CATS.map(c=>`<button type="button" style="${eventStyle(c.id)}" class="plan-cat-btn${selectedPlanCat===c.id?' active':''}" onclick="selectPlanCat('${c.id}')"><span class="cat-dot"></span>${escapeHtml(c.label)}</button>`).join('');
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function togglePlanCatSettings(){
+  const el=document.getElementById('planCatSettings');if(!el)return;
+  const show=!el.classList.contains('show');el.classList.toggle('show',show);if(show)renderPlanCatSettings();
+}
+function renderPlanCatSettings(){
+  const el=document.getElementById('planCatSettings');if(!el)return;
+  el.innerHTML='<div class="plan-cat-hint">點左側色塊可開啟完整選色器，不限原本六種顏色；月曆會自動搭配柔和底色。</div>'+PLAN_CATS.map(c=>`<div class="plan-cat-setting"><input class="plan-cat-color" type="color" value="${c.color}" aria-label="${escapeHtml(c.label)}顏色" onchange="updatePlanCat('${c.id}',null,this.value)"><input class="plan-cat-name" maxlength="8" value="${escapeHtml(c.label)}" aria-label="分類名稱" onchange="updatePlanCat('${c.id}',this.value,null)">${c.id.startsWith('custom_')?`<button type="button" class="plan-cat-delete" onclick="deletePlanCat('${c.id}')" aria-label="刪除${escapeHtml(c.label)}">✕</button>`:''}</div>`).join('')+'<button type="button" class="plan-cat-add" onclick="addPlanCat()">＋ 新增分類</button>';
+}
+function updatePlanCat(id,label,color){
+  const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;
+  const fallback=DEFAULT_PLAN_CATS.find(c=>c.id===id);
+  if(label!==null)PLAN_CATS[idx].label=label.trim()||(fallback?fallback.label:'自訂分類');
+  if(color!==null&&/^#[0-9a-f]{6}$/i.test(color))PLAN_CATS[idx].color=color;
+  try{localStorage.setItem('cow_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
+  renderPlanCats();renderPlanList();render();
+}
+function addPlanCat(){
+  const colors=['#7a9ab0','#8aa080','#b990b5','#c19068','#7f7aa8','#b86f6b'];
+  const id='custom_'+Date.now().toString(36);
+  PLAN_CATS.push({id,label:'新分類',color:colors[(PLAN_CATS.length-DEFAULT_PLAN_CATS.length)%colors.length]});
+  selectedPlanCat=id;
+  try{localStorage.setItem('cow_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
+  renderPlanCats();renderPlanCatSettings();
+}
+function deletePlanCat(id){
+  if(!id.startsWith('custom_'))return;
+  const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;
+  const replacement=PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id;
+  Object.keys(pS).forEach(key=>{const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);arr.forEach(it=>{if(it.cat===id)it.cat=replacement;});pS[key]=arr;});
+  PLAN_CATS.splice(idx,1);if(selectedPlanCat===id)selectedPlanCat=replacement;
+  try{localStorage.setItem('cow_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}save();
+  renderPlanCats();renderPlanCatSettings();renderPlanList();render();
+}
+// ── 圖片：用 localStorage 存 base64 ──
+const PHOTO_PREFIX='cow_photo_';
+function photoKey(dateKey){return PHOTO_PREFIX+dateKey;}
+function getPhotos(dateKey){try{const v=localStorage.getItem(photoKey(dateKey));return v?JSON.parse(v):[];}catch(e){return[];}}
+function setPhotos(dateKey,arr){try{if(arr.length)localStorage.setItem(photoKey(dateKey),JSON.stringify(arr));else localStorage.removeItem(photoKey(dateKey));}catch(e){alert('儲存空間不足，請先刪除部分圖片');}}
+function compressImage(file){
+  return new Promise(res=>{
+    const img=new Image(),url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const max=900;let w=img.width,h=img.height;
+      if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg',0.72));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);res(null);};
+    img.src=url;
+  });
+}
+async function uploadPhotos(e){
+  if(!selKey)return;
+  const files=Array.from(e.target.files);if(!files.length)return;
+  const existing=getPhotos(selKey);
+  const slots=20-existing.length;
+  if(slots<=0){alert('已達 20 張上限');e.target.value='';return;}
+  const toAdd=files.slice(0,slots);
+  for(const f of toAdd){
+    const b64=await compressImage(f);
+    if(b64)existing.push(b64);
+  }
+  setPhotos(selKey,existing);
+  e.target.value='';
+  renderPhotos();render();
+}
+function deletePhoto(idx){
+  if(!selKey)return;
+  const arr=getPhotos(selKey);
+  arr.splice(idx,1);
+  setPhotos(selKey,arr);
+  renderPhotos();render();
+  if(lbPhotos.length){lbPhotos.splice(idx,1);if(!lbPhotos.length){closeLightbox();}else{lbIdx=Math.min(lbIdx,lbPhotos.length-1);showLb(lbIdx);}}
+}
+let lbPhotos=[],lbIdx=0;
+function openLightbox(photos,idx){lbPhotos=[...photos];lbIdx=idx;showLb(lbIdx);document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');lbPhotos=[];lbIdx=0;}
+function showLb(idx){document.getElementById('lbImg').src=lbPhotos[idx];document.getElementById('lbCounter').textContent=(idx+1)+' / '+lbPhotos.length;}
+function lbNav(dir){lbIdx=(lbIdx+dir+lbPhotos.length)%lbPhotos.length;showLb(lbIdx);}
+function renderPhotos(){
+  const thumbs=document.getElementById('photoThumbs'),countEl=document.getElementById('photoCount');
+  if(!thumbs)return;
+  if(!selKey){thumbs.innerHTML='';if(countEl)countEl.textContent='';return;}
+  const arr=getPhotos(selKey);
+  thumbs.innerHTML='';
+  arr.forEach((b64,i)=>{
+    const wrap=document.createElement('div');wrap.className='photo-thumb-wrap';
+    const img=document.createElement('img');img.className='photo-thumb';img.src=b64;img.onclick=()=>openLightbox(arr,i);
+    const del=document.createElement('button');del.className='photo-del';del.textContent='✕';del.onclick=(ev)=>{ev.stopPropagation();deletePhoto(i);};
+    wrap.appendChild(img);wrap.appendChild(del);thumbs.appendChild(wrap);
+  });
+  if(countEl)countEl.textContent=arr.length?arr.length+' / 20 張':'';
+}
+async function renderCellPhotoMark(){render();}
+// 過月清除圖片
+function cleanOldPhotos(){
   const now=new Date(),ym=now.getFullYear()*100+now.getMonth();
-  let changed=false;
-  for(const k of Object.keys(wS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete wS[k];changed=true;}}
-  for(const k of Object.keys(dS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete dS[k];changed=true;}}
-  for(const k of Object.keys(nS)){if(kd(k).getFullYear()*100+kd(k).getMonth()<ym){delete nS[k];changed=true;}}
-  if(changed)save();
+  for(const k of Object.keys(localStorage)){
+    if(!k.startsWith(PHOTO_PREFIX))continue;
+    const dateStr=k.slice(PHOTO_PREFIX.length);
+    try{const d=kd(dateStr);if(d.getFullYear()*100+d.getMonth()<ym)localStorage.removeItem(k);}catch(e){}
+  }
+}
+// ── 行程多則 ──
+function renderPlanList(){
+  const ul=document.getElementById('planList');if(!ul)return;
+  const items=selKey?(Array.isArray(pS[selKey])?pS[selKey]:upgradePlan(pS[selKey])):[]; 
+  ul.innerHTML=items.map((it,i)=>`<li style="${eventStyle(it.cat)}" class="plan-item${it.done?' done':''}">
+    <input type="checkbox" class="plan-check" ${it.done?'checked':''} onchange="togglePlanItem(${i})">
+    <button class="plan-item-cat" onclick="cyclePlanCategory(${i})" title="切換事件顏色"></button>
+    <span class="plan-text">${it.text.replace(/</g,'&lt;')}</span>
+    <button class="plan-del" onclick="deletePlanItem(${i})">✕</button>
+  </li>`).join('');
+}
+function addPlanItem(){
+  if(!selKey)return;
+  const inp=document.getElementById('planAddInput');const v=inp.value.trim();if(!v)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  arr.push({text:v,done:false,cat:selectedPlanCat});
+  pS[selKey]=arr;inp.value='';save();renderPlanList();render();renderRecList();
+}
+function togglePlanItem(idx){
+  if(!selKey)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  arr[idx].done=!arr[idx].done;
+  pS[selKey]=arr;save();renderPlanList();render();
+}
+function cyclePlanCategory(idx){
+  if(!selKey)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  const cur=PLAN_CATS.findIndex(c=>c.id===planCat(arr[idx].cat));
+  arr[idx]={...arr[idx],cat:PLAN_CATS[(cur+1)%PLAN_CATS.length].id};
+  pS[selKey]=arr;save();renderPlanList();render();renderRecList();
+}
+function deletePlanItem(idx){
+  if(!selKey)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  arr.splice(idx,1);
+  if(arr.length)pS[selKey]=arr;else delete pS[selKey];
+  save();renderPlanList();render();renderRecList();
+}
+function autoClean(){
+  // 換班／備註／行程／同事紀錄全部永久保留，只清過月的舊圖片
+  cleanOldPhotos();
 }
 function save(){
-  try{localStorage.setItem(LS_PREFIX+'wswaps',JSON.stringify(wS));}catch(e){}
-  try{localStorage.setItem(LS_PREFIX+'dswaps',JSON.stringify(dS));}catch(e){}
-  try{localStorage.setItem(LS_PREFIX+'notes',JSON.stringify(nS));}catch(e){}
+  try{localStorage.setItem('cow_wswaps',JSON.stringify(wS));}catch(e){}
+  try{localStorage.setItem('cow_dswaps',JSON.stringify(dS));}catch(e){}
+  try{localStorage.setItem('cow_notes',JSON.stringify(nS));}catch(e){}
+  try{localStorage.setItem('cow_plans',JSON.stringify(pS));}catch(e){}
+  try{localStorage.setItem('cow_other',JSON.stringify(oD));}catch(e){}
 }
-function getNum(date){return wS[monKey(date)]||nf(ME.w1,wo(date))}
+function exportBackup(){
+  const keys=['cow_wswaps','cow_dswaps','cow_notes','cow_plans','cow_plan_cats','cow_other','cow_other_name','cow_hours','cow_hours_cfg','cow_allow_adj','cow_allow_confirmed','cow_swap_names'];
+  const data={_version:1,_exported:new Date().toISOString()};
+  keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v;});
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const d=new Date(),ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  a.href=url;a.download='Cow_backup_'+ds+'.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function importBackup(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data._version){alert('格式不符，請選擇正確的備份檔');return;}
+      if(!confirm('匯入後將覆蓋目前所有資料，確定繼續？'))return;
+      const keys=['cow_wswaps','cow_dswaps','cow_notes','cow_plans','cow_plan_cats','cow_other','cow_other_name','cow_hours','cow_hours_cfg','cow_allow_adj','cow_allow_confirmed','cow_swap_names'];
+      keys.forEach(k=>{if(data[k]!==undefined)localStorage.setItem(k,data[k]);else localStorage.removeItem(k);});
+      alert('匯入成功！即將重新載入。');location.reload();
+    }catch(err){alert('匯入失敗：'+err.message);}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+function getNum(date){const v=wS[monKey(date)];if(!v)return nf(ME.w1,wo(date));return typeof v==='object'?v.final:v;}
 function getShift(date){
-  const key=dk(date);
-  if(dS[key])return{s:dS[key],h:HOL[key]||null,dm:true,holD:false};
-  const num=getNum(date),idx=(date.getDay()+6)%7;
-  let s=SCH[num][idx];
-  const h=HOL[key];
-  let holD=false;
-  if(h&&date.getDay()!==0&&date.getDay()!==6){
-    const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3',"D'OFF"];
-    if(mo.includes(s)){s='OFF';}
-    else if(s==='D1'||s==='D2')holD=true;
-  }
+  const key=dk(date);if(dS[key])return{s:dS[key],h:HOL[key]||HOLD[key]||null,dm:true,holD:false};
+  const num=getNum(date),idx=(date.getDay()+6)%7;let s=(num==='?')?((idx>=5)?'?':'D?'):SCH[num][idx];const hc=HOL[key],h=hc||HOLD[key];let holD=false;
+  if(hc&&date.getDay()!==0&&date.getDay()!==6){const mo=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3','12-8 4',"D'OFF",'D?'];if(mo.includes(s)){s='OFF';}else if(s==='D1'||s==='D2')holD=true;}
   return{s,h:h||null,dm:false,holD};
 }
 function sc(s,holD){
-  if(!s||s==='OFF'||s==='OFF.B'||s==="D'OFF")return'sOFF';
-  if(s.startsWith('12-8'))return's12';
-  if(s.startsWith('E'))return'sE';
-  if(s.startsWith('N'))return'sN';
-  if(holD)return'sDhol';
-  return'sD';
+  if(!s||s==='?'||s==='OFF'||s==='OFF.B'||s==="D'OFF")return'sOFF';
+  if(s.startsWith('12-8'))return's12';if(s.startsWith('E'))return'sE';if(s.startsWith('N'))return'sN';
+  if(holD)return'sDhol';return'sD';
 }
-let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,curTab='week';
-function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();}
-function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();}
+let cy=new Date().getFullYear(),cm=new Date().getMonth(),selKey=null,pendingKey=null,zoneViewAbs=null;
+function goToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function updateTodayBtn(){const n=new Date();document.getElementById('todayBtn').style.display=(cy===n.getFullYear()&&cm===n.getMonth())?'none':'block';}
+function prev(){cm--;if(cm<0){cm=11;cy--;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
+function next(){cm++;if(cm>11){cm=0;cy++;}render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();}
 function render(){
-  const me=new Date(cy,cm+1,0),totalDays=me.getDate();
+  const totalDays=new Date(cy,cm+1,0).getDate();
   document.getElementById('title').textContent=cy+' 年 '+(cm+1)+' 月';
   const gh=document.getElementById('gridHead');gh.innerHTML='';
   for(const d of['一','二','三','四','五','六','日']){const e=document.createElement('div');e.className='dh';e.textContent=d;gh.appendChild(e)}
   const g=document.getElementById('grid');g.innerHTML='';
   const fd=new Date(cy,cm,1).getDay(),off=(fd+6)%7;
-  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cell empty';g.appendChild(e)}
+  for(let i=0;i<off;i++){const e=document.createElement('div');e.className='cell empty';const t=document.createElement('div');t.className='top';const b=document.createElement('div');b.className='bot';e.appendChild(t);e.appendChild(b);g.appendChild(e)}
   const tk=dk(new Date());
   for(let day=1;day<=totalDays;day++){
     const date=new Date(cy,cm,day),key=dk(date);
@@ -576,154 +1476,394 @@ function render(){
     const cell=document.createElement('div');
     cell.style.cssText='--zc:'+zc;
     let cls='cell';
-    if(key===tk)cls+=' today';
-    if(wS[mk])cls+=' swapped';
-    if(dm)cls+=' day-mod';
-    if(selKey===key)cls+=' selected';
-    if(hasNote)cls+=' has-note';
-    if(isTop)cls+=' z-top';
-    if(isBottom)cls+=' z-bottom';
-    if(isLeft)cls+=' z-left';
-    if(isRight)cls+=' z-right';
-    cell.className=cls;
-    cell.onclick=()=>openPanel(key);
+    if(key===tk)cls+=' today';if(wS[mk])cls+=' swapped';if(dm)cls+=' day-mod';
+    if(selKey===key)cls+=' selected';if(hasNote)cls+=' has-note';
+    if(oD[key])cls+=' other-working';
+    if(isTop)cls+=' z-top';if(isBottom)cls+=' z-bottom';if(isLeft)cls+=' z-left';if(isRight)cls+=' z-right';
+    cell.className=cls;cell.dataset.key=key;cell.onclick=otherEditMode?()=>toggleOtherDay(key):()=>showQuickActions(key);
     if(isMon||isFirst){
       const b=document.createElement('div');b.className='badge';b.textContent=origNum;
-      b.onclick=function(e){
-        e.stopPropagation();
-        openPanel(key);
-        switchTab('week');
-        document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'});
-      };
+      b.onclick=function(e){e.stopPropagation();if(otherEditMode){toggleOtherDay(key);}else{openWeekSheet(key);}};
       cell.appendChild(b);
     }
     const top=document.createElement('div');top.className='top';
     const dn=document.createElement('div');dn.className='dn'+(h?' holiday':'');dn.textContent=day;top.appendChild(dn);
-    if(h){const he=document.createElement('div');he.className='hol-name';he.textContent=h;top.appendChild(he);}
-    const isHolD=h&&date.getDay()!==0&&date.getDay()!==6&&(s==='D1'||s==='D2');
-    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);bot.textContent=s;
+    const isHolD=holD;
     const he=hD[key];
+    const isDayMod=!!dS[key];
+    const bot=document.createElement('div');bot.className='bot '+sc(s,isHolD);
+    const shiftMain=document.createElement('div');shiftMain.className='shift-main';shiftMain.textContent=s;
+    const hoursTags=document.createElement('div');hoursTags.className='hours-tags';
+    const swapTags=document.createElement('div');swapTags.className='swap-tags';
+    if(isDayMod){shiftMain.style.color='#a83232';shiftMain.style.fontWeight='700';}
+    bot.appendChild(shiftMain);bot.appendChild(hoursTags);bot.appendChild(swapTags);
     if(he){
-      if(he.jiji>0){const b=document.createElement('span');b.className='hbadge '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m');b.textContent='積'+(he.jijiDir==='+'?'＋':'－')+he.jiji;bot.appendChild(b);}
-      if(he.nian>0){const b=document.createElement('span');b.className='hbadge hb-n-m';b.textContent='年－'+he.nian;bot.appendChild(b);}
+      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};hoursTags.appendChild(b);}
+      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};hoursTags.appendChild(b);}
+      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};hoursTags.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge '+(he.sick==='公'?'hb-gong':'hb-sick');b.textContent=he.sick+'假';hoursTags.appendChild(b);}
+      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};hoursTags.appendChild(b);}
+      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};hoursTags.appendChild(b);}
+      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};hoursTags.appendChild(b);}
+      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};hoursTags.appendChild(b);}
+      if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';hoursTags.appendChild(b);}
     }
-    cell.appendChild(top);cell.appendChild(bot);g.appendChild(cell);
+    if(wS[mk]){
+      const wv=wS[mk],lg=(typeof wv==='object'&&wv.log&&wv.log.length)?wv.log[wv.log.length-1]:null;
+      const swapFinal=typeof wv==='object'?wv.final:wv;
+      const showSwapTag=key>=tk&&(swapFinal==='?'||swapFinal===''||swapFinal==null);
+      if(showSwapTag){const b=document.createElement('span');b.className='hbadge hb-swap';b.textContent='⇄'+((lg&&lg.who)?lg.who.slice(0,3):'換班');swapTags.appendChild(b);}
+    }
+    if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';swapTags.appendChild(b);}
+    const planArea=document.createElement('div');planArea.className='cell-plans';
+    const dayPlans=pS[key]?(Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key])):[];
+    const observance=h||MEMO[key];
+    if(observance){const obs=document.createElement('div');obs.className='cell-plan observance'+(h?'':' memo');obs.textContent=observance;obs.title=observance;planArea.appendChild(obs);}
+    const planLimit=observance?2:3;
+    if(dayPlans.length){
+      dayPlans.slice(0,planLimit).forEach(it=>{const row=document.createElement('div');row.className='cell-plan'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=it.text;row.title=it.text;row.onclick=function(ev){ev.stopPropagation();openPlanSheet(key);};planArea.appendChild(row);});
+      if(dayPlans.length>planLimit){const more=document.createElement('div');more.className='cell-plan-more';more.textContent='＋'+(dayPlans.length-planLimit)+' 項';planArea.appendChild(more);}
+    }else{const emptyPlan=document.createElement('div');emptyPlan.className='cell-plan-empty';planArea.appendChild(emptyPlan);}
+    // 📷 標記（同步讀 localStorage）
+    if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top='13px';pp.textContent='📷';cell.appendChild(pp);}
+    cell.appendChild(top);cell.appendChild(bot);cell.appendChild(planArea);g.appendChild(cell);
   }
+  // 補滿最後一排
+  const totalCells=off+totalDays,remainder=totalCells%7;
+  if(remainder!==0){const trailing=7-remainder;for(let i=0;i<trailing;i++){const e=document.createElement('div');e.className='cell empty';const t=document.createElement('div');t.className='top';const b=document.createElement('div');b.className='bot';e.appendChild(t);e.appendChild(b);g.appendChild(e);}}
+  updateOtherTrigger();
 }
-function openPanel(key){
-  selKey=key;
-  const date=kd(key),dow=date.getDay(),isMon=((dow+6)%7)===0;
+function showQuickActions(key){
+  pendingKey=key;
+  const date=kd(key),dow=date.getDay();
+  const{s,h}=getShift(date);
+  document.getElementById('quickDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）'+(h?'　🎌 '+h:(MEMO[key]?'　'+MEMO[key]:''));
+  document.getElementById('quickShift').textContent='目前班別：'+s;
+  renderQuickPlanPreview(key);
+  document.getElementById('quickOverlay').classList.add('open');
+}
+function renderQuickPlanPreview(key){
+  const el=document.getElementById('quickPlanPreview');if(!el)return;el.innerHTML='';
+  const date=kd(key),{h}=getShift(date),obs=h||MEMO[key];
+  const items=pS[key]?(Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key])):[];
+  if(obs){const row=document.createElement('div');row.className='quick-plan-item observance'+(h?'':' memo');row.textContent=obs;row.onclick=()=>quickAction('plan');el.appendChild(row);}
+  items.forEach(it=>{const row=document.createElement('div');row.className='quick-plan-item'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=(it.done?'✓ ':'')+it.text;row.onclick=()=>quickAction('plan');el.appendChild(row);});
+  el.classList.toggle('show',!!(obs||items.length));
+}
+function closeQuickActions(){
+  document.getElementById('quickOverlay').classList.remove('open');
+  pendingKey=null;
+}
+function quickAction(action){
+  const key=pendingKey;
+  closeQuickActions();
+  if(!key)return;
+  if(action==='week')openWeekSheet(key);
+  else if(action==='day')openDaySheet(key);
+  else if(action==='plan')openPlanSheet(key);
+  else if(action==='hours'){selKey=key;openHoursSheet();}
+  else if(action==='bal')openBalSheet(key);
+}
+function openWeekSheet(key){
+  selKey=key;const date=kd(key),mk=monKey(date);
   const{s:curShift,h}=getShift(date);
-  const mk=monKey(date);
-  document.getElementById('panelTitle').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[dow]+'）';
-  document.getElementById('panelSub').textContent='目前班別：'+curShift;
-  const holEl=document.getElementById('panelHol');
-  if(h){holEl.textContent='🎌 '+h;holEl.style.display='block';}else{holEl.style.display='none';}
-  switchTab(isMon?'week':'day');
-  document.getElementById('numSel').value=wS[mk]||'';
-  document.getElementById('preview').style.display='none';
-  if(wS[mk])renderPreview();
+  document.getElementById('weekDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）'+(h?'　🎌 '+h:(MEMO[key]?'　'+MEMO[key]:''));
+  document.getElementById('weekShift').textContent='目前班別：'+curShift;
+  const wv=wS[mk];const curFinal=wv?(typeof wv==='object'?wv.final:wv):'';
+  document.getElementById('numSel').value=curFinal||'';document.getElementById('preview').style.display='none';
+  if(curFinal)renderPreview();
+  const lastEntry=wv&&typeof wv==='object'&&wv.log&&wv.log.length?wv.log[wv.log.length-1]:null;
+  document.getElementById('weekNote').value=(lastEntry&&lastEntry.note)||(nS[mk]||'');
+  renderWhoSel((lastEntry&&lastEntry.who)||'');
+  document.getElementById('weekOverlay').classList.add('open');
+}
+function closeWeekSheet(){document.getElementById('weekOverlay').classList.remove('open');}
+function openDaySheet(key){
+  selKey=key;const date=kd(key);
+  const{s:curShift,h}=getShift(date);
+  document.getElementById('dayDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('dayShift').textContent='目前班別：'+curShift;
+  const dayHolEl=document.getElementById('dayHol');
+  if(h){dayHolEl.textContent='🎌 '+h;dayHolEl.style.color='';dayHolEl.style.display='block';}
+  else if(MEMO[key]){dayHolEl.textContent=MEMO[key];dayHolEl.style.color='var(--ink2)';dayHolEl.style.display='block';}
+  else{dayHolEl.style.display='none';}
   renderShiftBtns(dS[key]||curShift);
-  document.getElementById('weekNote').value=nS[mk]||'';
   document.getElementById('dayNote').value=nS[key]||'';
-  document.getElementById('panel').classList.add('open');
-  updateHoursBtnStyle();
-  render();
-  setTimeout(()=>document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'start'}),50);
+  const otherTrackRow=document.getElementById('otherTrackRow');
+  if(otherTrackRow){
+    otherTrackRow.classList.toggle('show',!!otherName);
+    const lbl=document.getElementById('otherPersonLabel');if(lbl)lbl.textContent=otherName||'同事';
+    updateOtherBtns();
+  }
+  document.getElementById('dayOverlay').classList.add('open');
 }
-function switchTab(tab){
-  curTab=tab;
-  document.getElementById('tabWeek').classList.toggle('active',tab==='week');
-  document.getElementById('tabDay').classList.toggle('active',tab==='day');
-  document.getElementById('formWeek').style.display=tab==='week'?'block':'none';
-  document.getElementById('formDay').style.display=tab==='day'?'block':'none';
+function closeDaySheet(){document.getElementById('dayOverlay').classList.remove('open');}
+function openPlanSheet(key){
+  selKey=key;const date=kd(key);
+  const{s:curShift}=getShift(date);
+  document.getElementById('planDate').textContent=(date.getMonth()+1)+'/'+date.getDate()+' （週'+DZ[date.getDay()]+'）';
+  document.getElementById('planShift').textContent='目前班別：'+curShift;
+  renderPlanList();renderPlanCats();renderPhotos();
+  document.getElementById('planOverlay').classList.add('open');
+  setTimeout(()=>{const inp=document.getElementById('planAddInput');if(inp)inp.focus();},300);
 }
-function renderShiftBtns(cur){
-  document.getElementById('shiftBtns').innerHTML=COMMON.map(s=>'<button class="sb '+sc(s,false)+' '+(s===cur?'active':'')+'" onclick="selectShift(\''+s+'\')">'+s+'</button>').join('');
-}
+function closePlanSheet(){document.getElementById('planOverlay').classList.remove('open');render();}
+function renderShiftBtns(cur){document.getElementById('shiftBtns').innerHTML=COMMON.map(s=>'<button class="sb '+sc(s,false)+' '+(s===cur?'active':'')+'" onclick="selectShift(\''+s+'\')">'+s+'</button>').join('');}
 function selectShift(s){renderShiftBtns(s);}
 function getSelectedShift(){const a=document.querySelector('#shiftBtns .sb.active');return a?a.textContent:'';}
 function renderPreview(){
   const nv=document.getElementById('numSel').value,pv=document.getElementById('preview'),pg=document.getElementById('previewGrid');
   if(!nv){pv.style.display='none';return;}
-  const num=parseInt(nv),wds=['一','二','三','四','五','六','日'];
+  const wds=['一','二','三','四','五','六','日'];
   let h='';for(const d of wds)h+='<div class="pg-head">'+d+'</div>';
-  for(let i=0;i<7;i++){const s=SCH[num][i];h+='<div class="pg-cell '+sc(s,false)+'">'+s+'</div>';}
+  for(let i=0;i<7;i++){const s=(nv==='?')?((i>=5)?'?':'D?'):SCH[parseInt(nv)][i];h+='<div class="pg-cell '+sc(s,false)+'">'+s+'</div>';}
   pg.innerHTML=h;pv.style.display='block';
 }
-function confirmAction(){
-  if(!selKey)return;
-  const mk=monKey(kd(selKey));
-  if(curTab==='week'){
-    const nv=document.getElementById('numSel').value;
-    if(!nv){alert('請先選擇號碼班');return;}
-    const date=kd(selKey),origNum=nf(ME.w1,wo(date));
-    const note=document.getElementById('weekNote').value.trim();
-    if(parseInt(nv)===origNum){
-      delete wS[mk];delete nS[mk];
-    }else{
-      wS[mk]=parseInt(nv);
-      if(note)nS[mk]=note;else delete nS[mk];
-    }
-  }else{
-    const chosen=getSelectedShift();
-    const date=kd(selKey);
-    const note=document.getElementById('dayNote').value.trim();
-    const savedDS=dS[selKey];delete dS[selKey];
-    const{s:baseShift}=getShift(date);
-    if(savedDS)dS[selKey]=savedDS;
-    if(chosen&&chosen!==baseShift){
-      dS[selKey]=chosen;
-    }else{
-      delete dS[selKey];
-    }
-    if(note)nS[selKey]=note;else delete nS[selKey];
-    if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+function savePlan(){/* 已由 addPlanItem/togglePlanItem/deletePlanItem 取代 */}
+function confirmWeekAction(){
+  if(!selKey)return;const mk=monKey(kd(selKey));
+  const nv=document.getElementById('numSel').value;if(!nv){alert('請先選擇號碼班');return;}
+  const date=kd(selKey),origNum=nf(ME.w1,wo(date)),note=document.getElementById('weekNote').value.trim();
+  let who=document.getElementById('weekWho').value;if(who==='__new')who='';who=who.trim();addSwapName(who);
+  const newNum=(nv==='?')?'?':parseInt(nv);
+  // 讀取現有 log
+  const existing=wS[mk];
+  let log=existing&&typeof existing==='object'&&existing.log?[...existing.log]:[];
+  const prevNum=log.length?log[log.length-1].to:origNum;
+  if(newNum===origNum&&!log.length){delete wS[mk];delete nS[mk];}
+  else if(newNum===prevNum){alert('班別與目前相同，無需換班');return;}
+  else{
+    // 若新 final 等於 origNum 且清空 log → 視為還原
+    if(newNum===origNum){log=[];delete wS[mk];delete nS[mk];}
+    else{log.push({from:prevNum,to:newNum,note,who});wS[mk]={final:newNum,log};}
   }
-  save();renderRecList();
-  render();refreshAllow();closePanel();
-  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+  save();renderRecList();render();refreshAllow();renderSwapBar();closeWeekSheet();
 }
-function closePanel(){
-  selKey=null;
-  document.getElementById('panel').classList.remove('open');
-  document.querySelectorAll('.cell.selected').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('title').scrollIntoView({behavior:'smooth',block:'start'});
+function confirmDayAction(){
+  if(!selKey)return;
+  const chosen=getSelectedShift(),date=kd(selKey),note=document.getElementById('dayNote').value.trim();
+  const savedDS=dS[selKey];delete dS[selKey];const{s:baseShift}=getShift(date);if(savedDS)dS[selKey]=savedDS;
+  if(chosen&&chosen!==baseShift){dS[selKey]=chosen;}else{delete dS[selKey];}
+  if(note)nS[selKey]=note;else delete nS[selKey];
+  if(!chosen&&!note){alert('請選擇班別或填寫備註');return;}
+  save();renderRecList();render();refreshAllow();closeDaySheet();
+}
+function closeAllSheets(){
+  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay','balOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  selKey=null;pendingKey=null;
 }
 function renderRecList(){
   const el=document.getElementById('recList'),items=[];
   function inViewMonth(date){return date.getFullYear()===cy&&date.getMonth()===cm;}
   Object.keys(wS).sort().forEach(mk=>{
-    const date=kd(mk);
-    if(!inViewMonth(date))return;
+    const date=kd(mk);if(!inViewMonth(date))return;
     const origNum=nf(ME.w1,wo(date));
-    items.push({type:'week',key:mk,desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週：N.'+origNum+' → N.'+wS[mk],note:nS[mk]||''});
-  });
-  Object.keys(dS).sort().forEach(key=>{
-    const date=kd(key);
-    if(!inViewMonth(date))return;
-    if(dS[key])items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key],note:nS[key]||''});
-  });
-  Object.keys(nS).sort().forEach(key=>{
-    if(!wS[key]&&!dS[key]){
-      const date=kd(key);
-      if(!inViewMonth(date))return;
-      items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註',note:nS[key]});
+    const wv=wS[mk];
+    if(typeof wv==='object'&&wv.log&&wv.log.length){
+      wv.log.forEach((entry,idx)=>{
+        const fromLabel=numLabel(entry.from),toLabel=numLabel(entry.to);
+        const isTail=idx===wv.log.length-1;
+        items.push({type:'week',key:mk,logIdx:idx,isTail,
+          desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週（第'+(idx+1)+'次）：'+fromLabel+' → '+toLabel+(entry.who?'　⇄ '+entry.who:''),
+          note:entry.note||''});
+      });
+    }else{
+      // 舊格式相容
+      const oldNum=typeof wv==='number'?wv:(wv.final||wv);
+      items.push({type:'week',key:mk,logIdx:0,isTail:true,
+        desc:(date.getMonth()+1)+'/'+date.getDate()+' 那週：'+numLabel(origNum)+' → '+numLabel(oldNum),
+        note:nS[mk]||''});
     }
   });
-  if(!items.length){el.innerHTML='<li class="empty-msg">尚無換班紀錄</li>';return;}
-  el.innerHTML=items.map(({type,key,desc,note})=>'<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+type+'">'+(type==='week'?'換號碼班':'單日')+'</span><span class="rec-desc">'+desc+'</span><button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button></div>'+(note?'<div class="rec-note">💬 '+note+'</div>':'')+'</li>').join('');
+  Object.keys(dS).sort().forEach(key=>{const date=kd(key);if(!inViewMonth(date))return;if(dS[key])items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）→ '+dS[key],note:nS[key]||''});});
+  Object.keys(nS).sort().forEach(key=>{if(!wS[key]&&!dS[key]){const date=kd(key);if(!inViewMonth(date))return;items.push({type:'day',key,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）備註',note:nS[key]});}});
+  Object.keys(pS).sort().forEach(key=>{
+    const date=kd(key);if(!inViewMonth(date))return;
+    const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);
+    if(!arr.length)return;
+    const summary=arr.map(it=>(it.done?'✓ ':'')+(it.text||'')).join('、');
+    items.push({type:'plan',key,logIdx:undefined,isTail:true,desc:(date.getMonth()+1)+'/'+date.getDate()+'（週'+DZ[date.getDay()]+'）',note:summary});
+  });
+  const icon=document.getElementById('recToggleIcon'),isOpen=document.getElementById('recList').style.display!=='none';
+  if(!items.length){el.innerHTML='<li class="empty-msg">尚無紀錄</li>';if(icon)icon.textContent='展開 ﹀';return;}
+  el.innerHTML=items.map(({type,key,logIdx,isTail,desc,note})=>{
+    var lbl=type==='week'?'換號碼班':(type==='plan'?'📌 行程':'單日');
+    var ic=type==='plan'?'📌':'💬';
+    var delBtn=type==='week'
+      ?'<button class="rec-del" onclick="delRec(\'week\',\''+key+'\','+logIdx+')" title="'+(isTail?'刪除此筆':'刪除此筆及之後所有換班紀錄')+'">✕</button>'
+      :'<button class="rec-del" onclick="delRec(\''+type+'\',\''+key+'\')">✕</button>';
+    var tailHint=(!isTail&&type==='week')?'<div class="rec-note" style="color:#c0392b;border-color:#e0b0a8">⚠ 刪此筆將一併清除後續換班紀錄</div>':'';
+    return '<li class="rec-item"><div class="rec-item-head"><span class="rec-tag '+type+'">'+lbl+'</span><span class="rec-desc">'+desc+'</span>'+delBtn+'</div>'
+      +tailHint
+      +(note?'<div class="rec-note">'+ic+' '+note+'</div>':'')
+      +'</li>';
+  }).join('');
+  if(icon)icon.textContent=isOpen?'收合 ︿ ('+items.length+')':'展開 ﹀ ('+items.length+')';
 }
-function delRec(type,key){
-  if(type==='week'){delete wS[key];delete nS[key];}else{delete dS[key];delete nS[key];}
-  save();renderRecList();render();
+let swapNames=[];
+try{const v=localStorage.getItem('cow_swap_names');if(v)swapNames=JSON.parse(v);}catch(e){}
+function saveSwapNames(){try{localStorage.setItem('cow_swap_names',JSON.stringify(swapNames));}catch(e){}}
+function addSwapName(n){n=(n||'').trim();if(!n||n==='__new')return;if(!swapNames.includes(n)){swapNames.push(n);swapNames.sort();saveSwapNames();}}
+function collectSwapNames(){
+  let ch=false;
+  for(const mk in wS){const wv=wS[mk];
+    if(wv&&typeof wv==='object'&&wv.log)wv.log.forEach(e=>{if(e.who&&!swapNames.includes(e.who)){swapNames.push(e.who);ch=true;}});}
+  if(ch){swapNames.sort();saveSwapNames();}
+}
+function renderWhoSel(cur){
+  const sel=document.getElementById('weekWho');if(!sel)return;
+  if(cur)addSwapName(cur);
+  let h='<option value="">－ 不填 －</option>';
+  swapNames.forEach(n=>{h+='<option value="'+esc(n)+'">'+esc(n)+'</option>';});
+  h+='<option value="__new">＋ 新增名字…</option>';
+  sel.innerHTML=h;sel.value=cur||'';
+  updateWhoDelBtn();
+}
+function onWhoChange(){
+  const sel=document.getElementById('weekWho');
+  if(sel.value==='__new'){
+    const n=prompt('新增換班對象名字：');
+    if(n&&n.trim()){addSwapName(n.trim());renderWhoSel(n.trim());}else{renderWhoSel('');}
+    return;
+  }
+  updateWhoDelBtn();
+}
+function updateWhoDelBtn(){
+  const sel=document.getElementById('weekWho'),b=document.getElementById('whoDelBtn');
+  if(b)b.style.visibility=(sel&&sel.value&&sel.value!=='__new')?'visible':'hidden';
+}
+function delSwapName(){
+  const sel=document.getElementById('weekWho'),v=sel.value;
+  if(!v||v==='__new')return;
+  swapNames=swapNames.filter(n=>n!==v);saveSwapNames();renderWhoSel('');
+}
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function jumpToWeek(mk){
+  const d=kd(mk);cy=d.getFullYear();cm=d.getMonth();
+  render();renderRecList();refreshAllow();updateTodayBtn();syncZoneToMonth();
+  try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){}
+}
+let swapConfirmKey=null,swapBarOpen=false;
+try{swapBarOpen=localStorage.getItem('cow_swapbar_open')==='1';}catch(e){}
+function toggleSwapBar(){
+  swapBarOpen=!swapBarOpen;
+  if(!swapBarOpen)swapConfirmKey=null;
+  try{localStorage.setItem('cow_swapbar_open',swapBarOpen?'1':'0');}catch(e){}
+  renderSwapBar();
+}
+function askCancelWeekSwap(mk,ev){
+  if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+  swapConfirmKey=mk;renderSwapBar();
+}
+function abortCancelWeekSwap(ev){
+  if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+  swapConfirmKey=null;renderSwapBar();
+}
+function doCancelWeekSwap(mk,ev){
+  if(ev){if(ev.stopPropagation)ev.stopPropagation();if(ev.preventDefault)ev.preventDefault();}
+  delete wS[mk];delete nS[mk];
+  swapConfirmKey=null;
+  save();render();renderRecList();refreshAllow();renderSwapBar();
+}
+function renderSwapBar(){
+  const bar=document.getElementById('swapBar');if(!bar)return;
+  const n=new Date(),curMon=ad(n,-((n.getDay()+6)%7));
+  const keys=Object.keys(wS).filter(mk=>kd(mk)>=curMon).sort();
+  if(!keys.length)swapConfirmKey=null;
+  if(swapConfirmKey&&keys.indexOf(swapConfirmKey)<0)swapConfirmKey=null;
+  let h='<div class="swap-bar-head'+(swapBarOpen?' open':'')+'" onclick="toggleSwapBar()">'
+    +'<span>\u21c4 \u5df2\u7d04\u597d\u7684\u63db\u73ed\u9031\uff08'+keys.length+' \u9031\uff09</span>'
+    +'<span class="swap-bar-toggle">'+(swapBarOpen?'\u6536\u5408 \ufe3f':'\u5c55\u958b \ufe40')+'</span></div>';
+  if(!swapBarOpen){bar.className='swap-bar show';bar.innerHTML=h;return;}
+  keys.slice(0,8).forEach(mk=>{
+    const d=kd(mk),wv=wS[mk];
+    const fin=(typeof wv==='object')?wv.final:wv;
+    const lg=(typeof wv==='object'&&wv.log&&wv.log.length)?wv.log[wv.log.length-1]:null;
+    const who=(lg&&lg.who)?lg.who:'';
+    const isThis=(dk(d)===dk(curMon));
+    const when=(d.getMonth()+1)+'/'+d.getDate()+(isThis?' \u672c\u9031':' \u90a3\u9031');
+    if(swapConfirmKey===mk){
+      h+='<div class="swap-item confirming">'
+        +'<span class="swap-ask">\u53d6\u6d88\u63db\u73ed\uff0c\u6539\u56de '+numLabel(nf(ME.w1,wo(d)))+'\uff1f</span>'
+        +'<button type="button" class="swap-yes" onclick="doCancelWeekSwap(\''+mk+'\',event)">\u78ba\u5b9a</button>'
+        +'<button type="button" class="swap-no" onclick="abortCancelWeekSwap(event)">\u8fd4\u56de</button></div>';
+    }else{
+      h+='<div class="swap-item" onclick="jumpToWeek(\''+mk+'\')">'
+        +'<span class="swap-when">'+when+'</span>'
+        +'<span class="swap-flow">'+numLabel(nf(ME.w1,wo(d)))+' \u2192 '+numLabel(fin)+'</span>'
+        +'<span class="swap-who'+(who?'':' none')+'">'+(who?'\u21c4 '+esc(who):'\u672a\u586b\u5c0d\u8c61')+'</span>'
+        +'<button type="button" class="swap-x" onclick="askCancelWeekSwap(\''+mk+'\',event)">\u2715</button></div>';
+    }
+  });
+  if(!keys.length)h+='<div class="swap-empty">\u5c1a\u672a\u767b\u8a18\u672a\u4f86\u7684\u63db\u73ed</div>';
+  bar.className='swap-bar show';bar.innerHTML=h;
+}
+function delRec(type,key,logIdx){
+  if(type==='week'){
+    const wv=wS[key];
+    if(typeof wv==='object'&&wv.log){
+      const newLog=wv.log.slice(0,logIdx);
+      if(!newLog.length){delete wS[key];delete nS[key];}
+      else{wS[key]={final:newLog[newLog.length-1].to,log:newLog};}
+    }else{delete wS[key];delete nS[key];}
+  }else if(type==='plan'){delete pS[key];}
+  else{delete dS[key];delete nS[key];}
+  save();renderRecList();render();renderSwapBar();
+}
+function toggleRecList(){const el=document.getElementById('recList'),icon=document.getElementById('recToggleIcon'),isOpen=el.style.display!=='none';el.style.display=isOpen?'none':'block';const count=el.querySelectorAll('.rec-item').length;icon.textContent=isOpen?('展開 ﹀'+(count>0?' ('+count+')':'')):'收合 ︿ ('+count+')';}
+// ── 本區間（按4週區間分組，與月曆顯示月份無關） ──
+function prevZoneRec(){zoneViewAbs--;renderZoneRecList();}
+function nextZoneRec(){zoneViewAbs++;renderZoneRecList();}
+function syncZoneToMonth(){zoneViewAbs=absZoneNum(new Date(cy,cm,1));renderZoneRecList();}
+function goTodayZone(){zoneViewAbs=absZoneNum(new Date());renderZoneRecList();}
+function updateZoneTodayBtn(){
+  const btn=document.getElementById('zoneTodayBtn');if(!btn)return;
+  btn.style.display=(zoneViewAbs===absZoneNum(new Date()))?'none':'block';
+}
+function renderZoneRecList(){
+  if(zoneViewAbs===null)zoneViewAbs=absZoneNum(new Date());
+  const start=zoneStart(zoneViewAbs),end=zoneEnd(zoneViewAbs);
+  const rangeEl=document.getElementById('zoneRecRange');
+  if(rangeEl)rangeEl.textContent=(start.getMonth()+1)+'/'+start.getDate()+' － '+(end.getMonth()+1)+'/'+end.getDate();
+  function r2(v){return parseFloat(v.toFixed(2));}
+  let addTotal=0,takeTotal=0;
+  Object.keys(hD).forEach(key=>{
+    const d=kd(key);
+    if(d<start||d>end)return;
+    const e=hD[key];
+    if(e.jiji>0){if(e.jijiDir==='+')addTotal+=e.jiji;else takeTotal+=e.jiji;}
+    if(e.tz)addTotal+=e.tz;
+    if(e.hw)addTotal+=e.hw;
+  });
+  const addEl=document.getElementById('zoneAddVal'),takeEl=document.getElementById('zoneTakeVal');
+  if(addEl)addEl.textContent=r2(addTotal);
+  if(takeEl)takeEl.textContent=r2(takeTotal);
+  updateZoneTodayBtn();
 }
 const sel=document.getElementById('numSel');
-for(let i=1;i<=35;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
-autoClean();renderRecList();render();
+{const o=document.createElement('option');o.value='?';o.textContent='？ 白班（號碼未定）';sel.appendChild(o);}
+for(let i=1;i<=36;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
+collectSwapNames();autoClean();renderRecList();render();updateTodayBtn();renderSwapBar();
 document.getElementById('nianTotalInput').value=nianTotal;
+document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
-refreshBalance();refreshAllow();
+document.getElementById('otherNameInput').value=otherName;
+refreshBalance();refreshAllow();renderZoneRecList();
 </script>
+<!-- 燈箱 -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img class="lightbox-img" id="lbImg" src="" alt="">
+  <div class="lightbox-nav">
+    <button class="lb-btn" onclick="lbNav(-1)">‹</button>
+    <span class="lb-counter" id="lbCounter"></span>
+    <button class="lb-btn" onclick="lbNav(1)">›</button>
+  </div>
+</div>
+<div class="other-edit-bar" id="otherEditBar">
+  <span class="oeb-label" id="oebLabel">輸入上班日<span class="oeb-hint">點格子切換有班 ↔ 清除</span></span>
+  <button class="oeb-cancel" onclick="cancelOtherEdit()">取消</button>
+  <button class="oeb-save" onclick="saveOtherEdit()">儲存</button>
+</div>
 </body>
 </html>
