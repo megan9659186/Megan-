@@ -178,6 +178,34 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .nts-label{font-size:13px;color:var(--ink3)}
 .nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
 .nts-input.jiji-color{color:#1a4a2a}
+/* 年度 / 代金 */
+.yr-nav-btn{background:transparent;border:1.5px solid var(--border2);border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;color:var(--ink2);padding:0;flex-shrink:0}
+.yr-nav-btn:active{background:var(--surface2)}
+.yr-cur{font-size:12px;color:var(--ink);font-weight:600;min-width:132px;text-align:center;letter-spacing:.2px}
+.yr-mgr-btn{padding:3px 9px;border:1px solid var(--border2);border-radius:99px;background:transparent;color:var(--accent2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-mgr-btn:active{background:var(--surface2)}
+.yr-back{display:none;padding:3px 9px;border:1px solid #e0cc90;border-radius:99px;background:#fdf6e8;color:#8a6800;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:8px}
+.yr-card.cur{border-color:#ccc8dc;background:#f7f6fb}
+.yr-card-head{display:flex;align-items:center;gap:6px}
+.yr-card-title{font-size:13px;font-weight:600;color:var(--ink)}
+.yr-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;background:#ccc8dc;color:#3a2a70}
+.yr-del{margin-left:auto;background:none;border:none;color:var(--ink3);font-size:14px;cursor:pointer;padding:0 3px;font-family:'DM Sans',sans-serif}
+.yr-del.on{color:var(--red);font-weight:700;font-size:12px;border:1px solid #e0c8c4;border-radius:99px;padding:2px 8px;background:#faf0ee}
+.yr-del.back{margin-left:0;font-size:12px}
+.yr-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:7px}
+.yr-lb{font-size:12px;color:var(--ink3);min-width:44px}
+.yr-lb.s{min-width:0}
+.yr-in{width:64px;padding:5px 6px;border:1px solid var(--border2);border-radius:6px;font-size:13px;text-align:center;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif}
+.yr-in.wide{width:150px;text-align:left}
+.yr-in.date{width:140px}
+.yr-used{font-size:11px;color:var(--ink3);margin-top:9px;padding-top:7px;border-top:1px dashed var(--border);line-height:1.6}
+.yr-add{width:100%;margin-top:10px;padding:10px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--accent2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-add:active{background:var(--surface2)}
+.yr-add.sub{padding:7px;font-size:12px;margin-top:6px;color:var(--ink3)}
+.yr-cash-sum{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink2);background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:10px 12px;margin-top:12px}
+.yr-cash-sum b{font-family:'Libre Baskerville',serif;font-weight:400;color:#8a6800;font-size:15px}
+.yr-msg{font-size:12px;color:#8a6800;background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:8px 10px;margin-top:10px;display:none}
 /* 本區間積休明細 */
 .zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px 8px}
 .zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:10px}
@@ -484,11 +512,19 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
   <div class="nbt"><div class="nbf yan-bar" id="yanFill" style="width:0%"></div></div>
   <span class="nbn" id="yanNums">已用 0 / 0 hr</span>
 </div>
-<!-- 設定：年休總額 + 延年休 + 積休初始 -->
+<!-- 設定：年度 + 年假時數 + 延年休 + 積休初始 -->
 <div class="hours-settings">
+  <div class="nts-group" style="flex-basis:100%">
+    <span class="nts-label">年度：</span>
+    <button class="yr-nav-btn" onclick="shiftYr(-1)">&#8249;</button>
+    <span class="yr-cur" id="yrCurLabel">未設定</span>
+    <button class="yr-nav-btn" onclick="shiftYr(1)">&#8250;</button>
+    <button class="yr-back" id="yrBackBtn" onclick="gotoCurYr()">回本年度</button>
+    <button class="yr-mgr-btn" onclick="openYrSheet()">年度／代金</button>
+  </div>
   <div class="nts-group">
-    <span class="nts-label">年休總額：</span>
-    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" value="52" onchange="saveSettings()">
+    <span class="nts-label">年假時數：</span>
+    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
   <div class="nts-group">
@@ -710,8 +746,33 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="bal-detail" id="balRangeDetail"></div>
       <div class="bal-sec" id="balCumSec">截止訖日累計</div>
       <div class="bal-detail" id="balDetail"></div>
-      <div class="bal-note">＊ 上方三張卡與「累計」是從最初算到<b>訖日</b>（含當日）的餘額；「區間內增減」只算起～訖之間的紀錄。起訖日可自行修改。</div>
+      <div class="bal-note">＊ 積休是從最初累計到<b>訖日</b>；年休／延休只算<b>訖日所屬年度</b>內的使用量；「區間內增減」只算起～訖之間的紀錄。起訖日可自行修改。</div>
       <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeBalSheet()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 年度／代金管理浮層 -->
+<div class="hours-overlay" id="yrOverlay" onclick="if(event.target===this)closeYrSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date">年度與代金</div>
+      <div class="hs-shift">依到職日週年制管理年假／延年休</div>
+    </div>
+    <div class="hs-body">
+      <div class="yr-line" style="margin-top:0">
+        <span class="yr-lb">到職日</span>
+        <input class="yr-in date" id="hireInput" type="date" onchange="saveHire()">
+        <button class="yr-mgr-btn" onclick="buildFirstYr()">建立本年度</button>
+      </div>
+      <div class="yr-msg" id="yrMsg"></div>
+      <div id="yrList"></div>
+      <button class="yr-add" onclick="addNextYr()">＋ 結轉新年度</button>
+      <button class="yr-add sub" onclick="addPrevYr()">＋ 補一個更早的年度</button>
+      <div class="yr-cash-sum"><span>代金累計</span><b id="yrCashSum">0 hr　$0</b></div>
+      <div class="bal-note">＊「結轉新年度」會把上年度剩餘的年休＋延休自動帶入新年度的「延年休」。若其中有一部分是折代金而非續用，把新年度延年休改成實際續用時數，再回到上年度卡片填入代金時數與金額即可。</div>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeYrSheet()">關閉</button>
     </div>
   </div>
 </div>
@@ -904,9 +965,30 @@ function updateOtherBtns(){
 }
 // ── 時數資料 ──
 let hD={};
-let nianTotal=52,yanTotal=0,jijiInit=21.45;
+let nianTotal=0,yanTotal=0,jijiInit=21.45;
+let yrs=[],hireDate='',selYr=0,yrDelIdx=-1;
 try{const s=localStorage.getItem('megan_hours');if(s)hD=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem('megan_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal);if(isNaN(nianTotal))nianTotal=52;yanTotal=parseFloat(c.yanTotal);if(isNaN(yanTotal))yanTotal=0;jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;}}catch(e){}
+try{const s=localStorage.getItem('megan_hours_cfg');if(s){const c=JSON.parse(s);
+  jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;
+  hireDate=c.hireDate||'';
+  if(Array.isArray(c.yrs)&&c.yrs.length)yrs=c.yrs.map(y=>({s:y.s,e:y.e,nian:parseFloat(y.nian)||0,yan:parseFloat(y.yan)||0,cashHr:parseFloat(y.cashHr)||0,cashAmt:parseFloat(y.cashAmt)||0,cashNote:y.cashNote||''}));
+  else{const n=parseFloat(c.nianTotal),ya=parseFloat(c.yanTotal);yrs=[{s:'0000-01-01',e:'9999-12-31',nian:isNaN(n)?0:n,yan:isNaN(ya)?0:ya,cashHr:0,cashAmt:0,cashNote:''}];}
+}}catch(e){}
+if(!yrs.length)yrs=[{s:'0000-01-01',e:'9999-12-31',nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:''}];
+sortYrs();selYr=curYrIdx();syncYr();
+function sortYrs(){yrs.sort((a,b)=>a.s<b.s?-1:(a.s>b.s?1:0));}
+function newYr(s,e){return{s:s,e:e,nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:''};}
+function addDaysK(k,n){const d=kd(k);d.setDate(d.getDate()+n);return dk(d);}
+function addYearsK(k,n){const d=kd(k);d.setFullYear(d.getFullYear()+n);return dk(d);}
+function yrEndFrom(s){return addDaysK(addYearsK(s,1),-1);}
+function isLegacyYr(y){return y&&y.s==='0000-01-01';}
+function yrIdxFor(k){for(let i=0;i<yrs.length;i++)if(k>=yrs[i].s&&k<=yrs[i].e)return i;return -1;}
+function yrIdxClamp(k){const i=yrIdxFor(k);if(i>=0)return i;if(!yrs.length)return 0;if(k<yrs[0].s)return 0;return yrs.length-1;}
+function curYrIdx(){return yrIdxClamp(dk(new Date()));}
+function ymdTxt(k){const d=kd(k);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
+function yrLabel(i){const y=yrs[i];if(!y)return'未設定';if(isLegacyYr(y))return'全部期間（年度未設定）';return ymdTxt(y.s)+' － '+ymdTxt(y.e);}
+function syncYr(){const y=yrs[selYr];nianTotal=y?y.nian:0;yanTotal=y?y.yan:0;}
+function saveCfg(){try{localStorage.setItem('megan_hours_cfg',JSON.stringify({jijiInit:jijiInit,hireDate:hireDate,yrs:yrs}));}catch(e){}}
 function saveHours(){try{localStorage.setItem('megan_hours',JSON.stringify(hD));}catch(e){}}
 function toggleHoursConfirm(key,type){
   const e=hD[key];if(!e)return;
@@ -918,16 +1000,99 @@ function saveSettings(){
   const nv=document.getElementById('nianTotalInput').value;
   const yv=document.getElementById('yanTotalInput').value;
   const jv=document.getElementById('jijiInitInput').value;
-  nianTotal=nv===''?52:parseFloat(nv);if(isNaN(nianTotal))nianTotal=52;
+  nianTotal=nv===''?0:parseFloat(nv);if(isNaN(nianTotal))nianTotal=0;
   yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
   jijiInit=jv===''?0:parseFloat(jv);if(isNaN(jijiInit))jijiInit=0;
-  try{localStorage.setItem('megan_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
-  refreshBalance();
+  if(yrs[selYr]){yrs[selYr].nian=nianTotal;yrs[selYr].yan=yanTotal;}
+  saveCfg();
+  refreshBalance();renderYrList();
+}
+// ── 年度／代金 ──
+function shiftYr(d){const n=selYr+d;if(n<0||n>=yrs.length)return;selYr=n;refreshBalance();}
+function gotoCurYr(){selYr=curYrIdx();refreshBalance();}
+function setYrMsg(t){const el=document.getElementById('yrMsg');if(!el)return;el.textContent=t||'';el.style.display=t?'block':'none';}
+function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;setYrMsg('');renderYrList();document.getElementById('yrOverlay').classList.add('open');}
+function closeYrSheet(){yrDelIdx=-1;document.getElementById('yrOverlay').classList.remove('open');}
+function saveHire(){hireDate=document.getElementById('hireInput').value||'';saveCfg();}
+function buildFirstYr(){
+  const hv=document.getElementById('hireInput').value;
+  if(!hv){setYrMsg('請先選擇到職日');return;}
+  hireDate=hv;
+  const hd=kd(hireDate),td=new Date(),tk=dk(td);
+  let sk=dk(new Date(td.getFullYear(),hd.getMonth(),hd.getDate()));
+  if(sk>tk)sk=dk(new Date(td.getFullYear()-1,hd.getMonth(),hd.getDate()));
+  if(yrs.length===1&&isLegacyYr(yrs[0])){yrs[0].s=sk;yrs[0].e=yrEndFrom(sk);setYrMsg('已建立本年度，原本的年假時數已沿用');}
+  else if(yrIdxFor(sk)<0){const y=newYr(sk,yrEndFrom(sk));yrs.push(y);sortYrs();setYrMsg('已建立本年度，請填入年假時數');}
+  else{setYrMsg('本年度已經存在了');saveCfg();return;}
+  selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();
+}
+function addNextYr(){
+  const last=yrs[yrs.length-1];
+  if(!last||isLegacyYr(last)){setYrMsg('請先填入到職日並按「建立本年度」');return;}
+  const li=yrs.length-1;
+  const leftN=Math.max(0,last.nian-calcNianUsed(li));
+  const leftY=Math.max(0,last.yan-calcYanUsed(li));
+  const sk=addDaysK(last.e,1);
+  const y=newYr(sk,yrEndFrom(sk));y.yan=fmtH(leftN+leftY);
+  yrs.push(y);selYr=yrs.length-1;saveCfg();refreshBalance();renderYrList();
+  setYrMsg('已結轉：上年度剩餘 '+fmtH(leftN+leftY)+' hr 帶入新年度延年休，請填入新年度的年假時數');
+}
+function addPrevYr(){
+  const first=yrs[0];
+  if(!first||isLegacyYr(first)){setYrMsg('請先填入到職日並按「建立本年度」');return;}
+  const ek=addDaysK(first.s,-1),sk=addDaysK(addYearsK(ek,-1),1);
+  yrs.unshift(newYr(sk,ek));selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();
+  setYrMsg('已補上更早的年度');
+}
+function delYr(i){
+  if(yrDelIdx!==i){yrDelIdx=i;renderYrList();return;}
+  yrs.splice(i,1);yrDelIdx=-1;
+  if(!yrs.length)yrs=[newYr('0000-01-01','9999-12-31')];
+  selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();setYrMsg('已刪除該年度');
+}
+function cancelDelYr(){yrDelIdx=-1;renderYrList();}
+function updYr(i,f,v){
+  const y=yrs[i];if(!y)return;
+  if(f==='s'){if(!v)return;y.s=v;y.e=yrEndFrom(v);sortYrs();selYr=curYrIdx();}
+  else if(f==='cashNote')y.cashNote=v;
+  else{const n=parseFloat(v);y[f]=isNaN(n)?0:n;}
+  saveCfg();refreshBalance();renderYrList();
+}
+function renderYrList(){
+  const el=document.getElementById('yrList');if(!el)return;
+  const ci=curYrIdx();let h='',chr=0,camt=0;
+  yrs.forEach((y,i)=>{
+    chr+=y.cashHr||0;camt+=y.cashAmt||0;
+    const nU=calcNianUsed(i),yU=calcYanUsed(i),leg=isLegacyYr(y);
+    h+='<div class="yr-card'+(i===ci?' cur':'')+'">';
+    h+='<div class="yr-card-head"><span class="yr-card-title">'+yrLabel(i)+'</span>';
+    if(i===ci)h+='<span class="yr-badge">本年度</span>';
+    h+=(yrDelIdx===i
+      ?'<button class="yr-del on" onclick="delYr('+i+')">確定刪除</button><button class="yr-del back" onclick="cancelDelYr()">返回</button>'
+      :'<button class="yr-del" onclick="delYr('+i+')">✕</button>');
+    h+='</div>';
+    if(leg)h+='<div class="yr-line"><span class="yr-lb s" style="color:#8a6800">尚未設定年度區間，請於上方填到職日後按「建立本年度」</span></div>';
+    else h+='<div class="yr-line"><span class="yr-lb">起日</span><input class="yr-in date" type="date" value="'+y.s+'" onchange="updYr('+i+',\'s\',this.value)"><span class="yr-lb s">訖 '+ymdTxt(y.e)+'</span></div>';
+    h+='<div class="yr-line"><span class="yr-lb">年假</span><input class="yr-in" type="number" min="0" step="any" value="'+y.nian+'" onchange="updYr('+i+',\'nian\',this.value)"><span class="yr-lb s">hr　延年休</span><input class="yr-in" type="number" min="0" step="any" value="'+y.yan+'" onchange="updYr('+i+',\'yan\',this.value)"><span class="yr-lb s">hr</span></div>';
+    h+='<div class="yr-line"><span class="yr-lb">代金</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashHr||0)+'" onchange="updYr('+i+',\'cashHr\',this.value)"><span class="yr-lb s">hr　金額 $</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashAmt||0)+'" onchange="updYr('+i+',\'cashAmt\',this.value)"></div>';
+    h+='<div class="yr-line"><span class="yr-lb">備註</span><input class="yr-in wide" type="text" value="'+escapeHtml(y.cashNote||'')+'" placeholder="例：未休折現" onchange="updYr('+i+',\'cashNote\',this.value)"></div>';
+    h+='<div class="yr-used">年休　已用 '+fmtH(nU)+' / '+fmtH(y.nian)+'　剩 '+fmtH(y.nian-nU)+' hr<br>延休　已用 '+fmtH(yU)+' / '+fmtH(y.yan)+'　剩 '+fmtH(y.yan-yU)+' hr</div>';
+    h+='</div>';
+  });
+  el.innerHTML=h;
+  const cs=document.getElementById('yrCashSum');
+  if(cs)cs.textContent=fmtH(chr)+' hr　$'+fmtH(camt);
 }
 function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;if(e.hw)bal+=e.hw;}return bal;}
-function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
-function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
+function calcNianUsed(i){const y=yrs[i===undefined?selYr:i];if(!y)return 0;let u=0;for(const k in hD){if(k<y.s||k>y.e)continue;const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
+function calcYanUsed(i){const y=yrs[i===undefined?selYr:i];if(!y)return 0;let u=0;for(const k in hD){if(k<y.s||k>y.e)continue;const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
 function refreshBalance(){
+  if(selYr<0||selYr>=yrs.length)selYr=curYrIdx();
+  syncYr();
+  const lbl=document.getElementById('yrCurLabel');if(lbl)lbl.textContent=yrLabel(selYr);
+  const bb=document.getElementById('yrBackBtn');if(bb)bb.style.display=(selYr===curYrIdx()?'none':'inline-block');
+  const ni=document.getElementById('nianTotalInput');if(ni)ni.value=nianTotal;
+  const yi=document.getElementById('yanTotalInput');if(yi)yi.value=yanTotal;
   const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
   const yanU=calcYanUsed(),yanB=yanTotal-yanU;
   function r2(v){return parseFloat(v.toFixed(2));}
@@ -958,7 +1123,13 @@ function calcRange(aKey,bKey){
 }
 function calcBalanceUntil(cutKey){
   const r=calcRange('0000-01-01',cutKey);
-  return{addJ:r.addJ,takeJ:r.takeJ,extraJ:r.extraJ,jiji:jijiInit+r.net,nianU:r.nianU,nianB:nianTotal-r.nianU,yanU:r.yanU,yanB:yanTotal-r.yanU,cnt:r.cnt,leave:r.leave};
+  const yi=yrIdxClamp(cutKey),y=yrs[yi]||newYr('0000-01-01','9999-12-31');
+  const inY=calcRange(y.s,cutKey<y.e?cutKey:y.e);
+  return{addJ:r.addJ,takeJ:r.takeJ,extraJ:r.extraJ,jiji:jijiInit+r.net,
+    nianU:inY.nianU,nianB:y.nian-inY.nianU,nianT:y.nian,
+    yanU:inY.yanU,yanB:y.yan-inY.yanU,yanT:y.yan,
+    yrIdx:yi,cashHr:y.cashHr||0,cashAmt:y.cashAmt||0,
+    cnt:r.cnt,leave:r.leave};
 }
 function balMD(key){const d=kd(key);return(d.getMonth()+1)+'/'+d.getDate();}
 function earliestHourKey(){const ks=Object.keys(hD).sort();return ks.length?ks[0]:null;}
@@ -1004,10 +1175,12 @@ function renderBal(){
   if(cum.extraJ>0)h+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(cum.extraJ)+'</b></div>';
   h+='<div class="bal-line"><span>拿時間累計</span><b class="minus">－'+fmtH(cum.takeJ)+'</b></div>';
   h+='<div class="bal-line sum"><span>截止訖日積休</span><b>'+fmtH(cum.jiji)+' hr</b></div>';
-  h+='<div class="bal-line"><span>年休已用</span><b class="minus">'+fmtH(cum.nianU)+' / '+nianTotal+'</b></div>';
+  h+='<div class="bal-line"><span>所屬年度</span><b style="font-size:12px">'+yrLabel(cum.yrIdx)+'</b></div>';
+  h+='<div class="bal-line"><span>年休已用（本年度）</span><b class="minus">'+fmtH(cum.nianU)+' / '+fmtH(cum.nianT)+'</b></div>';
   h+='<div class="bal-line sum"><span>截止訖日年休</span><b>'+fmtH(cum.nianB)+' hr</b></div>';
-  h+='<div class="bal-line"><span>延休已用</span><b class="minus">'+fmtH(cum.yanU)+' / '+yanTotal+'</b></div>';
+  h+='<div class="bal-line"><span>延休已用（本年度）</span><b class="minus">'+fmtH(cum.yanU)+' / '+fmtH(cum.yanT)+'</b></div>';
   h+='<div class="bal-line sum"><span>截止訖日延休</span><b>'+fmtH(cum.yanB)+' hr</b></div>';
+  if(cum.cashHr>0||cum.cashAmt>0)h+='<div class="bal-line"><span>本年度折代金</span><b>'+fmtH(cum.cashHr)+' hr　$'+fmtH(cum.cashAmt)+'</b></div>';
   document.getElementById('balDetail').innerHTML=h;
 }
 function openBalSheet(key){
@@ -1649,7 +1822,7 @@ function confirmDayAction(){
   save();renderRecList();render();refreshAllow();closeDaySheet();
 }
 function closeAllSheets(){
-  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay','balOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay','balOverlay','yrOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
   selKey=null;pendingKey=null;
 }
 function renderRecList(){
@@ -1844,11 +2017,9 @@ const sel=document.getElementById('numSel');
 {const o=document.createElement('option');o.value='?';o.textContent='？ 白班（號碼未定）';sel.appendChild(o);}
 for(let i=1;i<=36;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 collectSwapNames();autoClean();renderRecList();render();updateTodayBtn();renderSwapBar();
-document.getElementById('nianTotalInput').value=nianTotal;
-document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
 document.getElementById('otherNameInput').value=otherName;
-refreshBalance();refreshAllow();renderZoneRecList();
+refreshBalance();refreshAllow();renderZoneRecList();renderYrList();
 </script>
 <!-- 燈箱 -->
 <div class="lightbox" id="lightbox">
