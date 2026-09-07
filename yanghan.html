@@ -31,17 +31,20 @@
 @keyframes hup{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padding:calc(env(safe-area-inset-top,20px) + 16px) 12px 24px 12px;font-size:17px}
+/* NAV */
 .nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .nav h2{font-family:'Libre Baskerville',serif;font-size:24px;font-weight:400;color:var(--ink);letter-spacing:-0.3px}
 .nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:36px;height:36px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .nav button:active{background:var(--surface2)}
 .today-btn{display:none;margin:0 auto 10px;padding:6px 18px;background:transparent;color:var(--ink2);border:1px solid var(--border2);border-radius:99px;font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
 .today-btn:active{background:var(--surface2)}
+/* GRID */
 .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;background:var(--bg);width:100%}
 .dh{min-width:0;text-align:center;font-size:13px;color:var(--ink3);padding:5px 0 7px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
 .cell{position:relative;min-width:0;width:100%;height:118px;min-height:0;background:var(--surface);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0;display:flex;flex-direction:column;overflow:visible;cursor:pointer;transition:background 0.1s}
 .cell:nth-child(7n){border-right:none}
 .cell.empty{background:var(--bg);border-color:transparent;cursor:default;height:118px;min-height:0}
+/* badge 防裁切 */
 .grid#grid{overflow:visible;margin-top:6px;grid-auto-rows:118px}
 .cell.today{background:#fdf6ea}
 .cell.today .dn{background:var(--gold);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
@@ -79,6 +82,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell.z-bottom{border-bottom:2px solid var(--zc)!important}
 .cell.z-left{border-left:2px solid var(--zc)!important}
 .cell.z-right{border-right:2px solid var(--zc)!important}
+/* BADGE */
 .badge{position:absolute;top:-8px;left:-8px;width:23px;height:23px;background:var(--ink);color:var(--gold-pale);border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:20;border:2px solid var(--bg)}
 .top{background:transparent;flex:0 0 auto;min-height:28px;display:flex;align-items:center;justify-content:center;position:relative;padding-bottom:1px}
 .hol-name{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:var(--red);font-weight:700;line-height:1;letter-spacing:0}
@@ -89,6 +93,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .shift-main{min-width:0;min-height:22px;padding:0 2px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
 .hours-tags,.swap-tags{min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 1px;border-top:1px solid rgba(82,55,28,.2);background:var(--surface)}
 .hours-tags:empty,.swap-tags:empty{display:none}
+/* 月曆行程：直接顯示在每天格子內 */
 .cell-plans{flex:1 1 auto;min-width:0;width:100%;min-height:0;padding:4px 3px 3px;display:flex;flex-direction:column;gap:3px;overflow:hidden;background:rgba(255,254,251,.78)}
 .cell-plan{display:block;min-width:0;width:100%;max-width:100%;font-size:10px;line-height:1.2;color:var(--event-ink,#4b3928);background:var(--event-bg,#f4ead8);border-left:3px solid var(--event,#b47a35);border-radius:4px;padding:1px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;font-weight:600}
 .cell-plan.done{opacity:.45;text-decoration:line-through}
@@ -96,12 +101,14 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .cell-plan.observance.memo{--event:#978b7e;--event-bg:#eee9e3;--event-ink:#574b40}
 .cell-plan-more{font-size:10px;line-height:1.2;color:var(--ink3);padding-left:4px;font-weight:600}
 .cell-plan-empty{flex:1}
+/* SHIFT COLOURS */
 .sD{background:#f0e0bc;color:#2a2018}
 .sDhol{background:#c87832;color:#fff8ee}
 .sE{background:#b89468;color:#2a2018}
 .sN{background:#8a6240;color:#f5e8d0}
 .sOFF{background:#2a2018;color:#c87832}
 .s12{background:#d4b896;color:#2a2018}
+/* PANEL */
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-top:12px;display:none}
 .panel.open{display:block}
 .panel-title{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400;margin-bottom:3px;color:var(--ink)}
@@ -144,6 +151,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .rec-del{background:none;border:none;color:var(--ink3);font-size:16px;cursor:pointer;padding:0 4px}
 .rec-note{font-size:12px;color:var(--ink2);margin-top:5px;padding-left:10px;border-left:2px solid var(--border2)}
 .empty-msg{font-size:13px;color:var(--ink3);text-align:center;padding:20px 0}
+/* ── 時數功能 ── */
 .hours-summary{display:flex;gap:6px;margin-top:10px}
 .hs-card{flex:1;border-radius:var(--radius-sm);padding:8px 9px;border:1px solid var(--border);background:var(--surface)}
 .hs-card.jiji{background:#f0e4cc;border-color:#d4b880}
@@ -158,17 +166,50 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hs-card.nian .hs-card-val{color:#3d2e1e}
 .hs-card.yan  .hs-card-val{color:#c87832}
 .hs-card-unit{font-size:10px;color:var(--ink3);margin-top:2px}
+/* 年休/延年休進度條 */
 .nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
 .nbl{font-size:13px;font-weight:600;color:var(--ink3);width:28px;flex-shrink:0;letter-spacing:0.3px}
 .nbt{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden}
 .nbf{height:100%;background:var(--gold);border-radius:99px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
 .nbf.yan-bar{background:#c8a030}
 .nbn{font-size:13px;color:var(--ink3);white-space:nowrap;min-width:80px;text-align:right}
+/* 設定 */
 .hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap}
 .nts-group{display:flex;align-items:center;gap:6px}
 .nts-label{font-size:13px;color:var(--ink3)}
 .nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
 .nts-input.jiji-color{color:var(--gold)}
+/* 年度 / 代金 */
+.yr-nav-btn{background:transparent;border:1.5px solid var(--border2);border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;color:var(--ink2);padding:0;flex-shrink:0}
+.yr-nav-btn:active{background:var(--surface2)}
+.yr-cur{font-size:12px;color:var(--ink);font-weight:600;min-width:132px;text-align:center;letter-spacing:.2px}
+.yr-mgr-btn{padding:3px 9px;border:1px solid var(--border2);border-radius:99px;background:transparent;color:var(--accent2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-mgr-btn:active{background:var(--surface2)}
+.yr-back{display:none;padding:3px 9px;border:1px solid #e0cc90;border-radius:99px;background:#fdf6e8;color:#8a6800;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-setup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+.yr-build{width:100%;margin-top:10px;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:var(--gold-pale);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-setup-note{font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5}
+.yr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:8px}
+.yr-card.cur{border-color:#d4b880;background:#fdf6ea}
+.yr-card-head{display:flex;align-items:center;gap:6px}
+.yr-card-title{font-size:13px;font-weight:600;color:var(--ink)}
+.yr-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;background:#e8d4a8;color:#5a3800}
+.yr-del{margin-left:auto;background:none;border:none;color:var(--ink3);font-size:14px;cursor:pointer;padding:0 3px;font-family:'DM Sans',sans-serif}
+.yr-del.on{color:var(--red);font-weight:700;font-size:12px;border:1px solid #d0a888;border-radius:99px;padding:2px 8px;background:#f8e8d8}
+.yr-del.back{margin-left:0;font-size:12px}
+.yr-line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:7px}
+.yr-lb{font-size:12px;color:var(--ink3);min-width:44px}
+.yr-lb.s{min-width:0}
+.yr-in{width:64px;padding:5px 6px;border:1px solid var(--border2);border-radius:6px;font-size:13px;text-align:center;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif}
+.yr-in.wide{width:150px;text-align:left}
+.yr-in.date{width:140px}
+.yr-reset{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:1px dashed var(--border)}
+.yr-reset input[type=checkbox]{width:15px;height:15px;accent-color:var(--gold);margin:0}
+.yr-reset label{font-size:12px;color:#6a4820;font-weight:600;cursor:pointer}
+.yr-in.jiji{color:#6a4820}
+.yr-used{font-size:11px;color:var(--ink3);margin-top:9px;padding-top:7px;border-top:1px dashed var(--border);line-height:1.6}
+.yr-msg{font-size:12px;color:#8a6800;background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:8px 10px;margin-top:10px;display:none}
+/* 本區間積休明細 */
 .zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 16px 14px}
 .zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:16px}
 .zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
@@ -184,20 +225,20 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .zone-rec-box-label{font-size:13px;color:var(--ink3);margin-bottom:8px}
 .zone-rec-box.add .zone-rec-box-val{color:var(--gold);font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400}
 .zone-rec-box.take .zone-rec-box-val{color:#5a3e28;font-family:'Libre Baskerville',serif;font-size:30px;font-weight:400}
+/* hbadge */
 .hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:1px 3px;border-radius:4px;line-height:1.2;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bot.overtime{color:#8b2020!important;font-weight:600}
+.bot.overtime{color:#a03020!important;font-weight:600}
 .hb-j-p{background:#2a2018;color:var(--gold)}
 .hb-j-m{background:#6a4e30;color:#e8d4b0}
 .hb-n-m{background:#3d2e1e;color:#d4b880}
 .hb-y-m{background:#5a3a18;color:#e8c888}
-.hb-tz{background:#7a5000;color:#f5edd0}
-.hb-hw{background:#a03020;color:#f5e6e0}
-.hb-sick{background:#8a7a5a;color:#f5ecd8}
 .hbadge.tappable{cursor:pointer}
 .hbadge.tappable:active{opacity:0.6}
 .hbadge.confirmed{box-shadow:inset 0 0 0 1px var(--gold);font-weight:700}
+/* hours trigger btn */
 .hours-trigger-btn{width:100%;padding:11px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:10px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px}
 .hours-trigger-btn.has-data{background:#2a2018;color:var(--gold);border-color:#1a1208}
+/* 浮層 */
 .hours-overlay{display:none;position:fixed;inset:0;background:rgba(42,32,24,0.55);z-index:300;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .hours-overlay.open{display:flex}
 .hours-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
@@ -219,13 +260,14 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hdir.jm{border-color:#b89468;color:#5a3800;background:#f4e8d0}
 .hdir.nm{border-color:#b89468;color:#5a3800;background:#f4e8d0}
 .hdir.ym{border-color:#c8a040;color:#7a5000;background:#f5edd0}
-.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hhrs.sk{border-color:#b8a878;color:#5a4a20;background:#f5efdc;font-weight:500}
 .hhrs.sk.none{border-color:var(--border2);color:var(--ink3);background:var(--surface);font-weight:400}
+.hhrs{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-weight:400;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;cursor:pointer}
 .hs-btns{display:flex;gap:8px;margin-top:6px}
 .hs-btn-clear{padding:11px 14px;border:1px solid #d0a888;border-radius:var(--radius-sm);background:#f8e8d8;color:var(--red);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .hs-btn-cancel{flex:1;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .hs-btn-save{flex:2;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--ink);color:var(--gold-pale);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 快速選單 */
 .quick-overlay{display:none;position:fixed;inset:0;background:rgba(42,32,24,0.55);z-index:280;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .quick-overlay.open{display:flex}
 .quick-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
@@ -242,16 +284,16 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .quick-btn:active{background:var(--surface2)}
 .quick-btn .qi{font-size:18px;flex-shrink:0;width:22px;text-align:center}
 .quick-cancel{width:calc(100% - 36px);margin:8px 18px 4px;padding:11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--ink3);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+/* 12-8 津貼 */
 .allow12-row{display:none;align-items:center;gap:10px;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f0d8a0;border:1px solid #c8a040}
 .allow12-row.show{display:flex}
 .allow12-row.no-allow{background:#f8e8d8;border-color:#d0a888}
 .allow12-toggle{width:18px;height:18px;cursor:pointer;accent-color:var(--ink);flex-shrink:0}
 .allow12-label{font-size:13px;font-weight:500;color:#5a3800;flex:1;cursor:pointer}
 .allow12-row.no-allow .allow12-label{color:var(--red)}
+/* 天災假 */
 .tz-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f5edd8;border:1px solid #c8a040}
 .tz-label{color:#7a5000!important}
-.hw-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f8e8d8;border:1px solid #d0a888}
-.hw-label{color:#a03020!important}
 .chk-head{display:flex;align-items:center;gap:10px}
 .mode-btns{display:none;gap:6px;margin-top:10px}
 .mode-btns.show{display:flex}
@@ -260,10 +302,34 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .mbtn.cash.active{border-color:#5a3e28;background:#e2d2ba;color:#3a2a18;box-shadow:inset 0 0 0 1px #5a3e28}
 .hw-row .mbtn.active{border-color:#a03020;background:#f5d8c8;color:#7a2418;box-shadow:inset 0 0 0 1px #a03020}
 .hw-row .mbtn.cash.active{border-color:#5a3e28;background:#e2d2ba;color:#3a2a18;box-shadow:inset 0 0 0 1px #5a3e28}
-.hb-tzc{background:#5a3e28;color:#f0dca8}
 .hb-hwc{background:#3d2e1e;color:#e8c888}
+.hb-tz{background:#7a5000;color:#f5edd0}
+.hb-tzc{background:#5a3e28;color:#f0dca8}
+/* 週末國定假日補時數 */
+.hw-row{display:flex;flex-direction:column;margin-bottom:14px;padding:11px 14px;border-radius:var(--radius-sm);background:#f8e8d8;border:1px solid #d0a888}
+.hw-label{color:#a03020!important}
+.hb-hw{background:#a03020;color:#f5e6e0}
+.hb-sick{background:#8a7a5a;color:#f5ecd8}
+.hb-gong{background:#6a6440;color:#f5efd8}
+/* 截止日餘額查詢 */
+.bal-detail{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2px 14px}
+.bal-line{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--ink2)}
+.bal-line:last-child{border-bottom:none}
+.bal-line b{font-family:'Libre Baskerville',serif;font-weight:400;color:var(--ink);font-size:16px;white-space:nowrap}
+.bal-line.sum{color:var(--ink);font-weight:600}
+.bal-line b.plus{color:#7a5000}
+.bal-line b.minus{color:#a03020}
+.bal-note{font-size:12px;color:var(--ink3);margin-top:10px;line-height:1.5}
+.bal-range{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.bal-date{flex:1;min-width:0;appearance:none;-webkit-appearance:none;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 8px;font-size:14px;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;text-align:center}
+.bal-date-sep{font-size:13px;color:var(--ink3);flex-shrink:0}
+.bal-chips{display:flex;gap:5px;margin-bottom:14px}
+.bal-chip{flex:1;padding:7px 2px;border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+.bal-chip:active{background:var(--surface2)}
+.bal-sec{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:0.3px;margin:16px 0 6px;padding-left:2px}
+/* 行程多則 */
 .plan-list{list-style:none;margin-bottom:8px}
-.plan-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
+.plan-item{border-left:3px solid var(--event,#b47a35);padding-left:7px}
 .plan-item:last-child{border:none}
 .plan-check{width:18px;height:18px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--ink)}
 .plan-text{flex:1;font-size:14px;color:var(--ink);line-height:1.5;word-break:break-all}
@@ -276,9 +342,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .plan-cat-head{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
 .plan-cat-head .field-label{margin:0}
 .plan-cat-edit{border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:11px;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif}
-.plan-cat-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 4px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
-.plan-cat-btn .cat-dot{width:9px;height:9px;border-radius:50%;background:var(--event);flex-shrink:0}
-.plan-cat-btn.active{border-color:var(--event);background:var(--event-bg);color:var(--event-ink);box-shadow:inset 0 0 0 1px var(--event)}
 .plan-cat-settings{display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;margin-bottom:9px}
 .plan-cat-settings.show{display:block}
 .plan-cat-hint{font-size:14px;line-height:1.45;color:var(--ink2);padding:3px 3px 8px}
@@ -288,9 +351,18 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .plan-cat-name{flex:1;min-width:0;padding:7px 9px;border:1px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--ink);font-size:13px;font-family:'DM Sans',sans-serif}
 .plan-cat-delete{width:30px;height:30px;flex-shrink:0;border:1px solid #d0a888;border-radius:50%;background:var(--surface);color:var(--red);font-size:15px;cursor:pointer}
 .plan-cat-add{width:100%;margin-top:8px;padding:9px;border:1px dashed var(--border2);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan-cat-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 4px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--ink2);font-size:11px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.plan-cat-btn .cat-dot{width:9px;height:9px;border-radius:50%;background:var(--event);flex-shrink:0}
+.plan-cat-btn.active{border-color:var(--event);background:var(--event-bg);color:var(--event-ink);box-shadow:inset 0 0 0 1px var(--event)}
 .plan-item{border-left:3px solid var(--event,#b47a35);padding-left:7px}
 .plan-item-cat{width:18px;height:18px;flex-shrink:0;margin-top:2px;border:0;border-radius:50%;background:var(--event);cursor:pointer;box-shadow:0 0 0 2px var(--event-bg),0 0 0 3px var(--event);font-size:0}
-/* 行程面板閱讀尺寸：沿用金棕風格，只放大文字與色點 */
+.event-work{--event:#b47732;--event-bg:rgb(242,231,218);--event-ink:#4a3828}
+.event-personal{--event:#978b7e;--event-bg:rgb(236,234,232);--event-ink:#4a3828}
+.event-study{--event:#789aaa;--event-bg:rgb(231,237,240);--event-ink:#4a3828}
+.event-sport{--event:#87936b;--event-bg:rgb(233,236,228);--event-ink:#4a3828}
+.event-fun{--event:#bd8883;--event-bg:rgb(243,234,233);--event-ink:#4a3828}
+.event-important{--event:#a64f3c;--event-bg:rgb(239,223,220);--event-ink:#4a3828}
+/* 行程面板閱讀尺寸：只放大文字與色點，不改排列 */
 #planOverlay .hs-date{font-size:21px}
 #planOverlay .hs-shift{font-size:15px}
 #planOverlay .field-label{font-size:15px}
@@ -308,6 +380,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 #planOverlay .photo-upload-btn{font-size:16px}
 #planOverlay .photo-count{font-size:14px}
 #planOverlay .hs-btn-cancel{font-size:16px}
+/* 圖片區 */
 .photo-section{margin-top:10px}
 .photo-thumbs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
 .photo-thumb-wrap{position:relative;width:72px;height:72px;border-radius:8px;overflow:visible}
@@ -315,6 +388,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .photo-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:#a03020;color:#fff;border:none;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:10}
 .photo-upload-btn{display:flex;align-items:center;gap:6px;padding:9px 14px;background:var(--surface2);color:var(--ink2);border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
 .photo-count{font-size:11px;color:var(--ink3);margin-top:4px}
+/* 燈箱 */
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:500;align-items:center;justify-content:center;flex-direction:column}
 .lightbox.open{display:flex}
 .lightbox-img{max-width:96vw;max-height:80vh;object-fit:contain;border-radius:8px}
@@ -322,12 +396,14 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .lb-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:28px;width:48px;height:48px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lb-close{position:absolute;top:env(safe-area-inset-top,16px);right:16px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:22px;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lb-counter{color:rgba(255,255,255,0.7);font-size:13px;min-width:48px;text-align:center}
+/* 備份匯出入 */
 .backup-row{display:flex;gap:8px;margin-top:10px}
 .backup-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
 .backup-btn.export{background:#f0e4cc;color:#6a4820;border:1px solid #d4b880}
 .backup-btn.export:active{background:#e8d8b0}
 .backup-btn.import{background:#ece0d0;color:#5a3e28;border:1px solid #c8a878}
 .backup-btn.import:active{background:#e0d0b8}
+/* 夜班津貼 */
 .allow-wrap{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .allow-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .allow-header:active{background:var(--surface2)}
@@ -349,11 +425,11 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .allow-cnt{flex:1;min-width:0;padding:4px 6px;border:1px solid var(--border2);border-radius:5px;font-size:13px;font-weight:600;text-align:center;background:var(--surface);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
 .allow-cnt.manual{border-color:var(--gold);background:#fdf0d8;color:#6a3800}
 .allow-cnt-unit{font-size:11px;color:var(--ink3);flex-shrink:0}
-.allow-note{font-size:12px;color:var(--ink3);padding:8px 16px 10px;border-top:1px solid var(--border)}
 .allow-confirm{display:inline-block;margin-top:5px;font-size:10px;padding:2px 8px;border-radius:99px;border:1px dashed var(--border2);color:var(--ink3);cursor:pointer;font-family:'DM Sans',sans-serif}
 .allow-confirm:active{opacity:0.6}
 .allow-confirm.confirmed{border:1px solid var(--gold);background:#fdf0d8;color:#6a3800;font-weight:600}
 .allow-confirm.hidden{display:none}
+.allow-note{font-size:12px;color:var(--ink3);padding:8px 16px 10px;border-top:1px solid var(--border)}
 .allow-manual{width:100%;margin-top:6px;padding:4px 8px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--surface2);color:var(--ink);font-family:'DM Sans',sans-serif;box-sizing:border-box}
 </style>
 </head>
@@ -410,7 +486,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 <div class="nian-bar-row">
   <span class="nbl">年休</span>
   <div class="nbt"><div class="nbf" id="nianFill" style="width:0%"></div></div>
-  <span class="nbn" id="nianNums">已用 0 / 0 hr</span>
+  <span class="nbn" id="nianNums">已用 0 / 52 hr</span>
 </div>
 <!-- 延年休進度條 -->
 <div class="nian-bar-row">
@@ -418,11 +494,19 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
   <div class="nbt"><div class="nbf yan-bar" id="yanFill" style="width:0%"></div></div>
   <span class="nbn" id="yanNums">已用 0 / 0 hr</span>
 </div>
-<!-- 設定：年休總額 + 延年休 + 積休初始 -->
+<!-- 設定：年度 + 年假時數 + 延年休 + 積休初始 -->
 <div class="hours-settings">
+  <div class="nts-group" style="flex-basis:100%">
+    <span class="nts-label">年度：</span>
+    <button class="yr-nav-btn" onclick="shiftYr(-1)">&#8249;</button>
+    <span class="yr-cur" id="yrCurLabel">未設定</span>
+    <button class="yr-nav-btn" onclick="shiftYr(1)">&#8250;</button>
+    <button class="yr-back" id="yrBackBtn" onclick="gotoCurYr()">回本年度</button>
+    <button class="yr-mgr-btn" onclick="openYrSheet()">年度／代金</button>
+  </div>
   <div class="nts-group">
-    <span class="nts-label">年休總額：</span>
-    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" value="0" onchange="saveSettings()">
+    <span class="nts-label">年假時數：</span>
+    <input class="nts-input" id="nianTotalInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
   <div class="nts-group">
@@ -431,7 +515,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     <span class="nts-label">hr</span>
   </div>
   <div class="nts-group">
-    <span class="nts-label">積休初始：</span>
+    <span class="nts-label" id="jijiInitLabel">積休初始：</span>
     <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="0" onchange="saveSettings()">
     <span class="nts-label">hr</span>
   </div>
@@ -503,6 +587,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
       <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
       <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
+      <button class="quick-btn" onclick="quickAction('bal')"><span class="qi">📊</span>查詢餘額（可自訂起訖日）</button>
     </div>
     <button class="quick-cancel" onclick="closeQuickActions()">取消</button>
   </div>
@@ -587,6 +672,80 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
   </div>
 </div>
 
+<!-- 截止日餘額查詢浮層 -->
+<div class="hours-overlay" id="balOverlay" onclick="if(event.target===this)closeBalSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date" id="balDate"></div>
+      <div class="hs-shift" id="balSub"></div>
+    </div>
+    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+      <div class="field-label">查詢區間（起 － 訖）</div>
+      <div class="bal-range">
+        <input class="bal-date" id="balStart" type="date" onchange="renderBal()">
+        <span class="bal-date-sep">－</span>
+        <input class="bal-date" id="balEnd" type="date" onchange="renderBal()">
+      </div>
+      <div class="bal-chips">
+        <button class="bal-chip" onclick="balQuick('zone')">本區間</button>
+        <button class="bal-chip" onclick="balQuick('month')">本月</button>
+        <button class="bal-chip" onclick="balQuick('year')">今年</button>
+        <button class="bal-chip" onclick="balQuick('all')">全部</button>
+      </div>
+      <div class="bal-sec" id="balCardSec">截止訖日餘額</div>
+      <div class="hours-summary" style="margin-top:0">
+        <div class="hs-card jiji">
+          <div class="hs-card-label">積　休</div>
+          <div class="hs-card-val" id="balJiji">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+        <div class="hs-card nian">
+          <div class="hs-card-label">年　休</div>
+          <div class="hs-card-val" id="balNian">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+        <div class="hs-card yan">
+          <div class="hs-card-label">延年休</div>
+          <div class="hs-card-val" id="balYan">0</div>
+          <div class="hs-card-unit">小時</div>
+        </div>
+      </div>
+      <div class="bal-sec" id="balRangeSec">區間內增減</div>
+      <div class="bal-detail" id="balRangeDetail"></div>
+      <div class="bal-sec" id="balCumSec">截止訖日累計</div>
+      <div class="bal-detail" id="balDetail"></div>
+      <div class="bal-note">＊ 積休是從<b>最近一次重設點</b>累計到訖日（未設重設點則從最初算起）；年休／延休只算<b>訖日所屬年度</b>內的使用量；「區間內增減」只算起～訖之間的紀錄。起訖日可自行修改。</div>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeBalSheet()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 年度／代金管理浮層 -->
+<div class="hours-overlay" id="yrOverlay" onclick="if(event.target===this)closeYrSheet()">
+  <div class="hours-sheet">
+    <div class="hs-handle"><div class="hs-handle-bar"></div></div>
+    <div class="hs-head">
+      <div class="hs-date">年度與代金</div>
+      <div class="hs-shift">依到職日週年制管理年假／延年休</div>
+    </div>
+    <div class="hs-body">
+      <div class="yr-setup" id="yrSetup">
+        <div class="yr-line" style="margin-top:0">
+          <span class="yr-lb">到職日</span>
+          <input class="yr-in date" id="hireInput" type="date" onchange="saveHire()">
+        </div>
+        <button class="yr-build" onclick="buildFirstYr()">建立本年度休假時數</button>
+        <div class="yr-setup-note">選擇到職日後按上方按鈕，系統會依週年制建立本年度區間；之後每年會自動結轉，不必再按。</div>
+      </div>
+      <div class="yr-msg" id="yrMsg"></div>
+      <div id="yrList"></div>
+      <div class="bal-note" id="yrNote">＊ 新年度會在到職週年當天自動產生，上年度剩餘的年休＋延休自動帶入新年度的「延年休」，你只要填入新年度的年假時數。若其中有一部分是折代金而非續用，把延年休改成實際續用時數，再回到上年度卡片填代金時數與金額即可。<br>＊ 若你的積休會在到職週年當天歸零，勾選「年度起積休重新計算」並填起始值（通常是 0）；不勾就會一路累計不中斷。設定會自動沿用到往後的每個年度。</div>
+      <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeYrSheet()">關閉</button>
+    </div>
+  </div>
+</div>
+
 <!-- 時數輸入浮層 -->
 <div class="hours-overlay" id="hoursOverlay" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="hours-sheet">
@@ -634,12 +793,13 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
         </div>
       </div>
       <div class="hs-row">
-        <span class="hs-row-label s">事病</span>
+        <span class="hs-row-label s">事病公假</span>
         <div class="hs-selwrap">
           <select class="hhrs sk none" id="sickType" onchange="updateSickStyle()">
             <option value="">無</option>
             <option value="事">事假</option>
             <option value="病">病假</option>
+            <option value="公">公假</option>
           </select>
         </div>
       </div>
@@ -712,8 +872,29 @@ try{const s=localStorage.getItem('yanghan_plans');if(s)pS=JSON.parse(s);}catch(e
 // ── 時數資料 ──
 let hD={};
 let nianTotal=0,yanTotal=0,jijiInit=0;
+let yrs=[],hireDate='',selYr=0,yrDelIdx=-1;
 try{const s=localStorage.getItem('yanghan_hours');if(s)hD=JSON.parse(s);}catch(e){}
-try{const s=localStorage.getItem('yanghan_hours_cfg');if(s){const c=JSON.parse(s);nianTotal=parseFloat(c.nianTotal);if(isNaN(nianTotal))nianTotal=0;yanTotal=parseFloat(c.yanTotal);if(isNaN(yanTotal))yanTotal=0;jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;}}catch(e){}
+try{const s=localStorage.getItem('yanghan_hours_cfg');if(s){const c=JSON.parse(s);
+  jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;
+  hireDate=c.hireDate||'';
+  if(Array.isArray(c.yrs)&&c.yrs.length)yrs=c.yrs.map(y=>({s:y.s,e:y.e,nian:parseFloat(y.nian)||0,yan:parseFloat(y.yan)||0,cashHr:parseFloat(y.cashHr)||0,cashAmt:parseFloat(y.cashAmt)||0,cashNote:y.cashNote||'',jr:!!y.jr,ji:parseFloat(y.ji)||0}));
+  else{const n=parseFloat(c.nianTotal),ya=parseFloat(c.yanTotal);yrs=[{s:'0000-01-01',e:'9999-12-31',nian:isNaN(n)?0:n,yan:isNaN(ya)?0:ya,cashHr:0,cashAmt:0,cashNote:''}];}
+}}catch(e){}
+if(!yrs.length)yrs=[{s:'0000-01-01',e:'9999-12-31',nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:''}];
+sortYrs();selYr=curYrIdx();autoRollYr();selYr=curYrIdx();syncYr();
+function sortYrs(){yrs.sort((a,b)=>a.s<b.s?-1:(a.s>b.s?1:0));}
+function newYr(s,e){return{s:s,e:e,nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:'',jr:false,ji:0};}
+function addDaysK(k,n){const d=kd(k);d.setDate(d.getDate()+n);return dk(d);}
+function addYearsK(k,n){const d=kd(k);d.setFullYear(d.getFullYear()+n);return dk(d);}
+function yrEndFrom(s){return addDaysK(addYearsK(s,1),-1);}
+function isLegacyYr(y){return y&&y.s==='0000-01-01';}
+function yrIdxFor(k){for(let i=0;i<yrs.length;i++)if(k>=yrs[i].s&&k<=yrs[i].e)return i;return -1;}
+function yrIdxClamp(k){const i=yrIdxFor(k);if(i>=0)return i;if(!yrs.length)return 0;if(k<yrs[0].s)return 0;return yrs.length-1;}
+function curYrIdx(){return yrIdxClamp(dk(new Date()));}
+function ymdTxt(k){const d=kd(k);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
+function yrLabel(i){const y=yrs[i];if(!y)return'未設定';if(isLegacyYr(y))return'全部期間（年度未設定）';return ymdTxt(y.s)+' － '+ymdTxt(y.e);}
+function syncYr(){const y=yrs[selYr];nianTotal=y?y.nian:0;yanTotal=y?y.yan:0;}
+function saveCfg(){try{localStorage.setItem('yanghan_hours_cfg',JSON.stringify({jijiInit:jijiInit,hireDate:hireDate,yrs:yrs}));}catch(e){}}
 function saveHours(){try{localStorage.setItem('yanghan_hours',JSON.stringify(hD));}catch(e){}}
 function toggleHoursConfirm(key,type){
   const e=hD[key];if(!e)return;
@@ -727,14 +908,130 @@ function saveSettings(){
   const jv=document.getElementById('jijiInitInput').value;
   nianTotal=nv===''?0:parseFloat(nv);if(isNaN(nianTotal))nianTotal=0;
   yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
-  jijiInit=jv===''?0:parseFloat(jv);if(isNaN(jijiInit))jijiInit=0;
-  try{localStorage.setItem('yanghan_hours_cfg',JSON.stringify({nianTotal,yanTotal,jijiInit}));}catch(e){}
-  refreshBalance();
+  let jv2=jv===''?0:parseFloat(jv);if(isNaN(jv2))jv2=0;
+  const jw=jijiWindow(dk(new Date()));
+  if(jw.yi>=0)yrs[jw.yi].ji=jv2;else jijiInit=jv2;
+  if(yrs[selYr]){yrs[selYr].nian=nianTotal;yrs[selYr].yan=yanTotal;}
+  saveCfg();
+  refreshBalance();renderYrList();
 }
-function calcJijiBalance(){let bal=jijiInit;for(const k in hD){const e=hD[k];if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);if(e.tz)bal+=e.tz;if(e.hw)bal+=e.hw;}return bal;}
-function calcNianUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
-function calcYanUsed(){let u=0;for(const k in hD){const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
+// ── 年度／代金 ──
+function shiftYr(d){const n=selYr+d;if(n<0||n>=yrs.length||n>curYrIdx())return;selYr=n;refreshBalance();}
+function gotoCurYr(){selYr=curYrIdx();refreshBalance();}
+function setYrMsg(t){const el=document.getElementById('yrMsg');if(!el)return;el.textContent=t||'';el.style.display=t?'block':'none';}
+function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;setYrMsg('');renderYrList();document.getElementById('yrOverlay').classList.add('open');}
+function closeYrSheet(){yrDelIdx=-1;document.getElementById('yrOverlay').classList.remove('open');}
+function saveHire(){hireDate=document.getElementById('hireInput').value||'';saveCfg();}
+function buildFirstYr(){
+  const hv=document.getElementById('hireInput').value;
+  if(!hv){setYrMsg('請先選擇到職日');return;}
+  hireDate=hv;
+  const hd=kd(hireDate),td=new Date(),tk=dk(td);
+  let sk=dk(new Date(td.getFullYear(),hd.getMonth(),hd.getDate()));
+  if(sk>tk)sk=dk(new Date(td.getFullYear()-1,hd.getMonth(),hd.getDate()));
+  if(yrs.length===1&&isLegacyYr(yrs[0])){yrs[0].s=sk;yrs[0].e=yrEndFrom(sk);setYrMsg('已建立本年度，原本的年假時數已沿用');}
+  else if(yrIdxFor(sk)<0){const y=newYr(sk,yrEndFrom(sk));yrs.push(y);sortYrs();setYrMsg('已建立本年度，請填入年假時數');}
+  else{setYrMsg('本年度已經存在了');saveCfg();return;}
+  autoRollYr();selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();
+}
+// 到職週年當天自動開新年度（上年度剩餘自動帶入延年休）
+function autoRollYr(){
+  let changed=false;
+  const tk=dk(new Date());
+  // 先移除任何尚未到期的未來年度，改由自動產生時才建立
+  for(let i=yrs.length-1;i>=0;i--){if(!isLegacyYr(yrs[i])&&yrs[i].s>tk){yrs.splice(i,1);changed=true;}}
+  let guard=0;
+  while(guard++<60){
+    const last=yrs[yrs.length-1];
+    if(!last||isLegacyYr(last)||last.e>=tk)break;
+    const li=yrs.length-1;
+    const leftN=Math.max(0,last.nian-calcNianUsed(li));
+    const leftY=Math.max(0,last.yan-calcYanUsed(li));
+    const sk=addDaysK(last.e,1);
+    const y=newYr(sk,yrEndFrom(sk));
+    y.yan=fmtH(leftN+leftY);y.jr=!!last.jr;y.ji=0;
+    yrs.push(y);changed=true;
+  }
+  if(changed){selYr=curYrIdx();saveCfg();}
+  return changed;
+}
+function delYr(i){
+  if(yrDelIdx!==i){yrDelIdx=i;renderYrList();return;}
+  yrs.splice(i,1);yrDelIdx=-1;
+  if(!yrs.length)yrs=[newYr('0000-01-01','9999-12-31')];
+  selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();setYrMsg('已刪除該年度');
+}
+function cancelDelYr(){yrDelIdx=-1;renderYrList();}
+function updYr(i,f,v){
+  const y=yrs[i];if(!y)return;
+  if(f==='s'){if(!v)return;y.s=v;y.e=yrEndFrom(v);sortYrs();selYr=curYrIdx();}
+  else if(f==='cashNote')y.cashNote=v;
+  else if(f==='jr')y.jr=!!v;
+  else{const n=parseFloat(v);y[f]=isNaN(n)?0:n;}
+  saveCfg();refreshBalance();renderYrList();
+}
+function renderYrList(){
+  const el=document.getElementById('yrList');if(!el)return;
+  const ci=curYrIdx(),tk=dk(new Date());let h='';
+  const ready=yrs.some(y=>!isLegacyYr(y));
+  const su=document.getElementById('yrSetup');if(su)su.style.display=ready?'none':'block';
+  const nt=document.getElementById('yrNote');if(nt)nt.style.display=ready?'block':'none';
+  if(!ready){el.innerHTML='';return;}
+  yrs.forEach((y,i)=>{
+    if(isLegacyYr(y)||y.s>tk)return;
+    const nU=calcNianUsed(i),yU=calcYanUsed(i),leg=false;
+    h+='<div class="yr-card'+(i===ci?' cur':'')+'">';
+    h+='<div class="yr-card-head"><span class="yr-card-title">'+yrLabel(i)+'</span>';
+    if(i===ci)h+='<span class="yr-badge">本年度</span>';
+    h+=(yrDelIdx===i
+      ?'<button class="yr-del on" onclick="delYr('+i+')">確定刪除</button><button class="yr-del back" onclick="cancelDelYr()">返回</button>'
+      :'<button class="yr-del" onclick="delYr('+i+')">✕</button>');
+    h+='</div>';
+    if(leg)h+='<div class="yr-line"><span class="yr-lb s" style="color:#8a6800">尚未設定年度區間，請於上方填到職日後按「建立本年度」</span></div>';
+    else h+='<div class="yr-line"><span class="yr-lb">起日</span><input class="yr-in date" type="date" value="'+y.s+'" onchange="updYr('+i+',\'s\',this.value)"><span class="yr-lb s">訖 '+ymdTxt(y.e)+'</span></div>';
+    h+='<div class="yr-line"><span class="yr-lb">年假</span><input class="yr-in" type="number" min="0" step="any" value="'+y.nian+'" onchange="updYr('+i+',\'nian\',this.value)"><span class="yr-lb s">hr　延年休</span><input class="yr-in" type="number" min="0" step="any" value="'+y.yan+'" onchange="updYr('+i+',\'yan\',this.value)"><span class="yr-lb s">hr</span></div>';
+    h+='<div class="yr-line"><span class="yr-lb">代金</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashHr||0)+'" onchange="updYr('+i+',\'cashHr\',this.value)"><span class="yr-lb s">hr　金額 $</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashAmt||0)+'" onchange="updYr('+i+',\'cashAmt\',this.value)"></div>';
+    h+='<div class="yr-line"><span class="yr-lb">備註</span><input class="yr-in wide" type="text" value="'+escapeHtml(y.cashNote||'')+'" placeholder="例：未休折現" onchange="updYr('+i+',\'cashNote\',this.value)"></div>';
+    if(!leg)h+='<div class="yr-reset"><input type="checkbox" id="yrJr'+i+'"'+(y.jr?' checked':'')+' onchange="updYr('+i+',\'jr\',this.checked)"><label for="yrJr'+i+'">年度起積休重新計算</label>'+(y.jr?'<span class="yr-lb s">起始值</span><input class="yr-in jiji" type="number" step="any" value="'+(y.ji||0)+'" onchange="updYr('+i+',\'ji\',this.value)"><span class="yr-lb s">hr</span>':'')+'</div>';
+    h+='<div class="yr-used">年休　已用 '+fmtH(nU)+' / '+fmtH(y.nian)+'　剩 '+fmtH(y.nian-nU)+' hr<br>延休　已用 '+fmtH(yU)+' / '+fmtH(y.yan)+'　剩 '+fmtH(y.yan-yU)+' hr'+(leg?'':'<br>積休　'+(y.jr?'自 '+ymdTxt(y.s)+' 起以 '+fmtH(y.ji||0)+' hr 重新計算':'延續前期累計，不重設'))+'</div>';
+    h+='</div>';
+  });
+  el.innerHTML=h;
+}
+// 積休重設點：回傳截至 cutKey 生效的起始值與計算區間
+function jijiWindow(cutKey){
+  let base=jijiInit,from='0000-01-01',to='9999-12-31',yi=-1;
+  const rs=yrs.map((y,i)=>({y:y,i:i})).filter(o=>o.y.jr&&!isLegacyYr(o.y)).sort((a,b)=>a.y.s<b.y.s?-1:1);
+  for(let n=0;n<rs.length;n++){
+    if(rs[n].y.s<=cutKey){base=rs[n].y.ji||0;from=rs[n].y.s;yi=rs[n].i;}
+    else{to=addDaysK(rs[n].y.s,-1);break;}
+  }
+  return{base:base,from:from,to:to,yi:yi};
+}
+function calcJijiBalance(cutKey){
+  const w=jijiWindow(cutKey||dk(new Date()));
+  let bal=w.base;
+  for(const k in hD){
+    if(k<w.from||k>w.to)continue;
+    const e=hD[k];
+    if(e.jiji>0)bal+=(e.jijiDir==='+'?e.jiji:-e.jiji);
+    if(e.tz)bal+=e.tz;if(e.hw)bal+=e.hw;
+  }
+  return bal;
+}
+function calcNianUsed(i){const y=yrs[i===undefined?selYr:i];if(!y)return 0;let u=0;for(const k in hD){if(k<y.s||k>y.e)continue;const e=hD[k];if(e.nian>0)u+=e.nian;}return u;}
+function calcYanUsed(i){const y=yrs[i===undefined?selYr:i];if(!y)return 0;let u=0;for(const k in hD){if(k<y.s||k>y.e)continue;const e=hD[k];if(e.yan>0)u+=e.yan;}return u;}
 function refreshBalance(){
+  if(selYr<0||selYr>=yrs.length)selYr=curYrIdx();
+  syncYr();
+  const lbl=document.getElementById('yrCurLabel');if(lbl)lbl.textContent=yrLabel(selYr);
+  const bb=document.getElementById('yrBackBtn');if(bb)bb.style.display=(selYr===curYrIdx()?'none':'inline-block');
+  const ni=document.getElementById('nianTotalInput');if(ni)ni.value=nianTotal;
+  const yi=document.getElementById('yanTotalInput');if(yi)yi.value=yanTotal;
+  const jw=jijiWindow(dk(new Date()));
+  const jl=document.getElementById('jijiInitLabel');
+  if(jl)jl.textContent=(jw.yi>=0?'積休起始（'+ymdTxt(jw.from)+' 起）：':'積休初始：');
+  const ji=document.getElementById('jijiInitInput');if(ji)ji.value=(jw.yi>=0?yrs[jw.yi].ji:jijiInit);
   const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
   const yanU=calcYanUsed(),yanB=yanTotal-yanU;
   function r2(v){return parseFloat(v.toFixed(2));}
@@ -748,6 +1045,95 @@ function refreshBalance(){
   document.getElementById('yanFill').style.width=yanPct+'%';
   document.getElementById('yanNums').textContent='已用 '+fmtH(yanU)+' / '+yanTotal+' hr';
 }
+function calcRange(aKey,bKey){
+  let addJ=0,takeJ=0,extraJ=0,nianU=0,yanU=0,cnt=0;const leave={};
+  for(const k in hD){
+    if(k<aKey||k>bKey)continue;
+    const e=hD[k];let used=false;
+    if(e.jiji>0){if(e.jijiDir==='+')addJ+=e.jiji;else takeJ+=e.jiji;used=true;}
+    if(e.tz){extraJ+=e.tz;used=true;}
+    if(e.hw){extraJ+=e.hw;used=true;}
+    if(e.nian>0){nianU+=e.nian;used=true;}
+    if(e.yan>0){yanU+=e.yan;used=true;}
+    if(e.sick){leave[e.sick]=(leave[e.sick]||0)+1;used=true;}
+    if(used)cnt++;
+  }
+  return{addJ,takeJ,extraJ,net:addJ+extraJ-takeJ,nianU,yanU,cnt,leave};
+}
+function calcBalanceUntil(cutKey){
+  const r=calcRange('0000-01-01',cutKey);
+  const yi=yrIdxClamp(cutKey),y=yrs[yi]||newYr('0000-01-01','9999-12-31');
+  const inY=calcRange(y.s,cutKey<y.e?cutKey:y.e);
+  const jw=jijiWindow(cutKey);
+  const jr=calcRange(jw.from,cutKey<jw.to?cutKey:jw.to);
+  return{addJ:jr.addJ,takeJ:jr.takeJ,extraJ:jr.extraJ,jiji:jw.base+jr.net,
+    jijiBase:jw.base,jijiFrom:jw.from,jijiReset:jw.yi>=0,
+    nianU:inY.nianU,nianB:y.nian-inY.nianU,nianT:y.nian,
+    yanU:inY.yanU,yanB:y.yan-inY.yanU,yanT:y.yan,
+    yrIdx:yi,cashHr:y.cashHr||0,cashAmt:y.cashAmt||0,
+    cnt:r.cnt,leave:r.leave};
+}
+function balMD(key){const d=kd(key);return(d.getMonth()+1)+'/'+d.getDate();}
+function earliestHourKey(){const ks=Object.keys(hD).sort();return ks.length?ks[0]:null;}
+function balQuick(kind){
+  const eEl=document.getElementById('balEnd'),sEl=document.getElementById('balStart');
+  const b=eEl.value||dk(new Date()),d=kd(b);
+  let a=b;
+  if(kind==='zone')a=dk(zoneStart(absZoneNum(d)));
+  else if(kind==='month')a=dk(new Date(d.getFullYear(),d.getMonth(),1));
+  else if(kind==='year')a=dk(new Date(d.getFullYear(),0,1));
+  else if(kind==='all')a=earliestHourKey()||b;
+  if(a>b)a=b;
+  eEl.value=b;sEl.value=a;renderBal();
+}
+function renderBal(){
+  const sEl=document.getElementById('balStart'),eEl=document.getElementById('balEnd');
+  let b=eEl.value||dk(new Date()),a=sEl.value||b;
+  if(a>b){const t=a;a=b;b=t;}
+  sEl.value=a;eEl.value=b;
+  const cum=calcBalanceUntil(b),rg=calcRange(a,b);
+  const dEnd=kd(b);
+  document.getElementById('balDate').textContent=balMD(a)+' － '+balMD(b)+'（訖：週'+DZ[dEnd.getDay()]+'）';
+  document.getElementById('balSub').textContent='區間內 '+rg.cnt+' 筆　／　截止訖日累計 '+cum.cnt+' 筆';
+  document.getElementById('balCardSec').textContent='截止 '+balMD(b)+' 的餘額';
+  document.getElementById('balRangeSec').textContent='區間內增減（'+balMD(a)+' － '+balMD(b)+'）';
+  document.getElementById('balCumSec').textContent='截止 '+balMD(b)+' 累計';
+  document.getElementById('balJiji').textContent=fmtH(cum.jiji);
+  document.getElementById('balNian').textContent=fmtH(cum.nianB);
+  document.getElementById('balYan').textContent=fmtH(cum.yanB);
+  let g='';
+  g+='<div class="bal-line"><span>加班</span><b class="plus">＋'+fmtH(rg.addJ)+'</b></div>';
+  if(rg.extraJ>0)g+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(rg.extraJ)+'</b></div>';
+  g+='<div class="bal-line"><span>拿時間</span><b class="minus">－'+fmtH(rg.takeJ)+'</b></div>';
+  g+='<div class="bal-line sum"><span>積休淨增減</span><b class="'+(rg.net<0?'minus':'plus')+'">'+(rg.net<0?'－':'＋')+fmtH(Math.abs(rg.net))+' hr</b></div>';
+  g+='<div class="bal-line"><span>年休使用</span><b class="minus">－'+fmtH(rg.nianU)+' hr</b></div>';
+  g+='<div class="bal-line"><span>延休使用</span><b class="minus">－'+fmtH(rg.yanU)+' hr</b></div>';
+  const lv=['事','病','公'].filter(k=>rg.leave[k]);
+  if(lv.length)g+='<div class="bal-line"><span>事病公假</span><b>'+lv.map(k=>k+'假 '+rg.leave[k]+' 天').join('　')+'</b></div>';
+  document.getElementById('balRangeDetail').innerHTML=g;
+  let h='';
+  h+='<div class="bal-line"><span>'+(cum.jijiReset?'積休起始（'+ymdTxt(cum.jijiFrom)+' 重設）':'積休初始')+'</span><b>'+fmtH(cum.jijiBase)+'</b></div>';
+  h+='<div class="bal-line"><span>加班累計</span><b class="plus">＋'+fmtH(cum.addJ)+'</b></div>';
+  if(cum.extraJ>0)h+='<div class="bal-line"><span>天災／國定補時數</span><b class="plus">＋'+fmtH(cum.extraJ)+'</b></div>';
+  h+='<div class="bal-line"><span>拿時間累計</span><b class="minus">－'+fmtH(cum.takeJ)+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日積休</span><b>'+fmtH(cum.jiji)+' hr</b></div>';
+  h+='<div class="bal-line"><span>所屬年度</span><b style="font-size:12px">'+yrLabel(cum.yrIdx)+'</b></div>';
+  h+='<div class="bal-line"><span>年休已用（本年度）</span><b class="minus">'+fmtH(cum.nianU)+' / '+fmtH(cum.nianT)+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日年休</span><b>'+fmtH(cum.nianB)+' hr</b></div>';
+  h+='<div class="bal-line"><span>延休已用（本年度）</span><b class="minus">'+fmtH(cum.yanU)+' / '+fmtH(cum.yanT)+'</b></div>';
+  h+='<div class="bal-line sum"><span>截止訖日延休</span><b>'+fmtH(cum.yanB)+' hr</b></div>';
+  if(cum.cashHr>0||cum.cashAmt>0)h+='<div class="bal-line"><span>本年度折代金</span><b>'+fmtH(cum.cashHr)+' hr　$'+fmtH(cum.cashAmt)+'</b></div>';
+  document.getElementById('balDetail').innerHTML=h;
+}
+function openBalSheet(key){
+  selKey=key;
+  const d=kd(key);
+  document.getElementById('balEnd').value=key;
+  document.getElementById('balStart').value=dk(zoneStart(absZoneNum(d)));
+  renderBal();
+  document.getElementById('balOverlay').classList.add('open');
+}
+function closeBalSheet(){document.getElementById('balOverlay').classList.remove('open');}
 function openHoursSheet(){
   if(!selKey)return;
   const date=kd(selKey);const{s}=getShift(date);
@@ -869,7 +1255,8 @@ function renderAllowConfirmPill(elId,type,amt){
 }
 function toggleAllowance(){
   const wrap=document.getElementById('allowWrap');if(!wrap)return;
-  const open=!wrap.classList.contains('open');wrap.classList.toggle('open',open);
+  const open=!wrap.classList.contains('open');
+  wrap.classList.toggle('open',open);
   const head=wrap.querySelector('.allow-header');if(head)head.setAttribute('aria-expanded',open?'true':'false');
   try{localStorage.setItem('yanghan_allow_open',open?'1':'0');}catch(e){}
 }
@@ -970,16 +1357,50 @@ try{const s=localStorage.getItem('yanghan_plan_cats');if(s){const saved=JSON.par
 let selectedPlanCat='personal';
 function planCat(id){return PLAN_CATS.some(c=>c.id===id)?id:(PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id);}
 function catData(id){return PLAN_CATS.find(c=>c.id===planCat(id))||PLAN_CATS[0];}
-function softColor(hex){const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;return `rgb(${Math.round(r*.18+255*.82)},${Math.round(g*.18+255*.82)},${Math.round(b*.18+255*.82)})`;}
+function softColor(hex){
+  const n=parseInt(hex.slice(1),16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  return `rgb(${Math.round(r*.18+255*.82)},${Math.round(g*.18+255*.82)},${Math.round(b*.18+255*.82)})`;
+}
 function eventStyle(id){const c=catData(id);return `--event:${c.color};--event-bg:${softColor(c.color)};--event-ink:#4a3828`;}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function selectPlanCat(id){selectedPlanCat=planCat(id);renderPlanCats();}
-function renderPlanCats(){const el=document.getElementById('planCats');if(!el)return;el.innerHTML=PLAN_CATS.map(c=>`<button type="button" style="${eventStyle(c.id)}" class="plan-cat-btn${selectedPlanCat===c.id?' active':''}" onclick="selectPlanCat('${c.id}')"><span class="cat-dot"></span>${escapeHtml(c.label)}</button>`).join('');}
-function togglePlanCatSettings(){const el=document.getElementById('planCatSettings');if(!el)return;const show=!el.classList.contains('show');el.classList.toggle('show',show);if(show)renderPlanCatSettings();}
-function renderPlanCatSettings(){const el=document.getElementById('planCatSettings');if(!el)return;el.innerHTML='<div class="plan-cat-hint">點左側色塊可開啟完整選色器，不限原本六種顏色；月曆會自動搭配柔和金棕系底色。</div>'+PLAN_CATS.map(c=>`<div class="plan-cat-setting"><input class="plan-cat-color" type="color" value="${c.color}" aria-label="${escapeHtml(c.label)}顏色" onchange="updatePlanCat('${c.id}',null,this.value)"><input class="plan-cat-name" maxlength="8" value="${escapeHtml(c.label)}" aria-label="分類名稱" onchange="updatePlanCat('${c.id}',this.value,null)">${c.id.startsWith('custom_')?`<button type="button" class="plan-cat-delete" onclick="deletePlanCat('${c.id}')" aria-label="刪除${escapeHtml(c.label)}">✕</button>`:''}</div>`).join('')+'<button type="button" class="plan-cat-add" onclick="addPlanCat()">＋ 新增分類</button>';}
-function updatePlanCat(id,label,color){const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;const fallback=DEFAULT_PLAN_CATS.find(c=>c.id===id);if(label!==null)PLAN_CATS[idx].label=label.trim()||(fallback?fallback.label:'自訂分類');if(color!==null&&/^#[0-9a-f]{6}$/i.test(color))PLAN_CATS[idx].color=color;try{localStorage.setItem('yanghan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}renderPlanCats();renderPlanList();render();}
-function addPlanCat(){const colors=['#b47732','#9b7b58','#789aaa','#87936b','#bd8883','#8d735f'];const id='custom_'+Date.now().toString(36);PLAN_CATS.push({id,label:'新分類',color:colors[(PLAN_CATS.length-DEFAULT_PLAN_CATS.length)%colors.length]});selectedPlanCat=id;try{localStorage.setItem('yanghan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}renderPlanCats();renderPlanCatSettings();}
-function deletePlanCat(id){if(!id.startsWith('custom_'))return;const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;const replacement=PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id;Object.keys(pS).forEach(key=>{const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);arr.forEach(it=>{if(it.cat===id)it.cat=replacement;});pS[key]=arr;});PLAN_CATS.splice(idx,1);if(selectedPlanCat===id)selectedPlanCat=replacement;try{localStorage.setItem('yanghan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}save();renderPlanCats();renderPlanCatSettings();renderPlanList();render();}
+function renderPlanCats(){
+  const el=document.getElementById('planCats');if(!el)return;
+  el.innerHTML=PLAN_CATS.map(c=>`<button type="button" style="${eventStyle(c.id)}" class="plan-cat-btn${selectedPlanCat===c.id?' active':''}" onclick="selectPlanCat('${c.id}')"><span class="cat-dot"></span>${escapeHtml(c.label)}</button>`).join('');
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function togglePlanCatSettings(){
+  const el=document.getElementById('planCatSettings');if(!el)return;
+  const show=!el.classList.contains('show');el.classList.toggle('show',show);if(show)renderPlanCatSettings();
+}
+function renderPlanCatSettings(){
+  const el=document.getElementById('planCatSettings');if(!el)return;
+  el.innerHTML='<div class="plan-cat-hint">點左側色塊可開啟完整選色器，不限原本六種顏色；月曆會自動搭配柔和金棕系底色。</div>'+PLAN_CATS.map(c=>`<div class="plan-cat-setting"><input class="plan-cat-color" type="color" value="${c.color}" aria-label="${escapeHtml(c.label)}顏色" onchange="updatePlanCat('${c.id}',null,this.value)"><input class="plan-cat-name" maxlength="8" value="${escapeHtml(c.label)}" aria-label="分類名稱" onchange="updatePlanCat('${c.id}',this.value,null)">${c.id.startsWith('custom_')?`<button type="button" class="plan-cat-delete" onclick="deletePlanCat('${c.id}')" aria-label="刪除${escapeHtml(c.label)}">✕</button>`:''}</div>`).join('')+'<button type="button" class="plan-cat-add" onclick="addPlanCat()">＋ 新增分類</button>';
+}
+function updatePlanCat(id,label,color){
+  const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;
+  const fallback=DEFAULT_PLAN_CATS.find(c=>c.id===id);
+  if(label!==null)PLAN_CATS[idx].label=label.trim()||(fallback?fallback.label:'自訂分類');
+  if(color!==null&&/^#[0-9a-f]{6}$/i.test(color))PLAN_CATS[idx].color=color;
+  try{localStorage.setItem('yanghan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
+  renderPlanCats();renderPlanList();render();
+}
+function addPlanCat(){
+  const colors=['#b47732','#9b7b58','#789aaa','#87936b','#bd8883','#8d735f'];
+  const id='custom_'+Date.now().toString(36);
+  PLAN_CATS.push({id,label:'新分類',color:colors[(PLAN_CATS.length-DEFAULT_PLAN_CATS.length)%colors.length]});
+  selectedPlanCat=id;
+  try{localStorage.setItem('yanghan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}
+  renderPlanCats();renderPlanCatSettings();
+}
+function deletePlanCat(id){
+  if(!id.startsWith('custom_'))return;
+  const idx=PLAN_CATS.findIndex(c=>c.id===id);if(idx<0)return;
+  const replacement=PLAN_CATS.some(c=>c.id==='personal')?'personal':PLAN_CATS[0].id;
+  Object.keys(pS).forEach(key=>{const arr=Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key]);arr.forEach(it=>{if(it.cat===id)it.cat=replacement;});pS[key]=arr;});
+  PLAN_CATS.splice(idx,1);if(selectedPlanCat===id)selectedPlanCat=replacement;
+  try{localStorage.setItem('yanghan_plan_cats',JSON.stringify(PLAN_CATS));}catch(e){}save();
+  renderPlanCats();renderPlanCatSettings();renderPlanList();render();
+}
 // ── 圖片：用 localStorage 存 base64 ──
 const PHOTO_PREFIX='yanghan_photo_';
 function photoKey(dateKey){return PHOTO_PREFIX+dateKey;}
@@ -1076,7 +1497,13 @@ function togglePlanItem(idx){
   arr[idx].done=!arr[idx].done;
   pS[selKey]=arr;save();renderPlanList();render();
 }
-function cyclePlanCategory(idx){if(!selKey)return;let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);const cur=PLAN_CATS.findIndex(c=>c.id===planCat(arr[idx].cat));arr[idx]={...arr[idx],cat:PLAN_CATS[(cur+1)%PLAN_CATS.length].id};pS[selKey]=arr;save();renderPlanList();render();renderRecList();}
+function cyclePlanCategory(idx){
+  if(!selKey)return;
+  let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
+  const cur=PLAN_CATS.findIndex(c=>c.id===planCat(arr[idx].cat));
+  arr[idx]={...arr[idx],cat:PLAN_CATS[(cur+1)%PLAN_CATS.length].id};
+  pS[selKey]=arr;save();renderPlanList();render();renderRecList();
+}
 function deletePlanItem(idx){
   if(!selKey)return;
   let arr=Array.isArray(pS[selKey])?[...pS[selKey]]:upgradePlan(pS[selKey]);
@@ -1187,7 +1614,7 @@ function render(){
       if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'jiji');};hoursTags.appendChild(b);}
       if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'nian');};hoursTags.appendChild(b);}
       if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'yan');};hoursTags.appendChild(b);}
-      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge hb-sick';b.textContent=he.sick+'假';hoursTags.appendChild(b);}
+      if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge '+(he.sick==='公'?'hb-gong':'hb-sick');b.textContent=he.sick+'假';hoursTags.appendChild(b);}
       if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};hoursTags.appendChild(b);}
       if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};hoursTags.appendChild(b);}
       if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tz');};hoursTags.appendChild(b);}
@@ -1205,7 +1632,10 @@ function render(){
     const observance=h||MEMO[key];
     if(observance){const obs=document.createElement('div');obs.className='cell-plan observance'+(h?'':' memo');obs.textContent=observance;obs.title=observance;planArea.appendChild(obs);}
     const planLimit=observance?2:3;
-    if(dayPlans.length){dayPlans.slice(0,planLimit).forEach(it=>{const row=document.createElement('div');row.className='cell-plan'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=it.text;row.title=it.text;row.onclick=function(ev){ev.stopPropagation();openPlanSheet(key);};planArea.appendChild(row);});if(dayPlans.length>planLimit){const more=document.createElement('div');more.className='cell-plan-more';more.textContent='＋'+(dayPlans.length-planLimit)+' 項';planArea.appendChild(more);}}else{const emptyPlan=document.createElement('div');emptyPlan.className='cell-plan-empty';planArea.appendChild(emptyPlan);}
+    if(dayPlans.length){
+      dayPlans.slice(0,planLimit).forEach(it=>{const row=document.createElement('div');row.className='cell-plan'+(it.done?' done':'');row.style.cssText=eventStyle(it.cat);row.textContent=it.text;row.title=it.text;row.onclick=function(ev){ev.stopPropagation();openPlanSheet(key);};planArea.appendChild(row);});
+      if(dayPlans.length>planLimit){const more=document.createElement('div');more.className='cell-plan-more';more.textContent='＋'+(dayPlans.length-planLimit)+' 項';planArea.appendChild(more);}
+    }else{const emptyPlan=document.createElement('div');emptyPlan.className='cell-plan-empty';planArea.appendChild(emptyPlan);}
     // 📷 標記（同步讀 localStorage）
     if(getPhotos(key).length>0){const pp=document.createElement('div');pp.className='plan-pin';pp.style.top='13px';pp.textContent='📷';cell.appendChild(pp);}
     cell.appendChild(top);cell.appendChild(bot);cell.appendChild(planArea);g.appendChild(cell);
@@ -1243,6 +1673,7 @@ function quickAction(action){
   else if(action==='day')openDaySheet(key);
   else if(action==='plan')openPlanSheet(key);
   else if(action==='hours'){selKey=key;openHoursSheet();}
+  else if(action==='bal')openBalSheet(key);
 }
 function openWeekSheet(key){
   selKey=key;const date=kd(key),mk=monKey(date);
@@ -1323,7 +1754,7 @@ function confirmDayAction(){
   save();renderRecList();render();refreshAllow();closeDaySheet();
 }
 function closeAllSheets(){
-  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
+  ['weekOverlay','dayOverlay','planOverlay','hoursOverlay','quickOverlay','balOverlay','yrOverlay'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});
   selKey=null;pendingKey=null;
 }
 function renderRecList(){
@@ -1518,10 +1949,8 @@ const sel=document.getElementById('numSel');
 {const o=document.createElement('option');o.value='?';o.textContent='？ 白班（號碼未定）';sel.appendChild(o);}
 for(let i=1;i<=36;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 collectSwapNames();autoClean();renderRecList();render();updateTodayBtn();renderSwapBar();
-document.getElementById('nianTotalInput').value=nianTotal;
-document.getElementById('yanTotalInput').value=yanTotal;
 document.getElementById('jijiInitInput').value=jijiInit;
-refreshBalance();refreshAllow();renderZoneRecList();
+refreshBalance();refreshAllow();renderZoneRecList();renderYrList();
 </script>
 <!-- 燈箱 -->
 <div class="lightbox" id="lightbox">
