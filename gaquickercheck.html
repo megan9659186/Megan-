@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="麻醉速查">
 <meta name="theme-color" content="#FBF8F1">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
 <meta name="color-scheme" content="light">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="googlebot" content="noindex,nofollow,noarchive">
@@ -3546,10 +3546,17 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v9.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-08-21";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v9.6";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-09-07";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-07",
+    note: "更換手機桌面圖示。",
+    items: [
+      "加到手機主畫面的圖示換成新版麻醉機圖示;已加過捷徑的同仁請移除後重新加入才會更新"
+    ]
+  },
   {
     date: "2026-08-21",
     note: "麻醉計算機的說明改成點開才看。",
