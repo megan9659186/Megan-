@@ -185,6 +185,9 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .yr-mgr-btn{padding:3px 9px;border:1px solid var(--border2);border-radius:99px;background:transparent;color:var(--accent2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .yr-mgr-btn:active{background:var(--surface2)}
 .yr-back{display:none;padding:3px 9px;border:1px solid #e0cc90;border-radius:99px;background:#fdf6e8;color:#8a6800;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-setup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+.yr-build{width:100%;margin-top:10px;padding:11px;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.yr-setup-note{font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5}
 .yr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:8px}
 .yr-card.cur{border-color:#ccc8dc;background:#f7f6fb}
 .yr-card-head{display:flex;align-items:center;gap:6px}
@@ -204,11 +207,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .yr-reset label{font-size:12px;color:#1a4a2a;font-weight:600;cursor:pointer}
 .yr-in.jiji{color:#1a4a2a}
 .yr-used{font-size:11px;color:var(--ink3);margin-top:9px;padding-top:7px;border-top:1px dashed var(--border);line-height:1.6}
-.yr-add{width:100%;margin-top:10px;padding:10px;border:1px dashed var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--accent2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
-.yr-add:active{background:var(--surface2)}
-.yr-add.sub{padding:7px;font-size:12px;margin-top:6px;color:var(--ink3)}
-.yr-cash-sum{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink2);background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:10px 12px;margin-top:12px}
-.yr-cash-sum b{font-family:'Libre Baskerville',serif;font-weight:400;color:#8a6800;font-size:15px}
 .yr-msg{font-size:12px;color:#8a6800;background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:8px 10px;margin-top:10px;display:none}
 /* 本區間積休明細 */
 .zone-rec-card{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px 8px}
@@ -765,17 +763,17 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="hs-shift">依到職日週年制管理年假／延年休</div>
     </div>
     <div class="hs-body">
-      <div class="yr-line" style="margin-top:0">
-        <span class="yr-lb">到職日</span>
-        <input class="yr-in date" id="hireInput" type="date" onchange="saveHire()">
-        <button class="yr-mgr-btn" onclick="buildFirstYr()">建立本年度</button>
+      <div class="yr-setup" id="yrSetup">
+        <div class="yr-line" style="margin-top:0">
+          <span class="yr-lb">到職日</span>
+          <input class="yr-in date" id="hireInput" type="date" onchange="saveHire()">
+        </div>
+        <button class="yr-build" onclick="buildFirstYr()">建立本年度休假時數</button>
+        <div class="yr-setup-note">選擇到職日後按上方按鈕，系統會依週年制建立本年度區間；之後每年會自動結轉，不必再按。</div>
       </div>
       <div class="yr-msg" id="yrMsg"></div>
       <div id="yrList"></div>
-      <button class="yr-add" onclick="addNextYr()">＋ 結轉新年度</button>
-      <button class="yr-add sub" onclick="addPrevYr()">＋ 補一個更早的年度</button>
-      <div class="yr-cash-sum"><span>代金累計</span><b id="yrCashSum">0 hr　$0</b></div>
-      <div class="bal-note">＊「結轉新年度」會把上年度剩餘的年休＋延休自動帶入新年度的「延年休」。若其中有一部分是折代金而非續用，把新年度延年休改成實際續用時數，再回到上年度卡片填入代金時數與金額即可。<br>＊ 若你的積休會在到職週年當天歸零，勾選該年度的「年度起積休重新計算」並填起始值（通常是 0）；不勾就會一路累計不中斷。</div>
+      <div class="bal-note" id="yrNote">＊ 新年度會在到職週年當天自動產生，上年度剩餘的年休＋延休自動帶入新年度的「延年休」，你只要填入新年度的年假時數。若其中有一部分是折代金而非續用，把延年休改成實際續用時數，再回到上年度卡片填代金時數與金額即可。<br>＊ 若你的積休會在到職週年當天歸零，勾選「年度起積休重新計算」並填起始值（通常是 0）；不勾就會一路累計不中斷。設定會自動沿用到往後的每個年度。</div>
       <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeYrSheet()">關閉</button>
     </div>
   </div>
@@ -979,7 +977,7 @@ try{const s=localStorage.getItem('megan_hours_cfg');if(s){const c=JSON.parse(s);
   else{const n=parseFloat(c.nianTotal),ya=parseFloat(c.yanTotal);yrs=[{s:'0000-01-01',e:'9999-12-31',nian:isNaN(n)?0:n,yan:isNaN(ya)?0:ya,cashHr:0,cashAmt:0,cashNote:''}];}
 }}catch(e){}
 if(!yrs.length)yrs=[{s:'0000-01-01',e:'9999-12-31',nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:''}];
-sortYrs();selYr=curYrIdx();syncYr();
+sortYrs();selYr=curYrIdx();autoRollYr();selYr=curYrIdx();syncYr();
 function sortYrs(){yrs.sort((a,b)=>a.s<b.s?-1:(a.s>b.s?1:0));}
 function newYr(s,e){return{s:s,e:e,nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:'',jr:false,ji:0};}
 function addDaysK(k,n){const d=kd(k);d.setDate(d.getDate()+n);return dk(d);}
@@ -1014,7 +1012,7 @@ function saveSettings(){
   refreshBalance();renderYrList();
 }
 // ── 年度／代金 ──
-function shiftYr(d){const n=selYr+d;if(n<0||n>=yrs.length)return;selYr=n;refreshBalance();}
+function shiftYr(d){const n=selYr+d;if(n<0||n>=yrs.length||n>curYrIdx())return;selYr=n;refreshBalance();}
 function gotoCurYr(){selYr=curYrIdx();refreshBalance();}
 function setYrMsg(t){const el=document.getElementById('yrMsg');if(!el)return;el.textContent=t||'';el.style.display=t?'block':'none';}
 function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;setYrMsg('');renderYrList();document.getElementById('yrOverlay').classList.add('open');}
@@ -1030,26 +1028,28 @@ function buildFirstYr(){
   if(yrs.length===1&&isLegacyYr(yrs[0])){yrs[0].s=sk;yrs[0].e=yrEndFrom(sk);setYrMsg('已建立本年度，原本的年假時數已沿用');}
   else if(yrIdxFor(sk)<0){const y=newYr(sk,yrEndFrom(sk));yrs.push(y);sortYrs();setYrMsg('已建立本年度，請填入年假時數');}
   else{setYrMsg('本年度已經存在了');saveCfg();return;}
-  selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();
+  autoRollYr();selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();
 }
-function addNextYr(){
-  const last=yrs[yrs.length-1];
-  if(!last||isLegacyYr(last)){setYrMsg('請先填入到職日並按「建立本年度」');return;}
-  const li=yrs.length-1;
-  const leftN=Math.max(0,last.nian-calcNianUsed(li));
-  const leftY=Math.max(0,last.yan-calcYanUsed(li));
-  const sk=addDaysK(last.e,1);
-  const y=newYr(sk,yrEndFrom(sk));y.yan=fmtH(leftN+leftY);
-  y.jr=!!last.jr;y.ji=0;
-  yrs.push(y);selYr=yrs.length-1;saveCfg();refreshBalance();renderYrList();
-  setYrMsg('已結轉：上年度剩餘 '+fmtH(leftN+leftY)+' hr 帶入新年度延年休，請填入新年度的年假時數');
-}
-function addPrevYr(){
-  const first=yrs[0];
-  if(!first||isLegacyYr(first)){setYrMsg('請先填入到職日並按「建立本年度」');return;}
-  const ek=addDaysK(first.s,-1),sk=addDaysK(addYearsK(ek,-1),1);
-  yrs.unshift(newYr(sk,ek));selYr=curYrIdx();saveCfg();refreshBalance();renderYrList();
-  setYrMsg('已補上更早的年度');
+// 到職週年當天自動開新年度（上年度剩餘自動帶入延年休）
+function autoRollYr(){
+  let changed=false;
+  const tk=dk(new Date());
+  // 先移除任何尚未到期的未來年度，改由自動產生時才建立
+  for(let i=yrs.length-1;i>=0;i--){if(!isLegacyYr(yrs[i])&&yrs[i].s>tk){yrs.splice(i,1);changed=true;}}
+  let guard=0;
+  while(guard++<60){
+    const last=yrs[yrs.length-1];
+    if(!last||isLegacyYr(last)||last.e>=tk)break;
+    const li=yrs.length-1;
+    const leftN=Math.max(0,last.nian-calcNianUsed(li));
+    const leftY=Math.max(0,last.yan-calcYanUsed(li));
+    const sk=addDaysK(last.e,1);
+    const y=newYr(sk,yrEndFrom(sk));
+    y.yan=fmtH(leftN+leftY);y.jr=!!last.jr;y.ji=0;
+    yrs.push(y);changed=true;
+  }
+  if(changed){selYr=curYrIdx();saveCfg();}
+  return changed;
 }
 function delYr(i){
   if(yrDelIdx!==i){yrDelIdx=i;renderYrList();return;}
@@ -1068,10 +1068,14 @@ function updYr(i,f,v){
 }
 function renderYrList(){
   const el=document.getElementById('yrList');if(!el)return;
-  const ci=curYrIdx();let h='',chr=0,camt=0;
+  const ci=curYrIdx(),tk=dk(new Date());let h='';
+  const ready=yrs.some(y=>!isLegacyYr(y));
+  const su=document.getElementById('yrSetup');if(su)su.style.display=ready?'none':'block';
+  const nt=document.getElementById('yrNote');if(nt)nt.style.display=ready?'block':'none';
+  if(!ready){el.innerHTML='';return;}
   yrs.forEach((y,i)=>{
-    chr+=y.cashHr||0;camt+=y.cashAmt||0;
-    const nU=calcNianUsed(i),yU=calcYanUsed(i),leg=isLegacyYr(y);
+    if(isLegacyYr(y)||y.s>tk)return;
+    const nU=calcNianUsed(i),yU=calcYanUsed(i),leg=false;
     h+='<div class="yr-card'+(i===ci?' cur':'')+'">';
     h+='<div class="yr-card-head"><span class="yr-card-title">'+yrLabel(i)+'</span>';
     if(i===ci)h+='<span class="yr-badge">本年度</span>';
@@ -1089,8 +1093,6 @@ function renderYrList(){
     h+='</div>';
   });
   el.innerHTML=h;
-  const cs=document.getElementById('yrCashSum');
-  if(cs)cs.textContent=fmtH(chr)+' hr　$'+fmtH(camt);
 }
 // 積休重設點：回傳截至 cutKey 生效的起始值與計算區間
 function jijiWindow(cutKey){
