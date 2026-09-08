@@ -76,7 +76,6 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .plan-pin{position:absolute;top:1px;right:2px;font-size:10px;line-height:1;z-index:6;pointer-events:none}
 .cell.selected{background:#f5f0eb!important}
 .cell.selected .bot{opacity:0.8}
-.cell.other-working{background:#f0f4f8!important}
 .cell.z-top{border-top:2px solid var(--zc)!important}
 .cell.z-bottom{border-bottom:2px solid var(--zc)!important}
 .cell.z-left{border-left:2px solid var(--zc)!important}
@@ -206,6 +205,11 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .yr-reset input[type=checkbox]{width:15px;height:15px;accent-color:#4a7a5a;margin:0}
 .yr-reset label{font-size:12px;color:#1a4a2a;font-weight:600;cursor:pointer}
 .yr-in.jiji{color:#1a4a2a}
+.jr-sec{margin-top:16px;padding-top:13px;border-top:1px dashed var(--border)}
+.jr-sec-title{font-size:13px;font-weight:600;color:#1a4a2a;margin-bottom:9px}
+.jr-item{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;background:#f0f7f2;border:1px solid #c8ddd0;border-radius:var(--radius-sm);padding:8px 10px}
+.jr-item.cur{box-shadow:inset 0 0 0 1.5px #4a7a5a}
+.jr-cur-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;background:#c8ddd0;color:#1a4a2a}
 .yr-used{font-size:11px;color:var(--ink3);margin-top:9px;padding-top:7px;border-top:1px dashed var(--border);line-height:1.6}
 .yr-msg{font-size:12px;color:#8a6800;background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:8px 10px;margin-top:10px;display:none}
 /* 本區間積休明細 */
@@ -231,7 +235,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .hb-j-m{background:#f0ddd8;color:#7a2018}
 .hb-n-m{background:#f0ddd8;color:#7a2018}
 .hb-y-m{background:#fdf0c8;color:#8a6800}
-.hb-other{background:#dde4ec;color:#1a3050}
 .hbadge.tappable{cursor:pointer}
 .hbadge.tappable:active{opacity:0.6}
 .hbadge.confirmed{box-shadow:inset 0 0 0 1px #4a7a90;font-weight:700}
@@ -327,25 +330,6 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .bal-chip{flex:1;padding:7px 2px;border:1px solid var(--border2);border-radius:99px;background:var(--surface);color:var(--ink2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
 .bal-chip:active{background:var(--surface2)}
 .bal-sec{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:0.3px;margin:16px 0 6px;padding-left:2px}
-/* 追蹤同事班別 */
-.other-row{display:none;align-items:center;gap:10px;padding:10px 14px;background:#eef2f5;border:1px solid #d0dce6;border-radius:var(--radius-sm);margin-bottom:12px}
-.other-row.show{display:flex}
-.other-row-label{font-size:13px;font-weight:600;color:#2a4060;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.other-day-btns{display:flex;gap:4px;flex-shrink:0}
-.odb{padding:6px 14px;border:1px solid #c0ccd6;border-radius:6px;background:var(--surface);color:#5a7080;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.1s}
-.odb.active.on{background:#2a4060;color:#fff;border-color:#2a4060}
-.odb.active.off{background:#d0ccc4;color:#3a3530;border-color:#c0b8b0}
-/* 批次輸入模式 */
-.other-edit-trigger{width:100%;padding:10px;background:#eef2f5;color:#2a4060;border:1px solid #d0dce6;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif;display:none}
-.other-edit-trigger.show{display:block}
-.other-edit-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:2px solid #2a4060;padding:12px 16px calc(env(safe-area-inset-bottom,0px) + 12px);align-items:center;gap:8px;box-shadow:0 -4px 24px rgba(0,0,0,0.14)}
-.other-edit-bar.show{display:flex}
-.oeb-label{flex:1;font-size:13px;color:#2a4060;font-weight:600;line-height:1.4;min-width:0}
-.oeb-hint{display:block;font-size:11px;color:#7a9ab0;font-weight:400;margin-top:1px}
-.oeb-cancel{padding:9px 14px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:transparent;color:var(--ink2);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
-.oeb-save{padding:9px 18px;border:none;border-radius:var(--radius-sm);background:#2a4060;color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
-body.other-edit-mode .cell:not(.empty){cursor:pointer}
-body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 /* 行程多則 */
 .plan-list{list-style:none;margin-bottom:8px}
 .plan-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)}
@@ -461,7 +445,6 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 <button class="today-btn" id="todayBtn" onclick="goToday()">回到今日 ↩</button>
 <div class="grid" id="gridHead"></div>
 <div class="grid" id="grid"></div>
-<button class="other-edit-trigger" id="otherEditTrigger" onclick="enterOtherEditMode()"></button>
 <div class="swap-bar" id="swapBar"></div>
 
 <!-- 積休 年休 延年休 餘額總覽 -->
@@ -538,12 +521,6 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
     <span class="nts-label" id="jijiInitLabel">積休初始：</span>
     <input class="nts-input jiji-color" id="jijiInitInput" type="number" min="0" max="999" step="any" value="21.45" onchange="saveSettings()">
     <span class="nts-label">hr</span>
-  </div>
-  <div class="nts-group" style="flex-basis:100%;margin-top:4px">
-    <span class="nts-label">輸入</span>
-    <input class="nts-input" id="otherNameInput" type="text" style="width:80px;font-size:13px;text-align:left" placeholder="暱稱" onchange="saveOtherName()">
-    <span class="nts-label">上班日</span>
-    <span class="nts-label" style="color:var(--ink3);font-size:11px">（在月曆上顯示對方是否有班）</span>
   </div>
 </div>
 
@@ -663,13 +640,6 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       <div class="shift-btns" id="shiftBtns"></div>
       <div class="field-label" style="margin-top:14px">備註</div>
       <textarea class="note-area" id="dayNote" placeholder="例：假日加班、換班原因…"></textarea>
-      <div class="other-row" id="otherTrackRow" style="margin-top:14px">
-        <span class="other-row-label" id="otherPersonLabel">同事</span>
-        <div class="other-day-btns">
-          <button class="odb on" id="odbOn" onclick="setOtherDay(true)">有班</button>
-          <button class="odb off" id="odbOff" onclick="setOtherDay(false)">休息</button>
-        </div>
-      </div>
       <div class="hs-btns">
         <button class="hs-btn-cancel" onclick="closeDaySheet()">取消</button>
         <button class="hs-btn-save" onclick="confirmDayAction()">確認</button>
@@ -773,7 +743,16 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       </div>
       <div class="yr-msg" id="yrMsg"></div>
       <div id="yrList"></div>
-      <div class="bal-note" id="yrNote">＊ 新年度會在到職週年當天自動產生，上年度剩餘的年休＋延休自動帶入新年度的「延年休」，你只要填入新年度的年假時數。若其中有一部分是折代金而非續用，把延年休改成實際續用時數，再回到上年度卡片填代金時數與金額即可。<br>＊ 若你的積休會在到職週年當天歸零，勾選「年度起積休重新計算」並填起始值（通常是 0）；不勾就會一路累計不中斷。設定會自動沿用到往後的每個年度。</div>
+      <div class="jr-sec">
+        <div class="jr-sec-title">積休重設點（結算日）</div>
+        <div class="yr-line" style="margin-top:0">
+          <span class="yr-lb">結算日</span>
+          <input class="yr-in date" id="jrDateInput" type="date" onchange="addJr()">
+        </div>
+        <div id="jrList"></div>
+        <div class="yr-setup-note">積休結算日和到職日不同，所以在這裡自己 key 日期，選好日期就會直接建立。積休會從<b>最近一次重設點</b>的起始時數往後累計；起始值預設 0，若前一期有剩餘要結轉，直接改成剩餘時數即可。沒有設任何重設點就會一路累計不中斷。</div>
+      </div>
+      <div class="bal-note" id="yrNote">＊ 新年度會在到職週年當天自動產生，上年度剩餘的年休＋延休自動帶入新年度的「延年休」，你只要填入新年度的年假時數。若其中有一部分是折代金而非續用，把延年休改成實際續用時數，再回到上年度卡片填代金時數與金額即可。<br>＊ 積休的結算日和到職日不同，已獨立成下方「積休重設點」，每年結算日自己 key 一筆即可，不受年度區間影響。</div>
       <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeYrSheet()">關閉</button>
     </div>
   </div>
@@ -902,83 +881,25 @@ try{const s=localStorage.getItem('megan_dswaps');if(s)dS=JSON.parse(s);}catch(e)
 try{const s=localStorage.getItem('megan_notes');if(s)nS=JSON.parse(s);}catch(e){}
 let pS={};
 try{const s=localStorage.getItem('megan_plans');if(s)pS=JSON.parse(s);}catch(e){}
-let oD={};
-try{const s=localStorage.getItem('megan_other');if(s)oD=JSON.parse(s);}catch(e){}
-let otherName='';
-try{const s=localStorage.getItem('megan_other_name');if(s)otherName=s;}catch(e){}
-let otherEditMode=false,otherEditSnapshot=null;
-function saveOtherName(){
-  const v=document.getElementById('otherNameInput').value.trim();
-  otherName=v;
-  try{localStorage.setItem('megan_other_name',v);}catch(e){}
-  const row=document.getElementById('otherTrackRow');
-  if(row){row.classList.toggle('show',!!v);const lbl=document.getElementById('otherPersonLabel');if(lbl)lbl.textContent=v||'同事';}
-  render();
-}
-function enterOtherEditMode(){
-  if(!otherName){
-    const n=prompt('請輸入同事暱稱：');
-    if(!n||!n.trim())return;
-    otherName=n.trim();
-    try{localStorage.setItem('megan_other_name',otherName);}catch(e){}
-    const inp=document.getElementById('otherNameInput');if(inp)inp.value=otherName;
-  }
-  otherEditMode=true;otherEditSnapshot=JSON.stringify(oD);
-  closeAllSheets();
-  document.body.classList.add('other-edit-mode');
-  const bar=document.getElementById('otherEditBar');if(bar)bar.classList.add('show');
-  const lbl=document.getElementById('oebLabel');if(lbl)lbl.innerHTML=otherName+' 的上班日<span class="oeb-hint">點格子 = 有班，再點 = 清除</span>';
-  render();
-}
-function toggleOtherDay(key){
-  if(oD[key]===true)delete oD[key];else oD[key]=true;
-  render();
-}
-function saveOtherEdit(){
-  otherEditMode=false;otherEditSnapshot=null;
-  document.body.classList.remove('other-edit-mode');
-  const bar=document.getElementById('otherEditBar');if(bar)bar.classList.remove('show');
-  save();render();
-}
-function cancelOtherEdit(){
-  if(otherEditSnapshot!==null)oD=JSON.parse(otherEditSnapshot);
-  otherEditMode=false;otherEditSnapshot=null;
-  document.body.classList.remove('other-edit-mode');
-  const bar=document.getElementById('otherEditBar');if(bar)bar.classList.remove('show');
-  render();
-}
-function updateOtherTrigger(){
-  const btn=document.getElementById('otherEditTrigger');if(!btn)return;
-  if(otherEditMode){btn.className='other-edit-trigger';return;}
-  btn.className='other-edit-trigger show';
-  btn.textContent=otherName?'📅 輸入 '+otherName+' 的上班日':'📅 輸入上班日';
-}
-function setOtherDay(val){
-  if(!selKey)return;
-  if(oD[selKey]===val)delete oD[selKey];else oD[selKey]=val;
-  save();render();updateOtherBtns();
-}
-function updateOtherBtns(){
-  if(!selKey)return;
-  const v=oD[selKey];
-  const on=document.getElementById('odbOn'),off=document.getElementById('odbOff');
-  if(on){on.classList.toggle('active',v===true);}
-  if(off){off.classList.toggle('active',v===false);}
-}
 // ── 時數資料 ──
 let hD={};
 let nianTotal=0,yanTotal=0,jijiInit=21.45;
 let yrs=[],hireDate='',selYr=0,yrDelIdx=-1;
+let jrs=[],jrDelIdx=-1;
 try{const s=localStorage.getItem('megan_hours');if(s)hD=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('megan_hours_cfg');if(s){const c=JSON.parse(s);
   jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;
   hireDate=c.hireDate||'';
   if(Array.isArray(c.yrs)&&c.yrs.length)yrs=c.yrs.map(y=>({s:y.s,e:y.e,nian:parseFloat(y.nian)||0,yan:parseFloat(y.yan)||0,cashHr:parseFloat(y.cashHr)||0,cashAmt:parseFloat(y.cashAmt)||0,cashNote:y.cashNote||'',jr:!!y.jr,ji:parseFloat(y.ji)||0}));
   else{const n=parseFloat(c.nianTotal),ya=parseFloat(c.yanTotal);yrs=[{s:'0000-01-01',e:'9999-12-31',nian:isNaN(n)?0:n,yan:isNaN(ya)?0:ya,cashHr:0,cashAmt:0,cashNote:''}];}
+  if(Array.isArray(c.jrs))jrs=c.jrs.map(r=>({d:r.d,v:parseFloat(r.v)||0})).filter(r=>r.d);
+  else jrs=yrs.filter(y=>y.jr&&y.s!=='0000-01-01').map(y=>({d:y.s,v:parseFloat(y.ji)||0}));
 }}catch(e){}
+sortJrs();
 if(!yrs.length)yrs=[{s:'0000-01-01',e:'9999-12-31',nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:''}];
 sortYrs();selYr=curYrIdx();autoRollYr();selYr=curYrIdx();syncYr();
 function sortYrs(){yrs.sort((a,b)=>a.s<b.s?-1:(a.s>b.s?1:0));}
+function sortJrs(){jrs.sort((a,b)=>a.d<b.d?-1:(a.d>b.d?1:0));}
 function newYr(s,e){return{s:s,e:e,nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:'',jr:false,ji:0};}
 function addDaysK(k,n){const d=kd(k);d.setDate(d.getDate()+n);return dk(d);}
 function addYearsK(k,n){const d=kd(k);d.setFullYear(d.getFullYear()+n);return dk(d);}
@@ -990,7 +911,7 @@ function curYrIdx(){return yrIdxClamp(dk(new Date()));}
 function ymdTxt(k){const d=kd(k);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
 function yrLabel(i){const y=yrs[i];if(!y)return'未設定';if(isLegacyYr(y))return'全部期間（年度未設定）';return ymdTxt(y.s)+' － '+ymdTxt(y.e);}
 function syncYr(){const y=yrs[selYr];nianTotal=y?y.nian:0;yanTotal=y?y.yan:0;}
-function saveCfg(){try{localStorage.setItem('megan_hours_cfg',JSON.stringify({jijiInit:jijiInit,hireDate:hireDate,yrs:yrs}));}catch(e){}}
+function saveCfg(){try{localStorage.setItem('megan_hours_cfg',JSON.stringify({jijiInit:jijiInit,hireDate:hireDate,yrs:yrs,jrs:jrs}));}catch(e){}}
 function saveHours(){try{localStorage.setItem('megan_hours',JSON.stringify(hD));}catch(e){}}
 function toggleHoursConfirm(key,type){
   const e=hD[key];if(!e)return;
@@ -1006,7 +927,7 @@ function saveSettings(){
   yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
   let jv2=jv===''?0:parseFloat(jv);if(isNaN(jv2))jv2=0;
   const jw=jijiWindow(dk(new Date()));
-  if(jw.yi>=0)yrs[jw.yi].ji=jv2;else jijiInit=jv2;
+  if(jw.ri>=0)jrs[jw.ri].v=jv2;else jijiInit=jv2;
   if(yrs[selYr]){yrs[selYr].nian=nianTotal;yrs[selYr].yan=yanTotal;}
   saveCfg();
   refreshBalance();renderYrList();
@@ -1015,7 +936,7 @@ function saveSettings(){
 function shiftYr(d){const n=selYr+d;if(n<0||n>=yrs.length||n>curYrIdx())return;selYr=n;refreshBalance();}
 function gotoCurYr(){selYr=curYrIdx();refreshBalance();}
 function setYrMsg(t){const el=document.getElementById('yrMsg');if(!el)return;el.textContent=t||'';el.style.display=t?'block':'none';}
-function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;setYrMsg('');renderYrList();document.getElementById('yrOverlay').classList.add('open');}
+function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;jrDelIdx=-1;setYrMsg('');renderYrList();renderJrList();document.getElementById('yrOverlay').classList.add('open');}
 function closeYrSheet(){yrDelIdx=-1;document.getElementById('yrOverlay').classList.remove('open');}
 function saveHire(){hireDate=document.getElementById('hireInput').value||'';saveCfg();}
 function buildFirstYr(){
@@ -1045,7 +966,7 @@ function autoRollYr(){
     const leftY=Math.max(0,last.yan-calcYanUsed(li));
     const sk=addDaysK(last.e,1);
     const y=newYr(sk,yrEndFrom(sk));
-    y.yan=fmtH(leftN+leftY);y.jr=!!last.jr;y.ji=0;
+    y.yan=fmtH(leftN+leftY);
     yrs.push(y);changed=true;
   }
   if(changed){selYr=curYrIdx();saveCfg();}
@@ -1062,7 +983,6 @@ function updYr(i,f,v){
   const y=yrs[i];if(!y)return;
   if(f==='s'){if(!v)return;y.s=v;y.e=yrEndFrom(v);sortYrs();selYr=curYrIdx();}
   else if(f==='cashNote')y.cashNote=v;
-  else if(f==='jr')y.jr=!!v;
   else{const n=parseFloat(v);y[f]=isNaN(n)?0:n;}
   saveCfg();refreshBalance();renderYrList();
 }
@@ -1088,21 +1008,57 @@ function renderYrList(){
     h+='<div class="yr-line"><span class="yr-lb">年假</span><input class="yr-in" type="number" min="0" step="any" value="'+y.nian+'" onchange="updYr('+i+',\'nian\',this.value)"><span class="yr-lb s">hr　延年休</span><input class="yr-in" type="number" min="0" step="any" value="'+y.yan+'" onchange="updYr('+i+',\'yan\',this.value)"><span class="yr-lb s">hr</span></div>';
     h+='<div class="yr-line"><span class="yr-lb">代金</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashHr||0)+'" onchange="updYr('+i+',\'cashHr\',this.value)"><span class="yr-lb s">hr　金額 $</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashAmt||0)+'" onchange="updYr('+i+',\'cashAmt\',this.value)"></div>';
     h+='<div class="yr-line"><span class="yr-lb">備註</span><input class="yr-in wide" type="text" value="'+escapeHtml(y.cashNote||'')+'" placeholder="例：未休折現" onchange="updYr('+i+',\'cashNote\',this.value)"></div>';
-    if(!leg)h+='<div class="yr-reset"><input type="checkbox" id="yrJr'+i+'"'+(y.jr?' checked':'')+' onchange="updYr('+i+',\'jr\',this.checked)"><label for="yrJr'+i+'">年度起積休重新計算</label>'+(y.jr?'<span class="yr-lb s">起始值</span><input class="yr-in jiji" type="number" step="any" value="'+(y.ji||0)+'" onchange="updYr('+i+',\'ji\',this.value)"><span class="yr-lb s">hr</span>':'')+'</div>';
-    h+='<div class="yr-used">年休　已用 '+fmtH(nU)+' / '+fmtH(y.nian)+'　剩 '+fmtH(y.nian-nU)+' hr<br>延休　已用 '+fmtH(yU)+' / '+fmtH(y.yan)+'　剩 '+fmtH(y.yan-yU)+' hr'+(leg?'':'<br>積休　'+(y.jr?'自 '+ymdTxt(y.s)+' 起以 '+fmtH(y.ji||0)+' hr 重新計算':'延續前期累計，不重設'))+'</div>';
+    h+='<div class="yr-used">年休　已用 '+fmtH(nU)+' / '+fmtH(y.nian)+'　剩 '+fmtH(y.nian-nU)+' hr<br>延休　已用 '+fmtH(yU)+' / '+fmtH(y.yan)+'　剩 '+fmtH(y.yan-yU)+' hr'+'</div>';
     h+='</div>';
   });
   el.innerHTML=h;
 }
 // 積休重設點：回傳截至 cutKey 生效的起始值與計算區間
 function jijiWindow(cutKey){
-  let base=jijiInit,from='0000-01-01',to='9999-12-31',yi=-1;
-  const rs=yrs.map((y,i)=>({y:y,i:i})).filter(o=>o.y.jr&&!isLegacyYr(o.y)).sort((a,b)=>a.y.s<b.y.s?-1:1);
-  for(let n=0;n<rs.length;n++){
-    if(rs[n].y.s<=cutKey){base=rs[n].y.ji||0;from=rs[n].y.s;yi=rs[n].i;}
-    else{to=addDaysK(rs[n].y.s,-1);break;}
+  let base=jijiInit,from='0000-01-01',to='9999-12-31',ri=-1;
+  for(let n=0;n<jrs.length;n++){
+    if(jrs[n].d<=cutKey){base=jrs[n].v||0;from=jrs[n].d;ri=n;}
+    else{to=addDaysK(jrs[n].d,-1);break;}
   }
-  return{base:base,from:from,to:to,yi:yi};
+  return{base:base,from:from,to:to,ri:ri};
+}
+// ── 積休重設點：自己 key 日期，與到職週年年度無關 ──
+function addJr(){
+  const el=document.getElementById('jrDateInput');
+  const v=(el&&el.value)||dk(new Date());
+  if(jrs.some(r=>r.d===v)){setYrMsg('這個日期已經有重設點了');return;}
+  jrs.push({d:v,v:0});sortJrs();jrDelIdx=-1;
+  if(el)el.value='';
+  setYrMsg('已建立積休重設點 '+ymdTxt(v)+'，起始值預設 0，可直接修改');
+  saveCfg();refreshBalance();renderJrList();
+}
+function updJr(i,f,v){
+  const r=jrs[i];if(!r)return;
+  if(f==='d'){if(!v)return;if(jrs.some((o,n)=>n!==i&&o.d===v)){setYrMsg('這個日期已經有重設點了');renderJrList();return;}r.d=v;sortJrs();}
+  else{const n=parseFloat(v);r.v=isNaN(n)?0:n;}
+  jrDelIdx=-1;saveCfg();refreshBalance();renderJrList();
+}
+function delJr(i){
+  if(jrDelIdx!==i){jrDelIdx=i;renderJrList();return;}
+  jrs.splice(i,1);jrDelIdx=-1;
+  saveCfg();refreshBalance();renderJrList();setYrMsg('已刪除該重設點');
+}
+function cancelDelJr(){jrDelIdx=-1;renderJrList();}
+function renderJrList(){
+  const el=document.getElementById('jrList');if(!el)return;
+  if(!jrs.length){el.innerHTML='<div class="yr-setup-note" style="margin-top:8px">目前沒有重設點，積休會從「積休初始」一路累計。</div>';return;}
+  const cw=jijiWindow(dk(new Date()));let h='';
+  jrs.forEach((r,i)=>{
+    h+='<div class="jr-item'+(cw.ri===i?' cur':'')+'">';
+    h+='<input class="yr-in date" type="date" value="'+r.d+'" onchange="updJr('+i+',\'d\',this.value)">';
+    h+='<span class="yr-lb s">起始</span><input class="yr-in jiji" type="number" step="any" value="'+(r.v||0)+'" onchange="updJr('+i+',\'v\',this.value)"><span class="yr-lb s">hr</span>';
+    if(cw.ri===i)h+='<span class="jr-cur-badge">計算中</span>';
+    h+=(jrDelIdx===i
+      ?'<button class="yr-del on" onclick="delJr('+i+')">確定刪除</button><button class="yr-del back" onclick="cancelDelJr()">返回</button>'
+      :'<button class="yr-del" onclick="delJr('+i+')">✕</button>');
+    h+='</div>';
+  });
+  el.innerHTML=h;
 }
 function calcJijiBalance(cutKey){
   const w=jijiWindow(cutKey||dk(new Date()));
@@ -1126,8 +1082,8 @@ function refreshBalance(){
   const yi=document.getElementById('yanTotalInput');if(yi)yi.value=yanTotal;
   const jw=jijiWindow(dk(new Date()));
   const jl=document.getElementById('jijiInitLabel');
-  if(jl)jl.textContent=(jw.yi>=0?'積休起始（'+ymdTxt(jw.from)+' 起）：':'積休初始：');
-  const ji=document.getElementById('jijiInitInput');if(ji)ji.value=(jw.yi>=0?yrs[jw.yi].ji:jijiInit);
+  if(jl)jl.textContent=(jw.ri>=0?'積休起始（'+ymdTxt(jw.from)+' 起）：':'積休初始：');
+  const ji=document.getElementById('jijiInitInput');if(ji)ji.value=(jw.ri>=0?(jrs[jw.ri].v||0):jijiInit);
   const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
   const yanU=calcYanUsed(),yanB=yanTotal-yanU;
   function r2(v){return parseFloat(v.toFixed(2));}
@@ -1163,7 +1119,7 @@ function calcBalanceUntil(cutKey){
   const jw=jijiWindow(cutKey);
   const jr=calcRange(jw.from,cutKey<jw.to?cutKey:jw.to);
   return{addJ:jr.addJ,takeJ:jr.takeJ,extraJ:jr.extraJ,jiji:jw.base+jr.net,
-    jijiBase:jw.base,jijiFrom:jw.from,jijiReset:jw.yi>=0,
+    jijiBase:jw.base,jijiFrom:jw.from,jijiReset:jw.ri>=0,
     nianU:inY.nianU,nianB:y.nian-inY.nianU,nianT:y.nian,
     yanU:inY.yanU,yanB:y.yan-inY.yanU,yanT:y.yan,
     yrIdx:yi,cashHr:y.cashHr||0,cashAmt:y.cashAmt||0,
@@ -1608,7 +1564,7 @@ function deletePlanItem(idx){
   save();renderPlanList();render();renderRecList();
 }
 function autoClean(){
-  // 換班／備註／行程／同事紀錄全部永久保留，只清過月的舊圖片
+  // 換班／備註／行程紀錄全部永久保留，只清過月的舊圖片
   cleanOldPhotos();
 }
 function save(){
@@ -1616,10 +1572,9 @@ function save(){
   try{localStorage.setItem('megan_dswaps',JSON.stringify(dS));}catch(e){}
   try{localStorage.setItem('megan_notes',JSON.stringify(nS));}catch(e){}
   try{localStorage.setItem('megan_plans',JSON.stringify(pS));}catch(e){}
-  try{localStorage.setItem('megan_other',JSON.stringify(oD));}catch(e){}
 }
 function exportBackup(){
-  const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_plan_cats','megan_other','megan_other_name','megan_hours','megan_hours_cfg','megan_allow_adj','megan_allow_confirmed','megan_swap_names'];
+  const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_plan_cats','megan_hours','megan_hours_cfg','megan_allow_adj','megan_allow_confirmed','megan_swap_names'];
   const data={_version:1,_exported:new Date().toISOString()};
   keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v;});
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -1637,7 +1592,7 @@ function importBackup(e){
       const data=JSON.parse(ev.target.result);
       if(!data._version){alert('格式不符，請選擇正確的備份檔');return;}
       if(!confirm('匯入後將覆蓋目前所有資料，確定繼續？'))return;
-      const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_plan_cats','megan_other','megan_other_name','megan_hours','megan_hours_cfg','megan_allow_adj','megan_allow_confirmed','megan_swap_names'];
+      const keys=['megan_wswaps','megan_dswaps','megan_notes','megan_plans','megan_plan_cats','megan_hours','megan_hours_cfg','megan_allow_adj','megan_allow_confirmed','megan_swap_names'];
       keys.forEach(k=>{if(data[k]!==undefined)localStorage.setItem(k,data[k]);else localStorage.removeItem(k);});
       alert('匯入成功！即將重新載入。');location.reload();
     }catch(err){alert('匯入失敗：'+err.message);}
@@ -1689,12 +1644,11 @@ function render(){
     let cls='cell';
     if(key===tk)cls+=' today';if(wS[mk])cls+=' swapped';if(dm)cls+=' day-mod';
     if(selKey===key)cls+=' selected';if(hasNote)cls+=' has-note';
-    if(oD[key])cls+=' other-working';
     if(isTop)cls+=' z-top';if(isBottom)cls+=' z-bottom';if(isLeft)cls+=' z-left';if(isRight)cls+=' z-right';
-    cell.className=cls;cell.dataset.key=key;cell.onclick=otherEditMode?()=>toggleOtherDay(key):()=>showQuickActions(key);
+    cell.className=cls;cell.dataset.key=key;cell.onclick=()=>showQuickActions(key);
     if(isMon||isFirst){
       const b=document.createElement('div');b.className='badge';b.textContent=origNum;
-      b.onclick=function(e){e.stopPropagation();if(otherEditMode){toggleOtherDay(key);}else{openWeekSheet(key);}};
+      b.onclick=function(e){e.stopPropagation();openWeekSheet(key);};
       cell.appendChild(b);
     }
     const top=document.createElement('div');top.className='top';
@@ -1709,14 +1663,14 @@ function render(){
     if(isDayMod){shiftMain.style.color='#a83232';shiftMain.style.fontWeight='700';}
     bot.appendChild(shiftMain);bot.appendChild(hoursTags);bot.appendChild(swapTags);
     if(he){
-      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'jiji');};hoursTags.appendChild(b);}
-      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'nian');};hoursTags.appendChild(b);}
-      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'yan');};hoursTags.appendChild(b);}
+      if(he.jiji>0){const cf=!!he.jijiConfirmed;const b=document.createElement('span');b.className='hbadge tappable '+(he.jijiDir==='+'?'hb-j-p':'hb-j-m')+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'積'+(he.jijiDir==='+'?'＋':'－')+fmtH(he.jiji);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'jiji');};hoursTags.appendChild(b);}
+      if(he.nian>0){const cf=!!he.nianConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-n-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'年－'+fmtH(he.nian);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'nian');};hoursTags.appendChild(b);}
+      if(he.yan>0){const cf=!!he.yanConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-y-m'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'延－'+fmtH(he.yan);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'yan');};hoursTags.appendChild(b);}
       if(typeof he.sick==='string'&&he.sick){const b=document.createElement('span');b.className='hbadge '+(he.sick==='公'?'hb-gong':'hb-sick');b.textContent=he.sick+'假';hoursTags.appendChild(b);}
-      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};hoursTags.appendChild(b);}
-      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};hoursTags.appendChild(b);}
-      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'tz');};hoursTags.appendChild(b);}
-      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){if(otherEditMode)return;ev.stopPropagation();toggleHoursConfirm(key,'hw');};hoursTags.appendChild(b);}
+      if(he.tzCash){const cf=!!he.tzCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tzc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災金';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tzCash');};hoursTags.appendChild(b);}
+      if(he.hwCash){const cf=!!he.hwCashConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hwc'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國金';b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hwCash');};hoursTags.appendChild(b);}
+      if(he.tz){const cf=!!he.tzConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-tz'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'災＋'+fmtH(he.tz);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'tz');};hoursTags.appendChild(b);}
+      if(he.hw){const cf=!!he.hwConfirmed;const b=document.createElement('span');b.className='hbadge tappable hb-hw'+(cf?' confirmed':'');b.textContent=(cf?'✓':'')+'國＋'+fmtH(he.hw);b.onclick=function(ev){ev.stopPropagation();toggleHoursConfirm(key,'hw');};hoursTags.appendChild(b);}
       if(he.allow12===false&&s.startsWith('12-8')){const b=document.createElement('span');b.className='hbadge hb-j-m';b.textContent='無津貼';hoursTags.appendChild(b);}
     }
     if(wS[mk]){
@@ -1725,7 +1679,6 @@ function render(){
       const showSwapTag=key>=tk&&(swapFinal==='?'||swapFinal===''||swapFinal==null);
       if(showSwapTag){const b=document.createElement('span');b.className='hbadge hb-swap';b.textContent='⇄'+((lg&&lg.who)?lg.who.slice(0,3):'換班');swapTags.appendChild(b);}
     }
-    if(oD[key]===true&&otherName){const b=document.createElement('span');b.className='hbadge hb-other';b.textContent=otherName.slice(0,2)+'班';swapTags.appendChild(b);}
     const planArea=document.createElement('div');planArea.className='cell-plans';
     const dayPlans=pS[key]?(Array.isArray(pS[key])?pS[key]:upgradePlan(pS[key])):[];
     const observance=h||MEMO[key];
@@ -1742,7 +1695,6 @@ function render(){
   // 補滿最後一排
   const totalCells=off+totalDays,remainder=totalCells%7;
   if(remainder!==0){const trailing=7-remainder;for(let i=0;i<trailing;i++){const e=document.createElement('div');e.className='cell empty';const t=document.createElement('div');t.className='top';const b=document.createElement('div');b.className='bot';e.appendChild(t);e.appendChild(b);g.appendChild(e);}}
-  updateOtherTrigger();
 }
 function showQuickActions(key){
   pendingKey=key;
@@ -1800,12 +1752,6 @@ function openDaySheet(key){
   else{dayHolEl.style.display='none';}
   renderShiftBtns(dS[key]||curShift);
   document.getElementById('dayNote').value=nS[key]||'';
-  const otherTrackRow=document.getElementById('otherTrackRow');
-  if(otherTrackRow){
-    otherTrackRow.classList.toggle('show',!!otherName);
-    const lbl=document.getElementById('otherPersonLabel');if(lbl)lbl.textContent=otherName||'同事';
-    updateOtherBtns();
-  }
   document.getElementById('dayOverlay').classList.add('open');
 }
 function closeDaySheet(){document.getElementById('dayOverlay').classList.remove('open');}
@@ -2056,7 +2002,6 @@ const sel=document.getElementById('numSel');
 for(let i=1;i<=36;i++){const o=document.createElement('option');o.value=i;o.textContent='號碼班 '+i;sel.appendChild(o);}
 collectSwapNames();autoClean();renderRecList();render();updateTodayBtn();renderSwapBar();
 document.getElementById('jijiInitInput').value=jijiInit;
-document.getElementById('otherNameInput').value=otherName;
 refreshBalance();refreshAllow();renderZoneRecList();renderYrList();
 </script>
 <!-- 燈箱 -->
@@ -2068,11 +2013,6 @@ refreshBalance();refreshAllow();renderZoneRecList();renderYrList();
     <span class="lb-counter" id="lbCounter"></span>
     <button class="lb-btn" onclick="lbNav(1)">›</button>
   </div>
-</div>
-<div class="other-edit-bar" id="otherEditBar">
-  <span class="oeb-label" id="oebLabel">輸入上班日<span class="oeb-hint">點格子切換有班 ↔ 清除</span></span>
-  <button class="oeb-cancel" onclick="cancelOtherEdit()">取消</button>
-  <button class="oeb-save" onclick="saveOtherEdit()">儲存</button>
 </div>
 </body>
 </html>
