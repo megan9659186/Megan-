@@ -244,13 +244,13 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 /* 浮層 */
 .hours-overlay{display:none;position:fixed;inset:0;background:rgba(20,18,16,0.45);z-index:300;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 .hours-overlay.open{display:flex}
-.hours-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
-.hs-handle{padding:12px 0 0;display:flex;justify-content:center}
+.hours-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;display:flex;flex-direction:column;padding:0 0 env(safe-area-inset-bottom,16px);animation:hup 0.25s cubic-bezier(0.34,1.2,0.64,1)}
+.hs-handle{padding:12px 0 0;display:flex;justify-content:center;flex-shrink:0}
 .hs-handle-bar{width:36px;height:3px;background:var(--border2);border-radius:99px}
-.hs-head{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.hs-head{padding:14px 18px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .hs-date{font-family:'Libre Baskerville',serif;font-size:17px;font-weight:400;color:var(--ink)}
 .hs-shift{font-size:12px;color:var(--ink3);margin-top:2px}
-.hs-body{padding:16px 18px 18px}
+.hs-body{padding:16px 18px 18px;flex:1 1 auto;min-height:0;max-height:72vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .hs-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .hs-row-label{font-size:12px;font-weight:600;width:28px;flex-shrink:0;letter-spacing:0.3px;text-transform:uppercase}
 .hs-row-label.j{color:#4a7a5a}
@@ -605,7 +605,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="hs-date" id="weekDate"></div>
       <div class="hs-shift" id="weekShift"></div>
     </div>
-    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+    <div class="hs-body">
       <div class="field-label">換成哪個號碼班</div>
       <select id="numSel" onchange="renderPreview()"><option value="">-- 選擇 --</option></select>
       <div id="preview" style="display:none">
@@ -636,7 +636,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="hs-shift" id="dayShift"></div>
       <div class="panel-hol" id="dayHol" style="margin-top:4px"></div>
     </div>
-    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+    <div class="hs-body">
       <div class="field-label">選擇班別</div>
       <div class="shift-btns" id="shiftBtns"></div>
       <div class="field-label" style="margin-top:14px">備註</div>
@@ -657,7 +657,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="hs-date" id="planDate"></div>
       <div class="hs-shift" id="planShift"></div>
     </div>
-    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+    <div class="hs-body">
       <div class="field-label">📌 當天的事／行程</div>
       <ul class="plan-list" id="planList"></ul>
       <div class="plan-add-row">
@@ -684,7 +684,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
       <div class="hs-date" id="balDate"></div>
       <div class="hs-shift" id="balSub"></div>
     </div>
-    <div class="hs-body" style="max-height:72vh;overflow-y:auto">
+    <div class="hs-body">
       <div class="field-label">查詢區間（起 － 訖）</div>
       <div class="bal-range">
         <input class="bal-date" id="balStart" type="date" onchange="renderBal()">
