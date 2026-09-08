@@ -153,17 +153,17 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 /* ── 時數功能 ── */
 .hours-summary{display:flex;gap:6px;margin-top:10px}
 .hs-card{flex:1;border-radius:var(--radius-sm);padding:8px 9px;border:1px solid var(--border);background:var(--surface)}
-.hs-card.jiji{background:#f0f7f2;border-color:#c8ddd0}
-.hs-card.nian{background:#f2f0f8;border-color:#ccc8dc}
-.hs-card.yan{background:#fdf6e8;border-color:#e0cc90}
+.hs-card.jiji{background:#f5e7c8;border-color:#ddc38f}
+.hs-card.nian{background:#ead6cf;border-color:#d2afa4}
+.hs-card.yan{background:#e9c8b3;border-color:#cf9f83}
 .hs-card-label{font-size:14px;font-weight:700;letter-spacing:.8px;margin-bottom:4px;text-transform:uppercase}
-.hs-card.jiji .hs-card-label{color:#4a7a5a}
-.hs-card.nian .hs-card-label{color:#6a5a90}
-.hs-card.yan  .hs-card-label{color:#8a6800}
+.hs-card.jiji .hs-card-label{color:#8d682d}
+.hs-card.nian .hs-card-label{color:#8b5d55}
+.hs-card.yan  .hs-card-label{color:#955b3d}
 .hs-card-val{font-family:'Libre Baskerville',serif;font-size:21px;font-weight:400;line-height:1}
-.hs-card.jiji .hs-card-val{color:#1a4a2a}
-.hs-card.nian .hs-card-val{color:#3a2a70}
-.hs-card.yan  .hs-card-val{color:#8a6800}
+.hs-card.jiji .hs-card-val{color:#684715}
+.hs-card.nian .hs-card-val{color:#663d37}
+.hs-card.yan  .hs-card-val{color:#6f391f}
 .hs-card-unit{font-size:10px;color:var(--ink3);margin-top:2px}
 /* 年休/延年休進度條 */
 .nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
@@ -177,7 +177,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .nts-group{display:flex;align-items:center;gap:6px}
 .nts-label{font-size:13px;color:var(--ink3)}
 .nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
-.nts-input.jiji-color{color:#1a4a2a}
+.nts-input.jiji-color{color:#684715}
 /* 年度 / 代金 */
 .yr-nav-btn{background:transparent;border:1.5px solid var(--border2);border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;color:var(--ink2);padding:0;flex-shrink:0}
 .yr-nav-btn:active{background:var(--surface2)}
@@ -205,7 +205,12 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .yr-reset{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px;padding-top:8px;border-top:1px dashed var(--border)}
 .yr-reset input[type=checkbox]{width:15px;height:15px;accent-color:#4a7a5a;margin:0}
 .yr-reset label{font-size:12px;color:#1a4a2a;font-weight:600;cursor:pointer}
-.yr-in.jiji{color:#1a4a2a}
+.yr-in.jiji{color:#684715}
+.jr-sec{margin-top:16px;padding-top:13px;border-top:1px dashed var(--border)}
+.jr-sec-title{font-size:13px;font-weight:600;color:#684715;margin-bottom:9px}
+.jr-item{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;background:#f5e7c8;border:1px solid #ddc38f;border-radius:var(--radius-sm);padding:8px 10px}
+.jr-item.cur{box-shadow:inset 0 0 0 1.5px #8d682d}
+.jr-cur-badge{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;background:#ddc38f;color:#684715}
 .yr-used{font-size:11px;color:var(--ink3);margin-top:9px;padding-top:7px;border-top:1px dashed var(--border);line-height:1.6}
 .yr-msg{font-size:12px;color:#8a6800;background:#fdf6e8;border:1px solid #e0cc90;border-radius:var(--radius-sm);padding:8px 10px;margin-top:10px;display:none}
 /* 本區間積休明細 */
@@ -213,17 +218,19 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:10px}
 .zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .zone-rec-nav button:active{background:var(--surface2)}
-.zone-rec-title{font-size:13px;font-weight:600;color:#4a7a5a}
+.zone-rec-title{font-size:13px;font-weight:600;color:#8e6242}
 .zone-rec-range{text-align:center;font-size:11px;color:var(--ink3);margin-top:1px;margin-bottom:3px}
 .zone-today-btn{display:none;margin:0 auto 6px;padding:2px 10px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
 .zone-today-btn:active{background:var(--surface2)}
 .zone-rec-summary{display:flex;gap:6px}
 .zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:11px 8px;text-align:center;border:1px solid var(--border)}
-.zone-rec-box.add{background:#f0f7f2;border-color:#c8ddd0}
-.zone-rec-box.take{background:#faf0ee;border-color:#e0c8c4}
+.zone-rec-box.add{background:#f5e7c8;border-color:#ddc38f}
+.zone-rec-box.take{background:#e6d8ca;border-color:#cbb29c}
 .zone-rec-box-label{font-size:13px;font-weight:700;color:var(--ink3);margin-bottom:4px}
-.zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
-.zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.add .zone-rec-box-label{color:#8d682d}
+.zone-rec-box.take .zone-rec-box-label{color:#80624d}
+.zone-rec-box.add .zone-rec-box-val{color:#684715;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.take .zone-rec-box-val{color:#5f4331;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 /* hbadge */
 .hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:1px 3px;border-radius:4px;line-height:1.2;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bot.overtime{color:#8b2020!important;font-weight:600}
@@ -418,10 +425,10 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
 /* 備份匯出入 */
 .backup-row{display:flex;gap:8px;margin-top:10px}
 .backup-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
-.backup-btn.export{background:#f0f7f2;color:#1a4a2a;border:1px solid #c8ddd0}
-.backup-btn.export:active{background:#ddeee5}
-.backup-btn.import{background:#f2f0f8;color:#3a2a70;border:1px solid #ccc8dc}
-.backup-btn.import:active{background:#e4e0f0}
+.backup-btn.export{background:#f5e7c8;color:#684715;border:1px solid #ddc38f}
+.backup-btn.export:active{background:#ecd7ad}
+.backup-btn.import{background:#ead6cf;color:#663d37;border:1px solid #d2afa4}
+.backup-btn.import:active{background:#dfc5bc}
 /* 夜班津貼 */
 .allow-wrap{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .allow-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -773,7 +780,16 @@ body.other-edit-mode .cell.other-working{box-shadow:inset 0 0 0 2px #2a4060}
       </div>
       <div class="yr-msg" id="yrMsg"></div>
       <div id="yrList"></div>
-      <div class="bal-note" id="yrNote">＊ 新年度會在到職週年當天自動產生，上年度剩餘的年休＋延休自動帶入新年度的「延年休」，你只要填入新年度的年假時數。若其中有一部分是折代金而非續用，把延年休改成實際續用時數，再回到上年度卡片填代金時數與金額即可。<br>＊ 若你的積休會在到職週年當天歸零，勾選「年度起積休重新計算」並填起始值（通常是 0）；不勾就會一路累計不中斷。設定會自動沿用到往後的每個年度。</div>
+      <div class="jr-sec">
+        <div class="jr-sec-title">積休重設點（結算日）</div>
+        <div class="yr-line" style="margin-top:0">
+          <span class="yr-lb">結算日</span>
+          <input class="yr-in date" id="jrDateInput" type="date" onchange="addJr()">
+        </div>
+        <div id="jrList"></div>
+        <div class="yr-setup-note">積休結算日和到職日不同，所以在這裡自己 key 日期，選好日期就會直接建立。積休會從<b>最近一次重設點</b>的起始時數往後累計；起始值預設 0，若前一期有剩餘要結轉，直接改成剩餘時數即可。沒有設任何重設點就會一路累計不中斷。</div>
+      </div>
+      <div class="bal-note" id="yrNote">＊ 新年度會在到職週年當天自動產生，上年度剩餘的年休＋延休自動帶入新年度的「延年休」，你只要填入新年度的年假時數。若其中有一部分是折代金而非續用，把延年休改成實際續用時數，再回到上年度卡片填代金時數與金額即可。<br>＊ 積休的結算日和到職日不同，已獨立成下方「積休重設點」，每年結算日自己 key 一筆即可，不受年度區間影響。</div>
       <button class="hs-btn-cancel" style="width:100%;margin-top:16px" onclick="closeYrSheet()">關閉</button>
     </div>
   </div>
@@ -969,16 +985,21 @@ function updateOtherBtns(){
 let hD={};
 let nianTotal=0,yanTotal=0,jijiInit=0;
 let yrs=[],hireDate='',selYr=0,yrDelIdx=-1;
+let jrs=[],jrDelIdx=-1;
 try{const s=localStorage.getItem('cow_hours');if(s)hD=JSON.parse(s);}catch(e){}
 try{const s=localStorage.getItem('cow_hours_cfg');if(s){const c=JSON.parse(s);
   jijiInit=parseFloat(c.jijiInit);if(isNaN(jijiInit))jijiInit=0;
   hireDate=c.hireDate||'';
   if(Array.isArray(c.yrs)&&c.yrs.length)yrs=c.yrs.map(y=>({s:y.s,e:y.e,nian:parseFloat(y.nian)||0,yan:parseFloat(y.yan)||0,cashHr:parseFloat(y.cashHr)||0,cashAmt:parseFloat(y.cashAmt)||0,cashNote:y.cashNote||'',jr:!!y.jr,ji:parseFloat(y.ji)||0}));
   else{const n=parseFloat(c.nianTotal),ya=parseFloat(c.yanTotal);yrs=[{s:'0000-01-01',e:'9999-12-31',nian:isNaN(n)?0:n,yan:isNaN(ya)?0:ya,cashHr:0,cashAmt:0,cashNote:''}];}
+  if(Array.isArray(c.jrs))jrs=c.jrs.map(r=>({d:r.d,v:parseFloat(r.v)||0})).filter(r=>r.d);
+  else jrs=yrs.filter(y=>y.jr&&y.s!=='0000-01-01').map(y=>({d:y.s,v:parseFloat(y.ji)||0}));
 }}catch(e){}
+sortJrs();
 if(!yrs.length)yrs=[{s:'0000-01-01',e:'9999-12-31',nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:''}];
 sortYrs();selYr=curYrIdx();autoRollYr();selYr=curYrIdx();syncYr();
 function sortYrs(){yrs.sort((a,b)=>a.s<b.s?-1:(a.s>b.s?1:0));}
+function sortJrs(){jrs.sort((a,b)=>a.d<b.d?-1:(a.d>b.d?1:0));}
 function newYr(s,e){return{s:s,e:e,nian:0,yan:0,cashHr:0,cashAmt:0,cashNote:'',jr:false,ji:0};}
 function addDaysK(k,n){const d=kd(k);d.setDate(d.getDate()+n);return dk(d);}
 function addYearsK(k,n){const d=kd(k);d.setFullYear(d.getFullYear()+n);return dk(d);}
@@ -990,7 +1011,7 @@ function curYrIdx(){return yrIdxClamp(dk(new Date()));}
 function ymdTxt(k){const d=kd(k);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
 function yrLabel(i){const y=yrs[i];if(!y)return'未設定';if(isLegacyYr(y))return'全部期間（年度未設定）';return ymdTxt(y.s)+' － '+ymdTxt(y.e);}
 function syncYr(){const y=yrs[selYr];nianTotal=y?y.nian:0;yanTotal=y?y.yan:0;}
-function saveCfg(){try{localStorage.setItem('cow_hours_cfg',JSON.stringify({jijiInit:jijiInit,hireDate:hireDate,yrs:yrs}));}catch(e){}}
+function saveCfg(){try{localStorage.setItem('cow_hours_cfg',JSON.stringify({jijiInit:jijiInit,hireDate:hireDate,yrs:yrs,jrs:jrs}));}catch(e){}}
 function saveHours(){try{localStorage.setItem('cow_hours',JSON.stringify(hD));}catch(e){}}
 function toggleHoursConfirm(key,type){
   const e=hD[key];if(!e)return;
@@ -1006,7 +1027,7 @@ function saveSettings(){
   yanTotal=yv===''?0:parseFloat(yv);if(isNaN(yanTotal))yanTotal=0;
   let jv2=jv===''?0:parseFloat(jv);if(isNaN(jv2))jv2=0;
   const jw=jijiWindow(dk(new Date()));
-  if(jw.yi>=0)yrs[jw.yi].ji=jv2;else jijiInit=jv2;
+  if(jw.ri>=0)jrs[jw.ri].v=jv2;else jijiInit=jv2;
   if(yrs[selYr]){yrs[selYr].nian=nianTotal;yrs[selYr].yan=yanTotal;}
   saveCfg();
   refreshBalance();renderYrList();
@@ -1015,7 +1036,7 @@ function saveSettings(){
 function shiftYr(d){const n=selYr+d;if(n<0||n>=yrs.length||n>curYrIdx())return;selYr=n;refreshBalance();}
 function gotoCurYr(){selYr=curYrIdx();refreshBalance();}
 function setYrMsg(t){const el=document.getElementById('yrMsg');if(!el)return;el.textContent=t||'';el.style.display=t?'block':'none';}
-function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;setYrMsg('');renderYrList();document.getElementById('yrOverlay').classList.add('open');}
+function openYrSheet(){const hi=document.getElementById('hireInput');if(hi)hi.value=hireDate;yrDelIdx=-1;jrDelIdx=-1;setYrMsg('');renderYrList();renderJrList();document.getElementById('yrOverlay').classList.add('open');}
 function closeYrSheet(){yrDelIdx=-1;document.getElementById('yrOverlay').classList.remove('open');}
 function saveHire(){hireDate=document.getElementById('hireInput').value||'';saveCfg();}
 function buildFirstYr(){
@@ -1045,7 +1066,7 @@ function autoRollYr(){
     const leftY=Math.max(0,last.yan-calcYanUsed(li));
     const sk=addDaysK(last.e,1);
     const y=newYr(sk,yrEndFrom(sk));
-    y.yan=fmtH(leftN+leftY);y.jr=!!last.jr;y.ji=0;
+    y.yan=fmtH(leftN+leftY);
     yrs.push(y);changed=true;
   }
   if(changed){selYr=curYrIdx();saveCfg();}
@@ -1062,7 +1083,6 @@ function updYr(i,f,v){
   const y=yrs[i];if(!y)return;
   if(f==='s'){if(!v)return;y.s=v;y.e=yrEndFrom(v);sortYrs();selYr=curYrIdx();}
   else if(f==='cashNote')y.cashNote=v;
-  else if(f==='jr')y.jr=!!v;
   else{const n=parseFloat(v);y[f]=isNaN(n)?0:n;}
   saveCfg();refreshBalance();renderYrList();
 }
@@ -1088,21 +1108,57 @@ function renderYrList(){
     h+='<div class="yr-line"><span class="yr-lb">年假</span><input class="yr-in" type="number" min="0" step="any" value="'+y.nian+'" onchange="updYr('+i+',\'nian\',this.value)"><span class="yr-lb s">hr　延年休</span><input class="yr-in" type="number" min="0" step="any" value="'+y.yan+'" onchange="updYr('+i+',\'yan\',this.value)"><span class="yr-lb s">hr</span></div>';
     h+='<div class="yr-line"><span class="yr-lb">代金</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashHr||0)+'" onchange="updYr('+i+',\'cashHr\',this.value)"><span class="yr-lb s">hr　金額 $</span><input class="yr-in" type="number" min="0" step="any" value="'+(y.cashAmt||0)+'" onchange="updYr('+i+',\'cashAmt\',this.value)"></div>';
     h+='<div class="yr-line"><span class="yr-lb">備註</span><input class="yr-in wide" type="text" value="'+escapeHtml(y.cashNote||'')+'" placeholder="例：未休折現" onchange="updYr('+i+',\'cashNote\',this.value)"></div>';
-    if(!leg)h+='<div class="yr-reset"><input type="checkbox" id="yrJr'+i+'"'+(y.jr?' checked':'')+' onchange="updYr('+i+',\'jr\',this.checked)"><label for="yrJr'+i+'">年度起積休重新計算</label>'+(y.jr?'<span class="yr-lb s">起始值</span><input class="yr-in jiji" type="number" step="any" value="'+(y.ji||0)+'" onchange="updYr('+i+',\'ji\',this.value)"><span class="yr-lb s">hr</span>':'')+'</div>';
-    h+='<div class="yr-used">年休　已用 '+fmtH(nU)+' / '+fmtH(y.nian)+'　剩 '+fmtH(y.nian-nU)+' hr<br>延休　已用 '+fmtH(yU)+' / '+fmtH(y.yan)+'　剩 '+fmtH(y.yan-yU)+' hr'+(leg?'':'<br>積休　'+(y.jr?'自 '+ymdTxt(y.s)+' 起以 '+fmtH(y.ji||0)+' hr 重新計算':'延續前期累計，不重設'))+'</div>';
+    h+='<div class="yr-used">年休　已用 '+fmtH(nU)+' / '+fmtH(y.nian)+'　剩 '+fmtH(y.nian-nU)+' hr<br>延休　已用 '+fmtH(yU)+' / '+fmtH(y.yan)+'　剩 '+fmtH(y.yan-yU)+' hr'+'</div>';
     h+='</div>';
   });
   el.innerHTML=h;
 }
 // 積休重設點：回傳截至 cutKey 生效的起始值與計算區間
 function jijiWindow(cutKey){
-  let base=jijiInit,from='0000-01-01',to='9999-12-31',yi=-1;
-  const rs=yrs.map((y,i)=>({y:y,i:i})).filter(o=>o.y.jr&&!isLegacyYr(o.y)).sort((a,b)=>a.y.s<b.y.s?-1:1);
-  for(let n=0;n<rs.length;n++){
-    if(rs[n].y.s<=cutKey){base=rs[n].y.ji||0;from=rs[n].y.s;yi=rs[n].i;}
-    else{to=addDaysK(rs[n].y.s,-1);break;}
+  let base=jijiInit,from='0000-01-01',to='9999-12-31',ri=-1;
+  for(let n=0;n<jrs.length;n++){
+    if(jrs[n].d<=cutKey){base=jrs[n].v||0;from=jrs[n].d;ri=n;}
+    else{to=addDaysK(jrs[n].d,-1);break;}
   }
-  return{base:base,from:from,to:to,yi:yi};
+  return{base:base,from:from,to:to,ri:ri};
+}
+// ── 積休重設點：自己 key 日期，與到職週年年度無關 ──
+function addJr(){
+  const el=document.getElementById('jrDateInput');
+  const v=(el&&el.value)||dk(new Date());
+  if(jrs.some(r=>r.d===v)){setYrMsg('這個日期已經有重設點了');return;}
+  jrs.push({d:v,v:0});sortJrs();jrDelIdx=-1;
+  if(el)el.value='';
+  setYrMsg('已建立積休重設點 '+ymdTxt(v)+'，起始值預設 0，可直接修改');
+  saveCfg();refreshBalance();renderJrList();
+}
+function updJr(i,f,v){
+  const r=jrs[i];if(!r)return;
+  if(f==='d'){if(!v)return;if(jrs.some((o,n)=>n!==i&&o.d===v)){setYrMsg('這個日期已經有重設點了');renderJrList();return;}r.d=v;sortJrs();}
+  else{const n=parseFloat(v);r.v=isNaN(n)?0:n;}
+  jrDelIdx=-1;saveCfg();refreshBalance();renderJrList();
+}
+function delJr(i){
+  if(jrDelIdx!==i){jrDelIdx=i;renderJrList();return;}
+  jrs.splice(i,1);jrDelIdx=-1;
+  saveCfg();refreshBalance();renderJrList();setYrMsg('已刪除該重設點');
+}
+function cancelDelJr(){jrDelIdx=-1;renderJrList();}
+function renderJrList(){
+  const el=document.getElementById('jrList');if(!el)return;
+  if(!jrs.length){el.innerHTML='<div class="yr-setup-note" style="margin-top:8px">目前沒有重設點，積休會從「積休初始」一路累計。</div>';return;}
+  const cw=jijiWindow(dk(new Date()));let h='';
+  jrs.forEach((r,i)=>{
+    h+='<div class="jr-item'+(cw.ri===i?' cur':'')+'">';
+    h+='<input class="yr-in date" type="date" value="'+r.d+'" onchange="updJr('+i+',\'d\',this.value)">';
+    h+='<span class="yr-lb s">起始</span><input class="yr-in jiji" type="number" step="any" value="'+(r.v||0)+'" onchange="updJr('+i+',\'v\',this.value)"><span class="yr-lb s">hr</span>';
+    if(cw.ri===i)h+='<span class="jr-cur-badge">計算中</span>';
+    h+=(jrDelIdx===i
+      ?'<button class="yr-del on" onclick="delJr('+i+')">確定刪除</button><button class="yr-del back" onclick="cancelDelJr()">返回</button>'
+      :'<button class="yr-del" onclick="delJr('+i+')">✕</button>');
+    h+='</div>';
+  });
+  el.innerHTML=h;
 }
 function calcJijiBalance(cutKey){
   const w=jijiWindow(cutKey||dk(new Date()));
@@ -1126,8 +1182,8 @@ function refreshBalance(){
   const yi=document.getElementById('yanTotalInput');if(yi)yi.value=yanTotal;
   const jw=jijiWindow(dk(new Date()));
   const jl=document.getElementById('jijiInitLabel');
-  if(jl)jl.textContent=(jw.yi>=0?'積休起始（'+ymdTxt(jw.from)+' 起）：':'積休初始：');
-  const ji=document.getElementById('jijiInitInput');if(ji)ji.value=(jw.yi>=0?yrs[jw.yi].ji:jijiInit);
+  if(jl)jl.textContent=(jw.ri>=0?'積休起始（'+ymdTxt(jw.from)+' 起）：':'積休初始：');
+  const ji=document.getElementById('jijiInitInput');if(ji)ji.value=(jw.ri>=0?(jrs[jw.ri].v||0):jijiInit);
   const jijiB=calcJijiBalance(),nianU=calcNianUsed(),nianB=nianTotal-nianU;
   const yanU=calcYanUsed(),yanB=yanTotal-yanU;
   function r2(v){return parseFloat(v.toFixed(2));}
@@ -1163,7 +1219,7 @@ function calcBalanceUntil(cutKey){
   const jw=jijiWindow(cutKey);
   const jr=calcRange(jw.from,cutKey<jw.to?cutKey:jw.to);
   return{addJ:jr.addJ,takeJ:jr.takeJ,extraJ:jr.extraJ,jiji:jw.base+jr.net,
-    jijiBase:jw.base,jijiFrom:jw.from,jijiReset:jw.yi>=0,
+    jijiBase:jw.base,jijiFrom:jw.from,jijiReset:jw.ri>=0,
     nianU:inY.nianU,nianB:y.nian-inY.nianU,nianT:y.nian,
     yanU:inY.yanU,yanB:y.yan-inY.yanU,yanT:y.yan,
     yrIdx:yi,cashHr:y.cashHr||0,cashAmt:y.cashAmt||0,
