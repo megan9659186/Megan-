@@ -393,6 +393,16 @@ button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
 .calc-f input,.calc-f select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);
   border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
 .calc-f input:focus,.calc-f select:focus{outline:2px solid var(--sage);outline-offset:-1px}
+.ac-wrap{position:relative}
+.ac-list{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:30;max-height:216px;overflow-y:auto;
+  background:var(--bg);border:1px solid var(--line);border-radius:9px;box-shadow:0 6px 18px rgba(66,62,57,.14)}
+.ac-list button{display:block;width:100%;text-align:left;font:inherit;font-size:14.5px;font-weight:600;
+  color:var(--ink);background:none;border:0;border-bottom:1px solid var(--surface-2);padding:9px 11px;cursor:pointer}
+.ac-list button:last-child{border-bottom:0}
+.ac-list button:hover{background:var(--sage-tint)}
+.ac-list button .acs{display:block;font-size:11.5px;font-weight:500;color:var(--ink-soft);margin-top:2px}
+.dg-tag{display:inline-block;font-size:13.5px;font-weight:700;color:var(--ink);background:var(--clay-tint);
+  border-radius:999px;padding:5px 13px;margin:10px 0 2px}
 .calc-out{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
 .calc-cell{flex:1 1 132px;min-width:126px;background:var(--bg);border:1px solid var(--line);
   border-radius:10px;padding:10px 12px}
@@ -3546,10 +3556,33 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v9.6";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-09-07";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v9.9";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-09-08";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-08",
+    note: "Precedex 補上另外兩種泡法。",
+    items: [
+      "常見藥物泡法:dexmedetomidine 除本院常用的 40 mL(5 µg/mL),另補上稀釋成 50 mL(4 µg/mL)與 20 mL(10 µg/mL)兩種,依醫師習慣選用",
+      "濃度速算的常見泡法選單也一併加入這兩種,可直接帶入計算"
+    ]
+  },
+  {
+    date: "2026-09-08",
+    note: "更新 succinylcholine 泡法。",
+    items: [
+      "常見藥物泡法:succinylcholine 改成本單位實際作法,500 mg 粉劑 1 瓶加生理食鹽水 25 mL 溶解,泡好為 20 mg/mL(1 mL = 20 mg)"
+    ]
+  },
+  {
+    date: "2026-09-08",
+    note: "濃度速算多了藥名欄。",
+    items: [
+      "麻醉計算機的本單位濃度速算:新增藥名欄位,打第一個字就會跳出常見泡法裡的藥名可以直接點選,醫師開的藥不在清單裡也能自行輸入",
+      "填好的藥名會顯示在計算結果上方,方便核對與交班"
+    ]
+  },
   {
     date: "2026-09-07",
     note: "更換手機桌面圖示。",
@@ -7769,7 +7802,7 @@ const DRUG_PREP = [
     ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
     ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 D5W 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
   ]},
-  { g:"持續輸注(幫浦)", subs:[
+  { g:"持續輸注(幫浦)", updated:"2026-09-08", subs:[
     { s:"強心與升壓藥", rows:[
       ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 D5W 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b>本單位以 D5W 泡製</b>"],
       ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
@@ -7786,15 +7819,17 @@ const DRUG_PREP = [
       ["Remifentanil<br>稀釋版","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"]
     ]},
     { s:"麻醉與鎮靜藥", rows:[
-      ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩"]
+      ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩。泡法依醫師習慣不同,<b class='w'>泡好務必標示實際濃度</b>"],
+      ["Dexmedetomidine<br>50 mL 版","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 50 mL","4 µg/mL","劑量同上;濃度最低,同樣速率下實際給的藥量較少"],
+      ["Dexmedetomidine<br>20 mL 版","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 20 mL","10 µg/mL","劑量同上;濃度最高,速率設定前務必再確認一次"]
     ]},
     { s:"其他", rows:[
       ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
       ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL 晶體液","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
     ]}
   ]},
-  { g:"其他需稀釋藥品", rows:[
-    ["Succinylcholine","50 mg/mL","100 mg(2 mL)加 NS 稀釋成 5 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
+  { g:"其他需稀釋藥品", updated:"2026-09-08", rows:[
+    ["Succinylcholine","500 mg/vial(粉劑)","1 vial 加 NS 25 mL 溶解","20 mg/mL<br>1 mL = 20 mg","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
     ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 D5W 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"]
   ]}
 ];
@@ -7813,10 +7848,25 @@ const DRUG_PRESETS = [
   { t:"Nicardipine 10 mg / 100 mL", mg:10, mL:100 },
   { t:"Remifentanil 2 mg / 40 mL", mg:2, mL:40 },
   { t:"Remifentanil 稀釋版 2 mg / 200 mL", mg:2, mL:200 },
-  { t:"Dexmedetomidine 0.2 mg / 40 mL", mg:0.2, mL:40, hr:true }
+  { t:"Dexmedetomidine 0.2 mg / 40 mL", mg:0.2, mL:40, hr:true },
+  { t:"Dexmedetomidine 0.2 mg / 50 mL", mg:0.2, mL:50, hr:true },
+  { t:"Dexmedetomidine 0.2 mg / 20 mL", mg:0.2, mL:20, hr:true }
 ];
 
-const DRUG_CALC_STATE = { pi:"1", mg:8, mL:100, wt:70, dose:0.05, rate:5 };
+/* 藥名候選:取自上方常見泡法表的藥名(去掉重複與換行標註),
+   供自行輸入欄位打字時挑選;不在清單裡的藥仍可直接自行輸入。 */
+const DRUG_NAMES = (function(){
+  const out = [], seen = {};
+  DRUG_PREP.forEach(sec => (sec.subs || [{ rows: sec.rows }]).forEach(sub => sub.rows.forEach(r => {
+    const n = String(r[0]).split("<br>")[0].trim();
+    if(!n || seen[n]) return;
+    seen[n] = 1;
+    out.push({ n, c: String(r[1]).replace(/<br>/g, " ").trim() });
+  })));
+  return out;
+})();
+
+const DRUG_CALC_STATE = { pi:"1", name:"", mg:8, mL:100, wt:70, dose:0.05, rate:5 };
 
 function drugIsHrUnit(pi){
   const p = DRUG_PRESETS[+pi];
@@ -7850,7 +7900,7 @@ function drugPrepHtml(){
   const dgRate = drugRateFromDose(S.mg, S.mL, S.wt, S.dose);
   const dgDose = drugDoseFromRate(S.mg, S.mL, S.wt, S.rate);
   const dgHr = drugIsHrUnit(S.pi);
-  const dgNew = isNewItem({ updated:"2026-08-04" })
+  const dgNew = isNewItem({ updated:"2026-09-08" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   return `
   <div class="tool-wrap">
@@ -7865,7 +7915,7 @@ function drugPrepHtml(){
 
     ${DRUG_PREP.map(sec=>`
       <div class="tool-box">
-        <h3>${sec.g}</h3>
+        <h3${isNewItem(sec) ? ' class="th-new"' : ""}>${sec.g}${isNewItem(sec) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
         <div class="scroll-hint">表格可左右滑動查看</div>
         <div class="tool-scroll">
           <table class="tool-tbl drug-tbl">
@@ -7885,13 +7935,18 @@ function drugPrepHtml(){
 
     <div class="tool-box">
       <h3 class="th-new">本單位濃度速算${dgNew}</h3>
-      <div class="tool-sub" style="margin:0 0 11px">輸入藥量、溶液總量與體重,直接算出泡好濃度與速率對照;也可先選常見泡法自動帶入。</div>
+      <div class="tool-sub" style="margin:0 0 11px">輸入藥量、溶液總量與體重,直接算出泡好濃度與速率對照;也可先選常見泡法自動帶入。醫囑泡法與常見泡法不同時,藥名欄打第一個字即可挑選,清單裡沒有的藥也能自行輸入。</div>
       <div class="calc-form">
         <div class="calc-f" style="flex:1 1 240px;min-width:200px">
           <label for="dgPreset">常見泡法(可略)</label>
           <select id="dgPreset">
             ${DRUG_PRESETS.map((p,i)=>`<option value="${i}"${DRUG_CALC_STATE.pi===String(i)?" selected":""}>${p.t}</option>`).join("")}
           </select>
+        </div>
+        <div class="calc-f ac-wrap" style="flex:1 1 200px;min-width:180px">
+          <label for="dgName">藥名(可自行輸入)</label>
+          <input id="dgName" type="text" autocomplete="off" placeholder="打第一個字挑選,或自行輸入" value="${escHtml(DRUG_CALC_STATE.name)}">
+          <div class="ac-list" id="dgNameAc" hidden></div>
         </div>
         <div class="calc-f">
           <label for="dgMg">藥量(mg)</label>
@@ -7906,6 +7961,7 @@ function drugPrepHtml(){
           <input id="dgWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${DRUG_CALC_STATE.wt}">
         </div>
       </div>
+      <div class="dg-tag" id="dgTag"${DRUG_CALC_STATE.name ? "" : " hidden"}>${escHtml(DRUG_CALC_STATE.name)}</div>
       <div class="calc-out" id="dgOut">
         <div class="calc-cell hi">
           <div class="k">泡好濃度</div>
@@ -8085,6 +8141,41 @@ function wireDrugCalc(){
       [fmt(d && d.min), d ? (isHr ? `= ${fmt(d.hr)} µg/kg/hr` : "依上方濃度與體重換算") : "—"]
     ]);
   };
+  const nm = el("dgName"), ac = el("dgNameAc"), tag = el("dgTag");
+  const setName = v => {
+    S.name = (v || "").trim();
+    if(nm && nm.value !== v) nm.value = v || "";
+    if(tag){ tag.textContent = S.name; tag.hidden = !S.name; }
+  };
+  const acHide = () => { if(ac){ ac.hidden = true; ac.innerHTML = ""; } };
+  const acShow = () => {
+    if(!nm || !ac) return;
+    const q = nm.value.trim().toLowerCase();
+    if(!q){ acHide(); return; }
+    const head = DRUG_NAMES.filter(d => d.n.toLowerCase().indexOf(q) === 0);
+    /* 只打一個字時單純比對開頭,避免跳出一堆中段含該字母的藥 */
+    const rest = q.length > 1 ? DRUG_NAMES.filter(d => d.n.toLowerCase().indexOf(q) > 0) : [];
+    const hit = head.concat(rest).slice(0, 8);
+    if(!hit.length){ acHide(); return; }
+    ac.innerHTML = hit.map(d => `<button type="button" data-n="${escHtml(d.n)}">${escHtml(d.n)}<span class="acs">${escHtml(d.c)}</span></button>`).join("");
+    ac.hidden = false;
+  };
+  if(nm){
+    nm.addEventListener("input", () => { setName(nm.value); acShow(); });
+    nm.addEventListener("focus", acShow);
+    nm.addEventListener("keydown", e => { if(e.key === "Escape") acHide(); });
+    nm.addEventListener("blur", () => setTimeout(acHide, 180));
+  }
+  if(ac){
+    ac.addEventListener("mousedown", e => e.preventDefault());
+    ac.addEventListener("click", e => {
+      const b = e.target.closest("button[data-n]");
+      if(!b) return;
+      setName(b.getAttribute("data-n"));
+      acHide();
+      if(nm) nm.blur();
+    });
+  }
   const pre = el("dgPreset");
   if(pre){
     pre.addEventListener("change", () => {
@@ -8093,6 +8184,7 @@ function wireDrugCalc(){
       if(p && p.mg != null){
         el("dgMg").value = p.mg;
         el("dgVol").value = p.mL;
+        setName(p.t.replace(/\s*[\d.]+\s*mg\s*\/.*$/, "").trim());
       }
       upd();
     });
