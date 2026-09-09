@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="麻醉計算">
+<meta name="theme-color" content="#FBF8F1">
+<link rel="manifest" href="manifest-calc.webmanifest">
+<link rel="apple-touch-icon" href="calc-apple-touch-icon.png?v=1">
+<link rel="icon" type="image/png" sizes="192x192" href="calc-icon-192.png?v=1">
+<link rel="icon" type="image/png" sizes="512x512" href="calc-icon-512.png?v=1">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>麻醉計算機・藥物泡法</title>
+<style>html{background:#FBF8F1;color-scheme:light}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{
+  --bg:#FBF8F1;         /* 淺米白底 */
+  --surface:#F4F1EB;    /* 卡片乳白 */
+  --surface-2:#EDE9E1;
+  --ink:#423E39;        /* 暖深灰褐 主文字 */
+  --ink-soft:#726B62;   /* 次文字 */
+  --line:#D6CFC3;       /* 細分隔線 */
+  --sage:#8B9A8B;       /* 主色 灰綠 */
+  --sage-tint:#DDE3D9;
+  --clay:#B8968C;       /* 副色 灰玫 */
+  --clay-tint:#EBDDD7;
+  --flag:#A87E76;       /* 警示 灰陶紅 */
+  --flag-tint:#EAD9D3;
+  --warn:#C0392B;       /* 警示紅字 */
+  --slate:#8892A0;      /* 監測 灰藍 */
+  --slate-tint:#DCE0E5;
+  --ochre:#B7A177;      /* 用藥 灰赭 */
+  --ochre-tint:#E9E1D0;
+  --grey-tint:#E7E3DB;  /* 待校對底色 淺灰 */
+  --grey-line:#D2CCC0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html,body{touch-action:manipulation}   /* 關閉點兩下放大,保留雙指縮放 */
+body{
+  font-family:"Noto Sans TC",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.6;font-size:16.5px;
+}
+.app{max-width:1180px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+
+/* ---------- Header ---------- */
+header{padding:22px 22px 16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.5px}
+.brand .sub{font-size:13.5px;color:var(--ink-soft);letter-spacing:.5px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{padding:7px 16px;border-radius:20px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-soft);font-size:14.5px;cursor:pointer;
+  transition:all .15s;font-family:inherit;font-weight:500}
+.chip:hover{border-color:var(--sage)}
+.chip[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+.chip.drug{background:var(--clay-tint);border-color:#DCC7BF;color:#8a6a60}
+.chip.drug:hover{border-color:var(--clay)}
+.chip.drug[aria-pressed="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
+
+/* ---------- Body ---------- */
+.body{flex:1;min-height:0}
+.pane{max-width:900px;margin:0 auto;padding:26px 24px 60px}
+.disclaimer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--ink-soft);line-height:1.7}
+footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color:#A69E92;text-align:center}
+.updbar{display:none;align-items:center;justify-content:center;gap:8px;
+  background:var(--sage);color:#fff;font-weight:600;font-size:15px;
+  padding:11px 14px;border-radius:9px;margin-bottom:12px;cursor:pointer;
+  text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.updbar:active{opacity:.85}
+b.w{font-weight:700;color:var(--warn)}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-thumb{background:#CFC7B9;border-radius:6px}
+
+@media(max-width:760px){
+  header{padding:18px 16px 14px}
+  .pane{padding:20px 16px 56px}
+  h1{font-size:22px}
+  .brand .sub{font-size:12.5px}
+  .chip{font-size:15px;padding:9px 18px;flex:1 1 auto;text-align:center}
+  .tool-head{font-size:18px}
+  .tool-sub{font-size:14px}
+  .calc-cell .v{font-size:19px}
+  .info-btn{font-size:13px;padding:3px 9px}
+  .info-panel{font-size:15.5px;line-height:1.75}
+  .disclaimer{font-size:13.5px;line-height:1.75}
+}
+
+.badge-new{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.7px;
+  line-height:1.5;padding:1px 6px;border-radius:5px;
+  background:var(--clay);color:#FBF8F1;vertical-align:middle}
+.info-btn{display:inline-flex;align-items:center;margin-left:6px;font-family:inherit;font-size:12.5px;
+  color:var(--sage);background:var(--sage-tint);border:1px solid #C7D0C4;border-radius:20px;
+  padding:1px 8px;cursor:pointer;font-weight:500;vertical-align:middle;line-height:1.6;transition:all .15s}
+.info-btn:hover{background:#CED6C9}
+.info-btn[aria-expanded="true"]{background:var(--sage);color:#fff;border-color:var(--sage)}
+.info-panel{display:block;margin-top:8px;background:var(--surface-2);border:1px solid var(--line);
+  border-left:3px solid var(--sage);border-radius:8px;padding:10px 13px;
+  font-size:15px;line-height:1.65;color:var(--ink-soft);font-weight:400}
+.info-panel[hidden]{display:none}
+.info-panel b{color:var(--ink);font-weight:600}
+/* ---------- 麻醉計算機 / 藥物泡法 ---------- */
+.tool-wrap{display:flex;flex-direction:column;gap:16px}
+.tool-head{font-size:19px;font-weight:700;color:var(--ink)}
+.tool-sub{font-size:13.5px;line-height:1.7;color:var(--ink-soft);margin-top:4px}
+.tool-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.tool-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin-bottom:11px}
+.tool-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:700;color:var(--ink-soft)}
+.tool-det>summary::-webkit-details-marker{display:none}
+.tool-det>summary::after{content:'▾';margin-left:auto;font-size:12px;opacity:.65;transition:transform .18s}
+.tool-det[open]>summary{margin-bottom:11px}
+.tool-det[open]>summary::after{transform:rotate(180deg)}
+.dw-tbl .pill{font-size:14px;padding:3px 10px;border-radius:6px}
+.tool-det.sm{margin-top:10px}
+.tool-det.sm>summary{font-size:13px;font-weight:600}
+.tool-det.sm>summary::after{font-size:11px}
+.tool-det.sm[open]>summary{margin-bottom:6px}
+.tool-det.sm .calc-note{margin-top:0}
+.calc-form{display:flex;flex-wrap:wrap;gap:11px}
+.calc-seg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 2px}
+.calc-seg button{font:inherit;font-size:14.5px;font-weight:600;color:var(--ink-soft);background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;padding:8px 18px;cursor:pointer}
+.calc-seg button[aria-pressed="true"]{background:var(--sage-tint);border-color:#BFCBBD;color:var(--ink)}
+.calc-seg .seg-hint{font-size:12px;color:var(--ink-soft)}
+.calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 120px;min-width:110px}
+.calc-f label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+.calc-f input,.calc-f select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.calc-f input:focus,.calc-f select:focus{outline:2px solid var(--sage);outline-offset:-1px}
+.calc-out{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.calc-cell{flex:1 1 132px;min-width:126px;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px}
+.calc-cell .k{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em}
+.calc-cell .v{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
+.calc-cell .u{font-size:12px;font-weight:600;color:var(--ink-soft);margin-left:3px}
+.calc-cell .h{font-size:11.5px;line-height:1.5;color:var(--ink-soft);margin-top:4px}
+.calc-cell.hi{background:var(--sage-tint);border-color:#BFCBBD}
+.calc-note{font-size:12.5px;line-height:1.65;color:var(--ink-soft);margin-top:10px}
+.tool-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tool-tbl th{text-align:left;font-weight:700;color:var(--ink-soft);font-size:12px;
+  padding:7px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+.tool-tbl td{padding:8px;border-bottom:1px solid var(--line);line-height:1.55;color:var(--ink);vertical-align:top}
+.tool-tbl tr:last-child td{border-bottom:none}
+.tool-tbl td b{font-weight:600}
+.tool-box h3.th-new{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.drug-tbl{table-layout:fixed;min-width:760px}
+.drug-tbl td,.drug-tbl th{padding:9px 12px}
+.drug-tbl .dn{font-weight:600;color:var(--ink);line-height:1.45}
+.drug-tbl .dc{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+.drug-tbl .pill{white-space:normal;line-height:1.5;padding:2px 7px}
+.drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:12.5px;
+  font-weight:700;letter-spacing:.02em;padding:6px 12px;border-bottom:1px solid #DCC3BB}
+.scroll-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:7px}
+.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  scrollbar-width:none;-ms-overflow-style:none}
+.tool-scroll::-webkit-scrollbar{display:none;width:0;height:0}
+.scroll-rail{position:relative;height:9px;margin-top:8px;border-radius:5px;
+  background:var(--clay-tint);cursor:pointer;touch-action:none}
+.scroll-rail.off{display:none}
+.scroll-rail .scroll-thumb{position:absolute;top:0;bottom:0;left:0;min-width:26px;
+  border-radius:5px;background:var(--clay)}
+.scroll-rail:hover .scroll-thumb{background:#A6837A}
+.tool-warn{background:var(--flag-tint);border:1px solid #DCC3BB;border-left:3px solid var(--flag);
+  border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#6E4F49}
+.tool-warn b{color:var(--warn);font-weight:700}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:5px;
+  background:var(--ochre-tint);color:#6E6047;white-space:nowrap}
+.pill.s{background:var(--sage-tint);color:#4F5C4F}
+.pill.b{background:var(--slate-tint);color:#4E5766}
+
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div id="upd" class="updbar" onclick="applyUpdate()">🔄 已有新版本 · 點擊立即更新</div>
+    <div class="brand">
+      <h1>麻醉計算機・藥物泡法</h1>
+      <span class="sub">Anesthesia Calculator &amp; Drug Preparation</span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="body">
+    <div class="pane" id="pane"></div>
+  </div>
+
+  <footer>
+    <span id="foot">臨床輔助工具 · 使用前請對照所屬機構 protocol 與最新指引</span>
+  </footer>
+</div>
+
+<script>
+const TOOL_VERSION = "v1.0";
+const TOOL_UPDATED = "2026-09-09";
+
+const el = id => document.getElementById(id);
+const NEW_DAYS = 7;
+function isNewItem(s){
+  if(!s || !s.updated) return false;
+  const t = Date.parse(s.updated + "T00:00:00");
+  if(isNaN(t)) return false;
+  return (Date.now() - t) < NEW_DAYS * 86400000;
+}
+function toggleInfo(btn){
+  const p = btn.nextElementSibling; if(!p) return;
+  const show = p.hasAttribute("hidden");
+  if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
+  btn.setAttribute("aria-expanded", show ? "true" : "false");
+}
+
+/* ============================================================
+   麻醉計算機
+   ------------------------------------------------------------
+   IBW(Devine)、PBW(ARDSNet)、AdjBW、LBW(Janmahasatian)、
+   BMI、BSA(Mosteller);另附各類藥物該用哪個體重的對照表。
+   ============================================================ */
+const CALC_STATE = { sex:"M", age:45, ht:170, wt:70 };
+const FLUID_STATE = { wt:70, npo:8 };
+const EBV_STATE = { wt:70, grp:"75", hb0:13, hbT:8 };
+
+const EBV_GROUPS = [
+  { v:"95", t:"早產兒(95 mL/kg)" },
+  { v:"85", t:"足月新生兒(85 mL/kg)" },
+  { v:"80", t:"嬰兒 1 歲以下(80 mL/kg)" },
+  { v:"75", t:"兒童(75 mL/kg)" },
+  { v:"75m", t:"成年男性(75 mL/kg)" },
+  { v:"65", t:"成年女性(65 mL/kg)" }
+];
+
+/* 4-2-1 法則:前 10 kg 每公斤 4 mL/hr、次 10 kg 每公斤 2 mL/hr、超過 20 kg 每公斤 1 mL/hr */
+function fluidCalc(wt, npo){
+  if(!(wt>0)) return null;
+  const mh = wt<=10 ? wt*4 : (wt<=20 ? 40 + (wt-10)*2 : 60 + (wt-20));
+  const hrs = (npo>0 && isFinite(npo)) ? npo : 0;
+  const def = mh * hrs;
+  return { mh, def, h1: def/2 + mh, h23: def/4 + mh };
+}
+
+/* EBV = 體重 × 族群係數;ABL = EBV ×(目前 Hb − 可接受最低 Hb)÷ 目前 Hb */
+function ebvCalc(wt, perKg, hb0, hbT){
+  if(!(wt>0) || !(perKg>0)) return null;
+  const ebv = wt*perKg;
+  const ok = hb0>0 && hbT>0 && hb0>hbT;
+  const abl = ok ? ebv*(hb0-hbT)/hb0 : null;
+  return { ebv, abl, pct: abl==null ? null : abl/ebv*100, l15: ebv*0.15, l30: ebv*0.30 };
+}
+
+function calcAll(sex, ht, wt){
+  if(!(ht>0) || !(wt>0)) return null;
+  const m = ht/100;
+  const bmi = wt/(m*m);
+  const inchOver60 = Math.max(0, (ht/2.54) - 60);
+  const ibw = (sex==="M" ? 50 : 45.5) + 2.3*inchOver60;
+  const pbw = (sex==="M" ? 50 : 45.5) + 0.91*(ht - 152.4);
+  const adj = ibw + 0.4*(wt - ibw);
+  const lbw = sex==="M"
+    ? (9270*wt)/(6680 + 216*bmi)
+    : (9270*wt)/(8780 + 244*bmi);
+  const bsa = Math.sqrt(ht*wt/3600);
+  return { bmi, ibw, pbw, adj:Math.max(adj, ibw), lbw, bsa };
+}
+
+function bmiBand(b){
+  if(b < 18.5) return "過輕";
+  if(b < 24)   return "正常範圍";
+  if(b < 27)   return "過重";
+  if(b < 30)   return "輕度肥胖";
+  if(b < 35)   return "中度肥胖";
+  return "重度肥胖";
+}
+
+/* ------------------------------------------------------------
+   TIVA propofol TCI 模型選擇
+   Marsh 只吃體重;Schnider 吃年齡、身高、體重與性別(內建 James 淨體重公式)。
+   James 公式在 BMI 過高時會反轉(男約 42、女約 35),此時算出的淨體重不減反增,
+   幫浦速率被推高,有過量風險。
+   ------------------------------------------------------------ */
+const TIVA_CAP = { M:42, F:35 };
+const TIVA_STATE = { model:null };   /* null = 跟著建議走;"marsh" / "schnider" = 使用者自選 */
+
+function tivaPick(sex, age, ht, wt){
+  const r = calcAll(sex, ht, wt);
+  if(!r || !(age>0) || !isFinite(age)) return null;
+  const bmi = r.bmi;
+  const james = sex==="F"
+    ? 1.07*wt - 148*Math.pow(wt/ht, 2)
+    : 1.10*wt - 128*Math.pow(wt/ht, 2);
+  const cap = sex==="F" ? TIVA_CAP.F : TIVA_CAP.M;
+  const o = {
+    bmi, james, cap,
+    inverted: bmi >= cap,
+    adj: Math.round(r.adj),
+    tbw: Math.round(wt),
+    obese: bmi >= 30,
+    old: age >= 65,
+    child: age < 16
+  };
+  o.rec = o.child ? "none" : (o.inverted ? "marsh" : ((o.obese || o.old) ? "schnider" : "both"));
+  return o;
+}
+
+/* 目前要顯示哪個模型:使用者自選優先,否則跟著建議 */
+function tivaModelOf(o){
+  if(TIVA_STATE.model) return TIVA_STATE.model;
+  return (o && o.rec === "marsh") ? "marsh" : "schnider";
+}
+
+/* 產生四格內容 [標題, 數值, 說明] 與注意事項 */
+function tivaView(o, model){
+  const marsh = model === "marsh";
+  const name = marsh ? "Marsh" : "Schnider";
+  if(!o) return {
+    rows: [["模型", name, "請先輸入年齡、身高與體重"],
+           ["靶控模式", "—", "—"],
+           ["幫浦輸入體重", "—", "—"],
+           [marsh ? "校正體重 AdjBW" : "LBM(Schnider 內建)", "—", "—"]],
+    warn: ""
+  };
+  const na = o.rec === "none";
+  let fit, warn = "";
+  if(na){
+    fit = "未滿 16 歲,兩個模型都不適用";
+    warn = "改用小兒 TCI 模型(Paedfusor、Kataria),或改人工輸注並全程監測麻醉深度";
+  } else if(o.rec === "both"){
+    fit = "本例兩者皆可,依機器預設";
+  } else if(o.rec === "marsh"){
+    fit = marsh ? "本例建議選這個" : "本例不建議用 Schnider";
+    if(!marsh) warn = "BMI 已超過 " + o.cap + ",Schnider 的淨體重公式會反轉、輸注速率反而被推高;請改 Marsh 加校正體重,機器有 Eleveld 則優先用 Eleveld";
+  } else {
+    fit = marsh ? "本例建議 Schnider;機器沒有時才用 Marsh" : "本例建議選這個";
+  }
+  const wtV = na ? "—" : ((marsh && o.obese) ? o.adj + " kg" : o.tbw + " kg");
+  const wtH = na ? "—"
+    : (marsh
+        ? (o.obese
+            ? "校正體重 AdjBW;直接輸實際體重 " + o.tbw + " kg 會過量"
+            : "實際體重,磅秤上的數字")
+        : "實際體重,機器自己用身高年齡換算淨體重");
+  const rows = [
+    ["模型", name, fit],
+    ["靶控模式", marsh ? "Cp 血漿" : "Ce 效應室",
+      marsh ? "原始 Marsh 走血漿靶控;機器若為 modified Marsh 才走 Ce"
+            : "中央室小,走血漿靶控誘導會偏慢"],
+    ["幫浦輸入體重", wtV, wtH],
+    marsh
+      ? ["校正體重 AdjBW", na ? "—" : o.adj + " kg",
+         "IBW + 0.4 ×(實際 − IBW);BMI 到 30 以上就輸這個"]
+      : ["LBM(Schnider 內建)", na ? "—" : o.james.toFixed(1) + " kg",
+         o.inverted ? "已過反轉點(BMI " + o.cap + "),數值不可信"
+                    : "James 公式;BMI 到 " + o.cap + " 就會反轉"]
+  ];
+  if(!warn && !na){
+    if(marsh && o.obese)      warn = "Marsh 只吃體重,肥胖者一定要改輸校正體重 " + o.adj + " kg,不要用實際體重";
+    else if(marsh && o.old)   warn = "Marsh 沒有年齡項,老年人同樣目標濃度會偏深,先降 20–40% 再慢慢加";
+    else if(o.old)            warn = "老年人目標濃度先降 20–40%,誘導慢一點,注意低血壓";
+    else if(o.obese)          warn = "肥胖者誘導後容易低血壓與呼吸道問題,目標濃度慢慢往上加";
+  }
+  return { rows, warn };
+}
+
+function tivaWarnHtml(v){
+  const base = "模型只是起點,仍要依血壓、心跳與麻醉深度(BIS 或類似指標)滴定;TIVA 全程確認靜脈通路暢通、沒有外滲。";
+  if(!v) return base;
+  return (v.warn ? "<b class='w'>注意</b>:" + v.warn + "。" : "") + base;
+}
+
+const DOSE_WEIGHT = [
+  { d:"Propofol(誘導)",            w:"LBW",  cls:"s", n:"用實際體重會過量,容易低血壓" },
+  { d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  n:"清除率隨體重上升;仍需依反應滴定" },
+  { d:"Fentanyl",                    w:"LBW",  cls:"s", n:"依實際體重給會明顯過量" },
+  { d:"Remifentanil",                w:"LBW",  cls:"s", n:"TCI 亦以 LBW 或 IBW 設定" },
+  { d:"Morphine",                    w:"IBW",  cls:"b", n:"肥胖者呼吸抑制風險高,小量滴定" },
+  { d:"Rocuronium",                  w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長" },
+  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同 rocuronium,用實際體重會延長作用時間" },
+  { d:"Succinylcholine",             w:"TBW",  cls:"",  n:"血漿膽鹼酯酶活性隨體重增加" },
+  { d:"Sugammadex",                  w:"TBW",  cls:"",  n:"依仿單以實際體重計算" },
+  { d:"Neostigmine",                 w:"TBW",  cls:"",  n:"有單次最大劑量上限" },
+  { d:"Dexmedetomidine",             w:"AdjBW",cls:"",  n:"" },
+  { d:"Midazolam(單次)",           w:"TBW",  cls:"",  n:"重複給藥改用 IBW,脂溶性高易蓄積" },
+  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限" }
+];
+
+function calcHtml(){
+  const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
+  const f = (x,n=1) => x==null ? "—" : x.toFixed(n);
+  const newTag = isNewItem({ updated:"2026-08-04" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  const tv = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
+  const tvM = tivaModelOf(tv);
+  const tvV = tivaView(tv, tvM);
+  const tvNew = isNewItem({ updated:"2026-08-21" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  const fr = fluidCalc(FLUID_STATE.wt, FLUID_STATE.npo);
+  const ebvPerKg = parseFloat(EBV_STATE.grp);
+  const br = ebvCalc(EBV_STATE.wt, ebvPerKg, EBV_STATE.hb0, EBV_STATE.hbT);
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">麻醉計算機</div>
+      <div class="tool-sub">體重過重的病人,不同藥物要用不同的體重去算。輸入年齡身高體重後對照下方表格取用;另附 TIVA 模型選擇、4-2-1 維持輸液與預估失血量。結果僅供輔助,實際劑量與輸液仍需依病人狀況與臨床反應調整。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>基本資料</h3>
+      <div class="calc-form">
+        <div class="calc-f">
+          <label for="cSex">生理性別</label>
+          <select id="cSex">
+            <option value="M"${CALC_STATE.sex==="M"?" selected":""}>男</option>
+            <option value="F"${CALC_STATE.sex==="F"?" selected":""}>女</option>
+          </select>
+        </div>
+        <div class="calc-f">
+          <label for="cAge">年齡(歲)</label>
+          <input id="cAge" type="number" inputmode="numeric" min="0" max="120" step="1" value="${CALC_STATE.age}">
+        </div>
+        <div class="calc-f">
+          <label for="cHt">身高(cm)</label>
+          <input id="cHt" type="number" inputmode="decimal" min="100" max="230" step="0.5" value="${CALC_STATE.ht}">
+        </div>
+        <div class="calc-f">
+          <label for="cWt">體重(kg)</label>
+          <input id="cWt" type="number" inputmode="decimal" min="20" max="300" step="0.5" value="${CALC_STATE.wt}">
+        </div>
+      </div>
+
+      <div class="calc-out" id="cOut">
+        <div class="calc-cell hi">
+          <div class="k">BMI</div>
+          <div class="v">${f(r&&r.bmi)}<span class="u">kg/m²</span></div>
+          <div class="h">${r?bmiBand(r.bmi):"—"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">IBW 理想體重</div>
+          <div class="v">${f(r&&r.ibw)}<span class="u">kg</span></div>
+          <div class="h">Devine 公式</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">LBW 淨體重</div>
+          <div class="v">${f(r&&r.lbw)}<span class="u">kg</span></div>
+          <div class="h">Janmahasatian 公式</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">AdjBW 校正體重</div>
+          <div class="v">${f(r&&r.adj)}<span class="u">kg</span></div>
+          <div class="h">IBW + 0.4 ×(實際 − IBW)</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">PBW 預測體重</div>
+          <div class="v">${f(r&&r.pbw)}<span class="u">kg</span></div>
+          <div class="h">設潮氣容積用:${r?(r.pbw*6).toFixed(0)+"–"+(r.pbw*8).toFixed(0)+" mL":"—"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">BSA 體表面積</div>
+          <div class="v">${f(r&&r.bsa,2)}<span class="u">m²</span></div>
+          <div class="h">Mosteller 公式</div>
+        </div>
+      </div>
+      <div class="calc-note">BMI 分級採國民健康署成人標準(正常 18.5–24、過重 24–27、肥胖 ≥27)。校正體重取 IBW 與計算值的較大者。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3 class="th-new">TIVA 模型選擇(propofol TCI)${tvNew}</h3>
+      <div class="calc-seg" id="tSeg">
+        <button type="button" data-m="marsh" aria-pressed="${tvM==="marsh"}">Marsh</button>
+        <button type="button" data-m="schnider" aria-pressed="${tvM==="schnider"}">Schnider</button>
+        <span class="seg-hint">已依上方年齡體重預選,可自行切換</span>
+      </div>
+      <div class="calc-out" id="tOut">
+        ${tvV.rows.map((x,i)=>`
+        <div class="calc-cell${i===0?" hi":""}">
+          <div class="k">${x[0]}</div>
+          <div class="v">${x[1]}</div>
+          <div class="h">${x[2]}</div>
+        </div>`).join("")}
+      </div>
+      <div class="calc-note" id="tWarn">${tivaWarnHtml(tvV)}</div>
+
+      <details class="tool-det">
+        <summary>使用情境</summary>
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>模型</th><th>機器用到的資料</th><th>靶控</th><th>什麼時候選它</th></tr>
+          <tr><td><b>Marsh</b></td><td>只有體重</td><td>Cp 血漿</td><td>一般成人;機器只有這個模型時</td></tr>
+          <tr><td><b>Schnider</b></td><td>年齡、身高、體重、性別</td><td>Ce 效應室</td><td>年長、肥胖,或想走效應室靶控時</td></tr>
+        </table>
+      </div>
+
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>情境</th><th>選誰</th><th>為什麼</th></tr>
+          <tr><td>一般成人,BMI 未達 30</td><td>兩者皆可</td><td>差異不大,依機器預設;兩個模型都輸實際體重</td></tr>
+          <tr><td>65 歲以上</td><td><b>Schnider</b></td><td>Marsh 沒有年齡項,同樣目標濃度會偏深</td></tr>
+          <tr><td>BMI 30 以上、未到反轉點</td><td><b>Schnider</b></td><td>有淨體重校正;機器沒有 Schnider 時改用 Marsh,並輸校正體重</td></tr>
+          <tr><td>男 BMI ≥ 42、女 ≥ 35</td><td><b>Marsh + 校正體重</b></td><td>Schnider 的淨體重公式在此反轉,速率反而被推高;有 Eleveld 就選 Eleveld</td></tr>
+          <tr><td>未滿 16 歲</td><td>都不適用</td><td>改用小兒模型(Paedfusor、Kataria)</td></tr>
+        </table>
+      </div>
+      <div class="calc-note">常用目標濃度僅供起步參考:意識消失多落在 <b>Ce 2.5–3.5 µg/mL</b>;維持併用 remifentanil 約 <b>2.5–3.5</b>、單用 propofol 約 <b>3–6</b>;降到 <b>1.0–1.8</b> 附近多會甦醒。老年、低血容與心功能差者全部往下修。Remifentanil 的 Minto 模型同樣需要年齡與身高體重,體重以 LBW 設定。實際可用的模型與名稱以本院幫浦機型為準。</div>
+      </details>
+    </div>
+
+    <div class="tool-box">
+      <h3 class="th-new">4-2-1 法則(維持輸液)${newTag}</h3>
+      <div class="calc-form">
+        <div class="calc-f">
+          <label for="fWt">體重(kg)</label>
+          <input id="fWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${FLUID_STATE.wt}">
+        </div>
+        <div class="calc-f">
+          <label for="fNpo">禁食時數(hr)</label>
+          <input id="fNpo" type="number" inputmode="decimal" min="0" max="24" step="1" value="${FLUID_STATE.npo}">
+        </div>
+      </div>
+      <div class="calc-out" id="fOut">
+        <div class="calc-cell hi">
+          <div class="k">每小時維持量</div>
+          <div class="v">${fr?Math.round(fr.mh):"—"}<span class="u">mL/hr</span></div>
+          <div class="h">4-2-1 法則</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">禁食缺失量</div>
+          <div class="v">${fr?Math.round(fr.def):"—"}<span class="u">mL</span></div>
+          <div class="h">維持量 × 禁食時數</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">第 1 小時給</div>
+          <div class="v">${fr?Math.round(fr.h1):"—"}<span class="u">mL</span></div>
+          <div class="h">缺失量的一半 + 維持量</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">第 2、3 小時各給</div>
+          <div class="v">${fr?Math.round(fr.h23):"—"}<span class="u">mL</span></div>
+          <div class="h">缺失量的四分之一 + 維持量</div>
+        </div>
+      </div>
+      <details class="tool-det sm">
+        <summary>說明</summary>
+      <div class="calc-note">維持量算法:前 10 kg 每公斤 4 mL/hr、第 11–20 kg 每公斤 2 mL/hr、超過 20 kg 每公斤 1 mL/hr。禁食缺失量的分次補法為傳統作法;現行禁食規範已放寬(清流質術前 2 小時、輕食 6 小時),多數病人實際缺失有限,<b>請依血壓、心跳、尿量與失血量調整,不必機械式補足</b>。失血與第三間隙流失另外計算。</div>
+      </details>
+    </div>
+
+    <div class="tool-box">
+      <h3 class="th-new">預估失血量${newTag}</h3>
+      <div class="calc-form">
+        <div class="calc-f">
+          <label for="bWt">體重(kg)</label>
+          <input id="bWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${EBV_STATE.wt}">
+        </div>
+        <div class="calc-f">
+          <label for="bGrp">族群</label>
+          <select id="bGrp">
+            ${EBV_GROUPS.map(g=>`<option value="${g.v}"${EBV_STATE.grp===g.v?" selected":""}>${g.t}</option>`).join("")}
+          </select>
+        </div>
+        <div class="calc-f">
+          <label for="bHb0">目前 Hb(g/dL)</label>
+          <input id="bHb0" type="number" inputmode="decimal" min="3" max="22" step="0.1" value="${EBV_STATE.hb0}">
+        </div>
+        <div class="calc-f">
+          <label for="bHbT">可接受最低 Hb(g/dL)</label>
+          <input id="bHbT" type="number" inputmode="decimal" min="3" max="15" step="0.1" value="${EBV_STATE.hbT}">
+        </div>
+      </div>
+      <div class="calc-out" id="bOut">
+        <div class="calc-cell hi">
+          <div class="k">EBV 估計血容量</div>
+          <div class="v">${br?Math.round(br.ebv):"—"}<span class="u">mL</span></div>
+          <div class="h">${ebvPerKg} mL/kg × 體重</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">可容許失血量 ABL</div>
+          <div class="v">${(br&&br.abl!=null)?Math.round(br.abl):"—"}<span class="u">mL</span></div>
+          <div class="h">${(br&&br.pct!=null)?`約佔 EBV ${br.pct.toFixed(0)}%`:"目前 Hb 需高於可接受最低 Hb"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">失血 15%</div>
+          <div class="v">${br?Math.round(br.l15):"—"}<span class="u">mL</span></div>
+          <div class="h">心跳開始上升</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">失血 30%</div>
+          <div class="v">${br?Math.round(br.l30):"—"}<span class="u">mL</span></div>
+          <div class="h">血壓開始下降,積極評估輸血</div>
+        </div>
+      </div>
+      <details class="tool-det sm">
+        <summary>說明</summary>
+      <div class="calc-note">ABL 以目前 Hb 為分母計算,屬於較保守的估法;若改用手術前後的平均 Hb 為分母(Gross 公式),算出來的容許量會略高。<b>輸血決策不是只看數字</b>,還要合併出血速度、心肺共病與臨床徵象;一般穩定、非活動性出血的病人多以 Hb 7–8 g/dL 為輸血門檻。孕婦血容量增加約三到四成、肥胖病人每公斤血容量偏低,估計值都會失真。</div>
+      </details>
+    </div>
+
+    <div class="tool-box">
+      <details class="tool-det">
+        <summary>各名詞在算什麼</summary>
+      <div class="tool-scroll">
+        <table class="tool-tbl">
+          <tr><th>名詞</th><th>意思</th><th>公式</th></tr>
+          <tr><td><b>TBW</b> 實際體重</td><td>磅秤上量到的體重</td><td>—</td></tr>
+          <tr><td><b>IBW</b> 理想體重</td><td>依身高推算的標準體重,與胖瘦無關</td><td>男 50、女 45.5 kg,身高每超過 152.4 cm(60 英吋)一英吋加 2.3 kg</td></tr>
+          <tr><td><b>PBW</b> 預測體重</td><td>設定呼吸器潮氣容積專用,肺的大小由身高決定</td><td>男 50、女 45.5 kg + 0.91 ×(身高 cm − 152.4)</td></tr>
+          <tr><td><b>LBW</b> 淨體重</td><td>扣掉脂肪後的體重(肌肉、骨骼、內臟);心輸出量與多數藥物清除率跟著它走</td><td>男 9270 × 體重 ÷(6680 + 216 × BMI)<br>女 9270 × 體重 ÷(8780 + 244 × BMI)</td></tr>
+          <tr><td><b>AdjBW</b> 校正體重</td><td>介於理想與實際之間,承認脂肪組織也有部分分布容積</td><td>IBW + 0.4 ×(實際體重 − IBW)</td></tr>
+          <tr><td><b>BSA</b> 體表面積</td><td>部分藥物與心輸出指數以此換算</td><td>√(身高 cm × 體重 kg ÷ 3600)</td></tr>
+        </table>
+      </div>
+      <div class="calc-note">肥胖病人身上,脂肪組織血流低、但脂溶性藥物會蓄積,所以<b>單次誘導劑量</b>看的是初期分布容積與心輸出量(用 LBW),<b>持續輸注</b>看的是清除率(較接近實際體重),<b>肌鬆劑</b>幾乎不分布到脂肪(用 IBW)。</div>
+      </details>
+    </div>
+
+    <div class="tool-box">
+      <h3>常用藥物該用哪個體重</h3>
+      <div class="tool-scroll">
+        <table class="tool-tbl dw-tbl">
+          <tr><th>藥物</th><th>依據體重</th><th>備註</th></tr>
+          ${DOSE_WEIGHT.map(x=>`<tr><td>${x.d}</td><td><span class="pill ${x.cls}">${x.w}</span></td><td>${x.n||"—"}</td></tr>`).join("")}
+        </table>
+      </div>
+      <div class="calc-note">本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
+    </div>
+
+    <div class="tool-box">
+      <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">12</span></summary>
+          <ol>
+            <li>Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280.</li>
+            <li>Holliday, M. A., &amp; Segar, W. E. (1957). The maintenance need for water in parenteral fluid therapy. Pediatrics, 19(5), 823–832.</li>
+            <li>Mueller, M. M., Van Remoortel, H., Meybohm, P., et al. (2019). Patient blood management: Recommendations from the 2018 Frankfurt Consensus Conference. JAMA, 321(10), 983–997.</li>
+            <li>Ingrande, J., &amp; Lemmens, H. J. M. (2010). Dose adjustment of anaesthetics in the morbidly obese. British Journal of Anaesthesia, 105(Suppl 1), i16–i23.</li>
+            <li>Janmahasatian, S., Duffull, S. B., Ash, S., et al. (2005). Quantification of lean bodyweight. Clinical Pharmacokinetics, 44(10), 1051–1065.</li>
+            <li>Nightingale, C. E., Margarson, M. P., Shearer, E., et al. (2015). Peri-operative management of the obese surgical patient 2015. Anaesthesia, 70(7), 859–876.</li>
+            <li>The Acute Respiratory Distress Syndrome Network. (2000). Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the acute respiratory distress syndrome. New England Journal of Medicine, 342(18), 1301–1308.</li>
+            <li>Absalom, A. R., Mani, V., De Smet, T., &amp; Struys, M. M. R. F. (2009). Pharmacokinetic models for propofol: Defining and illuminating the devil in the detail. British Journal of Anaesthesia, 103(1), 26–37.</li>
+            <li>Schnider, T. W., Minto, C. F., Gambus, P. L., et al. (1998). The influence of method of administration and covariates on the pharmacokinetics of propofol in adult volunteers. Anesthesiology, 88(5), 1170–1182.</li>
+            <li>Marsh, B., White, M., Morton, N., &amp; Kenny, G. N. C. (1991). Pharmacokinetic model driven infusion of propofol in children. British Journal of Anaesthesia, 67(1), 41–48.</li>
+            <li>Eleveld, D. J., Colin, P., Absalom, A. R., &amp; Struys, M. M. R. F. (2018). Pharmacokinetic-pharmacodynamic model for propofol for broad application in anaesthesia and sedation. British Journal of Anaesthesia, 120(5), 942–959.</li>
+            <li>Nimmo, A. F., Absalom, A. R., Bagshaw, O., et al. (2019). Guidelines for the safe practice of total intravenous anaesthesia (TIVA): Joint guidelines from the Association of Anaesthetists and the Society for Intravenous Anaesthesia. Anaesthesia, 74(2), 211–224.</li>
+          </ol>
+        </details>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      本計算機為臨床輔助工具,不取代臨床判斷。所有劑量請依病人狀況、藥品仿單與所屬機構protocol核對後給藥。
+    </div>
+  </div>`;
+}
+
+function wireCalc(){
+  const updTiva = () => {
+    const box = el("tOut"); if(!box) return;
+    const o = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
+    const m = tivaModelOf(o);
+    const v = tivaView(o, m);
+    box.querySelectorAll(".calc-cell").forEach((c,i)=>{
+      const row = v.rows[i]; if(!row) return;
+      const k = c.querySelector(".k"); if(k) k.textContent = row[0];
+      const val = c.querySelector(".v"); if(val) val.textContent = row[1];
+      const h = c.querySelector(".h"); if(h) h.textContent = row[2];
+    });
+    const seg = el("tSeg");
+    if(seg) seg.querySelectorAll("button").forEach(b=>{
+      b.setAttribute("aria-pressed", b.dataset.m === m ? "true" : "false");
+    });
+    const w = el("tWarn");
+    if(w) w.innerHTML = tivaWarnHtml(v);
+  };
+
+  const seg = el("tSeg");
+  if(seg) seg.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{ TIVA_STATE.model = b.dataset.m; updTiva(); });
+  });
+
+  const upd = () => {
+    const sex = el("cSex").value;
+    const age = parseFloat(el("cAge").value);
+    const ht = parseFloat(el("cHt").value);
+    const wt = parseFloat(el("cWt").value);
+    CALC_STATE.sex = sex;
+    if(age>=0 && isFinite(age)) CALC_STATE.age = age;
+    if(ht>0) CALC_STATE.ht = ht;
+    if(wt>0) CALC_STATE.wt = wt;
+    const r = calcAll(sex, ht, wt);
+    const f = (x,n=1) => (x==null || !isFinite(x)) ? "—" : x.toFixed(n);
+    const cells = el("cOut").querySelectorAll(".calc-cell");
+    const vals = r ? [
+      [f(r.bmi), bmiBand(r.bmi)],
+      [f(r.ibw), null],
+      [f(r.lbw), null],
+      [f(r.adj), null],
+      [f(r.pbw), `設潮氣容積用:${(r.pbw*6).toFixed(0)}–${(r.pbw*8).toFixed(0)} mL`],
+      [f(r.bsa,2), null]
+    ] : [["—",'—'],["—",null],["—",null],["—",null],["—","設潮氣容積用:—"],["—",null]];
+    cells.forEach((c,i)=>{
+      const v = c.querySelector(".v");
+      const u = v.querySelector(".u");
+      v.textContent = vals[i][0];
+      if(u) v.appendChild(u);
+      if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
+    });
+    updTiva();
+  };
+  ["cSex","cAge","cHt","cWt"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", upd); n.addEventListener("change", upd); }
+  });
+
+  const setCells = (boxId, vals) => {
+    const box = el(boxId); if(!box) return;
+    box.querySelectorAll(".calc-cell").forEach((c,i)=>{
+      if(!vals[i]) return;
+      const v = c.querySelector(".v");
+      const u = v.querySelector(".u");
+      v.textContent = vals[i][0];
+      if(u) v.appendChild(u);
+      if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
+    });
+  };
+  const n0 = x => (x==null || !isFinite(x)) ? "—" : Math.round(x).toString();
+
+  const updFluid = () => {
+    const wt = parseFloat(el("fWt").value);
+    const npo = parseFloat(el("fNpo").value);
+    if(wt>0) FLUID_STATE.wt = wt;
+    if(npo>=0 && isFinite(npo)) FLUID_STATE.npo = npo;
+    const x = fluidCalc(wt, npo);
+    setCells("fOut", x
+      ? [[n0(x.mh),null],[n0(x.def),null],[n0(x.h1),null],[n0(x.h23),null]]
+      : [["—",null],["—",null],["—",null],["—",null]]);
+  };
+  ["fWt","fNpo"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", updFluid); n.addEventListener("change", updFluid); }
+  });
+
+  const updEbv = () => {
+    const wt = parseFloat(el("bWt").value);
+    const grp = el("bGrp").value;
+    const perKg = parseFloat(grp);
+    const hb0 = parseFloat(el("bHb0").value);
+    const hbT = parseFloat(el("bHbT").value);
+    if(wt>0) EBV_STATE.wt = wt;
+    EBV_STATE.grp = grp;
+    if(hb0>0) EBV_STATE.hb0 = hb0;
+    if(hbT>0) EBV_STATE.hbT = hbT;
+    const x = ebvCalc(wt, perKg, hb0, hbT);
+    setCells("bOut", x
+      ? [[n0(x.ebv), perKg + " mL/kg × 體重"],
+         [x.abl==null ? "—" : n0(x.abl), x.pct==null ? "目前 Hb 需高於可接受最低 Hb" : `約佔 EBV ${x.pct.toFixed(0)}%`],
+         [n0(x.l15), null],
+         [n0(x.l30), null]]
+      : [["—",null],["—",null],["—",null],["—",null]]);
+  };
+  ["bWt","bGrp","bHb0","bHbT"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", updEbv); n.addEventListener("change", updEbv); }
+  });
+  initScrollRails();
+}
+
+/* ============================================================
+   本科常見藥物泡法
+   ------------------------------------------------------------
+   欄位:藥名 / 原裝濃度 / 常見泡法 / 泡好濃度 / 常用劑量與備註
+   內容依本單位藥物泡製規範整理,實際請以本院藥局最新規範為準。
+   ============================================================ */
+const DRUG_PREP = [
+  { g:"單次推注(bolus)稀釋", rows:[
+    ["Ephedrine","40 mg/mL(1 mL/amp)","1 mL 加 NS 4 mL 稀釋成 5 mL,限 IV 使用","8 mg/mL","單次 5–10 mg;IM 給予不稀釋、抽成 1 mL 並依醫囑;<b>A 級刀也要稀釋</b>"],
+    ["Epinephrine<br>低濃度","1 mg/mL(1 mL/amp)","0.1 mg 加 NS 9.9 mL","0.01 mg/mL<br>= 10 µg/mL","過敏或低血壓時小量滴定 10–50 µg"],
+    ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
+    ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 D5W 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
+  ]},
+  { g:"持續輸注(幫浦)", subs:[
+    { s:"強心與升壓藥", rows:[
+      ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 D5W 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b>本單位以 D5W 泡製</b>"],
+      ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
+      ["Dopamine","200 mg/5 mL/amp","1 amp 加 NS 250 mL;洗腎病人:1 amp 加 NS 100 mL","0.8 mg/mL<br>EasyDopa 1.6 mg/mL<br>洗腎 2 mg/mL","2–20 µg/kg/min"],
+      ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 D5W 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"]
+    ]},
+    { s:"降壓與抗心律不整藥", rows:[
+      ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
+      ["Nicardipine","2.5 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","3–15 mg/hr;反射性心跳上升"],
+      ["Cordarone","150 mg/3 mL/amp","依醫囑泡製,<b class='w'>只能用 D5W</b>","依醫囑","150 mg 滴注時間需大於 10 分鐘"]
+    ]},
+    { s:"止痛藥", rows:[
+      ["Remifentanil<br>高濃度","2 mg/vial","先以 NS 40 mL 稀釋完成,再分裝成 2 支 20 mL","50 µg/mL<br>1 mL = 50 µg","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>空瓶由領藥人員保管,不可直接交給他人</b>"],
+      ["Remifentanil<br>稀釋版","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"]
+    ]},
+    { s:"麻醉與鎮靜藥", rows:[
+      ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩"]
+    ]},
+    { s:"其他", rows:[
+      ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
+      ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL 晶體液","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
+    ]}
+  ]},
+  { g:"其他需稀釋藥品", rows:[
+    ["Succinylcholine","50 mg/mL","100 mg(2 mL)加 NS 稀釋成 5 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
+    ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 D5W 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"]
+  ]}
+];
+
+/* ---------- 濃度速算(幫浦)---------- */
+const DRUG_PRESETS = [
+  { t:"自行輸入", mg:null, mL:null },
+  { t:"Norepinephrine 8 mg / 100 mL", mg:8, mL:100 },
+  { t:"Epinephrine 10 mg / 100 mL", mg:10, mL:100 },
+  { t:"Dopamine 200 mg / 250 mL", mg:200, mL:250 },
+  { t:"Dopamine 洗腎 200 mg / 100 mL", mg:200, mL:100 },
+  { t:"Dobutamine 250 mg / 250 mL", mg:250, mL:250 },
+  { t:"Dobutamine 洗腎 250 mg / 100 mL", mg:250, mL:100 },
+  { t:"Angidil 10 mg / 100 mL", mg:10, mL:100 },
+  { t:"Angidil 洗腎 10 mg / 20 mL", mg:10, mL:20 },
+  { t:"Nicardipine 10 mg / 100 mL", mg:10, mL:100 },
+  { t:"Remifentanil 2 mg / 40 mL", mg:2, mL:40 },
+  { t:"Remifentanil 稀釋版 2 mg / 200 mL", mg:2, mL:200 },
+  { t:"Dexmedetomidine 0.2 mg / 40 mL", mg:0.2, mL:40, hr:true }
+];
+
+const DRUG_CALC_STATE = { pi:"1", mg:8, mL:100, wt:70, dose:0.05, rate:5 };
+
+function drugIsHrUnit(pi){
+  const p = DRUG_PRESETS[+pi];
+  return !!(p && p.hr);           /* 只有以每小時計量的藥(dexmedetomidine)才顯示 µg/kg/hr */
+}
+
+function drugConcCalc(mg, mL, wt){
+  if(!(mg>0) || !(mL>0) || !(wt>0)) return null;
+  const cmg = mg/mL;                 /* mg/mL */
+  const cug = cmg*1000;              /* µg/mL */
+  return { cmg, cug, perMin: cug/60/wt, perHr: cug/wt };
+}
+
+function drugRateFromDose(mg, mL, wt, dose){
+  const c = drugConcCalc(mg, mL, wt);
+  if(!c || !(dose>0)) return null;
+  return dose*wt*60/c.cug;           /* mL/hr */
+}
+
+function drugDoseFromRate(mg, mL, wt, rate){
+  const c = drugConcCalc(mg, mL, wt);
+  if(!c || !(rate>0)) return null;
+  return { min: rate*c.perMin, hr: rate*c.perHr };
+}
+
+function drugPrepHtml(){
+  const S = DRUG_CALC_STATE;
+  const dgF = x => (x==null || !isFinite(x)) ? "—"
+    : (Math.abs(x)>=100 ? x.toFixed(0) : Math.abs(x)>=10 ? x.toFixed(1) : Math.abs(x)>=1 ? x.toFixed(2) : x.toFixed(3));
+  const dc = drugConcCalc(S.mg, S.mL, S.wt);
+  const dgRate = drugRateFromDose(S.mg, S.mL, S.wt, S.dose);
+  const dgDose = drugDoseFromRate(S.mg, S.mL, S.wt, S.rate);
+  const dgHr = drugIsHrUnit(S.pi);
+  const dgNew = isNewItem({ updated:"2026-08-04" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">本科常見藥物泡法</div>
+      <div class="tool-sub">依本單位藥物泡製規範整理原裝濃度、稀釋方式與泡好後的濃度,方便交班與備藥時對照。</div>
+    </div>
+
+    <div class="tool-warn">
+      <b>使用前務必確認</b>:本單位的稀釋慣例、幫浦設定與現有藥品規格不盡相同,本表僅為常見作法整理,<b>請以本院藥局最新規範與實際藥品標示為準</b>。泡好的針筒一定要貼上藥名、濃度、時間與泡藥者;同一藥品有多種濃度時(如 epinephrine)尤其要標清楚。
+    </div>
+
+    ${DRUG_PREP.map(sec=>`
+      <div class="tool-box">
+        <h3>${sec.g}</h3>
+        <div class="scroll-hint">表格可左右滑動查看</div>
+        <div class="tool-scroll">
+          <table class="tool-tbl drug-tbl">
+            <colgroup><col style="width:170px"><col style="width:240px"><col style="width:130px"><col style="width:220px"></colgroup>
+            <tr><th>藥物／原裝濃度</th><th>常見泡法</th><th>泡好濃度</th><th>常用劑量／備註</th></tr>
+            ${(sec.subs || [{ rows: sec.rows }]).map(sub=>`
+              ${sub.s ? `<tr class="drug-sub"><td colspan="4">${sub.s}</td></tr>` : ""}
+              ${sub.rows.map(r=>`<tr>
+                <td><div class="dn">${r[0]}</div><div class="dc">${r[1]}</div></td>
+                <td>${r[2]}</td>
+                <td><span class="pill b">${r[3]}</span></td><td>${r[4]}</td>
+              </tr>`).join("")}
+            `).join("")}
+          </table>
+        </div>
+      </div>`).join("")}
+
+    <div class="tool-box">
+      <h3 class="th-new">本單位濃度速算${dgNew}</h3>
+      <div class="tool-sub" style="margin:0 0 11px">輸入藥量、溶液總量與體重,直接算出泡好濃度與速率對照;也可先選常見泡法自動帶入。</div>
+      <div class="calc-form">
+        <div class="calc-f" style="flex:1 1 240px;min-width:200px">
+          <label for="dgPreset">常見泡法(可略)</label>
+          <select id="dgPreset">
+            ${DRUG_PRESETS.map((p,i)=>`<option value="${i}"${DRUG_CALC_STATE.pi===String(i)?" selected":""}>${p.t}</option>`).join("")}
+          </select>
+        </div>
+        <div class="calc-f">
+          <label for="dgMg">藥量(mg)</label>
+          <input id="dgMg" type="number" inputmode="decimal" min="0" step="0.1" value="${DRUG_CALC_STATE.mg}">
+        </div>
+        <div class="calc-f">
+          <label for="dgVol">溶液總量(mL)</label>
+          <input id="dgVol" type="number" inputmode="decimal" min="1" step="1" value="${DRUG_CALC_STATE.mL}">
+        </div>
+        <div class="calc-f">
+          <label for="dgWt">體重(kg)</label>
+          <input id="dgWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${DRUG_CALC_STATE.wt}">
+        </div>
+      </div>
+      <div class="calc-out" id="dgOut">
+        <div class="calc-cell hi">
+          <div class="k">泡好濃度</div>
+          <div class="v">${dgF(dc&&dc.cmg)}<span class="u">mg/mL</span></div>
+          <div class="h">${dc?`= ${dgF(dc.cug)} µg/mL`:"—"}</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">每 1 mL/hr 相當於</div>
+          <div class="v">${dgF(dc&&dc.perMin)}<span class="u">µg/kg/min</span></div>
+          <div class="h">依輸入體重換算</div>
+        </div>
+        <div class="calc-cell" id="dgHrCell"${dgHr?"":' style="display:none"'}>
+          <div class="k">每 1 mL/hr 相當於</div>
+          <div class="v">${dgF(dc&&dc.perHr)}<span class="u">µg/kg/hr</span></div>
+          <div class="h">dexmedetomidine 以每小時計量,用這格</div>
+        </div>
+      </div>
+
+      <div class="calc-form" style="margin-top:14px">
+        <div class="calc-f">
+          <label for="dgDose">目標劑量(µg/kg/min)</label>
+          <input id="dgDose" type="number" inputmode="decimal" min="0" step="0.01" value="${DRUG_CALC_STATE.dose}">
+        </div>
+        <div class="calc-f">
+          <label for="dgRate">目前速率(mL/hr)</label>
+          <input id="dgRate" type="number" inputmode="decimal" min="0" step="0.1" value="${DRUG_CALC_STATE.rate}">
+        </div>
+      </div>
+      <div class="calc-out" id="dgOut2">
+        <div class="calc-cell hi">
+          <div class="k">幫浦應設速率</div>
+          <div class="v">${dgF(dgRate)}<span class="u">mL/hr</span></div>
+          <div class="h">達到上方目標劑量所需</div>
+        </div>
+        <div class="calc-cell">
+          <div class="k">目前速率的實際劑量</div>
+          <div class="v">${dgF(dgDose&&dgDose.min)}<span class="u">µg/kg/min</span></div>
+          <div class="h">${dgDose?(dgHr?`= ${dgF(dgDose.hr)} µg/kg/hr`:"依上方濃度與體重換算"):"—"}</div>
+        </div>
+      </div>
+      <div class="calc-note"><b>公式</b>:藥量(mg)÷ 溶液總量(mL)× 1000 ÷ 體重(kg)÷ 60 = 每 1 mL/hr 相當於幾 µg/kg/min。<b>心算版</b>:藥量(mg)÷〔體重(kg)× 容量常數〕,容量常數 100 mL → 6、200 mL → 12、250 mL → 15、300 mL → 18、400 mL → 24、500 mL → 30。計算結果僅供核對,<b>實際速率仍依醫囑與病人反應調整</b>。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>上幫浦前的提醒</h3>
+      <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
+        <li>需持續點滴給藥時,<b>先加藥稀釋、再排 set 內空氣</b></li>
+        <li>劑量有變動時依主治醫師醫囑執行,<b>問清楚、聽清楚再執行</b></li>
+      </ul>
+    </div>
+
+    <div class="tool-box">
+      <h3>備藥時的幾個提醒</h3>
+      <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
+        <li><b>一次只泡一支、泡完立刻貼標</b>,不要一口氣抽好幾支再回頭補標籤</li>
+        <li>濃度相近但強度差很多的藥(epinephrine 0.01 mg/mL 與 0.1 mg/mL、norepinephrine 推注與輸注)<b class='w'>分開放置</b></li>
+        <li>換班或接手他人備好的針筒時,<b>沒有標示就重泡</b>,不要憑外觀猜</li>
+        <li>高濃度輸注藥物盡量走<b>中心靜脈</b>;週邊給予時固定好並定時檢查有無外滲</li>
+      </ul>
+    </div>
+
+    <div class="disclaimer">
+      本表為臨床記憶輔助,非取代臨床判斷與藥品仿單。給藥前請完成標準核對流程,並依所屬機構protocol調整。
+    </div>
+  </div>`;
+}
+
+/* ---------- 表格左右捲動指示條(常駐顯示)---------- */
+let RAIL_DRAG = null;
+let RAIL_GLOBAL_BOUND = false;
+
+function railBindGlobal(){
+  if(RAIL_GLOBAL_BOUND) return;
+  RAIL_GLOBAL_BOUND = true;
+  const move = e => {
+    if(!RAIL_DRAG) return;
+    const d = RAIL_DRAG;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const max = d.sc.scrollWidth - d.sc.clientWidth;
+    const track = d.rail.clientWidth - d.thumb.offsetWidth;
+    if(track > 0 && max > 0) d.sc.scrollLeft = d.left0 + (x - d.x0) * (max / track);
+  };
+  const up = () => { RAIL_DRAG = null; };
+  document.addEventListener("mousemove", move);
+  document.addEventListener("touchmove", move, { passive:true });
+  document.addEventListener("mouseup", up);
+  document.addEventListener("touchend", up);
+  document.addEventListener("touchcancel", up);
+}
+
+function initScrollRails(){
+  railBindGlobal();
+  document.querySelectorAll(".tool-scroll").forEach(sc => {
+    let rail = sc.nextElementSibling;
+    if(!rail || !rail.classList || !rail.classList.contains("scroll-rail")){
+      rail = document.createElement("div");
+      rail.className = "scroll-rail";
+      rail.innerHTML = `<div class="scroll-thumb"></div>`;
+      sc.parentNode.insertBefore(rail, sc.nextSibling);
+    }
+    const thumb = rail.querySelector(".scroll-thumb");
+    const sync = () => {
+      const max = sc.scrollWidth - sc.clientWidth;
+      if(max <= 2){ rail.classList.add("off"); return; }
+      rail.classList.remove("off");
+      const w = Math.max((sc.clientWidth / sc.scrollWidth) * 100, 14);
+      thumb.style.width = w + "%";
+      thumb.style.left = ((sc.scrollLeft / max) * (100 - w)) + "%";
+    };
+    if(!sc.dataset.railed){
+      sc.dataset.railed = "1";
+      sc.addEventListener("scroll", sync, { passive:true });
+      const start = e => {
+        const max = sc.scrollWidth - sc.clientWidth;
+        if(max <= 2) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const tb = thumb.getBoundingClientRect();
+        /* 直接點軌道任一處:先把滑塊移過去再開始拖曳 */
+        if(x < tb.left || x > tb.right){
+          const rb = rail.getBoundingClientRect();
+          const track = rail.clientWidth - thumb.offsetWidth;
+          if(track > 0){
+            const p = Math.min(Math.max((x - rb.left - thumb.offsetWidth/2) / track, 0), 1);
+            sc.scrollLeft = p * max;
+            sync();
+          }
+        }
+        RAIL_DRAG = { sc, rail, thumb, x0:x, left0:sc.scrollLeft };
+        if(e.cancelable) e.preventDefault();
+      };
+      rail.addEventListener("mousedown", start);
+      rail.addEventListener("touchstart", start, { passive:false });
+      window.addEventListener("resize", sync);
+    }
+    sync();
+    setTimeout(sync, 80);
+  });
+}
+
+function wireDrugCalc(){
+  const S = DRUG_CALC_STATE;
+  const fmt = x => (x==null || !isFinite(x)) ? "—"
+    : (Math.abs(x)>=100 ? x.toFixed(0) : Math.abs(x)>=10 ? x.toFixed(1) : Math.abs(x)>=1 ? x.toFixed(2) : x.toFixed(3));
+  const setCells = (boxId, vals) => {
+    const box = el(boxId); if(!box) return;
+    box.querySelectorAll(".calc-cell").forEach((c,i)=>{
+      if(!vals[i]) return;
+      const v = c.querySelector(".v");
+      const u = v.querySelector(".u");
+      v.textContent = vals[i][0];
+      if(u) v.appendChild(u);
+      if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
+    });
+  };
+  const upd = () => {
+    const mg = parseFloat(el("dgMg").value);
+    const mL = parseFloat(el("dgVol").value);
+    const wt = parseFloat(el("dgWt").value);
+    const dose = parseFloat(el("dgDose").value);
+    const rate = parseFloat(el("dgRate").value);
+    if(mg>0) S.mg = mg;
+    if(mL>0) S.mL = mL;
+    if(wt>0) S.wt = wt;
+    if(dose>0) S.dose = dose;
+    if(rate>0) S.rate = rate;
+    const isHr = drugIsHrUnit(S.pi);
+    const hrCell = el("dgHrCell");
+    if(hrCell) hrCell.style.display = isHr ? "" : "none";
+    const c = drugConcCalc(mg, mL, wt);
+    setCells("dgOut", c
+      ? [[fmt(c.cmg), `= ${fmt(c.cug)} µg/mL`], [fmt(c.perMin), null], [fmt(c.perHr), null]]
+      : [["—","—"], ["—",null], ["—",null]]);
+    const r = drugRateFromDose(mg, mL, wt, dose);
+    const d = drugDoseFromRate(mg, mL, wt, rate);
+    setCells("dgOut2", [
+      [fmt(r), null],
+      [fmt(d && d.min), d ? (isHr ? `= ${fmt(d.hr)} µg/kg/hr` : "依上方濃度與體重換算") : "—"]
+    ]);
+  };
+  const pre = el("dgPreset");
+  if(pre){
+    pre.addEventListener("change", () => {
+      S.pi = pre.value;
+      const p = DRUG_PRESETS[+pre.value];
+      if(p && p.mg != null){
+        el("dgMg").value = p.mg;
+        el("dgVol").value = p.mL;
+      }
+      upd();
+    });
+  }
+  ["dgMg","dgVol","dgWt","dgDose","dgRate"].forEach(id=>{
+    const n = el(id);
+    if(n){
+      n.addEventListener("input", upd);
+      n.addEventListener("change", upd);
+    }
+  });
+  ["dgMg","dgVol"].forEach(id=>{
+    const n = el(id);
+    if(n) n.addEventListener("input", () => {
+      const p = el("dgPreset");
+      if(p){ p.value = "0"; S.pi = "0"; }
+    });
+  });
+  initScrollRails();
+}
+
+/* ============================================================
+   兩個工具頁的切換
+   ------------------------------------------------------------
+   CALC_CHIP / DRUG_CHIP 兩顆 chip;選到哪個就 render 哪個並重新
+   綁定該頁的事件。狀態物件(CALC_STATE / DRUG_CALC_STATE 等)保留
+   在記憶體,切回來時輸入的數值還在。
+   ============================================================ */
+const CALC_CHIP = "麻醉計算機";
+const DRUG_CHIP = "藥物泡法";
+const TABS = [CALC_CHIP, DRUG_CHIP];
+let activeTab = CALC_CHIP;
+
+function renderChips(){
+  el("chips").innerHTML = TABS.map(t=>
+    `<button class="chip${t===DRUG_CHIP?" drug":""}" aria-pressed="${t===activeTab}" data-t="${t}">${t}</button>`
+  ).join("");
+  el("chips").querySelectorAll(".chip").forEach(b=>{
+    b.addEventListener("click", ()=>{ activeTab = b.dataset.t; renderChips(); renderPane(); });
+  });
+}
+
+const DISCLAIMER = `<div class="disclaimer">本工具僅為臨床輔助速查,所有數值與泡法在使用前請對照本院藥局規範、藥品實際標示與最新指引逐項確認。</div>`;
+
+function renderPane(){
+  const p = el("pane");
+  if(activeTab === DRUG_CHIP){
+    p.innerHTML = drugPrepHtml() + DISCLAIMER;
+    wireDrugCalc();
+  } else {
+    p.innerHTML = calcHtml() + DISCLAIMER;
+    wireCalc();
+  }
+  p.scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+el("foot").innerHTML = `臨床輔助工具 · 使用前請對照所屬機構 protocol 與最新指引　·　${TOOL_VERSION} · 更新日期 ${TOOL_UPDATED}`;
+renderChips();
+renderPane();
+
+/* ============================================================
+   自動更新:檔案推上 GitHub 後自動偵測伺服器上的新版。
+   本機 file:// 開啟會靜默略過。
+   ============================================================ */
+(function(){
+  var SELF = location.href.split('#')[0].split('?')[0];
+  var baseline = null;
+  function hash(t){var h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0;}return t.length+':'+h;}
+  function getSig(){
+    return fetch(SELF,{method:'HEAD',cache:'no-store'}).then(function(res){
+      if(!res.ok) throw 0;
+      var e=res.headers.get('etag'), m=res.headers.get('last-modified');
+      if(e) return 'e:'+e;
+      if(m) return 'm:'+m;
+      throw 0;
+    }).catch(function(){
+      return fetch(SELF,{cache:'no-store'}).then(function(res){
+        if(!res.ok) throw 0;
+        var e=res.headers.get('etag'), m=res.headers.get('last-modified');
+        if(e) return 'e:'+e;
+        if(m) return 'm:'+m;
+        return res.text().then(function(t){return 'h:'+hash(t);});
+      });
+    });
+  }
+  window.applyUpdate=function(){ location.reload(); };
+  function check(){
+    getSig().then(function(sig){
+      if(baseline===null){ baseline=sig; return; }
+      if(sig!==baseline){ var b=document.getElementById('upd'); if(b) b.style.display='flex'; }
+    }).catch(function(){});
+  }
+  check();
+  setInterval(check, 60000);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible') check(); });
+  window.addEventListener('focus', check);
+})();
+</script>
+</body>
+</html>
