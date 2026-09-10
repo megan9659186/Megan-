@@ -294,6 +294,11 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
 .nr{font-size:.8rem;color:var(--ink3)}
 .mt td.c span.na{border:none;color:var(--ink3);font-weight:400}
 .mt thead tr.zr th.zb em{font-style:normal;margin-left:.5rem;background:var(--warn);color:#fff;border-radius:.25rem;padding:0 .3rem;font-size:.62rem}
+.dpick{position:relative;display:inline-flex;align-items:center;gap:.25rem;cursor:pointer;padding:.2rem .35rem;border-radius:.4rem}
+.dpick:active{background:var(--surface2)}
+.dpick b{border-bottom:1.5px dashed var(--border2);padding-bottom:1px}
+.dpick::after{content:'▾';font-size:.7rem;color:var(--ink3)}
+.dpick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;-webkit-appearance:none;appearance:none;border:0;padding:0;margin:0}
 @media (min-width:900px){
   body{padding-left:24px;padding-right:24px}
   .simgrid{grid-template-columns:1fr 1fr}
@@ -364,7 +369,7 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
         <div><label for="simB">跟誰換號碼</label><select id="simB" onchange="simSet('b',this.value)"></select></div>
       </div>
       <div class="simwk">
-        <div class="wn"><button class="arr" onclick="simMove(-1)" aria-label="上一週">‹</button><b id="simTitle"></b><button class="arr" onclick="simMove(1)" aria-label="下一週">›</button>
+        <div class="wn"><button class="arr" onclick="simMove(-1)" aria-label="上一週">‹</button><label class="dpick" title="點一下選日期"><b id="simTitle"></b><input type="date" id="simDate" onchange="simPick(this.value)" onclick="try{this.showPicker()}catch(e){}" aria-label="選擇要試排的日期"></label><button class="arr" onclick="simMove(1)" aria-label="下一週">›</button>
           <button class="lnk" style="border:none;background:none;color:var(--ink3);font-size:.8rem;cursor:pointer" onclick="simMove(0)">本週</button></div>
         <div class="seg" id="simSpan"></div>
       </div>
@@ -1044,6 +1049,7 @@ function simSet(k,v){sim[k]=v;if(sim.a===sim.b){const o=roster.find(p=>p.id!==v&
 function simFlip(){const t=sim.a;sim.a=sim.b;sim.b=t;renderSim()}
 function simMove(d){sim.off=d===0?curOff():sim.off+d;renderSim()}
 function simSpan(n){sim.span=n;renderSim()}
+function simPick(v){if(!v)return;sim.off=wo(kd(v));renderSim()}
 function isWork(x){return cls(x.s,x.holD)!=='sOFF'}
 // 某人一段日子的班（swapN：換班那週改做的號碼）
 function daySeq(p,from,to,swapOff,swapN){
@@ -1079,6 +1085,7 @@ function renderSim(){
   simInit();renderSimSel();
   const A=person(sim.a),B=person(sim.b),o=sim.off,sp=sim.span,m=monOf(o);
   document.getElementById('simTitle').textContent=md(m)+' – '+md(ad(m,6));
+  const sd=document.getElementById('simDate');if(sd)sd.value=dk(m);
   document.getElementById('simSpan').innerHTML=[1,2].map(n=>'<button class="'+(sp===n?'on':'')+'" onclick="simSpan('+n+')">前後各 '+n+' 週</button>').join('');
   if(!A||!B||A.id===B.id||!inRot(A,o)||!inRot(B,o)){document.getElementById('simGrid').innerHTML='<div class="empty">'+(A&&B&&A.id!==B.id?esc(short(!inRot(A,o)?A:B))+' 這週不在號碼班，不能換號碼。':'請選兩個不同的人。')+'</div>';document.getElementById('simSum').innerHTML='';return}
   const nA=numOf(A,o),nB=numOf(B,o);
