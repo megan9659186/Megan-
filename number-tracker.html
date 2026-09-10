@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- build 2026-09-10b -->
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -181,21 +180,28 @@ input,select,textarea{font-size:max(16px,1rem)!important}
 .mnav .mid b{font-family:'Libre Baskerville',serif;font-weight:400;font-size:1.15rem;min-width:9rem;text-align:center}
 .mnav .arr{width:2.375rem;height:2.375rem;border-radius:50%;border:1.5px solid var(--border2);background:transparent;font-size:1.1rem;cursor:pointer}
 .mnav .lnk{border:none;background:none;font-size:.8rem;color:var(--ink3);cursor:pointer;padding:.2rem .4rem}
-.mbox{overflow:auto;max-height:78vh;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);-webkit-overflow-scrolling:touch}
+.mbox{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.mgrid{display:flex;align-items:flex-start}
+.mleft,.mright{max-height:78vh;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+.mleft{flex:none;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;border-right:1px solid var(--border);box-shadow:2px 0 4px -2px rgba(40,30,20,.12);position:relative;z-index:2;background:var(--surface)}
+.mleft::-webkit-scrollbar{display:none}
+.mright{flex:1;min-width:0;overflow:auto}
+.mleft table.mt{min-width:0}
+.mleft thead th{position:sticky;top:0;z-index:2}
 table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:100%}
 .mt th,.mt td{padding:0;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border)}
 .mt thead th{position:sticky;top:0;background:var(--surface);z-index:2;font-weight:500;color:var(--ink2);padding:.3rem .1rem;line-height:1.2}
 .mt thead th.we{color:var(--ink)}
 .mt thead th.hd{color:var(--red)}
 .mt thead th.td{background:var(--accent);color:#fff;border-radius:.3rem .3rem 0 0}
-.mt .nm{position:sticky;left:0;background:var(--surface);z-index:1;text-align:left;padding:.25rem .5rem;min-width:5.6rem;max-width:7rem;border-right:1px solid var(--border);cursor:pointer}
-.mt thead .nm{z-index:3}
-.mt .nm b{display:block;font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
-.mt .nm span{font-size:.65rem;color:var(--ink3)}
+.mt .nm{background:var(--surface);text-align:left;padding:.25rem .5rem;min-width:5.6rem;max-width:7rem;cursor:pointer}
+.mt thead .nm{vertical-align:middle}
+.mt .nm b{display:block;font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;color:var(--ink);line-height:1.25}
+.mt .nm span{display:block;font-size:.65rem;color:var(--ink3);line-height:1.2;white-space:nowrap}
 .mt tr.me td{border-top:3px solid var(--accent);border-bottom:3px solid var(--accent)}
 .mt tr.me td:last-child{border-right:3px solid var(--accent)}
 .mt tr.me td.no{border-left:none;box-shadow:inset 1px 0 0 var(--border)}
-.mt tr.me .nm{background:var(--accent);border-right-color:var(--accent)}
+.mt tr.me .nm{background:var(--accent);border-right:none}
 .mt tr.me .nm b{color:#fff}
 .mt tr.me .nm span{color:#cfc6ba}
 .mt td.no{font-family:'Libre Baskerville',serif;font-size:.75rem;color:var(--ink2);min-width:1.9rem;background:var(--surface2);border-left:1px solid var(--border)}
@@ -599,22 +605,17 @@ function renderBoard(){
   document.getElementById('boardChips').innerHTML=chipHTML(BOARD_F,boardFilter,'setBoardFilter');
   document.getElementById('boardDow').innerHTML=WD.map((w,i)=>{
     const d=ad(m,i),h=HOL[dk(d)];return '<span class="'+(i===boardDay?'hi':'')+'" style="cursor:pointer" onclick="setBoardDay('+i+')">'+w+'<br>'+md(d)+(h?'<br><span style="color:var(--red)">'+esc(h)+'</span>':'')+'</span>'}).join('');
-  const own=ownersAt(boardOff);let rows=[];
-  for(let n=1;n<=C(boardOff);n++){
-    const k=kind(n,boardOff);let ok;
-    if(boardDay>=0){const x=shiftAt(n,boardOff,boardDay);ok=dayMatch(cls(x.s,x.holD),boardFilter)}
-    else ok=weekMatch(k,boardFilter);
-    if(!ok)continue;
-    rows.push({n,ps:own[n]||[]});
-  }
-  if(boardDay>=0)rows.sort((a,b)=>{const xa=shiftAt(a.n,boardOff,boardDay),xb=shiftAt(b.n,boardOff,boardDay);return(ORD[cls(xa.s,xa.holD)]-ORD[cls(xb.s,xb.holD)])||xa.s.localeCompare(xb.s)||a.n-b.n});
+  // 依代碼排序（跟月總表、公告班表一樣）；沒人的號碼放最後
+  const own=ownersAt(boardOff),match=n=>{if(boardDay>=0){const x=shiftAt(n,boardOff,boardDay);return dayMatch(cls(x.s,x.holD),boardFilter)}return weekMatch(kind(n,boardOff),boardFilter)};
+  const rows=[];
+  roster.filter(p=>inRot(p,boardOff)).slice().sort(byCode).forEach(p=>{const n=numOf(p,boardOff);if(match(n))rows.push({n,p,dup:own[n].length>1})});
+  for(let n=1;n<=C(boardOff);n++)if(!own[n]&&match(n))rows.push({n,p:null});
   const h=rows.map(r=>{
-    const isMe=r.ps.some(p=>p.id===meId);
+    const p=r.p,isMe=!!p&&p.id===meId;
     let who;
-    if(!r.ps.length)who='<b>未指定</b><span>名單沒有人在這個號碼</span>';
-    else if(r.ps.length>1)who='<b class="warn">'+r.ps.map(p=>esc(short(p))).join('、')+'</b><span class="warn">號碼重複，請檢查名單</span>';
-    else{const p=r.ps[0];who='<b>'+esc(short(p))+(isMe?'（我）':'')+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span>'}
-    return '<div class="bd'+(isMe?' me':'')+(r.ps.length?'':' none')+'"><div class="num">'+r.n+'</div><div class="who">'+who+'</div>'+strip(r.n,boardOff,{day:boardDay})+'</div>';
+    if(!p)who='<b>未指定</b><span>名單沒有人在這個號碼</span>';
+    else who='<b'+(r.dup?' class="warn"':'')+'>'+esc(short(p))+(isMe?'（我）':'')+'</b><span'+(r.dup?' class="warn"':'')+'>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+(r.dup?'・號碼重複':'')+'</span>';
+    return '<div class="bd'+(isMe?' me':'')+(p?'':' none')+'"><div class="num">'+r.n+'</div><div class="who">'+who+'</div>'+strip(r.n,boardOff,{day:boardDay})+'</div>';
   }).join('');
   document.getElementById('boardList').innerHTML=h||'<div class="empty">這週沒有符合的號碼。</div>';
 }
@@ -971,7 +972,7 @@ function renderMonth(){
   const cols=[];ds.forEach((d,i)=>{if(i===0||d.getDay()===1)cols.push({no:true,d});cols.push({d})});
   cols.forEach((c,i)=>{c.p=periodIdxOf(c.d);c.zs=i>0&&c.p!==cols[i-1].p});
   const segs=[];cols.forEach(c=>{const L=segs[segs.length-1];if(L&&L.p===c.p)L.n++;else segs.push({p:c.p,n:1})});
-  let h0='<tr class="zr"><th class="nm" rowspan="3">人員</th>';
+  let h0='<tr class="zr">';
   segs.forEach((g,i)=>{const pp=periodByIdx(g.p),np=PO.some((o,j)=>j>0&&o>=wo(pp.a)&&o<=wo(pp.b));h0+='<th colspan="'+g.n+'" class="zb z'+(((g.p%2)+2)%2)+(i>0?' zs':'')+'"><div class="zl">'+(g.n>=6?'<span>四週區間</span> ':'')+pLabel(pp)+(np?'<em>新號碼表</em>':'')+'</div></th>'});
   h0+='</tr>';
   let h1='<tr>',h2='<tr>';
@@ -986,7 +987,7 @@ function renderMonth(){
   h1+='</tr>';h2+='</tr>';
   const ppl=roster.filter(p=>cols.some(c=>c.no&&inRot(p,wo(c.d)))).slice().sort(byCode);
   const rows=ppl.map(p=>{
-    let r='<tr class="'+(p.id===meId?'me':'')+'"><td class="nm" onclick="setView(\''+esc(p.id)+'\');setTab(\'mine\')"><b>'+esc(p.name||p.id)+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span></td>';
+    let r='<tr class="'+(p.id===meId?'me':'')+'">';
     cols.forEach(c=>{
       if(c.no){const n=numOf(p,wo(c.d));r+='<td class="no'+(c.zs?' zs':'')+'">'+(n==null?'—':n)+'</td>';return}
       const x=shiftOnDate(p,c.d);
@@ -997,15 +998,36 @@ function renderMonth(){
     });
     return r+'</tr>';
   }).join('');
-  document.getElementById('mBox').innerHTML=ppl.length?'<table class="mt'+(mFilter!=='all'?' f':'')+'"><thead>'+h0+h1+h2+'</thead><tbody>'+rows+'</tbody></table>':'<div class="empty">名單裡還沒有人。</div>';
+  const left=ppl.map(p=>'<tr class="'+(p.id===meId?'me':'')+'"><td class="nm" onclick="setView(\''+esc(p.id)+'\');setTab(\'mine\')"><b>'+esc(p.name||p.id)+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span></td></tr>').join('');
+  const box=document.getElementById('mBox'),keepX=document.getElementById('mRight')?document.getElementById('mRight').scrollLeft:0;
+  box.innerHTML=ppl.length?'<div class="mgrid"><div class="mleft" id="mLeft"><table class="mt"><thead><tr><th class="nm">人員</th></tr></thead><tbody>'+left+'</tbody></table><div id="mSpacer"></div></div>'
+    +'<div class="mright" id="mRight"><table class="mt'+(mFilter!=='all'?' f':'')+'"><thead>'+h0+h1+h2+'</thead><tbody>'+rows+'</tbody></table></div></div>':'<div class="empty">名單裡還沒有人。</div>';
+  const L=document.getElementById('mLeft'),R=document.getElementById('mRight');
+  if(L&&R){
+    // 上下捲動兩邊同步；左右捲動只有右邊的日期會動
+    let lock=null;
+    R.addEventListener('scroll',()=>{if(lock==='L')return;lock='R';L.scrollTop=R.scrollTop;requestAnimationFrame(()=>{lock=null})},{passive:true});
+    L.addEventListener('scroll',()=>{if(lock==='R')return;lock='L';R.scrollTop=L.scrollTop;requestAnimationFrame(()=>{lock=null})},{passive:true});
+    if(mFilter!==lastMFilter)R.scrollLeft=0;else R.scrollLeft=keepX;
+  }
+  lastMFilter=mFilter;
   fixMonthSticky();
 }
+let lastMFilter='all';
 // 三列表頭的 sticky 位置依實際高度計算
 function fixMonthSticky(){
-  const th=document.querySelector('#mBox thead');if(!th||!th.offsetHeight)return;
+  const R=document.getElementById('mRight'),L=document.getElementById('mLeft');if(!R||!L||!R.offsetHeight)return;
+  const th=R.querySelector('thead');
   let t=0;[...th.rows].forEach(tr=>{[...tr.cells].forEach(c=>c.style.top=t+'px');t+=tr.offsetHeight});
-  const nm=th.querySelector('.nm'),L=(nm?nm.offsetWidth:0)+6;
-  th.querySelectorAll('.zl').forEach(z=>z.style.left=L+'px');
+  th.querySelectorAll('.zl').forEach(z=>z.style.left='6px');
+  // 左右兩張表每一列同高，才會對齊
+  const hl=L.querySelector('thead tr');hl.style.height=th.getBoundingClientRect().height+'px';
+  const lr=[...L.querySelectorAll('tbody tr')],rr=[...R.querySelectorAll('tbody tr')];
+  lr.concat(rr).forEach(x=>x.style.height='');
+  const hs=rr.map((r,i)=>Math.max(r.getBoundingClientRect().height,lr[i]?lr[i].getBoundingClientRect().height:0));
+  rr.forEach((r,i)=>{r.style.height=hs[i]+'px';if(lr[i])lr[i].style.height=hs[i]+'px'});
+  document.getElementById('mSpacer').style.height=Math.max(0,R.offsetHeight-R.clientHeight)+'px';
+  L.scrollTop=R.scrollTop;
 }
 window.addEventListener('resize',fixMonthSticky);
 
