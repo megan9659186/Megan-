@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="號碼班">
+<link rel="apple-touch-icon" href="number-tracker-icon.png">
+<title>號碼班追蹤</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f1;--surface:#fff;--surface2:#f2f0ec;--border:#e4e0d8;--border2:#d0ccc4;
+  --ink:#1c1a18;--ink2:#6b6560;--ink3:#a09890;--accent:#2a2420;--red:#c0392b;--warn:#8a6a30;
+  --radius:0.75rem;--radius-sm:0.5rem;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',-apple-system,'PingFang TC',sans-serif;color:var(--ink);background:var(--bg);
+  padding:calc(env(safe-area-inset-top,1.25rem) + 0.875rem) 0.75rem calc(env(safe-area-inset-bottom,0px) + 1.75rem);font-size:1rem;line-height:1.45}
+.wrap{max-width:37.5rem;margin:0 auto}
+button{font-family:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* 標頭 */
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:0.625rem;margin-bottom:0.875rem}
+.top h1{font-family:'Libre Baskerville',serif;font-weight:400;font-size:1.4375rem;letter-spacing:-.3px}
+.top .today{font-size:0.8125rem;color:var(--ink2);white-space:nowrap}
+
+/* 本週焦點 */
+.now{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem 0.875rem 0.75rem;margin-bottom:1rem}
+.now-head{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.625rem}
+.now-num{font-family:'Libre Baskerville',serif;font-size:2.125rem;line-height:1;min-width:3.625rem}
+.now-num small{font-size:0.9375rem;color:var(--ink3);margin-right:1px}
+.now-txt{font-size:0.875rem;color:var(--ink2);line-height:1.4}
+.now-txt b{color:var(--ink);font-weight:600}
+.now .strip{--th:2.75rem}
+
+/* 分頁 */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface2);border-radius:0.625rem;padding:0.1875rem;margin-bottom:0.875rem}
+.tabs button{border:none;background:transparent;padding:0.5625rem 0;border-radius:0.5rem;font-size:0.9375rem;color:var(--ink2);cursor:pointer}
+.tabs button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(40,30,20,.08)}
+.pane{display:none}.pane.on{display:block}
+
+/* 篩選 */
+.chips{display:flex;gap:0.375rem;overflow-x:auto;padding-bottom:2px;margin-bottom:0.75rem;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;border:1px solid var(--border2);background:var(--surface);border-radius:6.1875rem;padding:0.375rem 0.8125rem;font-size:0.875rem;color:var(--ink2);cursor:pointer;display:flex;align-items:center;gap:0.375rem}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip i{width:0.5625rem;height:0.5625rem;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.12)}
+.row-ctl{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.625rem;font-size:0.875rem;color:var(--ink2)}
+.row-ctl select{flex:1;min-width:0;font:inherit;font-size:0.9375rem;color:var(--ink);padding:0.4375rem 0.625rem;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);-webkit-appearance:none;appearance:none}
+.summary{font-size:0.8125rem;color:var(--ink3);margin:-4px 0 0.625rem 2px}
+
+/* 班別色塊（同主檔配色） */
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0.1875rem;--th:2.125rem}
+.t{height:var(--th);border-radius:0.3125rem;border:1px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;line-height:1.05;position:relative;min-width:0;overflow:hidden;white-space:nowrap}
+.t.sm{font-size:0.625rem;letter-spacing:-.2px}
+.t .a{font-size:0.5625rem;font-weight:500;opacity:.8}
+.t.hol::after{content:'';position:absolute;top:0.1875rem;right:0.1875rem;width:0.3125rem;height:0.3125rem;border-radius:50%;background:var(--red)}
+.t.dim{opacity:.35}
+.t.hi{box-shadow:0 0 0 2px var(--accent);z-index:1}
+.sD{background:#ede9e2;color:#3a3228;border-color:#d8d4cc}
+.sDhol{background:#c8bfaa;color:#2a2018;border-color:#b8af9a}
+.sE{background:#c8d4d8;color:#1e3040;border-color:#b0c0c8}
+.sN{background:#d4cba0;color:#3a3010;border-color:#c0b888}
+.sOFF{background:#e8d8d0;color:#5a2820;border-color:#d4c0b8}
+.s12{background:#c4d0c0;color:#1e3020;border-color:#aabca8}
+.dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0.1875rem;font-size:0.6875rem;color:var(--ink3);text-align:center;margin-bottom:0.25rem}
+.dow span.hi{color:var(--ink);font-weight:700}
+.wkh,.bdh{display:grid;gap:0.5rem;padding:0 0.6875rem}
+.wkh{grid-template-columns:3.25rem 2.5rem 1fr}
+.bdh{grid-template-columns:2.125rem 4rem 1fr}
+.bdh .dow{line-height:1.25}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+
+/* 週次列表 */
+.list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.wk{display:grid;grid-template-columns:3.25rem 2.5rem 1fr;gap:0.5rem;align-items:center;padding:0.5625rem 0.625rem;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wk:last-child{border-bottom:none}
+.wk:active{background:var(--surface2)}
+.wk.cur{background:#fbf9f5}
+.wk-d{font-size:0.8125rem;line-height:1.25;color:var(--ink2)}
+.wk-d b{display:block;color:var(--ink);font-size:0.9375rem;font-weight:600}
+.wk-d .tag{display:inline-block;margin-top:2px;font-size:0.625rem;color:#fff;background:var(--accent);border-radius:0.25rem;padding:0 0.3125rem}
+.num{font-family:'Libre Baskerville',serif;font-size:1.0625rem;text-align:center;color:var(--ink)}
+.num.muted{color:var(--ink3)}
+.zone b{font-weight:600;color:var(--ink2)}
+.zone{padding:0.3125rem 0.75rem;font-size:0.6875rem;color:var(--ink3);background:var(--bg);border-bottom:1px solid var(--border);letter-spacing:.3px}
+.more{display:block;width:100%;margin-top:0.625rem;padding:0.6875rem;border:1px dashed var(--border2);background:transparent;border-radius:var(--radius-sm);color:var(--ink2);font-size:0.875rem;cursor:pointer}
+.empty{padding:1.625rem 1rem;text-align:center;color:var(--ink2);font-size:0.875rem}
+
+/* 週總表 */
+.wnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.625rem}
+.wnav button.arr{width:2.375rem;height:2.375rem;border-radius:50%;border:1.5px solid var(--border2);background:transparent;font-size:1.125rem;cursor:pointer}
+.wnav .mid{text-align:center}
+.wnav .mid b{font-family:'Libre Baskerville',serif;font-weight:400;font-size:1.125rem;display:block}
+.wnav .mid button{border:none;background:none;font-size:0.75rem;color:var(--ink3);cursor:pointer;padding:2px 0.375rem}
+.bd{display:grid;grid-template-columns:2.125rem 4rem 1fr;gap:0.5rem;align-items:center;padding:0.5rem 0.625rem;border-bottom:1px solid var(--border)}
+.bd:last-child{border-bottom:none}
+.bd.me{background:#f6f1e7}
+.bd.none{opacity:.55}
+.who{font-size:0.875rem;line-height:1.2;min-width:0;overflow:hidden}
+.who b{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{font-size:0.6875rem;color:var(--ink3)}
+.who .warn{color:var(--red)}
+.findbtn{display:block;width:100%;margin-top:0.75rem;padding:0.75rem;border:none;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:0.9375rem;font-weight:500;cursor:pointer}
+
+/* 名單 */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem;margin-bottom:0.875rem}
+.card h3{font-size:0.9375rem;font-weight:600;margin-bottom:0.5rem}
+.card p.hint{font-size:0.8125rem;color:var(--ink2);margin-bottom:0.625rem;line-height:1.5}
+.seg{display:inline-grid;grid-auto-flow:column;background:var(--surface2);border-radius:0.5rem;padding:0.1875rem;gap:2px}
+.seg button{border:none;background:transparent;padding:0.375rem 0.875rem;border-radius:0.375rem;font-size:0.875rem;color:var(--ink2);cursor:pointer}
+.seg button.on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(40,30,20,.08)}
+.alert{font-size:0.8125rem;line-height:1.5;padding:0.5625rem 0.6875rem;border-radius:var(--radius-sm);background:#faf3e6;color:var(--warn);border:1px solid #eadcbc;margin-bottom:0.75rem}
+.alert.ok{background:#f0f5ee;color:#3a5a36;border-color:#cfdec9}
+.rh,.rr{display:grid;grid-template-columns:1.1fr 1.5fr 1fr .9fr 3.125rem 2.125rem;gap:0.3125rem;align-items:center}
+.rh{font-size:0.6875rem;color:var(--ink3);padding:0 2px 0.3125rem}
+.rr{padding:0.25rem 0;border-top:1px solid var(--border)}
+.rr.me .cur{font-weight:700;color:var(--accent)}
+.rr input{width:100%;min-width:0;font:inherit;font-size:0.9375rem;padding:0.375rem 0.375rem;border:1px solid transparent;border-radius:0.375rem;background:transparent;color:var(--ink)}
+.rr input:focus{border-color:var(--border2);background:var(--surface2)}
+.rr input.bad{border-color:var(--red);background:#fbeeed}
+.rr .cur{font-family:'Libre Baskerville',serif;font-size:0.875rem;text-align:center;color:var(--ink2)}
+.del{width:2rem;height:2rem;border:1px solid var(--border);border-radius:0.375rem;background:var(--surface);color:var(--ink3);font-size:0.8125rem;cursor:pointer}
+.del.arm{background:var(--red);border-color:var(--red);color:#fff;font-size:0.6875rem;padding:0 0.25rem}
+.btns{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.625rem}
+.btn{padding:0.5625rem 0.875rem;border-radius:var(--radius-sm);border:1px solid var(--border2);background:var(--surface);font-size:0.875rem;cursor:pointer;color:var(--ink)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{color:var(--red);border-color:#e0c8c4}
+.btn.arm{background:var(--red);border-color:var(--red);color:#fff}
+textarea{width:100%;min-height:7.5rem;font:inherit;font-size:0.9375rem;padding:0.625rem;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);resize:vertical;color:var(--ink)}
+.field{display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;font-size:0.875rem;color:var(--ink2)}
+.field input{font:inherit;font-size:0.9375rem;padding:0.375rem 0.5rem;border:1px solid var(--border2);border-radius:0.375rem;background:var(--surface);color:var(--ink)}
+.msg{font-size:0.8125rem;margin-top:0.5rem;color:#3a5a36;min-height:1em}
+.msg.err{color:var(--red)}
+
+/* 換班抽屜（iOS：overlay 本身是捲動容器） */
+.ov{position:fixed;inset:0;background:rgba(28,26,24,.38);z-index:100;display:none;flex-direction:column;align-items:stretch;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.ov.on{display:flex}
+.sheet{margin-top:auto;width:100%;max-width:37.5rem;align-self:center;background:var(--bg);border-radius:1.125rem 1.125rem 0 0;padding:0.875rem 0.75rem calc(env(safe-area-inset-bottom,0px) + 1.5rem);min-height:40vh;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(1.875rem);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+.sh-top{display:flex;justify-content:space-between;align-items:flex-start;gap:0.625rem;margin-bottom:0.75rem}
+.sh-top h2{font-family:'Libre Baskerville',serif;font-weight:400;font-size:1.1875rem;line-height:1.3}
+.sh-top h2 span{display:block;font-family:'DM Sans',sans-serif;font-size:0.8125rem;color:var(--ink2);margin-top:2px}
+.x{width:2.125rem;height:2.125rem;flex-shrink:0;border-radius:50%;border:1px solid var(--border2);background:var(--surface);font-size:0.9375rem;cursor:pointer;color:var(--ink2)}
+.mine{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.625rem;margin-bottom:0.75rem}
+.mine .lbl{font-size:0.75rem;color:var(--ink3);margin-bottom:0.375rem}
+.mine .strip{--th:2.5rem}
+.cand{display:grid;grid-template-columns:1fr auto;gap:0.25rem 0.625rem;padding:0.625rem;border-bottom:1px solid var(--border)}
+.cand:last-child{border-bottom:none}
+.cand .who b{display:inline;margin-right:0.375rem}
+.cand .num{font-size:0.9375rem;text-align:right}
+.cand .strip{grid-column:1 / -1}
+.cand .adj{grid-column:1 / -1;font-size:0.75rem;color:var(--ink2);display:flex;gap:0.875rem;flex-wrap:wrap}
+.cand .adj i{display:inline-block;width:0.5rem;height:0.5rem;border-radius:50%;margin-right:0.25rem;border:1px solid rgba(0,0,0,.12);vertical-align:0}
+.cand .gets{grid-column:1 / -1;font-size:0.75rem;color:var(--ink3)}
+.note{font-size:0.75rem;color:var(--ink3);margin-top:0.75rem;line-height:1.5}
+
+/* ── 網頁版版面 ── */
+.wrap{max-width:1180px}
+.narrow{max-width:47.5rem;margin-left:auto;margin-right:auto}
+.tabs{grid-template-columns:repeat(5,1fr)}
+.tabs button{font-size:.9rem;padding:.55rem 0}
+.zoom{display:flex;gap:.25rem;align-items:center}
+.zoom button{width:2.1rem;height:2.1rem;border-radius:50%;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:.85rem;color:var(--ink2);line-height:1}
+.zoom button:disabled{opacity:.35;cursor:default}
+.top-r{display:flex;align-items:center;gap:.75rem}
+input,select,textarea{font-size:max(16px,1rem)!important}
+.rr input{font-size:max(16px,.95rem)!important}
+
+/* ── 每月總表 ── */
+.mnav{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.625rem;flex-wrap:wrap}
+.mnav .mid{display:flex;align-items:center;gap:.5rem}
+.mnav .mid b{font-family:'Libre Baskerville',serif;font-weight:400;font-size:1.15rem;min-width:9rem;text-align:center}
+.mnav .arr{width:2.375rem;height:2.375rem;border-radius:50%;border:1.5px solid var(--border2);background:transparent;font-size:1.1rem;cursor:pointer}
+.mnav .lnk{border:none;background:none;font-size:.8rem;color:var(--ink3);cursor:pointer;padding:.2rem .4rem}
+.mbox{overflow:auto;max-height:78vh;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);-webkit-overflow-scrolling:touch}
+table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:100%}
+.mt th,.mt td{padding:0;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border)}
+.mt thead th{position:sticky;top:0;background:var(--surface);z-index:2;font-weight:500;color:var(--ink2);padding:.3rem .1rem;line-height:1.2}
+.mt thead th.we{color:var(--ink)}
+.mt thead th.hd{color:var(--red)}
+.mt thead th.td{background:var(--accent);color:#fff;border-radius:.3rem .3rem 0 0}
+.mt .nm{position:sticky;left:0;background:var(--surface);z-index:1;text-align:left;padding:.25rem .5rem;min-width:5.6rem;max-width:7rem;border-right:1px solid var(--border);cursor:pointer}
+.mt thead .nm{z-index:3}
+.mt .nm b{display:block;font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.mt .nm span{font-size:.65rem;color:var(--ink3)}
+.mt tr.me td{border-top:3px solid var(--accent);border-bottom:3px solid var(--accent)}
+.mt tr.me td:last-child{border-right:3px solid var(--accent)}
+.mt tr.me td.no{border-left:none;box-shadow:inset 1px 0 0 var(--border)}
+.mt tr.me .nm{background:var(--accent);border-right-color:var(--accent)}
+.mt tr.me .nm b{color:#fff}
+.mt tr.me .nm span{color:#cfc6ba}
+.mt td.no{font-family:'Libre Baskerville',serif;font-size:.75rem;color:var(--ink2);min-width:1.9rem;background:var(--surface2);border-left:1px solid var(--border)}
+
+.mt thead th.no{background:var(--surface2);border-left:1px solid var(--border);font-size:.65rem}
+.mt td.c{padding:.14rem .09rem}
+.mt td.c span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:2.15rem;height:2.1rem;border-radius:.3rem;border-width:1px;border-style:solid;font-weight:600;line-height:1.05;position:relative}
+.mt td.c span small{font-size:.58rem;font-weight:500;opacity:.8}
+.mt td.c span.sm{font-size:.62rem}
+.mt td.c span.hol::after{content:'';position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:var(--red)}
+.mt.f td.c span:not(.hit){opacity:.2}
+.mt td.today{background:#faf6ee}
+
+/* ── 試排班 ── */
+.simctl{display:grid;gap:.75rem}
+.simpair{display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:end}
+.simpair label{display:block;font-size:.8rem;color:var(--ink3);margin-bottom:.25rem}
+.simpair select{width:100%;font:inherit;padding:.45rem .6rem;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);-webkit-appearance:none;appearance:none}
+.flip{width:2.4rem;height:2.4rem;border-radius:50%;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:1rem;color:var(--ink2)}
+.simwk{display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+.simwk .wn{display:flex;align-items:center;gap:.4rem}
+.simwk .wn b{font-family:'Libre Baskerville',serif;font-weight:400;font-size:1.05rem;min-width:7.5rem;text-align:center}
+.simwk .arr{width:2.1rem;height:2.1rem;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer}
+.simsum{font-size:.9rem;color:var(--ink2);line-height:1.6;margin:.25rem 0 .9rem}
+.simsum b{color:var(--ink)}
+.simgrid{display:grid;grid-template-columns:1fr;gap:.9rem}
+.simp{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem}
+.simhd{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;margin-bottom:.5rem}
+.simhd b{font-size:1rem}
+.simhd span{font-family:'Libre Baskerville',serif;font-size:.9rem;color:var(--ink2)}
+.sr,.srh{display:grid;grid-template-columns:3.6rem 2.4rem 1fr;gap:.5rem;align-items:center}
+.sr{padding:.35rem 0;border-top:1px solid var(--border)}
+.sr.sw{background:#f6f1e7;margin:0 -.75rem;padding:.45rem .75rem;border-top:1px solid #e6dcc8}
+.sr.orig{border-top:none;padding-top:0;opacity:.5}
+.sr.orig .strip{--th:1.4rem}
+.sr.orig .t{font-size:.6rem}
+.sr .wk-d{font-size:.78rem}
+.sr .wk-d b{font-size:.85rem}
+.sr.sw .num{font-weight:700}
+.sr .tg{display:inline-block;font-size:.6rem;background:var(--accent);color:#fff;border-radius:.25rem;padding:0 .3rem;margin-top:.15rem}
+.t.warn{box-shadow:0 0 0 2px var(--red);z-index:1}
+.flags{margin-top:.7rem;font-size:.82rem;line-height:1.55}
+.flags .new{color:var(--red)}
+.flags .old{color:var(--ink3)}
+.flags .ok{color:#3a5a36}
+.flags p{margin-top:.15rem}
+.trybtn{grid-column:1 / -1;justify-self:start;margin-top:.2rem;padding:.3rem .75rem;border:1px solid var(--border2);background:var(--surface);border-radius:99px;font-size:.78rem;color:var(--ink2);cursor:pointer}
+
+/* 放大字級、螢幕不夠寬時：日期／號碼一行，色塊一行 */
+.top{flex-wrap:wrap}
+.rtable{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.rtable>div{min-width:20rem}
+.stack .tabs{display:flex;overflow-x:auto;scrollbar-width:none}
+.stack .tabs::-webkit-scrollbar{display:none}
+.stack .tabs button{flex:0 0 auto;padding:.55rem .95rem}
+.stack .wk,.stack .bd,.stack .sr{grid-template-columns:auto 1fr;row-gap:.35rem}
+.stack .wk .strip,.stack .bd .strip,.stack .sr .strip{grid-column:1 / -1}
+.stack .wk .num,.stack .bd .num,.stack .sr .num{text-align:right}
+.stack .bd{grid-template-columns:1.9rem 1fr}
+.stack .bd .who{grid-column:2;grid-row:1}
+.stack .bd .num{grid-column:1;grid-row:1;text-align:left;min-width:2rem}
+.stack .wk-d br{display:none}
+.stack .wk-d b{display:inline;margin-right:.25rem}
+.stack .wk-d .tag,.stack .sr .tg{margin:0 0 0 .4rem}
+.stack .wkh,.stack .bdh,.stack .srh{grid-template-columns:1fr}
+.stack .wkh>span,.stack .bdh>span,.stack .srh>span{display:none}
+/* 四週區間與假日名稱 */
+.mt thead tr.zr th.zb{text-align:left;padding:.3rem .5rem;font-size:.72rem;font-weight:600;color:var(--ink);letter-spacing:.2px}
+.mt thead tr.zr th.zb .zl{position:sticky;display:inline-block;white-space:nowrap}
+.mt thead tr.zr th.zb span{font-weight:400;color:var(--ink2)}
+.mt thead tr.zr th.z0{background:#e6ecef}
+.mt thead tr.zr th.z1{background:#f1e9da}
+.mt .zs{border-left:3px solid #6f8490!important}
+.mt thead th .hn{display:block;font-size:.56rem;color:var(--red);font-weight:600;white-space:normal;line-height:1.1;max-width:2.4rem;margin:.1rem auto 0}
+.hl{grid-column:3;font-size:.72rem;color:var(--red);line-height:1.35;margin-top:-.1rem}
+.stack .hl{grid-column:1 / -1}
+.mine .hl{margin-top:.35rem}
+/* 號碼表 */
+.filebtn{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer}
+.filebtn input{display:none}
+.planinfo{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;font-size:.9rem;color:var(--ink2);margin-bottom:.75rem}
+.planinfo input{width:4.5rem;font:inherit;padding:.3rem .5rem;border:1px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--ink)}
+.imp{margin-top:.8rem;font-size:.9rem;line-height:1.6}
+.imp h4{font-size:.95rem;margin-bottom:.3rem}
+.imp ul{margin:.2rem 0 .5rem 1.1rem}
+.imp .chg{color:var(--warn)}
+.zone.newplan{background:#f6efe0;color:var(--warn)}
+.zone.newplan b{color:var(--warn)}
+.wk.off-rot{cursor:default;opacity:.6}
+.nr{font-size:.8rem;color:var(--ink3)}
+.mt td.c span.na{border:none;color:var(--ink3);font-weight:400}
+.mt thead tr.zr th.zb em{font-style:normal;margin-left:.5rem;background:var(--warn);color:#fff;border-radius:.25rem;padding:0 .3rem;font-size:.62rem}
+@media (min-width:900px){
+  body{padding-left:24px;padding-right:24px}
+  .simgrid{grid-template-columns:1fr 1fr}
+  .top h1{font-size:1.7rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top narrow"><h1>號碼班追蹤</h1><div class="top-r"><div class="today" id="todayTxt"></div>
+    <div class="zoom"><button onclick="zoom(-1)" id="zOut" aria-label="縮小字">A−</button><button onclick="zoom(1)" id="zIn" aria-label="放大字">A＋</button></div></div></div>
+
+  <div class="tabs narrow" role="tablist">
+    <button class="on" data-tab="mine" onclick="setTab('mine')">我的週次</button>
+    <button data-tab="board" onclick="setTab('board')">週總表</button>
+    <button data-tab="month" onclick="setTab('month')">月總表</button>
+    <button data-tab="sim" onclick="setTab('sim')">試排班</button>
+    <button data-tab="roster" onclick="setTab('roster')">名單</button>
+  </div>
+
+  <!-- 我的週次 -->
+  <section class="pane on narrow" id="pane-mine">
+    <div class="now" id="now"></div>
+    <div class="row-ctl"><span>查看</span><select id="viewSel" onchange="setView(this.value)"></select></div>
+    <div class="chips" id="mineChips"></div>
+    <div class="summary" id="mineSum"></div>
+    <div class="wkh"><span></span><span></span><div class="dow"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div></div>
+    <div class="list" id="mineList"></div>
+    <button class="more" id="moreBtn" onclick="more()">再往後看 12 週</button>
+  </section>
+
+  <!-- 每週總表 -->
+  <section class="pane narrow" id="pane-board">
+    <div class="wnav">
+      <button class="arr" onclick="boardMove(-1)" aria-label="上一週">‹</button>
+      <div class="mid"><b id="bTitle"></b><button id="bToday" onclick="boardMove(0)">回到本週</button></div>
+      <button class="arr" onclick="boardMove(1)" aria-label="下一週">›</button>
+    </div>
+    <div class="chips" id="boardChips"></div>
+    <div class="summary">點星期可以只看那一天，例如誰週三是大夜。</div>
+    <div class="bdh"><span></span><span></span><div class="dow" id="boardDow"></div></div>
+    <div class="list" id="boardList"></div>
+    <button class="findbtn" onclick="openSwap(boardOff)">這週幫我找人換班</button>
+  </section>
+
+  <!-- 每月總表 -->
+  <section class="pane" id="pane-month">
+    <div class="mnav">
+      <div class="seg" id="mModeSeg"></div>
+      <div class="mid">
+        <button class="arr" onclick="monthMove(-1)" aria-label="上一個">‹</button>
+        <b id="mTitle"></b>
+        <button class="arr" onclick="monthMove(1)" aria-label="下一個">›</button>
+        <button class="lnk" id="mToday" onclick="monthMove(0)">回到現在</button>
+      </div>
+    </div>
+    <div class="chips" id="monthChips"></div>
+    <div class="mbox" id="mBox"></div>
+    <div class="summary" style="margin-top:.6rem">最上面一列是醫院的四週區間，區間交界有粗線。號碼欄是那週輪到的號碼班。點名字可以看那個人的所有週次。</div>
+  </section>
+
+  <!-- 號碼試排班 -->
+  <section class="pane" id="pane-sim">
+    <div class="card simctl">
+      <div class="simpair">
+        <div><label for="simA">我</label><select id="simA" onchange="simSet('a',this.value)"></select></div>
+        <button class="flip" onclick="simFlip()" aria-label="對調兩人">⇄</button>
+        <div><label for="simB">跟誰換號碼</label><select id="simB" onchange="simSet('b',this.value)"></select></div>
+      </div>
+      <div class="simwk">
+        <div class="wn"><button class="arr" onclick="simMove(-1)" aria-label="上一週">‹</button><b id="simTitle"></b><button class="arr" onclick="simMove(1)" aria-label="下一週">›</button>
+          <button class="lnk" style="border:none;background:none;color:var(--ink3);font-size:.8rem;cursor:pointer" onclick="simMove(0)">本週</button></div>
+        <div class="seg" id="simSpan"></div>
+      </div>
+    </div>
+    <div class="simsum" id="simSum"></div>
+    <div class="simgrid" id="simGrid"></div>
+    <p class="note">紅框是換完後要注意的地方：大夜隔天就接上班、小夜隔天接白班、連續上班 7 天以上。這三種在原始號碼班裡都不會出現。依原始號碼班推算，不含其他人已經換過的班。</p>
+  </section>
+
+  <!-- 人員名單 -->
+  <section class="pane narrow" id="pane-roster">
+    <div class="card">
+      <h3>我是誰</h3>
+      <div class="row-ctl" style="margin-bottom:0"><select id="meSel" onchange="setMe(this.value)"></select></div>
+    </div>
+    <div class="card">
+      <h3>匯入新的公告班表</h3>
+      <p class="hint">醫院每出一期公告班表（Excel），直接選檔案匯入。會讀出那一期第 1 週每個人的號碼，跟目前推算的比對：一樣就不用動；有新人入號碼班、號碼總數改變或有人跳號，就從那一期開始換新的號碼表，之前的週次維持原樣。</p>
+      <label class="btn pri filebtn">選擇公告班表 Excel<input type="file" id="xlsIn" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" onchange="importXlsx(this.files[0])"></label>
+      <div id="impRes"></div>
+    </div>
+    <div class="card">
+      <h3>名單與號碼表</h3>
+      <p class="hint">每張號碼表從某一週開始生效，一直用到下一張開始。號碼欄空白代表那段期間不入號碼班。</p>
+      <div class="chips" id="planChips"></div>
+      <div class="planinfo" id="planInfo"></div>
+      <div id="rosterAlert"></div>
+      <div class="rtable"><div>
+      <div class="rh"><span>代碼</span><span>暱稱</span><span>職級</span><span id="rhNum">號碼</span><span style="text-align:center">本週</span><span></span></div>
+      <div id="rosterRows"></div>
+      </div></div>
+      <div class="btns"><button class="btn" onclick="addPerson()">＋ 新增一人</button></div>
+    </div>
+    <div class="card">
+      <h3>一次貼上名單</h3>
+      <p class="hint">每行一人：代碼、號碼，可再加職級和暱稱，例如 <b>19 32 NA4 Megan</b>。也可以從公告班表複製「代碼、職級、備註、號碼班」幾欄貼上，號碼 0 的人會自動跳過。</p>
+      <textarea id="pasteBox" placeholder="19 32 NA4 Megan&#10;25 2 NA2 Lena&#10;3 0（不入號碼班，會跳過）"></textarea>
+      <div class="field"><span>這些號碼是哪一週的</span><input type="date" id="pasteRef" value="2026-09-28"></div>
+      <div class="btns">
+        <button class="btn pri" onclick="doPaste('merge')">更新號碼</button>
+        <button class="btn" id="newPlanBtn" onclick="doPaste('newplan')">從這週起換新號碼表</button>
+        <button class="btn danger" id="replaceBtn" onclick="doPaste('replace')">整份取代</button>
+      </div>
+      <p class="hint" style="margin:8px 0 0">「更新號碼」修正那一週所在的號碼表；「從這週起換新號碼表」用在改制；「整份取代」用在從備份還原。</p>
+      <div class="msg" id="pasteMsg"></div>
+    </div>
+    <div class="card">
+      <h3>備份</h3>
+      <p class="hint">名單只存在這支手機的這個 app 裡。改完建議複製一份存到備忘錄，需要時用「整份取代」貼回來。</p>
+      <div class="btns">
+        <button class="btn" onclick="copyRoster()">複製名單文字</button>
+        <button class="btn danger" id="resetBtn" onclick="resetRoster()">恢復預設名單</button>
+      </div>
+      <div class="msg" id="copyMsg"></div>
+      <textarea id="copyBox" style="display:none;margin-top:8px;min-height:90px" readonly></textarea>
+    </div>
+  </section>
+</div>
+
+<!-- 換班抽屜 -->
+<div class="ov" id="ov" onclick="if(event.target===this)closeSwap()">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+const SCH={"1":["D2","D","D5","D","D7","OFF","N2"],"2":["N1","N2","OFF","OFF","N2","N1","OFF"],"3":["E3","E3","E3","E3","E3","OFF","E1"],"4":["E4","E4","E4","E4","E4","OFF","OFF"],"5":["D10","D8","D2","D","D4","D1","OFF"],"6":["E1","E1","E1","E1","E1","OFF","N1"],"7":["N2","N1","N1","N2","OFF","OFF","OFF"],"8":["D4","D6","D","D10","D3","OFF","OFF"],"9":["E2","E2","E2","E2","E2","E2","OFF"],"10":["D5","D","D6","D2","DB1","D2","OFF"],"11":["DB1","D7","D1","D8","D5","OFF","OFF"],"12":["D3","DB1","N2","N1","N1","N2","OFF"],"13":["OFF","D10","D3","D7","D1","OFF","OFF"],"14":["12-8 4","12-8 1","12-8 2","12-8 3","12-8 4","OFF","E2"],"15":["12-8 2","12-8 3","12-8 4","12-8 1","12-8 2","OFF","OFF"],"16":["D7","D4","D9","DB1","D2","OFF","D2"],"17":["D","D3","D10","D1","D9","OFF","OFF"],"18":["12-8 3","12-8 4","12-8 1","12-8 2","12-8 3","E1","OFF"],"19":["12-8 1","12-8 2","12-8 3","12-8 4","12-8 1","OFF","OFF"],"20":["D1","D9","D4","D9","D6","OFF","OFF"],"21":["D9","D","DB1","D6","D8","OFF","D1"],"22":["D","D","D","D","D","OFF","OFF"],"23":["OFF","OFF","OFF","OFF","OFF","OFF","OFF"],"24":["D'OFF","D","D","D","D","OFF","OFF"],"25":["D","D","D","D","D","OFF","OFF"],"26":["D8","D2","D7","D4","D","OFF.B","OFF"],"27":["D6","D1","D8","D3","D10","OFF","OFF"],"28":["D","D5","D","D5","D","OFF","OFF"],"29":["D11","D11","D11","D11","D11","OFF","OFF"],"30":["D","D","D","D","D","OFF","OFF"],"31":["D12","D12","D12","D12","D12","OFF","OFF"],"32":["D","D","D","D","D","OFF","OFF"],"33":["D","D","D","D","D","OFF","OFF"],"34":["D","D","D","D","D","OFF","OFF"],"35":["D","D","D","D","D","OFF","OFF"],"36":["D","D","D","D","D","OFF","OFF"],"37":["D","D","D","D","D","OFF","OFF"],"38":["D","D","D","D","D","OFF","OFF"],"39":["D","D","D","D","D","OFF","OFF"],"40":["D","D","D","D","D","OFF","OFF"],"41":["D","D","D","D","D","OFF","OFF"],"42":["D","D","D","D","D","OFF","OFF"],"43":["D","D","D","D","D","OFF","OFF"]};
+const HOL=Object.assign({},{'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'},{'2027-01-01':'元旦','2027-02-04':'小年夜','2027-02-05':'除夕','2027-02-06':'初一','2027-02-07':'初二','2027-02-08':'初三','2027-02-09':'初四','2027-02-10':'初五','2027-02-28':'228','2027-04-04':'兒童節','2027-04-05':'清明節','2027-05-01':'勞動節','2027-06-09':'端午節','2027-09-15':'中秋節','2027-09-28':'教師節','2027-10-10':'國慶日','2027-10-25':'光復節','2027-12-25':'行憲紀念日'});
+const ANC=new Date(2026,8,28); // 錨點：公告班表第 1 週（9/28）
+const VER=4;
+// 醫院四週區間：9/1–9/27（27 天，醫院公告），9/28 起每 28 天一期；9/1 以前往回每 28 天推估
+const P1=new Date(2026,8,1),P2=new Date(2026,8,28);
+function dayDiff(a,b){return Math.round((a-b)/86400000)}
+function periodIdxOf(d){if(d>=P2)return Math.floor(dayDiff(d,P2)/28);if(d>=P1)return -1;return -1-Math.ceil(dayDiff(P1,d)/28)}
+function periodByIdx(i){let a,b;if(i>=0){a=ad(P2,28*i);b=ad(a,27)}else if(i===-1){a=new Date(P1);b=ad(P2,-1)}else{a=ad(P1,28*(i+1));b=ad(a,27)}return{i,a,b}}
+function periodOf(d){return periodByIdx(periodIdxOf(d))}
+function pLabel(p){return md(p.a)+' – '+md(p.b)}
+function holLine(off){const m=monOf(off),a=[];for(let i=0;i<7;i++){const d=ad(m,i),h=HOL[dk(d)];if(h)a.push(md(d)+'（'+WD[i]+'）'+esc(h))}return a.length?'<div class="hl">'+a.join('　')+'</div>':''}
+const MO=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3','12-8 4',"D'OFF",'D?'];
+const WD=['一','二','三','四','五','六','日'];
+const DEF_ROSTER=[[1,9,"NA4","Shelly"],[2,13,"NA4","鳳英"],[4,14,"NA4","Wuma"],[5,17,"NA4","Angel, 秋"],[6,34,"NA4","琇"],[7,19,"NA4","薰"],[8,35,"NA4","檸檬魚"],[9,8,"NA4","王美"],[10,12,"NA4","梅"],[11,26,"NA4","ZiHan"],[12,29,"NA4","LiWen"],[13,21,"NA4","心"],[14,18,"NA4","喬喬"],[15,33,"NA4","汝"],[16,24,"NA4","花生"],[17,28,"NA4","小牛"],[18,30,"NA4","真真"],[19,32,"NA4","Megan"],[20,25,"NA3","郎"],[21,16,"NA1","柔柔"],[22,36,"NA4","萍"],[23,1,"NA4","癢癢"],[24,4,"NA3","茹"],[25,2,"NA2","Lena"],[26,27,"NA3","帆帆"],[27,10,"NA3","嘉"],[28,5,"NA3","彭琳"],[29,11,"NA2","小陳"],[30,15,"NA2","晴"],[31,3,"NA2","戴"],[32,31,"NA3","強強"],[33,23,"NA2","榆"],[34,22,"NA2","彥良"],[35,20,"NA","瑩"],[36,7,"NA2","XuanRui"],[37,6,"NA2","Tin"]];
+const P='nt_';
+
+function load(k,d){try{const v=localStorage.getItem(P+k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}}
+// 人員（代碼、暱稱、職級）與號碼表分開存：號碼表可以從某一週起換新的（新人入號碼班、號碼總數改變、有人跳號）
+function defPeople(){return DEF_ROSTER.map(r=>({id:String(r[0]),grade:r[2]||'',name:r[3]||''}))}
+function defPlans(){const nums={};DEF_ROSTER.forEach(r=>nums[String(r[0])]=r[1]);return[{start:'2026-09-28',cycle:36,nums}]}
+(function(){const v=load('ver',1);
+  if(v<2){try{['roster','me','cfg'].forEach(k=>localStorage.removeItem(P+k))}catch(e){}}
+  if(v>=2&&v<3){const r=load('roster',null);// v3：換上 Megan 提供的全員暱稱，號碼等其他欄位不動
+    if(r){r.forEach(p=>{const d=DEF_ROSTER.find(x=>String(x[0])===String(p.id));if(d&&d[3])p.name=d[3]});save('roster',r)}}
+  if(v>=2&&v<4){const r=load('roster',null);// v4：舊的單一名單 → 人員＋號碼表（9/28 起）
+    if(r){const c=(load('cfg',{}).cycle)||36,nums={};
+      r.forEach(p=>{if(Number.isInteger(p.w1)&&p.w1>=1&&p.w1<=c)nums[String(p.id)]=p.w1});
+      save('people',r.map(p=>({id:String(p.id),grade:p.grade||'',name:p.name||''})));
+      save('plans',[{start:'2026-09-28',cycle:c,nums}]);
+      try{localStorage.removeItem(P+'roster')}catch(e){}}}
+  if(v<VER)save('ver',VER);})();
+let roster=load('people',null)||defPeople();
+let plans=load('plans',null)||defPlans();
+let cfg=Object.assign({},load('cfg',{}));delete cfg.cycle;
+let PO=[];
+function syncPlans(){plans.sort((a,b)=>a.start<b.start?-1:1);PO=plans.map(pl=>wo(kd(pl.start)));for(const k in KIND)delete KIND[k]}
+function savePlans(){syncPlans();save('plans',plans)}
+let meId=String(load('me','19'));
+let viewId=meId;
+let tab='mine',mineFilter='all',horizon=26,boardOff=0,boardFilter='all',boardDay=-1;
+let sw=null; // 換班抽屜狀態
+
+/* ── 日期與號碼 ── */
+function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function ad(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function kd(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
+function today(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function wo(date){const mon=ad(date,-((date.getDay()+6)%7));return Math.round((mon-ANC)/(7*86400000))}
+function planIdx(off){let k=0;for(let i=0;i<PO.length;i++)if(PO[i]<=off)k=i;return k}
+function planAt(off){return plans[planIdx(off)]}
+function C(off){return planAt(off==null?curOff():off).cycle}
+function schAt(off){return planAt(off).sch||SCH}
+// 某人某週的號碼；不在號碼班回傳 null
+function numOf(p,off){if(!p)return null;const i=planIdx(off),pl=plans[i],n0=pl&&pl.nums[p.id];if(!n0)return null;const c=pl.cycle;return((n0-1+off-PO[i])%c+c)%c+1}
+function inRot(p,off){return numOf(p,off)!=null}
+function everRot(p){return plans.some(pl=>pl.nums[p.id])}
+const PLAIN=['D','D','D','D','D','OFF','OFF'];
+function monOf(off){return ad(ANC,off*7)}
+function md(d){return(d.getMonth()+1)+'/'+d.getDate()}
+function curOff(){return wo(today())}
+
+/* 某號碼某天的班（含國定假日自動轉換，規則同排班 app） */
+function shiftAt(num,off,idx){
+  const date=ad(monOf(off),idx),key=dk(date);
+  let s=(schAt(off)[num]||PLAIN)[idx];const h=HOL[key]||null;let holD=false,conv=false;
+  if(h&&idx<5){if(MO.includes(s)){s='OFF';conv=true}else if(s==='D1'||s==='D2')holD=true}
+  return{s,h,holD,conv,date};
+}
+function cls(s,holD){
+  if(!s||s==='—'||s==='OFF'||s==='OFF.B'||s==="D'OFF")return'sOFF';
+  if(s.startsWith('12-8'))return's12';if(s[0]==='E')return'sE';if(s[0]==='N')return'sN';
+  return holD?'sDhol':'sD';
+}
+/* 號碼的性質（依原始班表） */
+const KIND={};
+function kind(num,off){
+  const key=planIdx(off)+':'+num;if(KIND[key])return KIND[key];
+  const w=schAt(off)[num]||PLAIN,isOff=s=>s==='OFF'||s==='OFF.B';
+  const k={n:w.some(s=>s[0]==='N'),e:w.some(s=>s[0]==='E'),t:w.some(s=>s.startsWith('12-8')),
+    wk:!isOff(w[5])||!isOff(w[6]),rest:w.every(isOff)};
+  k.day=!k.n&&!k.e&&!k.t;
+  const cnt={sN:0,sE:0,s12:0,sD:0};w.forEach(s=>{const c=cls(s,false);if(c in cnt)cnt[c]++});
+  let best='sOFF',bv=0;['sN','sE','s12','sD'].forEach(c=>{if(cnt[c]>bv){bv=cnt[c];best=c}});
+  k.main=best;
+  return KIND[key]=k;
+}
+const DOT={sN:'#d4cba0',sE:'#c8d4d8',s12:'#c4d0c0',sD:'#ede9e2',sOFF:'#e8d8d0',sDhol:'#c8bfaa'};
+
+function person(id){return roster.find(p=>p.id===id)}
+function label(p){return p?(p.name?p.name+'（'+p.id+'）':'代碼 '+p.id):'—'}
+function short(p){return p?(p.name||'代碼 '+p.id):'—'}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+/* ── 色塊 ── */
+function tile(x,opt={}){
+  const c=cls(x.s,x.holD);let inner,sm=false;
+  if(x.s.startsWith('12-8')){inner='12-8<span class="a">'+esc(x.s.slice(5))+'</span>';sm=true}
+  else{inner=esc(x.s);sm=x.s.length>3}
+  const title=md(x.date)+'（'+WD[(x.date.getDay()+6)%7]+'）'+x.s+(x.h?'・'+x.h+(x.conv?'（原班轉休）':''):'');
+  return '<span class="t '+c+(sm?' sm':'')+(x.h?' hol':'')+(opt.hi?' hi':'')+(opt.dim?' dim':'')+(opt.warn?' warn':'')+'"'+(opt.click?' onclick="'+opt.click+'" style="cursor:pointer"':'')+' title="'+esc(title)+'">'+inner+'</span>';
+}
+function strip(num,off,opt={}){
+  let h='<div class="strip">';
+  for(let i=0;i<7;i++)h+=tile(shiftAt(num,off,i),{hi:opt.day===i,dim:opt.day>=0&&opt.day!==i&&opt.dimOthers,click:opt.pick?"swSet('day',"+i+")":''});
+  return h+'</div>';
+}
+
+/* ── 上方：今天 ── */
+function renderNow(){
+  const t=today(),off=curOff(),me=person(meId),idx=(t.getDay()+6)%7;
+  document.getElementById('todayTxt').textContent=md(t)+'（'+WD[idx]+'）';
+  const el=document.getElementById('now');
+  if(!me||!inRot(me,off)){el.innerHTML='<div class="now-txt">'+(me?esc(label(me))+' 這週不在號碼班裡。':'到「名單」選你是誰，這裡就會顯示你本週的號碼班。')+'</div>';return}
+  const n=numOf(me,off),x=shiftAt(n,off,idx),nx=numOf(me,off+1);
+  el.innerHTML='<div class="now-head"><div class="now-num"><small>N.</small>'+n+'</div>'
+    +'<div class="now-txt">'+esc(label(me))+' 本週號碼<br>今天 <b>'+esc(x.s)+'</b>'+(x.h?'（'+esc(x.h)+'）':'')+'　下週 '+(nx==null?'不在號碼班':'N.'+nx)+'</div></div>'
+    +'<div class="dow">'+WD.map((w,i)=>'<span class="'+(i===idx?'hi':'')+'">'+w+'</span>').join('')+'</div>'
+    +strip(n,off,{day:idx});
+}
+
+/* ── 我的週次 ── */
+const MINE_F=[['all','全部'],['n','大夜 N','sN'],['e','小夜 E','sE'],['t','12-8','s12'],['wk','週末要上班']];
+function chipHTML(list,cur,fn){return list.map(([k,l,c])=>'<button class="chip'+(k===cur?' on':'')+'" onclick="'+fn+'(\''+k+'\')">'+(c?'<i style="background:'+DOT[c]+'"></i>':'')+l+'</button>').join('')}
+function setMineFilter(k){mineFilter=k;renderMine()}
+function setView(id){viewId=id;renderMine()}
+function more(){horizon+=12;renderMine()}
+function renderViewSel(){
+  const sel=document.getElementById('viewSel');
+  if(!person(viewId)||!everRot(person(viewId)))viewId=meId;
+  sel.innerHTML=roster.filter(everRot).slice().sort(byCode).map(p=>'<option value="'+esc(p.id)+'"'+(p.id===viewId?' selected':'')+'>'+esc(label(p))+(p.id===meId?'・我':'')+'</option>').join('');
+}
+function renderMine(){
+  renderViewSel();
+  document.getElementById('mineChips').innerHTML=chipHTML(MINE_F,mineFilter,'setMineFilter');
+  const p=person(viewId),list=document.getElementById('mineList'),sum=document.getElementById('mineSum');
+  if(!p||!everRot(p)){list.innerHTML='<div class="empty">名單裡還沒有人。到「人員名單」加入或貼上名單。</div>';sum.textContent='';return}
+  const c0=curOff();let h='',hit=0,lastP=null;
+  for(let off=c0;off<c0+horizon;off++){
+    const n=numOf(p,off),k=n==null?null:kind(n,off);
+    const ok=mineFilter==='all'||(k&&k[mineFilter]);
+    if(!ok)continue;if(k)hit++;
+    const m=monOf(off),e=ad(m,6),pp=periodOf(e);
+    if(pp.i!==lastP){lastP=pp.i;h+='<div class="zone"><b>四週區間</b>　'+pLabel(pp)+'</div>'}
+    const pi=PO.indexOf(off);if(pi>0)h+='<div class="zone newplan"><b>從這週起換新號碼表</b>　共 '+plans[pi].cycle+' 個號碼</div>';
+    if(n==null){h+='<div class="wk off-rot"><div class="wk-d"><b>'+md(m)+'</b>– '+md(e)+'</div><div class="num muted">—</div><div class="nr">這週不在號碼班</div></div>';continue}
+    h+='<div class="wk'+(off===c0?' cur':'')+'" onclick="openSwap('+off+')">'
+      +'<div class="wk-d"><b>'+md(m)+'</b>– '+md(e)+(off===c0?'<br><span class="tag">本週</span>':'')+'</div>'
+      +'<div class="num">'+n+'</div>'+strip(n,off)+holLine(off)+'</div>';
+  }
+  const endD=ad(monOf(c0+horizon-1),6);
+  if(mineFilter==='all')sum.textContent='點任一週，看可以跟誰換。紅點和紅字是國定假日。';
+  else sum.textContent='到 '+endD.getFullYear()+'/'+md(endD)+' 為止，共 '+hit+' 週符合。';
+  list.innerHTML=h||'<div class="empty">這段時間沒有符合的週。可以按下面再往後看。</div>';
+}
+
+/* ── 每週總表 ── */
+const BOARD_F=[['all','全部'],['n','大夜 N','sN'],['e','小夜 E','sE'],['t','12-8','s12'],['day','白班','sD'],['off','休假','sOFF']];
+function setBoardFilter(k){boardFilter=k;renderBoard()}
+function setBoardDay(i){boardDay=(boardDay===i)?-1:i;renderBoard()}
+function boardMove(d){boardOff=d===0?curOff():boardOff+d;renderBoard()}
+function ownersAt(off){
+  const o={};roster.forEach(p=>{const n=numOf(p,off);if(n==null)return;(o[n]=o[n]||[]).push(p)});return o;
+}
+function dayMatch(c,f){return f==='all'||(f==='n'&&c==='sN')||(f==='e'&&c==='sE')||(f==='t'&&c==='s12')||(f==='day'&&(c==='sD'||c==='sDhol'))||(f==='off'&&c==='sOFF')}
+function weekMatch(k,f){return f==='all'||(f==='day'?k.day&&!k.rest:f==='off'?k.rest:k[f])}
+const ORD={sN:0,sE:1,s12:2,sD:3,sDhol:4,sOFF:5};
+function renderBoard(){
+  const m=monOf(boardOff),e=ad(m,6),c0=curOff();
+  document.getElementById('bTitle').textContent=md(m)+' – '+md(e);
+  document.getElementById('bToday').textContent=(boardOff===c0?'本週':'回到本週')+'・共 '+C(boardOff)+' 個號碼';
+  document.getElementById('boardChips').innerHTML=chipHTML(BOARD_F,boardFilter,'setBoardFilter');
+  document.getElementById('boardDow').innerHTML=WD.map((w,i)=>{
+    const d=ad(m,i),h=HOL[dk(d)];return '<span class="'+(i===boardDay?'hi':'')+'" style="cursor:pointer" onclick="setBoardDay('+i+')">'+w+'<br>'+md(d)+(h?'<br><span style="color:var(--red)">'+esc(h)+'</span>':'')+'</span>'}).join('');
+  const own=ownersAt(boardOff);let rows=[];
+  for(let n=1;n<=C(boardOff);n++){
+    const k=kind(n,boardOff);let ok;
+    if(boardDay>=0){const x=shiftAt(n,boardOff,boardDay);ok=dayMatch(cls(x.s,x.holD),boardFilter)}
+    else ok=weekMatch(k,boardFilter);
+    if(!ok)continue;
+    rows.push({n,ps:own[n]||[]});
+  }
+  if(boardDay>=0)rows.sort((a,b)=>{const xa=shiftAt(a.n,boardOff,boardDay),xb=shiftAt(b.n,boardOff,boardDay);return(ORD[cls(xa.s,xa.holD)]-ORD[cls(xb.s,xb.holD)])||xa.s.localeCompare(xb.s)||a.n-b.n});
+  const h=rows.map(r=>{
+    const isMe=r.ps.some(p=>p.id===meId);
+    let who;
+    if(!r.ps.length)who='<b>未指定</b><span>名單沒有人在這個號碼</span>';
+    else if(r.ps.length>1)who='<b class="warn">'+r.ps.map(p=>esc(short(p))).join('、')+'</b><span class="warn">號碼重複，請檢查名單</span>';
+    else{const p=r.ps[0];who='<b>'+esc(short(p))+(isMe?'（我）':'')+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span>'}
+    return '<div class="bd'+(isMe?' me':'')+(r.ps.length?'':' none')+'"><div class="num">'+r.n+'</div><div class="who">'+who+'</div>'+strip(r.n,boardOff,{day:boardDay})+'</div>';
+  }).join('');
+  document.getElementById('boardList').innerHTML=h||'<div class="empty">這週沒有符合的號碼。</div>';
+}
+
+/* ── 換班抽屜 ── */
+const SW_WEEK=[['day','白班'],['dayoff','白班＋週末休'],['noN','不是大夜'],['all','全部']];
+const SW_DAY=[['day','白班'],['off','休假'],['noN','不是大夜'],['all','全部']];
+function openSwap(off){
+  const p=person(tab==='board'?meId:viewId);
+  if(!p||!inRot(p,off))return;
+  const n=numOf(p,off);let d=-1;
+  for(let i=0;i<7;i++){const c=cls(shiftAt(n,off,i).s);if(c==='sN'){d=i;break}}
+  if(d<0)for(let i=0;i<7;i++){const c=cls(shiftAt(n,off,i).s);if(c==='sE'||c==='s12'){d=i;break}}
+  sw={pid:p.id,off,mode:'week',day:d<0?0:d,target:'day'};
+  renderSwap();
+  const ov=document.getElementById('ov');ov.classList.add('on');ov.scrollTop=0;document.body.style.overflow='hidden';
+}
+function closeSwap(){document.getElementById('ov').classList.remove('on');document.body.style.overflow='';sw=null}
+function swSet(k,v){sw[k]=v;if(k==='mode')sw.target='day';renderSwap()}
+function neighbors(p,off,idx){
+  const prev=idx===0?{off:off-1,i:6}:{off,i:idx-1},next=idx===6?{off:off+1,i:0}:{off,i:idx+1};
+  const g=(o,i)=>{const n=numOf(p,o);return n==null?{s:'—',holD:false}:shiftAt(n,o,i)};
+  return[g(prev.off,prev.i),g(next.off,next.i)];
+}
+function renderSwap(){
+  const me=person(sw.pid),off=sw.off,myN=numOf(me,off),m=monOf(off),e=ad(m,6);
+  let h='<div class="sh-top"><h2>'+md(m)+' – '+md(e)+'<span>'+esc(label(me))+' 這週是 N.'+myN+'</span></h2><button class="x" onclick="closeSwap()" aria-label="關閉">✕</button></div>';
+  h+='<div class="seg" style="margin-bottom:12px"><button class="'+(sw.mode==='week'?'on':'')+'" onclick="swSet(\'mode\',\'week\')">整週換號碼</button><button class="'+(sw.mode==='day'?'on':'')+'" onclick="swSet(\'mode\',\'day\')">只換一天</button></div>';
+  h+='<div class="mine"><div class="lbl">'+(sw.mode==='day'?'我的這一週（點一天來換）':'我的這一週')+'</div><div class="dow">'+WD.map((w,i)=>'<span class="'+(sw.mode==='day'&&i===sw.day?'hi':'')+'">'+w+' '+md(ad(m,i))+'</span>').join('')+'</div>'+strip(myN,off,sw.mode==='day'?{day:sw.day,pick:true}:{})+holLine(off)+'</div>';
+  h+='<div class="chips">'+(sw.mode==='week'?SW_WEEK:SW_DAY).map(([k,l])=>'<button class="chip'+(k===sw.target?' on':'')+'" onclick="swSet(\'target\',\''+k+'\')">'+l+'</button>').join('')+'</div>';
+
+  const cands=[];
+  roster.forEach(p=>{
+    if(p.id===me.id)return;
+    const n=numOf(p,off);if(n==null||n===myN)return;
+    if(sw.mode==='week'){
+      const k=kind(n,off);let ok;
+      if(sw.target==='day')ok=k.day;else if(sw.target==='dayoff')ok=k.day&&!k.wk;else if(sw.target==='noN')ok=!k.n;else ok=true;
+      if(!ok)return;
+      const rank=k.rest?1:(k.day&&!k.wk)?0:k.day?2:k.n?5:k.e?3:4;
+      cands.push({p,n,rank});
+    }else{
+      const mine=shiftAt(myN,off,sw.day),x=shiftAt(n,off,sw.day),c=cls(x.s,x.holD);
+      if(x.s===mine.s)return;
+      let ok;
+      if(sw.target==='day')ok=c==='sD'||c==='sDhol';else if(sw.target==='off')ok=c==='sOFF';else if(sw.target==='noN')ok=c!=='sN';else ok=true;
+      if(!ok)return;
+      cands.push({p,n,x,rank:ORD[c]});
+    }
+  });
+  const byId=(a,b)=>{const na=parseFloat(a.p.id),nb=parseFloat(b.p.id);return(!isNaN(na)&&!isNaN(nb))?na-nb:a.p.id.localeCompare(b.p.id)};
+  cands.sort((a,b)=>(sw.mode==='week'?a.rank-b.rank:(a.rank-b.rank)||a.x.s.localeCompare(b.x.s))||byId(a,b));
+
+  h+='<div class="summary" style="margin:0 0 8px 2px">'+(cands.length?'有 '+cands.length+' 人符合':'')+'</div>';
+  if(!cands.length)h+='<div class="list"><div class="empty">這個條件下沒有人可以換。試試「不是大夜」或「全部」。</div></div>';
+  else{
+    h+='<div class="list">'+cands.map(c=>{
+      const p=c.p;let body='<div class="cand"><div class="who"><b>'+esc(short(p))+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span></div><div class="num">N.'+c.n+'</div>';
+      if(sw.mode==='week'){
+        const pn=numOf(p,off-1),nn=numOf(p,off+1),k=kind(c.n,off);
+        const adj=(n,o,t)=>n==null?'<span>他'+t+'不在號碼班</span>':'<span><i style="background:'+DOT[kind(n,o).main]+'"></i>他'+t+' N.'+n+'</span>';
+        body+=strip(c.n,off);
+        body+='<div class="adj">'+adj(pn,off-1,'上週')+adj(nn,off+1,'下週')+(k.rest?'<span>這週他全休</span>':'')+'</div>';
+        body+='<button class="trybtn" onclick="goSim(\''+esc(p.id)+'\','+off+',\''+esc(me.id)+'\')">試排：換完前後三週 ›</button>';
+      }else{
+        const[pv,nx]=neighbors(p,off,sw.day);
+        body+=strip(c.n,off,{day:sw.day,dimOthers:true});
+        body+='<div class="adj"><span><i style="background:'+DOT[cls(pv.s,pv.holD)]+'"></i>他前一天 '+esc(pv.s)+'</span><span><i style="background:'+DOT[cls(nx.s,nx.holD)]+'"></i>他後一天 '+esc(nx.s)+'</span></div>';
+      }
+      return body+'</div>';
+    }).join('')+'</div>';
+  }
+  h+='<p class="note">依原始號碼班推算，不知道別人已經換過的班。'+(sw.mode==='week'?'「他上週／下週」':'「他前一天／後一天」')+'可以看對方換完會不會太累。紅點是國定假日，平日白班遇假日已自動轉休。</p>';
+  document.getElementById('sheet').innerHTML=h;
+}
+
+/* ── 名單與號碼表 ── */
+let armed={},rp=null,imp=null;
+function planName(pl){const d=kd(pl.start);return(d.getFullYear()!==today().getFullYear()?d.getFullYear()+'/':'')+md(d)+' 起'}
+function selPlan(){if(rp==null||!plans[rp])rp=planIdx(curOff());return plans[rp]}
+function monday(d){return monOf(wo(d))}
+function setMe(id){meId=id;viewId=id;save('me',id);renderAll()}
+function saveRoster(){save('people',roster)}
+function setRP(i){rp=i;armed={};renderRoster()}
+function setCycle(v){const pl=selPlan(),n=parseInt(v,10);if(n>=1&&n<=99){pl.cycle=n;savePlans()}renderAll()}
+function editP(i,f,v){
+  const p=roster[i];if(!p)return;
+  if(f==='num'){const pl=selPlan(),n=parseInt(v,10);if(isNaN(n)||n<=0)delete pl.nums[p.id];else pl.nums[p.id]=n;savePlans();renderAll();return}
+  if(f==='id'){v=v.trim();if(!v||roster.some((q,j)=>j!==i&&q.id===v)){renderRoster();return}
+    plans.forEach(pl=>{if(p.id in pl.nums){pl.nums[v]=pl.nums[p.id];delete pl.nums[p.id]}});
+    if(p.id===meId){meId=v;save('me',v)}if(p.id===viewId)viewId=v;p.id=v;savePlans()}
+  else p[f]=v.trim();
+  saveRoster();renderAll();
+}
+function addPerson(){let k=1;while(roster.some(p=>p.id==='新'+k))k++;roster.push({id:'新'+k,grade:'',name:''});saveRoster();renderRoster();
+  const rows=document.querySelectorAll('#rosterRows .rr');const last=rows[rows.length-1];if(last)last.querySelector('input').focus()}
+function delP(i){
+  const key='d'+i;
+  if(!armed[key]){armed={};armed[key]=1;renderRoster();setTimeout(()=>{if(armed[key]){delete armed[key];renderRoster()}},4000);return}
+  armed={};const p=roster[i];roster.splice(i,1);plans.forEach(pl=>delete pl.nums[p.id]);savePlans();saveRoster();
+  if(p&&p.id===meId&&roster.length){meId=roster[0].id;save('me',meId)}
+  renderAll();
+}
+function delPlan(){
+  if(!rp||plans.length<2)return;
+  if(!armed.plan){armed={plan:1};renderRoster();setTimeout(()=>{if(armed.plan){armed={};renderRoster()}},4000);return}
+  armed={};plans.splice(rp,1);rp=null;savePlans();renderAll();
+}
+function rosterIssues(pl){
+  const c=pl.cycle,by={},bad=[];
+  roster.forEach(p=>{const n=pl.nums[p.id];if(n==null)return;if(!(Number.isInteger(n)&&n>=1&&n<=c)){bad.push(p);return}(by[n]=by[n]||[]).push(p)});
+  const dup=Object.keys(by).filter(k=>by[k].length>1).map(k=>by[k]);
+  const miss=[];for(let n=1;n<=c;n++)if(!by[n])miss.push(n);
+  return{dup,miss,bad,count:Object.values(by).reduce((a,g)=>a+g.length,0)};
+}
+function renderRoster(){
+  roster.sort(byCode);
+  document.getElementById('meSel').innerHTML=roster.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===meId?' selected':'')+'>'+esc(label(p))+'</option>').join('');
+  const pl=selPlan(),ci=planIdx(curOff());
+  document.getElementById('planChips').innerHTML=plans.map((q,i)=>'<button class="chip'+(i===rp?' on':'')+'" onclick="setRP('+i+')">'+planName(q)+'・'+q.cycle+' 號'+(i===ci?'（現在）':'')+'</button>').join('');
+  document.getElementById('planInfo').innerHTML='<span>號碼總數</span><input type="number" inputmode="numeric" min="1" max="99" value="'+pl.cycle+'" onchange="setCycle(this.value)" aria-label="號碼總數">'
+    +(rp>0?'<button class="btn danger'+(armed.plan?' arm':'')+'" onclick="delPlan()">'+(armed.plan?'再按一次刪除這張號碼表':'刪除這張號碼表')+'</button>':'');
+  document.getElementById('rhNum').textContent=md(kd(pl.start))+' 號碼';
+  const iss=rosterIssues(pl),c0=curOff();let a=[];
+  if(iss.bad.length)a.push('號碼要填 1–'+pl.cycle+'：'+iss.bad.map(p=>esc(short(p))).join('、'));
+  if(iss.dup.length)a.push('號碼重複：'+iss.dup.map(g=>'N.'+pl.nums[g[0].id]+'（'+g.map(p=>esc(short(p))).join('、')+'）').join('；'));
+  if(iss.miss.length)a.push('沒有人的號碼：'+iss.miss.join('、')+'　（總表會顯示「未指定」）');
+  document.getElementById('rosterAlert').innerHTML=a.length?'<div class="alert">'+a.join('<br>')+'</div>':'<div class="alert ok">'+planName(pl)+'：'+iss.count+' 人對應 '+pl.cycle+' 個號碼，沒有重複。</div>';
+  const badSet=new Set(iss.bad);
+  document.getElementById('rosterRows').innerHTML=roster.map((p,i)=>{
+    const cur=numOf(p,c0),arm=armed['d'+i],v=pl.nums[p.id];
+    return '<div class="rr'+(p.id===meId?' me':'')+'">'
+      +'<input value="'+esc(p.id)+'" onchange="editP('+i+',\'id\',this.value)" aria-label="代碼">'
+      +'<input value="'+esc(p.name)+'" placeholder="—" onchange="editP('+i+',\'name\',this.value)" aria-label="暱稱">'
+      +'<input value="'+esc(p.grade)+'" placeholder="—" onchange="editP('+i+',\'grade\',this.value)" aria-label="職級">'
+      +'<input class="'+(badSet.has(p)?'bad':'')+'" type="number" inputmode="numeric" min="1" max="'+pl.cycle+'" value="'+(v??'')+'" placeholder="不入" onchange="editP('+i+',\'num\',this.value)" aria-label="號碼">'
+      +'<span class="cur">'+(cur==null?'—':cur)+'</span>'
+      +'<button class="del'+(arm?' arm':'')+'" onclick="delP('+i+')" aria-label="刪除">'+(arm?'刪除':'✕')+'</button></div>';
+  }).join('');
+}
+const GRADE=/^(NA\d?|獨立SNA|SNA)$/i;
+function parseLines(txt){
+  const out=[],skip=[],zero=[];
+  txt.split(/\r?\n/).forEach(line=>{
+    const raw=line.trim();if(!raw||raw[0]==='#')return;
+    const re=/[^\s,，、;；:：|]+/g,toks=[];let m;while((m=re.exec(raw)))toks.push({v:m[0],i:m.index});
+    const id=toks.length?toks[0].v.replace(/^(人員|代號|代碼)/,''):'';
+    let grade='',n=null,k=1;
+    for(;k<toks.length;k++){const x=toks[k].v;
+      if(!grade&&GRADE.test(x)){grade=x.toUpperCase();continue}
+      if(n===null){const mm=x.match(/^(?:N\.?|號碼)?(\d{1,2})$/i);if(mm){n=parseInt(mm[1],10);continue}}
+      break;
+    }
+    if(!id||n===null){skip.push(raw);return}
+    // 暱稱保留原字（例如「Angel, 秋」）；從公告班表整列複製時後面是一串班別，不當暱稱
+    const restN=toks.length-k,name=(restN>0&&restN<=2)?raw.slice(toks[k].i).trim():'';
+    if(n===0){zero.push({id,grade,name});return}
+    out.push({id,n,grade,name});
+  });
+  return{out,skip,zero};
+}
+// 支援備份格式：「# 號碼表 2026-11-23 起，共 43 個號碼」分段
+function parseSections(txt){
+  const secs=[];let cur={date:null,cycle:null,lines:[]};secs.push(cur);
+  txt.split(/\r?\n/).forEach(line=>{const m=line.trim().match(/^#.*?(\d{4})[-\/](\d{1,2})[-\/](\d{1,2}).*?共\s*(\d+)\s*個/);
+    if(m){cur={date:new Date(+m[1],+m[2]-1,+m[3]),cycle:+m[4],lines:[]};secs.push(cur);return}
+    cur.lines.push(line)});
+  return secs.map(x=>Object.assign(x,parseLines(x.lines.join('\n')))).filter(x=>x.out.length||x.zero.length);
+}
+function upsertPeople(rows,withZero){let add=0;rows.forEach(r=>{let p=person(r.id);if(!p){if(r.n>0||withZero){roster.push({id:r.id,grade:r.grade||'',name:r.name||''});add++}}else{if(r.grade)p.grade=r.grade;if(r.name)p.name=r.name}});return add}
+function putPlan(pl){const i=plans.findIndex(q=>q.start===pl.start);if(i>=0)plans[i]=pl;else plans.push(pl);savePlans();return plans.indexOf(pl)}
+function doPaste(mode){
+  const msg=document.getElementById('pasteMsg');msg.className='msg';
+  const secs=parseSections(document.getElementById('pasteBox').value);
+  const err=t=>{msg.className='msg err';msg.textContent=t};
+  if(!secs.some(x=>x.out.length))return err('沒有讀到名單。每行要有代碼和號碼，例如「19 32」。');
+  const refV=document.getElementById('pasteRef').value,ref=refV?kd(refV):today();
+  const skip=secs.reduce((a,x)=>a.concat(x.skip),[]),zero=secs.reduce((a,x)=>a.concat(x.zero),[]);
+  const btnIds={newplan:['newPlanBtn','從這週起換新號碼表'],replace:['replaceBtn','整份取代']};
+  if(btnIds[mode]&&!armed[mode]){const[b,l]=btnIds[mode];armed={};armed[mode]=1;const el=document.getElementById(b);el.classList.add('arm');
+    el.textContent=mode==='replace'?'再按一次，整份取代':'再按一次，'+md(monday(ref))+' 起換新表';
+    setTimeout(()=>{armed[mode]=0;el.classList.remove('arm');el.textContent=l},4000);return}
+  if(btnIds[mode]){const[b,l]=btnIds[mode];const el=document.getElementById(b);el.classList.remove('arm');el.textContent=l}
+  armed={};
+  let add=0,note='';
+  if(mode==='merge'){
+    for(const x of secs){
+      const d=x.date||ref,off=wo(d);
+      if(x.date&&!plans.some(q=>q.start===dk(monday(d)))&&off>PO[0]){const c=x.cycle||Math.max(...x.out.map(r=>r.n)),nums={};x.out.forEach(r=>nums[r.id]=r.n);add+=upsertPeople(x.out);putPlan({start:dk(monday(d)),cycle:c,nums});continue}
+      const i=planIdx(off),pl=plans[i],c=pl.cycle,rel=off-PO[i];
+      const bad=x.out.filter(r=>r.n>c);if(bad.length)return err('號碼超出 1–'+c+'：'+bad.map(r=>r.id).join('、')+'。如果號碼總數變了，請用「從這週起換新號碼表」。');
+      add+=upsertPeople(x.out);x.out.forEach(r=>{pl.nums[r.id]=((r.n-1-rel)%c+c)%c+1});
+    }
+    savePlans();note='已更新 '+secs.reduce((a,x)=>a+x.out.length,0)+' 人的號碼';
+  }else if(mode==='newplan'){
+    const x=secs.find(y=>y.out.length),st=monday(x.date||ref),c=x.cycle||Math.max(...x.out.map(r=>r.n)),nums={};
+    x.out.forEach(r=>nums[r.id]=r.n);add+=upsertPeople(x.out);rp=putPlan({start:dk(st),cycle:c,nums});
+    note='已從 '+md(st)+' 起換新號碼表（'+c+' 個號碼、'+x.out.length+' 人）';
+  }else{
+    const np=[],people=[];
+    secs.forEach(x=>{const st=dk(monday(x.date||ref)),c=x.cycle||Math.max(0,...x.out.map(r=>r.n)),nums={};
+      x.out.concat(x.zero).forEach(r=>{let p=people.find(q=>q.id===r.id);if(!p)people.push(p={id:r.id,grade:'',name:''});if(r.grade)p.grade=r.grade;if(r.name)p.name=r.name});
+      x.out.forEach(r=>nums[r.id]=r.n);if(x.out.length){const i=np.findIndex(q=>q.start===st);if(i>=0)np[i]={start:st,cycle:c,nums};else np.push({start:st,cycle:c,nums})}});
+    if(!np.length)return err('沒有讀到號碼表。');
+    roster=people;plans=np;rp=null;savePlans();add=people.length;
+    note='已取代為 '+people.length+' 人、'+np.length+' 張號碼表';
+  }
+  if(!person(meId)&&roster.length){meId=roster[0].id;save('me',meId)}
+  saveRoster();renderAll();
+  msg.textContent=note+(add&&mode!=='replace'?'，新增 '+add+' 人':'')+(zero.length&&mode!=='replace'?'；'+zero.length+' 位號碼 0 不入號碼班，已跳過（'+zero.slice(0,8).map(z=>z.id).join('、')+(zero.length>8?'…':'')+'）':'')+(skip.length?'；略過 '+skip.length+' 行看不懂的：'+skip.slice(0,3).join(' / '):'')+'。';
+}
+function rosterText(){
+  const t=plans.map(pl=>'# 號碼表 '+pl.start+' 起，共 '+pl.cycle+' 個號碼\n'+roster.filter(p=>pl.nums[p.id]).slice().sort(byCode).map(p=>[p.id,pl.nums[p.id],p.grade,p.name].filter(x=>x!==''&&x!=null).join(' ')).join('\n'));
+  const idle=roster.filter(p=>!everRot(p));
+  if(idle.length)t.push('# 不在號碼班\n'+idle.map(p=>[p.id,0,p.grade,p.name].filter(x=>x!=='').join(' ')).join('\n'));
+  return t.join('\n');
+}
+function copyRoster(){
+  const txt=rosterText(),m=document.getElementById('copyMsg'),box=document.getElementById('copyBox');
+  box.value=txt;box.style.display='block';
+  const done=()=>{m.className='msg';m.textContent='已複製 '+roster.length+' 人、'+plans.length+' 張號碼表，可以貼到備忘錄保存。'};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,()=>{box.select();m.textContent='請長按下方文字全選複製。'});
+  else{box.select();m.textContent='請長按下方文字全選複製。'}
+}
+function resetRoster(){
+  const b=document.getElementById('resetBtn');
+  if(!armed.reset){armed={reset:1};b.classList.add('arm');b.textContent='再按一次確定恢復';setTimeout(()=>{armed.reset=0;b.classList.remove('arm');b.textContent='恢復預設名單'},4000);return}
+  armed={};b.classList.remove('arm');b.textContent='恢復預設名單';
+  roster=defPeople();plans=defPlans();rp=null;savePlans();saveRoster();if(!person(meId)){meId='19';save('me',meId)}viewId=meId;renderAll();
+}
+
+/* ── 匯入公告班表 Excel ── */
+function loadXLSX(){return window.XLSX?Promise.resolve(window.XLSX):new Promise((res,rej)=>{const sc=document.createElement('script');
+  sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=()=>window.XLSX?res(window.XLSX):rej(new Error('Excel 讀取元件載入失敗'));sc.onerror=()=>rej(new Error('Excel 讀取元件載入失敗，請確認有網路'));document.head.appendChild(sc)})}
+async function importXlsx(f){
+  if(!f)return;const box=document.getElementById('impRes');box.innerHTML='<div class="imp">讀取中…</div>';
+  try{const X=await loadXLSX();importBuffer(X,await f.arrayBuffer())}
+  catch(e){box.innerHTML='<div class="alert" style="margin-top:.8rem">讀不到這個檔案：'+esc(e.message||String(e))+'</div>'}
+  document.getElementById('xlsIn').value='';
+}
+function readPublished(X,buf){
+  const wb=X.read(buf,{type:'array'}),norm=v=>String(v==null?'':v).replace(/\s+/g,' ').trim();
+  const grid=ws=>X.utils.sheet_to_json(ws,{header:1,raw:false,defval:''});
+  let main=wb.Sheets['公告班表']?grid(wb.Sheets['公告班表']):null;
+  if(!main)for(const n of wb.SheetNames){const g=grid(wb.Sheets[n]);if(g.some(r=>r.some(c=>norm(c)==='職級'))&&g.some(r=>r.some(c=>norm(c)==='號碼班'))){main=g;break}}
+  if(!main)throw new Error('找不到「公告班表」工作表');
+  let start=null,end=null;
+  for(const r of main){for(const c of r){const m=norm(c).match(/(\d{2,4})\s*年\s*(\d{1,2})\s*\/\s*(\d{1,2})\s*[-–~至]\s*(?:(\d{2,4})\s*年\s*)?(\d{1,2})\s*\/\s*(\d{1,2})/);
+    if(m){const y=+m[1]<1911?+m[1]+1911:+m[1],y2=m[4]?(+m[4]<1911?+m[4]+1911:+m[4]):y;start=new Date(y,+m[2]-1,+m[3]);end=new Date(y2,+m[5]-1,+m[6]);break}}if(start)break}
+  if(!start)throw new Error('找不到班表日期（標題要有「115年11/23-115年12/20」這種格式）');
+  let numCol=-1,gradeCol=1,hdr=0;
+  main.forEach((r,ri)=>r.forEach((c,ci)=>{const v=norm(c);if(v==='號碼班'&&numCol<0){numCol=ci;hdr=Math.max(hdr,ri)}if(v==='職級'){gradeCol=ci;hdr=Math.max(hdr,ri)}}));
+  if(numCol<0)throw new Error('找不到「號碼班」欄');
+  const people=[];
+  main.slice(hdr+1).forEach(r=>{const id=norm(r[0]);if(!/^\d+$/.test(id))return;const n=parseInt(norm(r[numCol]),10);people.push({id,grade:norm(r[gradeCol]),n:isNaN(n)?0:n})});
+  const sch={};const ns=wb.Sheets['號碼班'];
+  if(ns)grid(ns).forEach(r=>{const k=norm(r[0]);if(/^\d+$/.test(k))sch[+k]=r.slice(1,8).map(v=>norm(v).replace(/^OFF ?\. ?B$/,'OFF.B'))});
+  return{start,end,people,sch};
+}
+function importBuffer(X,buf){
+  const R=readPublished(X,buf),st=monday(R.start),off=wo(st);
+  const rot=R.people.filter(r=>r.n>0),zero=R.people.filter(r=>!(r.n>0));
+  if(!rot.length)throw new Error('檔案裡沒有人有號碼');
+  const cycle=Math.max(...rot.map(r=>r.n)),byN={};rot.forEach(r=>(byN[r.n]=byN[r.n]||[]).push(r.id));
+  const dup=Object.keys(byN).filter(n=>byN[n].length>1),miss=[];for(let n=1;n<=cycle;n++)if(!byN[n])miss.push(n);
+  const nm=id=>{const p=person(id);return p?short(p):'代碼 '+id};
+  const joined=rot.filter(r=>!inRot(person(r.id),off)),left=roster.filter(p=>inRot(p,off)&&!rot.some(r=>r.id===p.id));
+  const jumped=[];rot.forEach(r=>{const pn=numOf(person(r.id),off);if(pn!=null&&pn!==r.n)jumped.push({id:r.id,from:pn,to:r.n})});
+  const cs=schAt(off),schDiff=[];for(let n=1;n<=cycle;n++)if(R.sch[n]&&R.sch[n].join()!==(cs[n]||PLAIN).join())schDiff.push(n);
+  const grades=R.people.filter(r=>{const p=person(r.id);return p&&r.grade&&p.grade!==r.grade});
+  const same=!joined.length&&!left.length&&!jumped.length&&!schDiff.length&&cycle===C(off);
+  imp={R,st,off,rot,zero,cycle,schDiff,grades};
+  const range=md(R.start)+' – '+md(R.end);
+  let h='<div class="imp"><h4>公告班表 '+R.start.getFullYear()+'/'+range+'</h4>';
+  if(dup.length||miss.length)h+='<div class="alert">'+(dup.length?'號碼重複：'+dup.map(n=>'N.'+n+'（'+byN[n].map(nm).join('、')+'）').join('；')+'<br>':'')+(miss.length?'沒有人的號碼：'+miss.join('、'):'')+'</div>';
+  if(same){
+    h+='<div class="alert ok">這期第 1 週每個人的號碼，跟目前推算的完全一樣，不用換號碼表。</div>';
+    if(grades.length)h+='<p>職級有變動：'+grades.map(r=>esc(nm(r.id))+' '+esc(person(r.id).grade)+' → '+esc(r.grade)).join('、')+'</p><button class="btn pri" onclick="applyImport(true)">更新職級</button>';
+  }else{
+    h+='<ul>';
+    if(cycle!==C(off))h+='<li class="chg">號碼總數：'+C(off)+' → '+cycle+'</li>';
+    if(joined.length)h+='<li class="chg">新入號碼班 '+joined.length+' 人：'+joined.map(r=>esc(nm(r.id))+'（N.'+r.n+'）').join('、')+'</li>';
+    if(left.length)h+='<li class="chg">不再入號碼班 '+left.length+' 人：'+left.map(p=>esc(short(p))).join('、')+'</li>';
+    if(jumped.length)h+='<li class="chg">號碼跟推算不同（跳號）'+jumped.length+' 人：'+jumped.map(j=>esc(nm(j.id))+' N.'+j.from+' → N.'+j.to).join('、')+'</li>';
+    if(schDiff.length)h+='<li class="chg">號碼班內容有改：第 '+schDiff.join('、')+' 號</li>';
+    if(grades.length)h+='<li>職級有變動：'+grades.map(r=>esc(nm(r.id))+' → '+esc(r.grade)).join('、')+'</li>';
+    h+='</ul><p style="margin-bottom:.6rem">套用後，'+md(st)+' 以後的週次改用新號碼表推算，之前的週次維持原樣。</p><button class="btn pri" onclick="applyImport(false)">從 '+md(st)+' 起套用新號碼表</button>';
+  }
+  document.getElementById('impRes').innerHTML=h+'</div>';
+}
+function applyImport(gradesOnly){
+  if(!imp)return;const I=imp;imp=null;
+  I.grades.forEach(r=>{person(r.id).grade=r.grade});
+  if(!gradesOnly){
+    upsertPeople(I.rot);
+    const pl={start:dk(I.st),cycle:I.cycle,nums:{}};I.rot.forEach(r=>pl.nums[r.id]=r.n);
+    if(I.schDiff.length){const cs=schAt(I.off);pl.sch={};for(let n=1;n<=Math.max(I.cycle,43);n++)pl.sch[n]=(I.R.sch[n]||cs[n]||PLAIN).slice()}
+    rp=putPlan(pl);
+  }
+  saveRoster();renderAll();
+  document.getElementById('impRes').innerHTML='<div class="alert ok" style="margin-top:.8rem">'+(gradesOnly?'職級已更新。':'已從 '+md(I.st)+' 起套用新號碼表。新加入的人還沒有暱稱，可以在下面的名單補上。')+'</div>';
+}
+
+/* ── 分頁 ── */
+function setTab(t){tab=t;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('on',p.id==='pane-'+t));
+  if(t==='board')renderBoard();if(t==='roster')renderRoster();if(t==='mine')renderMine();if(t==='month')renderMonth();if(t==='sim')renderSim();
+  window.scrollTo(0,0);}
+function renderAll(){renderNow();renderMine();renderBoard();renderMonth();renderSim();renderRoster();if(sw)renderSwap()}
+
+/* ── 字級縮放 ── */
+const ZS=[.85,1,1.15,1.3,1.5,1.75];
+function applyStack(){const i=ZS.indexOf(cfg.z),z=i<0?1:cfg.z;document.documentElement.classList.toggle('stack',window.innerWidth/(16*z)<22)}
+window.addEventListener('resize',applyStack);
+function applyZoom(){const i=ZS.indexOf(cfg.z);const z=i<0?1:cfg.z;document.documentElement.style.fontSize=(16*z)+'px';applyStack();
+  document.getElementById('zOut').disabled=z===ZS[0];document.getElementById('zIn').disabled=z===ZS[ZS.length-1]}
+function zoom(d){let i=ZS.indexOf(cfg.z);if(i<0)i=1;i=Math.max(0,Math.min(ZS.length-1,i+d));cfg.z=ZS[i];save('cfg',cfg);applyZoom();fixMonthSticky()}
+
+/* ── 每月總表 ── */
+let mMode='month',mRef=null,mZone=0,mFilter='all';
+const MONTH_F=[['all','全部'],['sN','大夜 N','sN'],['sE','小夜 E','sE'],['s12','12-8','s12'],['sOFF','休假','sOFF']];
+function zoneOf(date){return periodIdxOf(date)}
+function setMonthMode(m){mMode=m;renderMonth()}
+function setMonthFilter(f){mFilter=f;renderMonth()}
+function monthMove(d){
+  const t=today();
+  if(d===0){mRef=new Date(t.getFullYear(),t.getMonth(),1);mZone=zoneOf(t)}
+  else if(mMode==='month')mRef=new Date(mRef.getFullYear(),mRef.getMonth()+d,1);
+  else mZone+=d;
+  renderMonth();
+}
+function monthDates(){
+  let a,b;
+  if(mMode==='month'){a=new Date(mRef);b=new Date(mRef.getFullYear(),mRef.getMonth()+1,0)}
+  else{const pp=periodByIdx(mZone);a=pp.a;b=pp.b}
+  const out=[];for(let d=new Date(a);d<=b;d=ad(d,1))out.push(d);return out;
+}
+function byCode(a,b){const na=parseFloat(a.id),nb=parseFloat(b.id);return(!isNaN(na)&&!isNaN(nb))?na-nb:a.id.localeCompare(b.id)}
+function shiftOnDate(p,date){const off=wo(date),idx=(date.getDay()+6)%7,n=numOf(p,off);return n==null?null:Object.assign(shiftAt(n,off,idx),{n,off,idx})}
+function cellHTML(x,hit){
+  const c=cls(x.s,x.holD);let inner,sm=false;
+  if(x.s.startsWith('12-8')){inner='12-8<small>'+esc(x.s.slice(5))+'</small>';sm=true}else{inner=esc(x.s);sm=x.s.length>3}
+  return '<span class="'+c+(sm?' sm':'')+(x.h?' hol':'')+(hit?' hit':'')+'" title="'+esc(md(x.date)+' '+x.s+(x.h?'・'+x.h:''))+'">'+inner+'</span>';
+}
+function renderMonth(){
+  if(!mRef){const t=today();mRef=new Date(t.getFullYear(),t.getMonth(),1);mZone=zoneOf(t)}
+  document.getElementById('mModeSeg').innerHTML=[['month','月份'],['period','公告期 4 週']].map(([k,l])=>'<button class="'+(mMode===k?'on':'')+'" onclick="setMonthMode(\''+k+'\')">'+l+'</button>').join('');
+  document.getElementById('monthChips').innerHTML=chipHTML(MONTH_F,mFilter,'setMonthFilter');
+  const ds=monthDates(),t=today(),tk=dk(t);
+  document.getElementById('mTitle').textContent=mMode==='month'?ds[0].getFullYear()+' 年 '+(ds[0].getMonth()+1)+' 月':md(ds[0])+' – '+md(ds[ds.length-1]);
+  const isNow=mMode==='month'?(mRef.getFullYear()===t.getFullYear()&&mRef.getMonth()===t.getMonth()):mZone===zoneOf(t);
+  document.getElementById('mToday').style.visibility=isNow?'hidden':'visible';
+  // 欄：每週一（或第一天）前面插一欄號碼；標出醫院四週區間
+  const cols=[];ds.forEach((d,i)=>{if(i===0||d.getDay()===1)cols.push({no:true,d});cols.push({d})});
+  cols.forEach((c,i)=>{c.p=periodIdxOf(c.d);c.zs=i>0&&c.p!==cols[i-1].p});
+  const segs=[];cols.forEach(c=>{const L=segs[segs.length-1];if(L&&L.p===c.p)L.n++;else segs.push({p:c.p,n:1})});
+  let h0='<tr class="zr"><th class="nm" rowspan="3">人員</th>';
+  segs.forEach((g,i)=>{const pp=periodByIdx(g.p),np=PO.some((o,j)=>j>0&&o>=wo(pp.a)&&o<=wo(pp.b));h0+='<th colspan="'+g.n+'" class="zb z'+(((g.p%2)+2)%2)+(i>0?' zs':'')+'"><div class="zl">'+(g.n>=6?'<span>四週區間</span> ':'')+pLabel(pp)+(np?'<em>新號碼表</em>':'')+'</div></th>'});
+  h0+='</tr>';
+  let h1='<tr>',h2='<tr>';
+  cols.forEach(c=>{
+    const zs=c.zs?' zs':'';
+    if(c.no){h1+='<th class="no'+zs+'" rowspan="2">號</th>';return}
+    const d=c.d,k=dk(d),hol=HOL[k],we=d.getDay()===0||d.getDay()===6;
+    const cl=(k===tk?'td':hol?'hd':we?'we':'')+zs;
+    h1+='<th class="'+cl+'">'+(mMode==='month'?d.getDate():md(d))+'</th>';
+    h2+='<th class="'+cl+'">'+WD[(d.getDay()+6)%7]+(hol?'<small class="hn">'+esc(hol)+'</small>':'')+'</th>';
+  });
+  h1+='</tr>';h2+='</tr>';
+  const ppl=roster.filter(p=>cols.some(c=>c.no&&inRot(p,wo(c.d)))).slice().sort(byCode);
+  const rows=ppl.map(p=>{
+    let r='<tr class="'+(p.id===meId?'me':'')+'"><td class="nm" onclick="setView(\''+esc(p.id)+'\');setTab(\'mine\')"><b>'+esc(p.name||p.id)+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span></td>';
+    cols.forEach(c=>{
+      if(c.no){const n=numOf(p,wo(c.d));r+='<td class="no'+(c.zs?' zs':'')+'">'+(n==null?'—':n)+'</td>';return}
+      const x=shiftOnDate(p,c.d);
+      if(!x){r+='<td class="c'+(c.zs?' zs':'')+'"><span class="na">—</span></td>';return}
+      const cl=cls(x.s,x.holD);
+      const hit=mFilter==='all'||cl===mFilter||(mFilter==='sOFF'&&cl==='sOFF');
+      r+='<td class="c'+(dk(c.d)===tk?' today':'')+(c.zs?' zs':'')+'">'+cellHTML(x,hit)+'</td>';
+    });
+    return r+'</tr>';
+  }).join('');
+  document.getElementById('mBox').innerHTML=ppl.length?'<table class="mt'+(mFilter!=='all'?' f':'')+'"><thead>'+h0+h1+h2+'</thead><tbody>'+rows+'</tbody></table>':'<div class="empty">名單裡還沒有人。</div>';
+  fixMonthSticky();
+}
+// 三列表頭的 sticky 位置依實際高度計算
+function fixMonthSticky(){
+  const th=document.querySelector('#mBox thead');if(!th||!th.offsetHeight)return;
+  let t=0;[...th.rows].forEach(tr=>{[...tr.cells].forEach(c=>c.style.top=t+'px');t+=tr.offsetHeight});
+  const nm=th.querySelector('.nm'),L=(nm?nm.offsetWidth:0)+6;
+  th.querySelectorAll('.zl').forEach(z=>z.style.left=L+'px');
+}
+window.addEventListener('resize',fixMonthSticky);
+
+/* ── 號碼試排班 ── */
+let sim=null;
+function simInit(){
+  if(sim&&person(sim.a)&&person(sim.b)&&sim.a!==sim.b)return;
+  const lw=roster.find(p=>/liwen/i.test(p.name)&&p.id!==meId);
+  const other=lw||roster.find(p=>p.id!==meId&&everRot(p));
+  sim={a:meId,b:other?other.id:meId,off:curOff(),span:(sim&&sim.span)||1};
+}
+function goSim(bid,off,aid){closeSwap();sim={a:aid||meId,b:bid,off,span:(sim&&sim.span)||1};setTab('sim')}
+function simSet(k,v){sim[k]=v;if(sim.a===sim.b){const o=roster.find(p=>p.id!==v&&everRot(p));if(o)sim[k==='a'?'b':'a']=o.id}renderSim()}
+function simFlip(){const t=sim.a;sim.a=sim.b;sim.b=t;renderSim()}
+function simMove(d){sim.off=d===0?curOff():sim.off+d;renderSim()}
+function simSpan(n){sim.span=n;renderSim()}
+function isWork(x){return cls(x.s,x.holD)!=='sOFF'}
+// 某人一段日子的班（swapN：換班那週改做的號碼）
+function daySeq(p,from,to,swapOff,swapN){
+  const out=[];for(let d=new Date(from);d<=to;d=ad(d,1)){
+    const off=wo(d),idx=(d.getDay()+6)%7,n=(off===swapOff&&swapN)?swapN:numOf(p,off);
+    out.push(n==null?{s:'—',holD:false,date:d,off,idx}:Object.assign(shiftAt(n,off,idx),{off,idx}));
+  }return out;
+}
+function findFlags(seq,v0,v1){
+  // v0..v1：顯示範圍在 seq 裡的索引
+  const f=[];
+  for(let i=Math.max(0,v0-1);i<Math.min(seq.length-1,v1+1);i++){
+    const a=seq[i],b=seq[i+1];if(i+1<v0||i>v1)continue;
+    const ca=cls(a.s,a.holD),cb=cls(b.s,b.holD);
+    if(ca==='sN'&&cb!=='sOFF'&&cb!=='sN')f.push({k:'N'+dk(a.date),txt:md(a.date)+' '+a.s+' 大夜，隔天 '+md(b.date)+' 就接 '+b.s,days:[dk(a.date),dk(b.date)]});
+    if(ca==='sE'&&(cb==='sD'||cb==='sDhol'))f.push({k:'E'+dk(a.date),txt:md(a.date)+' '+a.s+' 小夜，隔天 '+md(b.date)+' 接白班 '+b.s,days:[dk(a.date),dk(b.date)]});
+  }
+  let st=-1;
+  for(let i=0;i<=seq.length;i++){
+    const w=i<seq.length&&isWork(seq[i]);
+    if(w&&st<0)st=i;
+    if(!w&&st>=0){const len=i-st;if(len>=7&&i-1>=v0&&st<=v1){const ds=[];for(let j=st;j<i;j++)ds.push(dk(seq[j].date));
+      f.push({k:'R'+dk(seq[st].date)+len,txt:'連續上班 '+len+' 天（'+md(seq[st].date)+'–'+md(seq[i-1].date)+'）',days:ds})}st=-1}
+  }
+  return f;
+}
+function renderSimSel(){
+  const opts=id=>roster.filter(everRot).slice().sort(byCode).map(p=>'<option value="'+esc(p.id)+'"'+(p.id===id?' selected':'')+'>'+esc(label(p))+(p.id===meId?'・我':'')+'</option>').join('');
+  document.getElementById('simA').innerHTML=opts(sim.a);document.getElementById('simB').innerHTML=opts(sim.b);
+}
+function renderSim(){
+  if(!document.getElementById('simGrid'))return;
+  simInit();renderSimSel();
+  const A=person(sim.a),B=person(sim.b),o=sim.off,sp=sim.span,m=monOf(o);
+  document.getElementById('simTitle').textContent=md(m)+' – '+md(ad(m,6));
+  document.getElementById('simSpan').innerHTML=[1,2].map(n=>'<button class="'+(sp===n?'on':'')+'" onclick="simSpan('+n+')">前後各 '+n+' 週</button>').join('');
+  if(!A||!B||A.id===B.id||!inRot(A,o)||!inRot(B,o)){document.getElementById('simGrid').innerHTML='<div class="empty">'+(A&&B&&A.id!==B.id?esc(short(!inRot(A,o)?A:B))+' 這週不在號碼班，不能換號碼。':'請選兩個不同的人。')+'</div>';document.getElementById('simSum').innerHTML='';return}
+  const nA=numOf(A,o),nB=numOf(B,o);
+  document.getElementById('simSum').innerHTML=md(m)+' 那週互換號碼：<b>'+esc(short(A))+'</b> 改做 <b>N.'+nB+'</b>，<b>'+esc(short(B))+'</b> 改做 <b>N.'+nA+'</b>。下面是換完後前後 '+sp+' 週的樣子。';
+  const from=monOf(o-sp),to=ad(monOf(o+sp),6),mf=ad(from,-7),mt=ad(to,7);
+  const v0=7,v1=v0+Math.round((to-from)/86400000);
+  const block=(P,mine,theirs)=>{
+    const after=daySeq(P,mf,mt,o,theirs),before=daySeq(P,mf,mt,null,null);
+    const fa=findFlags(after,v0,v1),fb=findFlags(before,v0,v1),oldK=new Set(fb.map(x=>x.k));
+    const warnDays=new Set();fa.filter(x=>!oldK.has(x.k)).forEach(x=>x.days.forEach(d=>warnDays.add(d)));
+    let h='<div class="simp"><div class="simhd"><b>'+esc(label(P))+'</b><span>N.'+mine+' → N.'+theirs+'</span></div>';
+    h+='<div class="srh"><span></span><span></span><div class="dow">'+WD.map(w=>'<span>'+w+'</span>').join('')+'</div></div>';
+    for(let w=o-sp;w<=o+sp;w++){
+      const n=w===o?theirs:numOf(P,w),wm=monOf(w);
+      if(n==null){h+='<div class="sr"><div class="wk-d"><b>'+md(wm)+'</b>– '+md(ad(wm,6))+'</div><div class="num muted">—</div><div class="nr">這週不在號碼班</div></div>';continue}
+      let st='<div class="strip">';for(let i=0;i<7;i++){const x=shiftAt(n,w,i);st+=tile(x,{warn:warnDays.has(dk(x.date))})}st+='</div>';
+      h+='<div class="sr'+(w===o?' sw':'')+'"><div class="wk-d"><b>'+md(wm)+'</b>– '+md(ad(wm,6))+(w===o?'<br><span class="tg">換這週</span>':'')+'</div><div class="num">'+n+'</div>'+st+holLine(w)+'</div>';
+      if(w===o)h+='<div class="sr orig"><div class="wk-d">原本</div><div class="num muted">'+mine+'</div>'+strip(mine,w)+'</div>';
+    }
+    const nw=fa.filter(x=>!oldK.has(x.k)),od=fa.filter(x=>oldK.has(x.k)),gone=fb.filter(x=>!fa.some(y=>y.k===x.k));
+    h+='<div class="flags">';
+    if(!nw.length)h+='<p class="ok">換完沒有新增的接班問題。</p>';
+    nw.forEach(x=>h+='<p class="new">⚠ '+esc(x.txt)+'</p>');
+    od.forEach(x=>h+='<p class="old">原本就有：'+esc(x.txt)+'</p>');
+    gone.forEach(x=>h+='<p class="ok">換完反而解決：'+esc(x.txt)+'</p>');
+    return h+'</div></div>';
+  };
+  document.getElementById('simGrid').innerHTML=block(A,nA,nB)+block(B,nB,nA);
+}
+
+syncPlans();
+boardOff=curOff();
+applyZoom();
+renderAll();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderNow()});
+</script>
+</body>
+</html>
