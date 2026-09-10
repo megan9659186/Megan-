@@ -46,7 +46,7 @@ body{
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","微軟正黑體",
     "Hiragino Sans GB","Heiti TC",system-ui,-apple-system,"Segoe UI",sans-serif;
   background:var(--bg);color:var(--ink);
-  line-height:1.6;font-size:16.5px;
+  line-height:1.65;font-size:17.5px;
 }
 .app{max-width:1180px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
 
@@ -56,11 +56,11 @@ header{padding:22px 22px 16px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 h1{font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","PingFang TC",
   "Microsoft JhengHei","微軟正黑體",system-ui,serif;
-  font-weight:700;font-size:26px;letter-spacing:.5px}
-.brand .sub{font-size:13.5px;color:var(--ink-soft);letter-spacing:.5px}
+  font-weight:700;font-size:30px;letter-spacing:.5px}
+.brand .sub{font-size:15px;color:var(--ink-soft);letter-spacing:.5px}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .chip{padding:7px 16px;border-radius:20px;border:1px solid var(--line);
-  background:var(--surface);color:var(--ink-soft);font-size:14.5px;cursor:pointer;
+  background:var(--surface);color:var(--ink-soft);font-size:16px;cursor:pointer;
   transition:all .15s;font-family:inherit;font-weight:500}
 .chip:hover{border-color:var(--sage)}
 .chip[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
@@ -70,10 +70,10 @@ h1{font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","PingFang TC",
 
 /* ---------- Body ---------- */
 .body{flex:1;min-height:0}
-.pane{max-width:900px;margin:0 auto;padding:26px 24px 60px}
+.pane{max-width:1280px;margin:0 auto;padding:26px 28px 60px}
 .disclaimer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
-  font-size:13px;color:var(--ink-soft);line-height:1.7}
-footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color:#A3A19D;text-align:center}
+  font-size:14.5px;color:var(--ink-soft);line-height:1.75}
+footer{padding:14px 22px;border-top:1px solid var(--line);font-size:13.5px;color:#A3A19D;text-align:center}
 .updbar{display:none;align-items:center;justify-content:center;gap:8px;
   background:var(--sage);color:#fff;font-weight:600;font-size:15px;
   padding:11px 14px;border-radius:9px;margin-bottom:12px;cursor:pointer;
@@ -86,83 +86,83 @@ b.w{font-weight:700;color:var(--warn)}
 @media(max-width:760px){
   header{padding:18px 16px 14px}
   .pane{padding:20px 16px 56px}
-  h1{font-size:22px}
-  .brand .sub{font-size:12.5px}
-  .chip{font-size:15px;padding:9px 18px;flex:1 1 auto;text-align:center}
-  .tool-head{font-size:18px}
-  .tool-sub{font-size:14px}
-  .calc-cell .v{font-size:19px}
-  .info-btn{font-size:13px;padding:3px 9px}
-  .info-panel{font-size:15.5px;line-height:1.75}
-  .disclaimer{font-size:13.5px;line-height:1.75}
+  h1{font-size:25px}
+  .brand .sub{font-size:14px}
+  .chip{font-size:16.5px;padding:9px 18px;flex:1 1 auto;text-align:center}
+  .tool-head{font-size:21px}
+  .tool-sub{font-size:15.5px}
+  .calc-cell .v{font-size:23px}
+  .info-btn{font-size:14.5px;padding:4px 10px}
+  .info-panel{font-size:17px;line-height:1.8}
+  .disclaimer{font-size:15px;line-height:1.8}
 }
 
-.badge-new{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.7px;
+.badge-new{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.7px;
   line-height:1.5;padding:1px 6px;border-radius:5px;
   background:var(--clay);color:#FDFDFC;vertical-align:middle}
-.info-btn{display:inline-flex;align-items:center;margin-left:6px;font-family:inherit;font-size:12.5px;
+.info-btn{display:inline-flex;align-items:center;margin-left:6px;font-family:inherit;font-size:14px;
   color:var(--sage);background:var(--sage-tint);border:1px solid #C7D0C4;border-radius:20px;
   padding:1px 8px;cursor:pointer;font-weight:500;vertical-align:middle;line-height:1.6;transition:all .15s}
 .info-btn:hover{background:#CED6C9}
 .info-btn[aria-expanded="true"]{background:var(--sage);color:#fff;border-color:var(--sage)}
 .info-panel{display:block;margin-top:8px;background:var(--surface-2);border:1px solid var(--line);
   border-left:3px solid var(--sage);border-radius:8px;padding:10px 13px;
-  font-size:15px;line-height:1.65;color:var(--ink-soft);font-weight:400}
+  font-size:16.5px;line-height:1.7;color:var(--ink-soft);font-weight:400}
 .info-panel[hidden]{display:none}
 .info-panel b{color:var(--ink);font-weight:600}
 /* ---------- 麻醉計算機 / 藥物泡法 ---------- */
 .tool-wrap{display:flex;flex-direction:column;gap:16px}
-.tool-head{font-size:19px;font-weight:700;color:var(--ink)}
-.tool-sub{font-size:13.5px;line-height:1.7;color:var(--ink-soft);margin-top:4px}
+.tool-head{font-size:23px;font-weight:700;color:var(--ink);letter-spacing:.2px}
+.tool-sub{font-size:15px;line-height:1.7;color:var(--ink-soft);margin-top:4px}
 .tool-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
-.tool-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin-bottom:11px}
+.tool-box h3{font-size:17.5px;font-weight:700;color:var(--ink);margin-bottom:12px;letter-spacing:.2px}
 .tool-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
-  font-size:15px;font-weight:700;color:var(--ink-soft)}
+  font-size:17.5px;font-weight:700;color:var(--ink);letter-spacing:.2px}
 .tool-det>summary::-webkit-details-marker{display:none}
-.tool-det>summary::after{content:'▾';margin-left:auto;font-size:12px;opacity:.65;transition:transform .18s}
+.tool-det>summary::after{content:'▾';margin-left:auto;font-size:14px;opacity:.65;transition:transform .18s}
 .tool-det[open]>summary{margin-bottom:11px}
 .tool-det[open]>summary::after{transform:rotate(180deg)}
-.dw-tbl .pill{font-size:14px;padding:3px 10px;border-radius:6px}
 .tool-det.sm{margin-top:10px}
-.tool-det.sm>summary{font-size:13px;font-weight:600}
-.tool-det.sm>summary::after{font-size:11px}
+.tool-det.sm>summary{font-size:15px;font-weight:700;color:var(--ink)}
+.tool-det.sm>summary::after{font-size:13px}
 .tool-det.sm[open]>summary{margin-bottom:6px}
 .tool-det.sm .calc-note{margin-top:0}
 .calc-form{display:flex;flex-wrap:wrap;gap:11px}
 .calc-seg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 2px}
-.calc-seg button{font:inherit;font-size:14.5px;font-weight:600;color:var(--ink-soft);background:var(--bg);
+.calc-seg button{font:inherit;font-size:16px;font-weight:600;color:var(--ink-soft);background:var(--bg);
   border:1px solid var(--line);border-radius:9px;padding:8px 18px;cursor:pointer}
 .calc-seg button[aria-pressed="true"]{background:var(--sage-tint);border-color:#BFCBBD;color:var(--ink)}
-.calc-seg .seg-hint{font-size:12px;color:var(--ink-soft)}
-.calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 120px;min-width:110px}
-.calc-f label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
-.calc-f input,.calc-f select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);
+.calc-seg .seg-hint{font-size:13.5px;color:var(--ink-soft)}
+.calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 132px;min-width:124px}
+.calc-f label{font-size:14px;font-weight:700;color:var(--ink-soft)}
+.calc-f input,.calc-f select{font:inherit;font-size:16.5px;color:var(--ink);background:var(--bg);
   border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
 .calc-f input:focus,.calc-f select:focus{outline:2px solid var(--sage);outline-offset:-1px}
 .calc-out{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
-.calc-cell{flex:1 1 132px;min-width:126px;background:var(--bg);border:1px solid var(--line);
+.calc-cell{flex:1 1 150px;min-width:144px;background:var(--bg);border:1px solid var(--line);
   border-radius:10px;padding:10px 12px}
-.calc-cell .k{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em}
-.calc-cell .v{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
-.calc-cell .u{font-size:12px;font-weight:600;color:var(--ink-soft);margin-left:3px}
-.calc-cell .h{font-size:11.5px;line-height:1.5;color:var(--ink-soft);margin-top:4px}
+.calc-cell .k{font-size:13px;font-weight:700;color:var(--ink-soft);letter-spacing:.02em}
+.calc-cell .v{font-size:25px;font-weight:700;color:var(--ink);margin-top:2px}
+.calc-cell .u{font-size:13.5px;font-weight:600;color:var(--ink-soft);margin-left:3px}
+.calc-cell .h{font-size:13px;line-height:1.55;color:var(--ink-soft);margin-top:4px}
 .calc-cell.hi{background:var(--sage-tint);border-color:#BFCBBD}
-.calc-note{font-size:12.5px;line-height:1.65;color:var(--ink-soft);margin-top:10px}
-.tool-tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tool-tbl th{text-align:left;font-weight:700;color:var(--ink-soft);font-size:12px;
+.calc-note{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-top:10px}
+.tool-tbl{width:100%;border-collapse:collapse;font-size:15px}
+.tool-tbl th{text-align:left;font-weight:700;color:var(--ink);font-size:13.5px;
   padding:7px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap}
 .tool-tbl td{padding:8px;border-bottom:1px solid var(--line);line-height:1.55;color:var(--ink);vertical-align:top}
 .tool-tbl tr:last-child td{border-bottom:none}
 .tool-tbl td b{font-weight:600}
 .tool-box h3.th-new{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.drug-tbl{table-layout:fixed;min-width:760px}
-.drug-tbl td,.drug-tbl th{padding:9px 12px}
-.drug-tbl .dn{font-weight:600;color:var(--ink);line-height:1.45}
-.drug-tbl .dc{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
-.drug-tbl .pill{white-space:normal;line-height:1.5;padding:2px 7px}
-.drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:12.5px;
-  font-weight:700;letter-spacing:.02em;padding:6px 12px;border-bottom:1px solid #DCC3BB}
-.scroll-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:7px}
+.drug-tbl{table-layout:fixed;min-width:880px;font-size:16.5px}
+.drug-tbl td,.drug-tbl th{padding:12px 14px}
+.drug-tbl th{font-size:15px}
+.drug-tbl .dn{font-size:17.5px;font-weight:700;color:var(--ink);line-height:1.4}
+.drug-tbl .dc{font-size:14.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+.drug-tbl .pill{white-space:normal;line-height:1.5;font-size:14px;padding:3px 9px}
+.drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:16px;
+  font-weight:700;letter-spacing:.02em;padding:9px 14px;border-bottom:1px solid #DCC3BB}
+.scroll-hint{font-size:13px;color:var(--ink-soft);margin-bottom:7px}
 .tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
   scrollbar-width:none;-ms-overflow-style:none}
 .tool-scroll::-webkit-scrollbar{display:none;width:0;height:0}
@@ -173,12 +173,17 @@ b.w{font-weight:700;color:var(--warn)}
   border-radius:5px;background:var(--clay)}
 .scroll-rail:hover .scroll-thumb{background:#A6837A}
 .tool-warn{background:var(--flag-tint);border:1px solid #DCC3BB;border-left:3px solid var(--flag);
-  border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#6E4F49}
+  border-radius:10px;padding:16px 18px;font-size:17.5px;line-height:1.85;color:#6E4F49}
 .tool-warn b{color:var(--warn);font-weight:700}
-.pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:5px;
+.pill{display:inline-block;font-size:12.5px;font-weight:600;padding:1px 7px;border-radius:5px;
   background:var(--ochre-tint);color:#6E6047;white-space:nowrap}
 .pill.s{background:var(--sage-tint);color:#4F5C4F}
 .pill.b{background:var(--slate-tint);color:#4E5766}
+/* 常用藥物該用哪個體重:整表加大 */
+.dw-tbl{font-size:16.5px;min-width:520px}
+.dw-tbl th{font-size:15px;padding:10px 12px}
+.dw-tbl td{padding:12px 12px;line-height:1.6}
+.dw-tbl .pill{font-size:16px;font-weight:700;padding:5px 13px;border-radius:7px}
 
 </style>
 </head>
@@ -203,7 +208,7 @@ b.w{font-weight:700;color:var(--warn)}
 </div>
 
 <script>
-const TOOL_VERSION = "v1.2";
+const TOOL_VERSION = "v1.5";
 const TOOL_UPDATED = "2026-09-09";
 
 const el = id => document.getElementById(id);
@@ -783,14 +788,14 @@ const DRUG_PREP = [
     ["Ephedrine","40 mg/mL(1 mL/amp)","1 mL 加 NS 4 mL 稀釋成 5 mL,限 IV 使用","8 mg/mL","單次 5–10 mg;IM 給予不稀釋、抽成 1 mL 並依醫囑;<b>A 級刀也要稀釋</b>"],
     ["Epinephrine<br>低濃度","1 mg/mL(1 mL/amp)","0.1 mg 加 NS 9.9 mL","0.01 mg/mL<br>= 10 µg/mL","過敏或低血壓時小量滴定 10–50 µg"],
     ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
-    ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 D5W 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
+    ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 <b class='w'>D5W</b> 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
   ]},
   { g:"持續輸注(幫浦)", subs:[
     { s:"強心與升壓藥", rows:[
-      ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 D5W 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b>本單位以 D5W 泡製</b>"],
+      ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 <b class='w'>D5W</b> 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b class='w'>本單位以 D5W 泡製</b>"],
       ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
       ["Dopamine","200 mg/5 mL/amp","1 amp 加 NS 250 mL;洗腎病人:1 amp 加 NS 100 mL","0.8 mg/mL<br>EasyDopa 1.6 mg/mL<br>洗腎 2 mg/mL","2–20 µg/kg/min"],
-      ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 D5W 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"]
+      ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 <b class='w'>D5W</b> 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"]
     ]},
     { s:"降壓與抗心律不整藥", rows:[
       ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
@@ -806,12 +811,12 @@ const DRUG_PREP = [
     ]},
     { s:"其他", rows:[
       ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
-      ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL 晶體液","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
+      ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL <b class='w'>晶體液</b>","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
     ]}
   ]},
   { g:"其他需稀釋藥品", rows:[
     ["Succinylcholine","50 mg/mL","100 mg(2 mL)加 NS 稀釋成 5 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
-    ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 D5W 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"]
+    ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 <b class='w'>D5W</b> 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"]
   ]}
 ];
 
@@ -967,7 +972,7 @@ function drugPrepHtml(){
 
     <div class="tool-box">
       <h3>上幫浦前的提醒</h3>
-      <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
+      <ul style="display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.7;color:var(--ink);padding-left:18px">
         <li>需持續點滴給藥時,<b>先加藥稀釋、再排 set 內空氣</b></li>
         <li>劑量有變動時依主治醫師醫囑執行,<b>問清楚、聽清楚再執行</b></li>
       </ul>
@@ -975,7 +980,7 @@ function drugPrepHtml(){
 
     <div class="tool-box">
       <h3>備藥時的幾個提醒</h3>
-      <ul style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.65;color:var(--ink);padding-left:18px">
+      <ul style="display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.7;color:var(--ink);padding-left:18px">
         <li><b>一次只泡一支、泡完立刻貼標</b>,不要一口氣抽好幾支再回頭補標籤</li>
         <li>濃度相近但強度差很多的藥(epinephrine 0.01 mg/mL 與 0.1 mg/mL、norepinephrine 推注與輸注)<b class='w'>分開放置</b></li>
         <li>換班或接手他人備好的針筒時,<b>沒有標示就重泡</b>,不要憑外觀猜</li>
