@@ -15,6 +15,69 @@
 <meta name="color-scheme" content="light">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>麻醉計算機・藥物泡法</title>
+<script>
+/* ============================================================
+   啟動器(必須放在最前面)
+   ------------------------------------------------------------
+   本機檔案(file://)無法自行覆寫磁碟上的自己,所以改用這個作法:
+   磁碟上那份永遠是「內建版」,線上抓到的新版存在瀏覽器的
+   localStorage 當「快取版」。開啟時若快取版比內建版新,就由快取版
+   接手渲染;磁碟上的檔案完全不動,隨時可以還原。
+   換版若因瀏覽器限制而失敗,下次開啟會自動丟掉快取回到內建版,
+   並改為提供下載新檔,不會讓人開到空白頁。
+   線上版(http/https)不走這條路,直接讀伺服器上的檔案。
+   ============================================================ */
+var TOOL_VERSION = "v1.9";
+var TOOL_UPDATED = "2026-09-10";
+var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
+var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
+var BUILD_KEY  = "gacalc_build";
+var SWAP_KEY   = "gacalc_swap";
+var GC_SWAP = null;          /* 待接手的快取版全文 */
+var GC_SWAP_BROKEN = false;  /* 這台電腦換版失敗過,改走下載 */
+
+function gcVerNum(v){
+  var a = String(v || "").replace(/[^0-9.]/g, "").split(".");
+  return (parseInt(a[0], 10) || 0) * 1000 + (parseInt(a[1], 10) || 0);
+}
+function gcVerOf(t){
+  var m = String(t || "").match(/TOOL_VERSION\s*=\s*"([^"]+)"/);
+  return m ? m[1] : null;
+}
+function gcValidBuild(t){
+  return typeof t === "string" && t.length > 30000
+      && /^\s*<!DOCTYPE html>/i.test(t) && t.indexOf("TOOL_VERSION") > 0;
+}
+function gcLS(fn, dflt){ try{ return fn(); }catch(e){ return dflt; } }
+function gcGetBuild(){ return gcLS(function(){ return localStorage.getItem(BUILD_KEY); }, null); }
+function gcDropBuild(){ gcLS(function(){ localStorage.removeItem(BUILD_KEY); }); }
+
+(function boot(){
+  if(IS_CACHED_BUILD){
+    /* 順利接手了,把「換版進行中」的記號清掉 */
+    gcLS(function(){ localStorage.removeItem(SWAP_KEY); });
+    return;
+  }
+  if(location.protocol !== "file:") return;
+
+  /* 上次換版沒走完 → 判定這台電腦不支援,丟掉快取改走下載 */
+  if(gcLS(function(){ return localStorage.getItem(SWAP_KEY); }) === "pending"){
+    GC_SWAP_BROKEN = true;
+    gcDropBuild();
+    gcLS(function(){ localStorage.removeItem(SWAP_KEY); });
+    return;
+  }
+
+  var t = gcGetBuild();
+  if(!gcValidBuild(t)){ if(t) gcDropBuild(); return; }
+  var v = gcVerOf(t);
+  if(!v || gcVerNum(v) <= gcVerNum(TOOL_VERSION)){ gcDropBuild(); return; }
+  GC_SWAP = t;
+  /* 先藏起來,避免內建版閃一下 */
+  try{ document.documentElement.style.visibility = "hidden"; }catch(e){}
+})();
+</script>
+</script>
 <style>html{background:#FDFDFC;color-scheme:light}</style>
 <!-- 離線使用:不載入任何外部資源,字型一律使用系統內建字體 -->
 <style>
@@ -68,12 +131,47 @@ h1{font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","PingFang TC",
 .chip.drug:hover{border-color:var(--clay)}
 .chip.drug[aria-pressed="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
 
+/* ---------- 藥物泡法查詢 ---------- */
+.ds-search{display:flex;gap:10px;align-items:stretch}
+.ds-search input{flex:1;font:inherit;font-size:19px;padding:13px 16px;border-radius:10px;
+  border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.ds-search input:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 3px var(--clay-tint)}
+.ds-clear{font:inherit;font-size:15px;font-weight:600;padding:0 18px;border-radius:10px;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--ink-soft);cursor:pointer}
+.ds-clear:hover{background:var(--surface)}
+.ds-names{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.ds-chip{font:inherit;font-size:14.5px;padding:6px 13px;border-radius:16px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink-soft)}
+.ds-chip:hover{border-color:var(--clay);color:var(--ink)}
+.ds-count{font-size:14.5px;color:var(--ink-soft);margin:4px 0 10px}
+.ds-empty{font-size:16px;line-height:1.8;color:var(--ink-soft);background:var(--surface);
+  border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.ds-card{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--clay);
+  border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.ds-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.ds-name{font-size:21px;font-weight:700;color:var(--ink)}
+.ds-grp{font-size:14px;color:var(--ink-soft)}
+.ds-row{display:flex;gap:16px;padding:7px 0;font-size:16.5px;line-height:1.6;color:var(--ink)}
+.ds-k{flex:0 0 128px;font-size:14.5px;font-weight:700;color:var(--ink-soft);padding-top:2px}
+.ds-v{flex:1;min-width:0}
+.ds-prep{font-weight:600}
+/* ---------- 病人資訊同步提示 ---------- */
+.sync-note{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-size:14px;color:var(--ink-soft);margin-top:10px}
+.sync-note button{font:inherit;font-size:13.5px;font-weight:600;padding:3px 11px;border-radius:14px;
+  border:1px solid var(--line);background:var(--surface-2);color:var(--sage);cursor:pointer}
+.sync-note button:hover{background:var(--sage-tint)}
+
 /* ---------- Body ---------- */
 .body{flex:1;min-height:0}
 .pane{max-width:1280px;margin:0 auto;padding:26px 28px 60px}
 .disclaimer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
   font-size:14.5px;color:var(--ink-soft);line-height:1.75}
 footer{padding:14px 22px;border-top:1px solid var(--line);font-size:13.5px;color:#A3A19D;text-align:center}
+.foot-btn{font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:14px;padding:2px 10px;cursor:pointer;margin-left:4px}
+.foot-btn:hover{background:var(--surface)}
 .updbar{display:none;align-items:center;justify-content:center;gap:8px;
   background:var(--sage);color:#fff;font-weight:600;font-size:15px;
   padding:11px 14px;border-radius:9px;margin-bottom:12px;cursor:pointer;
@@ -88,6 +186,9 @@ b.w{font-weight:700;color:var(--warn)}
   .pane{padding:20px 16px 56px}
   h1{font-size:25px}
   .brand .sub{font-size:14px}
+  .ds-row{flex-direction:column;gap:2px}
+  .ds-k{flex:none}
+  .ds-search input{font-size:17px}
   .chip{font-size:16.5px;padding:9px 18px;flex:1 1 auto;text-align:center}
   .tool-head{font-size:21px}
   .tool-sub{font-size:15.5px}
@@ -208,9 +309,6 @@ b.w{font-weight:700;color:var(--warn)}
 </div>
 
 <script>
-const TOOL_VERSION = "v1.5";
-const TOOL_UPDATED = "2026-09-09";
-
 const el = id => document.getElementById(id);
 const NEW_DAYS = 7;
 function isNewItem(s){
@@ -233,8 +331,8 @@ function toggleInfo(btn){
    BMI、BSA(Mosteller);另附各類藥物該用哪個體重的對照表。
    ============================================================ */
 const CALC_STATE = { sex:"M", age:45, ht:170, wt:70 };
-const FLUID_STATE = { wt:70, npo:8 };
-const EBV_STATE = { wt:70, grp:"75", hb0:13, hbT:8 };
+const FLUID_STATE = { wt:70, npo:8, manual:false };
+const EBV_STATE = { wt:70, grp:"75m", hb0:13, hbT:8, manual:false, grpManual:false };
 
 const EBV_GROUPS = [
   { v:"95", t:"早產兒(95 mL/kg)" },
@@ -261,6 +359,14 @@ function ebvCalc(wt, perKg, hb0, hbT){
   const ok = hb0>0 && hbT>0 && hb0>hbT;
   const abl = ok ? ebv*(hb0-hbT)/hb0 : null;
   return { ebv, abl, pct: abl==null ? null : abl/ebv*100, l15: ebv*0.15, l30: ebv*0.30 };
+}
+
+/* 依年齡與性別自動選 EBV 族群;新生兒與早產兒無法由「歲」判斷,維持手動選擇 */
+function ebvAutoGroup(age, sex){
+  if(!(age>=0) || !isFinite(age)) return null;
+  if(age < 1)  return "80";
+  if(age < 16) return "75";
+  return sex === "F" ? "65" : "75m";
 }
 
 function calcAll(sex, ht, wt){
@@ -408,6 +514,12 @@ function calcHtml(){
   const tvV = tivaView(tv, tvM);
   const tvNew = isNewItem({ updated:"2026-08-21" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  if(!FLUID_STATE.manual && CALC_STATE.wt>0) FLUID_STATE.wt = CALC_STATE.wt;
+  if(!EBV_STATE.manual && CALC_STATE.wt>0) EBV_STATE.wt = CALC_STATE.wt;
+  if(!EBV_STATE.grpManual){
+    const g0 = ebvAutoGroup(CALC_STATE.age, CALC_STATE.sex);
+    if(g0) EBV_STATE.grp = g0;
+  }
   const fr = fluidCalc(FLUID_STATE.wt, FLUID_STATE.npo);
   const ebvPerKg = parseFloat(EBV_STATE.grp);
   const br = ebvCalc(EBV_STATE.wt, ebvPerKg, EBV_STATE.hb0, EBV_STATE.hbT);
@@ -530,6 +642,7 @@ function calcHtml(){
           <input id="fNpo" type="number" inputmode="decimal" min="0" max="24" step="1" value="${FLUID_STATE.npo}">
         </div>
       </div>
+      <div class="sync-note" id="fSync"></div>
       <div class="calc-out" id="fOut">
         <div class="calc-cell hi">
           <div class="k">每小時維持量</div>
@@ -580,6 +693,7 @@ function calcHtml(){
           <input id="bHbT" type="number" inputmode="decimal" min="3" max="15" step="0.1" value="${EBV_STATE.hbT}">
         </div>
       </div>
+      <div class="sync-note" id="bSync"></div>
       <div class="calc-out" id="bOut">
         <div class="calc-cell hi">
           <div class="k">EBV 估計血容量</div>
@@ -718,6 +832,7 @@ function wireCalc(){
       if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
     });
     updTiva();
+    syncPatient();
   };
   ["cSex","cAge","cHt","cWt"].forEach(id=>{
     const n = el(id);
@@ -770,10 +885,69 @@ function wireCalc(){
          [n0(x.l30), null]]
       : [["—",null],["—",null],["—",null],["—",null]]);
   };
-  ["bWt","bGrp","bHb0","bHbT"].forEach(id=>{
+  ["bHb0","bHbT"].forEach(id=>{
     const n = el(id);
     if(n){ n.addEventListener("input", updEbv); n.addEventListener("change", updEbv); }
   });
+
+  /* ----------------------------------------------------------
+     病人資訊同步
+     ------------------------------------------------------------
+     基本資料的體重會自動帶入下方 4-2-1 與預估失血量;年齡與性別
+     決定失血量的族群係數。使用者若自行改動該區欄位,該區即停止
+     同步(例如只想單獨試算某個體重),按「恢復同步」可以再接回。
+     ---------------------------------------------------------- */
+  function paintSync(){
+    const f = el("fSync");
+    if(f) f.innerHTML = FLUID_STATE.manual
+      ? `體重已手動調整,不再跟隨基本資料 <button type="button" id="fReSync">恢復同步</button>`
+      : `體重跟隨上方基本資料`;
+    const b = el("bSync");
+    if(b){
+      const bits = [];
+      bits.push(EBV_STATE.manual ? "體重已手動調整" : "體重跟隨上方基本資料");
+      bits.push(EBV_STATE.grpManual ? "族群已手動選擇" : "族群依年齡與性別自動判定");
+      b.innerHTML = (EBV_STATE.manual || EBV_STATE.grpManual)
+        ? `${bits.join("、")} <button type="button" id="bReSync">恢復同步</button>`
+        : bits.join("、");
+    }
+    const fr = el("fReSync");
+    if(fr) fr.addEventListener("click", ()=>{ FLUID_STATE.manual = false; syncPatient(); });
+    const br = el("bReSync");
+    if(br) br.addEventListener("click", ()=>{
+      EBV_STATE.manual = false; EBV_STATE.grpManual = false; syncPatient();
+    });
+  }
+
+  function syncPatient(){
+    if(!FLUID_STATE.manual && CALC_STATE.wt>0){
+      const n = el("fWt");
+      if(n){ n.value = CALC_STATE.wt; updFluid(); }
+    }
+    if(!EBV_STATE.manual && CALC_STATE.wt>0){
+      const n = el("bWt");
+      if(n) n.value = CALC_STATE.wt;
+    }
+    if(!EBV_STATE.grpManual){
+      const g = ebvAutoGroup(CALC_STATE.age, CALC_STATE.sex);
+      const n = el("bGrp");
+      if(g && n) n.value = g;
+    }
+    updEbv();
+    paintSync();
+  }
+
+  const markManual = (id, fn) => {
+    const n = el(id);
+    if(n) n.addEventListener("input", ()=>{ fn(); updEbvOrFluid(id); paintSync(); });
+  };
+  const updEbvOrFluid = id => { if(id === "fWt") updFluid(); else updEbv(); };
+  markManual("fWt", ()=>{ FLUID_STATE.manual = true; });
+  markManual("bWt", ()=>{ EBV_STATE.manual = true; });
+  const bg = el("bGrp");
+  if(bg) bg.addEventListener("change", ()=>{ EBV_STATE.grpManual = true; updEbv(); paintSync(); });
+
+  syncPatient();
   initScrollRails();
 }
 
@@ -790,12 +964,13 @@ const DRUG_PREP = [
     ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
     ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 <b class='w'>D5W</b> 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
   ]},
-  { g:"持續輸注(幫浦)", subs:[
+  { g:"持續輸注(幫浦)", up:"2026-09-09", subs:[
     { s:"強心與升壓藥", rows:[
       ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 <b class='w'>D5W</b> 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b class='w'>本單位以 D5W 泡製</b>"],
       ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
       ["Dopamine","200 mg/5 mL/amp","1 amp 加 NS 250 mL;洗腎病人:1 amp 加 NS 100 mL","0.8 mg/mL<br>EasyDopa 1.6 mg/mL<br>洗腎 2 mg/mL","2–20 µg/kg/min"],
-      ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 <b class='w'>D5W</b> 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"]
+      ["Dobutamine","250 mg/20 mL/vial","1 vial 加 NS 250 mL;洗腎病人:1 vial 加 NS 或 <b class='w'>D5W</b> 80 mL","1 mg/mL<br>洗腎 2.5 mg/mL","2–20 µg/kg/min"],
+      ["Primacor","10 mg/10 mL/amp<br>(milrinone)","1 amp(10 mg,10 mL)加 NS 90 mL 稀釋成 100 mL","0.1 mg/mL<br>= 100 µg/mL","0.375–0.75 µg/kg/min;<b class='w'>會擴張血管、明顯低血壓</b>,常需併用升壓藥;半衰期約 2–3 小時"]
     ]},
     { s:"降壓與抗心律不整藥", rows:[
       ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
@@ -829,6 +1004,7 @@ const DRUG_PRESETS = [
   { t:"Dopamine 洗腎 200 mg / 100 mL", mg:200, mL:100 },
   { t:"Dobutamine 250 mg / 250 mL", mg:250, mL:250 },
   { t:"Dobutamine 洗腎 250 mg / 100 mL", mg:250, mL:100 },
+  { t:"Primacor 10 mg / 100 mL", mg:10, mL:100 },
   { t:"Angidil 10 mg / 100 mL", mg:10, mL:100 },
   { t:"Angidil 洗腎 10 mg / 20 mL", mg:10, mL:20 },
   { t:"Nicardipine 10 mg / 100 mL", mg:10, mL:100 },
@@ -838,6 +1014,7 @@ const DRUG_PRESETS = [
 ];
 
 const DRUG_CALC_STATE = { pi:"1", mg:8, mL:100, wt:70, dose:0.05, rate:5 };
+const DRUG_SEARCH_STATE = { q:"" };
 
 function drugIsHrUnit(pi){
   const p = DRUG_PRESETS[+pi];
@@ -863,6 +1040,123 @@ function drugDoseFromRate(mg, mL, wt, rate){
   return { min: rate*c.perMin, hr: rate*c.perHr };
 }
 
+/* ============================================================
+   藥物泡法查詢
+   ------------------------------------------------------------
+   從 DRUG_PREP 直接建索引,不另存一份資料,泡法內容改一次就好。
+   別名表只收「本單位實際會講的講法」,查得到就好,不做藥理說明。
+   Angidil 為 isosorbide dinitrate(怡心通),不是 diltiazem。
+   ============================================================ */
+const DRUG_ALIAS = {
+  "Ephedrine":                ["麻黃素","麻黃鹼","ephe"],
+  "Epinephrine 低濃度":       ["adrenaline","腎上腺素","epi","bosmin","低濃度"],
+  "Epinephrine 高濃度":       ["adrenaline","腎上腺素","epi","bosmin","高濃度"],
+  "Norepinephrine 推注":      ["noradrenaline","正腎","正腎上腺素","levophed","ne","norepi","昇壓"],
+  "Norepinephrine":           ["noradrenaline","正腎","正腎上腺素","levophed","ne","norepi","昇壓"],
+  "Epinephrine":              ["adrenaline","腎上腺素","epi","bosmin"],
+  "Dopamine":                 ["多巴胺","da","easydopa"],
+  "Dobutamine":               ["多巴酚丁胺","dobu"],
+  "Primacor":                 ["milrinone","米力農","明克","pde3","強心","inodilator"],
+  "Angidil":                  ["isosorbide dinitrate","isdn","怡心通","硝酸異山梨酯","nitrate"],
+  "Nicardipine":              ["perdipine","培爾吉平","ncd","鈣離子阻斷劑"],
+  "Cordarone":                ["amiodarone","胺碘酮","抗心律不整"],
+  "Remifentanil 高濃度":      ["ultiva","瑞芬","remi","管制藥","高濃度"],
+  "Remifentanil 稀釋版":      ["ultiva","瑞芬","remi","管制藥","稀釋"],
+  "Dexmedetomidine":          ["precedex","右美","dex","鎮靜"],
+  "Tranexamic acid":          ["transamin","txa","傳明酸","止血"],
+  "Oxytocin":                 ["pitocin","syntocinon","催產素","子宮收縮"],
+  "Succinylcholine":          ["scc","sux","anectine","琥珀膽鹼","肌鬆"],
+  "Magnesium sulfate":        ["mgso4","硫酸鎂","鎂"]
+};
+
+/* HTML 去標籤,只用於建立搜尋用的純文字 */
+function dsPlain(x){ return String(x).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(); }
+
+/* 把 DRUG_PREP 攤平成一列一藥,供查詢使用 */
+function drugIndex(){
+  const out = [];
+  DRUG_PREP.forEach(sec=>{
+    (sec.subs || [{ rows: sec.rows }]).forEach(sub=>{
+      sub.rows.forEach(r=>{
+        const name = dsPlain(r[0]);
+        out.push({
+          name, grp: sec.g, sub: sub.s || "",
+          spec: r[1], prep: r[2], conc: r[3], note: r[4],
+          key: [name, sec.g, sub.s || "", dsPlain(r[1]), dsPlain(r[2]),
+                dsPlain(r[3]), dsPlain(r[4]),
+                (DRUG_ALIAS[name] || []).join(" ")].join(" ").toLowerCase()
+        });
+      });
+    });
+  });
+  return out;
+}
+
+function dsCard(d){
+  const path = d.sub ? `${d.grp}　·　${d.sub}` : d.grp;
+  return `
+    <div class="ds-card">
+      <div class="ds-head"><span class="ds-name">${d.name}</span><span class="ds-grp">${path}</span></div>
+      <div class="ds-row"><span class="ds-k">原裝濃度</span><span class="ds-v">${d.spec}</span></div>
+      <div class="ds-row"><span class="ds-k">常見泡法</span><span class="ds-v ds-prep">${d.prep}</span></div>
+      <div class="ds-row"><span class="ds-k">泡好濃度</span><span class="ds-v"><span class="pill b">${d.conc}</span></span></div>
+      <div class="ds-row"><span class="ds-k">常用劑量／備註</span><span class="ds-v">${d.note}</span></div>
+    </div>`;
+}
+
+function drugSearchHtml(){
+  const idx = drugIndex();
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">藥物泡法查詢</div>
+      <div class="tool-sub">輸入藥名即可查該藥的原裝濃度、稀釋方式與泡好濃度。中文、英文、常用簡稱與別名都查得到(例如正腎、levophed、TXA、右美)。</div>
+    </div>
+
+    <div class="tool-box">
+      <div class="ds-search">
+        <input id="dsQ" type="search" autocomplete="off" placeholder="輸入藥名,例如 norepinephrine、正腎、TXA" value="${DRUG_SEARCH_STATE.q}">
+        <button type="button" id="dsClear" class="ds-clear">清除</button>
+      </div>
+      <div class="ds-names" id="dsNames">
+        ${idx.map(d=>`<button type="button" class="ds-chip" data-n="${d.name}">${d.name}</button>`).join("")}
+      </div>
+    </div>
+
+    <div id="dsOut"></div>
+
+    <div class="disclaimer">
+      查詢結果與「本科常見藥物泡法」為同一份資料。給藥前請完成標準核對流程,並以本院藥局最新規範與藥品實際標示為準。
+    </div>
+  </div>`;
+}
+
+function wireDrugSearch(){
+  const idx = drugIndex();
+  const box = el("dsOut"), q = el("dsQ"), names = el("dsNames");
+  const run = () => {
+    const t = (q.value || "").trim().toLowerCase();
+    DRUG_SEARCH_STATE.q = q.value || "";
+    if(names) names.style.display = t ? "none" : "flex";
+    if(!t){
+      box.innerHTML = `<div class="ds-empty">上方可直接點選藥名,或輸入關鍵字查詢。</div>`;
+      return;
+    }
+    const terms = t.split(/\s+/).filter(Boolean);
+    const hit = idx.filter(d => terms.every(w => d.key.indexOf(w) >= 0));
+    box.innerHTML = hit.length
+      ? `<div class="ds-count">找到 ${hit.length} 筆</div>` + hit.map(dsCard).join("")
+      : `<div class="ds-empty">查無這個藥名。可以改用英文原名、常用簡稱,或到「藥物泡法」分頁瀏覽完整表格。<br>本表只收錄本單位需要稀釋或上幫浦的藥品。</div>`;
+  };
+  if(q){ q.addEventListener("input", run); }
+  const c = el("dsClear");
+  if(c) c.addEventListener("click", ()=>{ q.value = ""; run(); q.focus(); });
+  if(names) names.querySelectorAll(".ds-chip").forEach(b=>{
+    b.addEventListener("click", ()=>{ q.value = b.dataset.n; run(); });
+  });
+  run();
+}
+
 function drugPrepHtml(){
   const S = DRUG_CALC_STATE;
   const dgF = x => (x==null || !isFinite(x)) ? "—"
@@ -879,30 +1173,6 @@ function drugPrepHtml(){
       <div class="tool-head">本科常見藥物泡法</div>
       <div class="tool-sub">依本單位藥物泡製規範整理原裝濃度、稀釋方式與泡好後的濃度,方便交班與備藥時對照。</div>
     </div>
-
-    <div class="tool-warn">
-      <b>使用前務必確認</b>:本單位的稀釋慣例、幫浦設定與現有藥品規格不盡相同,本表僅為常見作法整理,<b>請以本院藥局最新規範與實際藥品標示為準</b>。泡好的針筒一定要貼上藥名、濃度、時間與泡藥者;同一藥品有多種濃度時(如 epinephrine)尤其要標清楚。
-    </div>
-
-    ${DRUG_PREP.map(sec=>`
-      <div class="tool-box">
-        <h3>${sec.g}</h3>
-        <div class="scroll-hint">表格可左右滑動查看</div>
-        <div class="tool-scroll">
-          <table class="tool-tbl drug-tbl">
-            <colgroup><col style="width:170px"><col style="width:240px"><col style="width:130px"><col style="width:220px"></colgroup>
-            <tr><th>藥物／原裝濃度</th><th>常見泡法</th><th>泡好濃度</th><th>常用劑量／備註</th></tr>
-            ${(sec.subs || [{ rows: sec.rows }]).map(sub=>`
-              ${sub.s ? `<tr class="drug-sub"><td colspan="4">${sub.s}</td></tr>` : ""}
-              ${sub.rows.map(r=>`<tr>
-                <td><div class="dn">${r[0]}</div><div class="dc">${r[1]}</div></td>
-                <td>${r[2]}</td>
-                <td><span class="pill b">${r[3]}</span></td><td>${r[4]}</td>
-              </tr>`).join("")}
-            `).join("")}
-          </table>
-        </div>
-      </div>`).join("")}
 
     <div class="tool-box">
       <h3 class="th-new">本單位濃度速算${dgNew}</h3>
@@ -969,6 +1239,30 @@ function drugPrepHtml(){
       </div>
       <div class="calc-note"><b>公式</b>:藥量(mg)÷ 溶液總量(mL)× 1000 ÷ 體重(kg)÷ 60 = 每 1 mL/hr 相當於幾 µg/kg/min。<b>心算版</b>:藥量(mg)÷〔體重(kg)× 容量常數〕,容量常數 100 mL → 6、200 mL → 12、250 mL → 15、300 mL → 18、400 mL → 24、500 mL → 30。計算結果僅供核對,<b>實際速率仍依醫囑與病人反應調整</b>。</div>
     </div>
+
+    <div class="tool-warn">
+      <b>使用前務必確認</b>:本單位的稀釋慣例、幫浦設定與現有藥品規格不盡相同,本表僅為常見作法整理,<b>請以本院藥局最新規範與實際藥品標示為準</b>。泡好的針筒一定要貼上藥名、濃度、時間與泡藥者;同一藥品有多種濃度時(如 epinephrine)尤其要標清楚。
+    </div>
+
+    ${DRUG_PREP.map(sec=>`
+      <div class="tool-box">
+        <h3 class="th-new">${sec.g}${isNewItem({ updated: sec.up }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
+        <div class="scroll-hint">表格可左右滑動查看</div>
+        <div class="tool-scroll">
+          <table class="tool-tbl drug-tbl">
+            <colgroup><col style="width:170px"><col style="width:240px"><col style="width:130px"><col style="width:220px"></colgroup>
+            <tr><th>藥物／原裝濃度</th><th>常見泡法</th><th>泡好濃度</th><th>常用劑量／備註</th></tr>
+            ${(sec.subs || [{ rows: sec.rows }]).map(sub=>`
+              ${sub.s ? `<tr class="drug-sub"><td colspan="4">${sub.s}</td></tr>` : ""}
+              ${sub.rows.map(r=>`<tr>
+                <td><div class="dn">${r[0]}</div><div class="dc">${r[1]}</div></td>
+                <td>${r[2]}</td>
+                <td><span class="pill b">${r[3]}</span></td><td>${r[4]}</td>
+              </tr>`).join("")}
+            `).join("")}
+          </table>
+        </div>
+      </div>`).join("")}
 
     <div class="tool-box">
       <h3>上幫浦前的提醒</h3>
@@ -1144,12 +1438,13 @@ function wireDrugCalc(){
    ============================================================ */
 const CALC_CHIP = "麻醉計算機";
 const DRUG_CHIP = "藥物泡法";
-const TABS = [CALC_CHIP, DRUG_CHIP];
+const FIND_CHIP = "藥物查詢";
+const TABS = [CALC_CHIP, DRUG_CHIP, FIND_CHIP];
 let activeTab = CALC_CHIP;
 
 function renderChips(){
   el("chips").innerHTML = TABS.map(t=>
-    `<button class="chip${t===DRUG_CHIP?" drug":""}" aria-pressed="${t===activeTab}" data-t="${t}">${t}</button>`
+    `<button class="chip${(t===DRUG_CHIP||t===FIND_CHIP)?" drug":""}" aria-pressed="${t===activeTab}" data-t="${t}">${t===FIND_CHIP?"🔍 "+t:t}</button>`
   ).join("");
   el("chips").querySelectorAll(".chip").forEach(b=>{
     b.addEventListener("click", ()=>{ activeTab = b.dataset.t; renderChips(); renderPane(); });
@@ -1160,7 +1455,12 @@ const DISCLAIMER = `<div class="disclaimer">本工具僅為臨床輔助速查,�
 
 function renderPane(){
   const p = el("pane");
-  if(activeTab === DRUG_CHIP){
+  if(activeTab === FIND_CHIP){
+    p.innerHTML = drugSearchHtml();
+    wireDrugSearch();
+    const q = el("dsQ");
+    if(q && !("ontouchstart" in window)) q.focus();
+  } else if(activeTab === DRUG_CHIP){
     p.innerHTML = drugPrepHtml() + DISCLAIMER;
     wireDrugCalc();
   } else {
@@ -1171,49 +1471,131 @@ function renderPane(){
   window.scrollTo(0,0);
 }
 
-el("foot").innerHTML = `臨床輔助工具 · 使用前請對照所屬機構 protocol 與最新指引　·　${TOOL_VERSION} · 更新日期 ${TOOL_UPDATED}`;
+el("foot").innerHTML = `臨床輔助工具 · 使用前請對照所屬機構 protocol 與最新指引　·　${TOOL_VERSION} · 更新日期 ${TOOL_UPDATED}`
+  + (IS_CACHED_BUILD ? `　·　線上更新版 <button type="button" class="foot-btn" onclick="revertBuild()">還原內建版本</button>` : "");
 renderChips();
 renderPane();
 
 /* ============================================================
-   自動更新:檔案推上 GitHub 後自動偵測伺服器上的新版。
-   本機 file:// 開啟會靜默略過。
+   版本偵測與更新
+   ------------------------------------------------------------
+   線上版:比對伺服器上的檔案版本,按更新即重新載入。
+   本機版:比對 GitHub raw 檔案版本;按更新後把新版存進 localStorage
+   再重新載入,由啟動器接手。磁碟上的檔案不動,可隨時還原。
+   偵測失敗(離線、被防火牆擋住)一律靜默略過,不影響離線查詢。
    ============================================================ */
 (function(){
-  var SELF = location.href.split('#')[0].split('?')[0];
-  var baseline = null;
-  function hash(t){var h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0;}return t.length+':'+h;}
-  function getSig(){
-    return fetch(SELF,{method:'HEAD',cache:'no-store'}).then(function(res){
-      if(!res.ok) throw 0;
-      var e=res.headers.get('etag'), m=res.headers.get('last-modified');
-      if(e) return 'e:'+e;
-      if(m) return 'm:'+m;
-      throw 0;
-    }).catch(function(){
-      return fetch(SELF,{cache:'no-store'}).then(function(res){
-        if(!res.ok) throw 0;
-        var e=res.headers.get('etag'), m=res.headers.get('last-modified');
-        if(e) return 'e:'+e;
-        if(m) return 'm:'+m;
-        return res.text().then(function(t){return 'h:'+hash(t);});
-      });
-    });
+  var isFile  = location.protocol === "file:";
+  var SELF    = location.href.split("#")[0].split("?")[0];
+  var SRC     = isFile ? UPDATE_SRC : SELF;
+  var pending = null;
+  var newVer  = null;
+
+  function dotIcon(){
+    var svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>"
+      + "<rect x='2' y='2' width='60' height='60' rx='14' fill='#B7CFD4'/>"
+      + "<rect x='13' y='11' width='38' height='13' rx='3' fill='#3C3B39'/>"
+      + "<g fill='#4E5766'><rect x='13' y='30' width='16' height='10' rx='2'/>"
+      + "<rect x='35' y='30' width='16' height='10' rx='2'/>"
+      + "<rect x='13' y='44' width='16' height='10' rx='2'/>"
+      + "<rect x='35' y='44' width='16' height='10' rx='2'/></g>"
+      + "<circle cx='51' cy='13' r='12' fill='#C0392B' stroke='#FDFDFC' stroke-width='4'/></svg>";
+    return "data:image/svg+xml," + encodeURIComponent(svg);
   }
-  window.applyUpdate=function(){ location.reload(); };
-  /* 本機檔案(file://)離線使用:不做版本輪詢 */
-  if(location.protocol === 'file:') return;
+
+  function paintDot(v){
+    var b = document.getElementById("upd");
+    if(b){
+      b.innerHTML = GC_SWAP_BROKEN
+        ? "🔄 有新版本 " + v + " · 點此下載新檔覆蓋"
+        : "🔄 有新版本 " + v + " · 點此立即更新";
+      b.style.display = "flex";
+    }
+    if(document.title.indexOf("●") !== 0) document.title = "● " + document.title;
+    try{
+      var href = dotIcon();
+      var list = document.querySelectorAll("link[rel~='icon']");
+      if(list.length){ for(var i = 0; i < list.length; i++) list[i].href = href; }
+      else{
+        var l = document.createElement("link");
+        l.rel = "icon"; l.href = href;
+        document.head.appendChild(l);
+      }
+    }catch(e){}
+  }
+
   function check(){
-    getSig().then(function(sig){
-      if(baseline===null){ baseline=sig; return; }
-      if(sig!==baseline){ var b=document.getElementById('upd'); if(b) b.style.display='flex'; }
-    }).catch(function(){});
+    if(navigator.onLine === false) return;
+    fetch(SRC, { cache:"no-store" })
+      .then(function(r){ if(!r.ok) throw 0; return r.text(); })
+      .then(function(t){
+        if(!gcValidBuild(t)) return;
+        var v = gcVerOf(t);
+        if(v && gcVerNum(v) > gcVerNum(TOOL_VERSION)){ pending = t; newVer = v; paintDot(v); }
+      })
+      .catch(function(){});
   }
+
+  function offerDownload(){
+    try{
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([pending], { type:"text/html" }));
+      a.download = "gacalc.html";
+      a.click();
+      alert("已下載新版 " + newVer + "。請用它覆蓋這台電腦上的舊檔,重開就是新版。");
+    }catch(e){
+      alert("下載失敗,請直接到 GitHub 取得新版檔案。");
+    }
+  }
+
+  window.applyUpdate = function(){
+    if(!pending){ location.reload(); return; }
+    if(!isFile){ location.reload(); return; }
+    if(GC_SWAP_BROKEN){ offerDownload(); return; }
+    try{
+      localStorage.setItem(BUILD_KEY,
+        pending.replace("var IS_CACHED_BUILD = false; /*BUILD-FLAG*/",
+                        "var IS_CACHED_BUILD = true; /*BUILD-FLAG*/"));
+      location.reload();
+    }catch(e){ offerDownload(); }
+  };
+
+  window.revertBuild = function(){
+    if(!confirm("將清除線上更新的版本,回到這個檔案原本的內容。要繼續嗎?")) return;
+    gcDropBuild();
+    location.reload();
+  };
+
   check();
-  setInterval(check, 60000);
-  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible') check(); });
-  window.addEventListener('focus', check);
+  setInterval(check, 300000);
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible") check();
+  });
+  window.addEventListener("focus", check);
+  window.addEventListener("online", check);
 })();
+
+/* ============================================================
+   快取版接手
+   ------------------------------------------------------------
+   等內建版渲染完成後才換,確保文件解析已結束。換版前先留下記號,
+   若換版沒走完(瀏覽器不支援),下次開啟會偵測到記號並自動回到
+   內建版,不會停在空白頁。
+   ============================================================ */
+if(GC_SWAP){
+  setTimeout(function(){
+    try{
+      localStorage.setItem(SWAP_KEY, "pending");
+      document.open();
+      document.write(GC_SWAP);
+      document.close();
+    }catch(e){
+      gcDropBuild();
+      try{ localStorage.removeItem(SWAP_KEY); }catch(e2){}
+      try{ document.documentElement.style.visibility = "visible"; }catch(e3){}
+    }
+  }, 0);
+}
 </script>
 </body>
 </html>
