@@ -27,7 +27,7 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v1.9";
+var TOOL_VERSION = "v2.1";
 var TOOL_UPDATED = "2026-09-10";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
@@ -264,6 +264,9 @@ b.w{font-weight:700;color:var(--warn)}
 .drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:16px;
   font-weight:700;letter-spacing:.02em;padding:9px 14px;border-bottom:1px solid #DCC3BB}
 .scroll-hint{font-size:13px;color:var(--ink-soft);margin-bottom:7px}
+b.dv{font-weight:700;color:#3F6C99}
+.dg-name{font-size:17px;font-weight:700;color:var(--ink);margin:0 0 10px;min-height:1.2em}
+.dg-name span{font-weight:400;font-size:14.5px;color:var(--ink-soft);margin-left:8px}
 .tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
   scrollbar-width:none;-ms-overflow-style:none}
 .tool-scroll::-webkit-scrollbar{display:none;width:0;height:0}
@@ -960,11 +963,11 @@ function wireCalc(){
 const DRUG_PREP = [
   { g:"單次推注(bolus)稀釋", rows:[
     ["Ephedrine","40 mg/mL(1 mL/amp)","1 mL 加 NS 4 mL 稀釋成 5 mL,限 IV 使用","8 mg/mL","單次 5–10 mg;IM 給予不稀釋、抽成 1 mL 並依醫囑;<b>A 級刀也要稀釋</b>"],
-    ["Epinephrine<br>低濃度","1 mg/mL(1 mL/amp)","0.1 mg 加 NS 9.9 mL","0.01 mg/mL<br>= 10 µg/mL","過敏或低血壓時小量滴定 10–50 µg"],
+    ["Epinephrine<br><b class='dv'>低濃度</b>","1 mg/mL(1 mL/amp)","0.1 mg 加 NS 9.9 mL","0.01 mg/mL<br>= 10 µg/mL","過敏或低血壓時小量滴定 10–50 µg"],
     ["Epinephrine<br>高濃度","1 mg/mL(1 mL/amp)","1 mg 加 NS 9 mL","0.1 mg/mL<br>= 100 µg/mL","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
     ["Norepinephrine<br>推注","4 mg/4 mL/amp","冰箱稀釋液:5 mg 加 <b class='w'>D5W</b> 500 mL","10 µg/mL<br>1 mL = 10 µg","單次 5–10 µg;建議走中心靜脈,週邊給予要嚴密觀察外滲"]
   ]},
-  { g:"持續輸注(幫浦)", up:"2026-09-09", subs:[
+  { g:"持續輸注(幫浦)", up:"2026-09-10", subs:[
     { s:"強心與升壓藥", rows:[
       ["Norepinephrine","4 mg/4 mL/amp","單一病人常規:8 mg(2 amp,8 mL)加 <b class='w'>D5W</b> 92 mL","80 µg/mL<br>1 mL = 80 µg","0.01–0.5 µg/kg/min;<b class='w'>本單位以 D5W 泡製</b>"],
       ["Epinephrine","1 mg/1 mL/amp","10 mg(10 amp)加 NS 90 mL","0.1 mg/mL<br>= 100 µg/mL","0.01–0.2 µg/kg/min;高濃度建議走中心靜脈"],
@@ -974,24 +977,25 @@ const DRUG_PREP = [
     ]},
     { s:"降壓與抗心律不整藥", rows:[
       ["Angidil","10 mg/10 mL/amp","1 amp 加 NS 90 mL;洗腎病人:1 amp 加 NS 10 mL","0.1 mg/mL<br>洗腎 0.5 mg/mL","控制血壓與心肌缺血;低血容者容易出現明顯低血壓"],
-      ["Nicardipine","2.5 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","3–15 mg/hr;反射性心跳上升"],
+      ["Nicardipine","1 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","3–15 mg/hr;反射性心跳上升"],
       ["Cordarone","150 mg/3 mL/amp","依醫囑泡製,<b class='w'>只能用 D5W</b>","依醫囑","150 mg 滴注時間需大於 10 分鐘"]
     ]},
     { s:"止痛藥", rows:[
       ["Remifentanil<br>高濃度","2 mg/vial","先以 NS 40 mL 稀釋完成,再分裝成 2 支 20 mL","50 µg/mL<br>1 mL = 50 µg","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>空瓶由領藥人員保管,不可直接交給他人</b>"],
-      ["Remifentanil<br>稀釋版","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"]
+      ["Remifentanil<br><b class='dv'>稀釋版</b>","2 mg/vial","1 vial 稀釋成 NS 200 mL","10 µg/mL<br>1 mL = 10 µg","同上;濃度較低、速率較好調,適合體重輕或需微調的病人。<b class='w'>兩種濃度務必標示清楚</b>"]
     ]},
     { s:"麻醉與鎮靜藥", rows:[
-      ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 40 mL","5 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩"]
+      ["Dexmedetomidine","100 µg/mL,2 mL/vial(200 µg)","1 vial(2 mL)稀釋成 NS 50 mL","4 µg/mL","0.2–0.7 µg/kg/hr;起始快速輸注易低血壓與心搏過緩;<b class='w'>稀釋前務必與麻醫確認稀釋劑量與濃度</b>"]
     ]},
     { s:"其他", rows:[
-      ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"],
-      ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL <b class='w'>晶體液</b>","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"]
+      ["Tranexamic acid","500 mg/amp","原液 4 amp(共 2000 mg)直接上 syringe pump","原液未稀釋","低劑量:10 mg/kg 推注後 6 mg/kg/hr;高劑量:30 mg/kg 推注後 16 mg/kg/hr;<b class='w'>絕不可誤入脊髓腔</b>"]
     ]}
   ]},
-  { g:"其他需稀釋藥品", rows:[
-    ["Succinylcholine","50 mg/mL","100 mg(2 mL)加 NS 稀釋成 5 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
-    ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 <b class='w'>D5W</b> 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"]
+  { g:"其他需稀釋藥品", up:"2026-09-10", rows:[
+    ["Succinylcholine","500 mg/vial","500 mg 加 <b class='w'>DW</b> 或 NS 稀釋成 25 mL","20 mg/mL","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
+    ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL <b class='w'>晶體液</b>","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"],
+    ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 <b class='w'>D5W</b> 至 100 mL","—","慢速輸注;過量會肌肉無力與呼吸抑制"],
+    ["Duratocin","100 µg/mL(1 mL/amp)<br>(carbetocin)","1 amp(1 mL)稀釋成 10 mL","10 µg/mL<br>1 mL = 10 µg","剖腹產胎兒娩出後單次給予;<b class='w'>緩慢推注 10 分鐘</b>;需冷藏 2–8 °C 保存"]
   ]}
 ];
 
@@ -1010,10 +1014,10 @@ const DRUG_PRESETS = [
   { t:"Nicardipine 10 mg / 100 mL", mg:10, mL:100 },
   { t:"Remifentanil 2 mg / 40 mL", mg:2, mL:40 },
   { t:"Remifentanil 稀釋版 2 mg / 200 mL", mg:2, mL:200 },
-  { t:"Dexmedetomidine 0.2 mg / 40 mL", mg:0.2, mL:40, hr:true }
+  { t:"Dexmedetomidine 0.2 mg / 50 mL", mg:0.2, mL:50, hr:true }
 ];
 
-const DRUG_CALC_STATE = { pi:"1", mg:8, mL:100, wt:70, dose:0.05, rate:5 };
+const DRUG_CALC_STATE = { pi:"1", mg:8, mL:100, wt:70, dose:0.05, rate:5, name:"" };
 const DRUG_SEARCH_STATE = { q:"" };
 
 function drugIsHrUnit(pi){
@@ -1065,6 +1069,7 @@ const DRUG_ALIAS = {
   "Dexmedetomidine":          ["precedex","右美","dex","鎮靜"],
   "Tranexamic acid":          ["transamin","txa","傳明酸","止血"],
   "Oxytocin":                 ["pitocin","syntocinon","催產素","子宮收縮"],
+  "Duratocin":                ["carbetocin","巧特欣","子宮收縮","產後出血","剖腹產"],
   "Succinylcholine":          ["scc","sux","anectine","琥珀膽鹼","肌鬆"],
   "Magnesium sulfate":        ["mgso4","硫酸鎂","鎂"]
 };
@@ -1176,8 +1181,15 @@ function drugPrepHtml(){
 
     <div class="tool-box">
       <h3 class="th-new">本單位濃度速算${dgNew}</h3>
-      <div class="tool-sub" style="margin:0 0 11px">輸入藥量、溶液總量與體重,直接算出泡好濃度與速率對照;也可先選常見泡法自動帶入。</div>
+      <div class="tool-sub" style="margin:0 0 11px">輸入藥量、溶液總量與體重,直接算出泡好濃度與速率對照;也可先選常見泡法自動帶入。表列以外的藥品,直接在藥名欄自行輸入即可。</div>
       <div class="calc-form">
+        <div class="calc-f" style="flex:1 1 220px;min-width:190px">
+          <label for="dgName">藥名(可自行輸入)</label>
+          <input id="dgName" type="text" list="dgNameList" autocomplete="off" placeholder="表列以外的藥品也可直接打" value="${DRUG_CALC_STATE.name}">
+          <datalist id="dgNameList">
+            ${drugIndex().map(x=>`<option value="${x.name}"></option>`).join("")}
+          </datalist>
+        </div>
         <div class="calc-f" style="flex:1 1 240px;min-width:200px">
           <label for="dgPreset">常見泡法(可略)</label>
           <select id="dgPreset">
@@ -1197,6 +1209,7 @@ function drugPrepHtml(){
           <input id="dgWt" type="number" inputmode="decimal" min="0.5" max="300" step="0.5" value="${DRUG_CALC_STATE.wt}">
         </div>
       </div>
+      <div class="dg-name" id="dgTitle"></div>
       <div class="calc-out" id="dgOut">
         <div class="calc-cell hi">
           <div class="k">泡好濃度</div>
@@ -1247,7 +1260,6 @@ function drugPrepHtml(){
     ${DRUG_PREP.map(sec=>`
       <div class="tool-box">
         <h3 class="th-new">${sec.g}${isNewItem({ updated: sec.up }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
-        <div class="scroll-hint">表格可左右滑動查看</div>
         <div class="tool-scroll">
           <table class="tool-tbl drug-tbl">
             <colgroup><col style="width:170px"><col style="width:240px"><col style="width:130px"><col style="width:220px"></colgroup>
@@ -1275,7 +1287,7 @@ function drugPrepHtml(){
     <div class="tool-box">
       <h3>備藥時的幾個提醒</h3>
       <ul style="display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.7;color:var(--ink);padding-left:18px">
-        <li><b>一次只泡一支、泡完立刻貼標</b>,不要一口氣抽好幾支再回頭補標籤</li>
+        <li><b>一次只泡一支</b>、<b class='w'>泡完立刻貼標</b>,不要一口氣抽好幾支再回頭補標籤</li>
         <li>濃度相近但強度差很多的藥(epinephrine 0.01 mg/mL 與 0.1 mg/mL、norepinephrine 推注與輸注)<b class='w'>分開放置</b></li>
         <li>換班或接手他人備好的針筒時,<b>沒有標示就重泡</b>,不要憑外觀猜</li>
         <li>高濃度輸注藥物盡量走<b>中心靜脈</b>;週邊給予時固定好並定時檢查有無外滲</li>
@@ -1393,6 +1405,13 @@ function wireDrugCalc(){
     setCells("dgOut", c
       ? [[fmt(c.cmg), `= ${fmt(c.cug)} µg/mL`], [fmt(c.perMin), null], [fmt(c.perHr), null]]
       : [["—","—"], ["—",null], ["—",null]]);
+    const ttl = el("dgTitle");
+    if(ttl){
+      const nm = (S.name || "").trim();
+      ttl.innerHTML = nm
+        ? `${nm}<span>${(mg>0 && mL>0) ? `${mg} mg / ${mL} mL` : "尚未輸入藥量與溶液總量"}</span>`
+        : "";
+    }
     const r = drugRateFromDose(mg, mL, wt, dose);
     const d = drugDoseFromRate(mg, mL, wt, rate);
     setCells("dgOut2", [
@@ -1408,10 +1427,14 @@ function wireDrugCalc(){
       if(p && p.mg != null){
         el("dgMg").value = p.mg;
         el("dgVol").value = p.mL;
+        const nm = el("dgName");
+        if(nm){ S.name = p.t.split(/\s+\d/)[0].trim(); nm.value = S.name; }
       }
       upd();
     });
   }
+  const nmIn = el("dgName");
+  if(nmIn) nmIn.addEventListener("input", () => { S.name = nmIn.value; upd(); });
   ["dgMg","dgVol","dgWt","dgDose","dgRate"].forEach(id=>{
     const n = el(id);
     if(n){
