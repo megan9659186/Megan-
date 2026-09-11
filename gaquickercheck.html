@@ -635,6 +635,31 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .quiz-btn{font-size:16px;padding:13px 22px;width:100%}
   .quiz-score{font-size:18px}
 
+  /* 手機版：縮窄內容與 CABG 區塊，減少橫向撐滿感 */
+  #detail .d-head,
+  #detail .d-summary,
+  #detail .d-body{
+    width:calc(100% - 28px);
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #detail .d-body{
+    padding-left:0;
+    padding-right:0;
+  }
+  #detail .sec-fold{
+    margin-left:0;
+    margin-right:0;
+  }
+  #detail .sec-fold>summary{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  #detail .sec-body{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
   /* CABG / 文獻來源標籤：手機版固定在區塊標題下一行 */
   details.sec-fold>summary{
     flex-wrap:wrap;
