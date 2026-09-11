@@ -635,70 +635,22 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .quiz-btn{font-size:16px;padding:13px 22px;width:100%}
   .quiz-score{font-size:18px}
 
-  /* 手機版：縮窄內容與 CABG 區塊，減少橫向撐滿感 */
-  #detail .d-head,
-  #detail .d-summary,
-  #detail .d-body{
-    width:calc(100% - 28px);
-    margin-left:auto;
-    margin-right:auto;
-  }
-  #detail .d-body{
-    padding-left:0;
-    padding-right:0;
-  }
-  #detail .sec-fold{
-    margin-left:0;
-    margin-right:0;
-  }
-  #detail .sec-fold>summary{
-    padding-left:14px;
-    padding-right:14px;
-  }
-  #detail .sec-body{
-    padding-left:14px;
-    padding-right:14px;
-  }
+  /* 手機版:術式摘要框與下方區塊同寬,改「標籤在左、內容在右」逐列排列降低高度 */
+  .d-summary{display:grid;grid-template-columns:max-content minmax(0,1fr);
+    gap:6px 12px;align-items:start;padding:10px 14px;margin-top:12px}
+  .d-summary .item{display:contents}
+  .d-summary .item .k{font-size:12.5px;letter-spacing:.3px;line-height:22px}
+  .d-summary .item .v{margin-top:0;line-height:22px}
+  .d-summary .item.pos .v{align-items:flex-start}
+  .d-summary .item.pos .posico{margin-top:4px}
 
-  /* 手機版：縮短收合狀態的垂直空白 */
-  #detail details.sec-fold{
-    margin-top:6px;
-    margin-bottom:6px;
-  }
-  #detail details.sec-fold>summary{
-    min-height:0;
-    padding-top:10px;
-    padding-bottom:10px;
-    align-content:flex-start;
-  }
-  #detail details.sec-fold>summary .src-chips{
-    margin-top:5px;
-    margin-bottom:0;
-  }
-  #detail details.sec-fold:not([open]){
-    padding-bottom:0;
-  }
-  #detail details.sec-fold:not([open])>summary{
-    padding-bottom:10px;
-  }
-  #detail details.sec-fold+details.sec-fold{
-    margin-top:4px;
-  }
-
-  /* CABG / 文獻來源標籤：手機版固定在區塊標題下一行 */
-  details.sec-fold>summary{
-    flex-wrap:wrap;
-  }
-  details.sec-fold>summary .src-chips{
-    flex:0 0 100%;
-    width:100%;
-    margin-left:16px;
-    margin-top:5px;
-    gap:6px;
-  }
-  details.sec-fold>summary .src-chip{
-    margin-left:0;
-  }
+  /* 手機版:收合區塊 ▾ 與標題同一行、來源標籤排在下一行,減少空白 */
+  details.sec-fold{margin-top:8px}
+  details.sec-fold>summary{flex-wrap:wrap;padding:6px 0}
+  details.sec-fold>summary::after{order:1}
+  details.sec-fold>summary .src-chips{order:2;flex:0 0 calc(100% - 16px);
+    margin-left:16px;margin-top:4px;gap:6px}
+  details.sec-fold>summary .src-chip{margin-left:0}
 
 }
 ::-webkit-scrollbar{width:9px}
@@ -4143,10 +4095,18 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v10.1";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v10.2";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-09-11";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-11",
+    note: "手機版術式頁面排版調整,畫面更緊湊、少滑幾下。",
+    items: [
+      { t:"手機版術式頁面:上方體位／時間／失血／麻醉方式資訊框改為與下方區塊同寬,並縮小高度" },
+      { t:"冠狀動脈繞道:收合的各區塊減少多餘空白,展開箭頭移回標題同一行", en:"Coronary Artery Bypass Graft (CABG)" }
+    ]
+  },
   {
     date: "2026-09-11",
     note: "冠狀動脈繞道術中重點顏色調整。",
