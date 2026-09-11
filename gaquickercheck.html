@@ -660,6 +660,31 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
     padding-right:14px;
   }
 
+  /* 手機版：縮短收合狀態的垂直空白 */
+  #detail details.sec-fold{
+    margin-top:6px;
+    margin-bottom:6px;
+  }
+  #detail details.sec-fold>summary{
+    min-height:0;
+    padding-top:10px;
+    padding-bottom:10px;
+    align-content:flex-start;
+  }
+  #detail details.sec-fold>summary .src-chips{
+    margin-top:5px;
+    margin-bottom:0;
+  }
+  #detail details.sec-fold:not([open]){
+    padding-bottom:0;
+  }
+  #detail details.sec-fold:not([open])>summary{
+    padding-bottom:10px;
+  }
+  #detail details.sec-fold+details.sec-fold{
+    margin-top:4px;
+  }
+
   /* CABG / 文獻來源標籤：手機版固定在區塊標題下一行 */
   details.sec-fold>summary{
     flex-wrap:wrap;
@@ -668,7 +693,7 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
     flex:0 0 100%;
     width:100%;
     margin-left:16px;
-    margin-top:6px;
+    margin-top:5px;
     gap:6px;
   }
   details.sec-fold>summary .src-chip{
