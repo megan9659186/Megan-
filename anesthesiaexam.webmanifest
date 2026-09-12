@@ -11,7 +11,7 @@
   "theme_color": "#FBF8F1",
   "icons": [
     {
-      "src": "anesthesiaexam-icon.png",
+      "src": "anesthesiaexam-icon.png?v=2",
       "sizes": "1254x1254",
       "type": "image/png",
       "purpose": "any"
