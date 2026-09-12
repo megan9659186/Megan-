@@ -1,0 +1,20 @@
+{
+  "id": "./anesthesiaexam.html",
+  "name": "麻醉科考試題庫",
+  "short_name": "麻醉考題",
+  "description": "歷屆麻醉科專科護理師甄審考題與 AI 練習題",
+  "lang": "zh-Hant",
+  "start_url": "./anesthesiaexam.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF8F1",
+  "theme_color": "#FBF8F1",
+  "icons": [
+    {
+      "src": "anesthesiaexam-icon.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
