@@ -3857,7 +3857,7 @@ const SURGERIES = [
     ]
   },
   {
-    updated:"2026-09-11",
+    updated:"2026-09-12",
     specialty:"心臟外科",
     name:"微創主動脈瓣膜置換(Mini-AVR)",
     en:"Minimally Invasive Aortic Valve Replacement (Mini-AVR)",
@@ -3942,7 +3942,86 @@ const SURGERIES = [
       "Parnell, A., & Prince, M. (2018). Anaesthesia for minimally invasive cardiac surgery. BJA Education, 18(10), 323–330.",
       "Hancock, H. C., Maier, R. H., Kasim, A., et al. (2021). Mini-sternotomy versus conventional sternotomy for aortic valve replacement: A randomised controlled trial. BMJ Open, 11(1), e041398.",
       "Fischlein, T., Folliguet, T., Meuris, B., et al. (2021). Sutureless versus conventional bioprostheses for aortic valve replacement in severe symptomatic aortic valve stenosis. The Journal of Thoracic and Cardiovascular Surgery, 161(3), 920–932.",
-      "Nicoara, A., Skubas, N., Ad, N., et al. (2020). Guidelines for the use of transesophageal echocardiography to assist with surgical decision-making in the operating room: A surgery-based approach. Journal of the American Society of Echocardiography, 33(6), 692–734."
+      "Nicoara, A., Skubas, N., Ad, N., et al. (2020). Guidelines for the use of transesophageal echocardiography to assist with surgical decision-making in the operating room: A surgery-based approach. Journal of the American Society of Echocardiography, 33(6), 692–734.",
+      "Sarwar, M. F., Rodriguez-Diaz, C., Dabski, M., et al. (2025). Anesthesia for cardiac surgical procedures. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 1577–1682). Elsevier.",
+      "Aldea, G. S. (2024, November 18). Minimally invasive aortic and mitral valve surgery. In C. M. Otto & S. B. Yeon (Eds.), UpToDate. Retrieved September 12, 2026, from https://www.uptodate.com/contents/minimally-invasive-aortic-and-mitral-valve-surgery"
+    ],
+    lit:[
+      {
+        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點",
+        preop:[
+          "<b>AS 病因</b>:先天性二葉瓣(占人口 1–2%)、老年退化鈣化;<b>75 歲以上約 3% 有 AS</b>,其中約一成二為中重度;動脈粥狀硬化的危險因子與 AS 的發生有關",
+          "<b>二葉瓣即使功能正常也會因異常開合而結疤鈣化</b>,中年就可能出現嚴重 AS 或 AR;瓣葉活動異常造成血流紊亂,可能導致<b>升主動脈擴大、破裂或剝離</b>",
+          "<b>AS 嚴重度</b>:瓣口面積正常 3–4 cm²,<b>≤1.0 cm² 為重度</b>;平均壓差 >40 mmHg 為重度",
+          "<b>AS 的病理生理</b>:出口阻塞 → 收縮期室壁張力上升 → <b>向心性肥厚</b> → 舒張功能不良、LVEDP 上升、<b class='w'>心內膜下缺血</b>",
+          "<b>出現症狀就該考慮換瓣</b>:運動耐受力下降、喘、心絞痛、心衰竭、暈厥;<b>已有症狀卻延遲手術會使預後變差</b>",
+          "<b>AR 的麻醉方向與 AS 相反</b>:心跳維持偏快(約 90)、SVR 偏低,維持前負荷與收縮力;<b class='w'>心跳慢或血壓高都會使逆流量增加</b>",
+          "<b>急性 AR 的代償很快失效</b>:常見於外傷、感染性心內膜炎、主動脈剝離;交感反應造成血管收縮反而讓逆流更嚴重,可能需要緊急手術"
+        ],
+        airway:[
+          "<b>術前給藥可減輕焦慮</b>,目的是避免心搏過速與舒張期充填時間縮短",
+          "<b class='w'>AS 病人應避免有心肌抑制、加快心跳或血管擴張作用的藥物</b>"
+        ],
+        monitor:[
+          "<b class='w'>小切口手術要在消毒鋪單前貼好體外電擊片</b>,因為術野有限,需要電擊時來不及放心臟上的電擊板",
+          "<b>依 AS 嚴重度考慮誘導前先放動脈導管</b>;<b>脈壓常變窄,即使 LVEF 正常也可能只有 50 mmHg 或更低</b>",
+          "<b>Swan-Ganz 不是常規</b>:心室功能正常者很少需要;<b class='w'>AS 病人在放置過程中若發生心律不整,冠狀動脈灌流會嚴重受損</b>",
+          "<b class='w'>AS 病人心跳停止時,胸外按壓無法有效把血打過狹窄的瓣膜</b>",
+          "<b>TEE 量瓣環大小是選瓣的依據</b>:<b>瓣膜選得不合適</b>會造成瓣周或跨瓣逆流、影響二尖瓣前葉活動,並因 patient–prosthesis mismatch 使存活率下降",
+          "<b>AS 的 TEE 視窗</b>:食道中段短軸與長軸看形態與構造,<b>經胃視窗量跨瓣壓差</b>",
+          "<b>微創手術的管路都靠 TEE 定位</b>:股靜脈引流管的末端位置(下腔靜脈、右心房或上腔靜脈遠端)須由 TEE 確認",
+          "<b class='w'>放導引線之前,先用 TEE 看清楚原本就存在的構造(例如節律器導線)</b>,避免與新放的導引線混淆"
+        ],
+        hemo:[
+          "<b>AS 的目標</b>:前負荷要足、<b class='w'>心跳偏慢且維持竇律</b>、維持收縮力、<b>提高 SVR</b>、PVR 維持不變",
+          "<b class='w'>AS 急性低血壓的首選是 phenylephrine</b>:拉高舒張壓等於拉高冠狀動脈灌流壓",
+          "<b class='w'>AS 病人的心房收縮可貢獻多達四成的心輸出量</b> → 盡一切努力維持竇律",
+          "<b>AR 換瓣後脫離 CPB 可能因術前左心室功能不良而困難</b>;<b>機械瓣本身會有輕微跨瓣壓差</b>,可能需要強心藥;擴大的左心室仍需維持足夠前負荷"
+        ],
+        intraop:[
+          "<b>微創主動脈瓣手術的切口</b>:右側胸骨旁切口、上半或下半胸骨切開;若經導管血管路徑不可行,也可能走左前胸肋間做經心尖途徑",
+          "<b>動脈插管方式依主動脈狀況決定</b>:可股動脈;<b>若主動脈粥狀硬化不適合逆行灌流,則直接主動脈插管或走腋動脈</b>",
+          "<b>靜脈引流</b>:術野允許時插右心房,否則走股靜脈",
+          "<b class='w'>沒有直視心臟,排氣更要靠 TEE 確認</b>;可在術野灌二氧化碳以減少左心室殘留氣體",
+          "<b>是否需要單肺通氣依外科習慣與術式而定</b>,<b class='w'>誘導前就要先和團隊講好通氣策略</b>",
+          "<b>需要逆行灌停時</b>,可用 TEE 引導經頸靜脈的導管進入冠狀竇"
+        ],
+        flags:[
+          "瓣膜尺寸不合造成瓣周逆流、跨瓣逆流與 patient–prosthesis mismatch",
+          "AS 病人放置肺動脈導管時誘發心律不整 → 冠狀動脈灌流受損",
+          "左心室殘留氣體(無直視、排氣較不完全)"
+        ]
+      },
+      {
+        tag:"UpToDate", cls:"uptodate", label:"UpToDate 重點",
+        preop:[
+          "<b>微創瓣膜手術(MIVS)指的是不走正中胸骨切開的一組術式</b>:小切口、胸腔鏡或機械手臂;<b>經導管手術(如 TAVI)不算在內</b>",
+          "<b class='w'>需要外科、麻醉、護理與體循都熟練的團隊</b>;二尖瓣尤其明顯,修補成功率與外科醫師及機構的手術量高度相關",
+          "<b>術前電腦斷層是規劃的關鍵</b>:主動脈位置與鈣化程度、瓣膜與瓣下鈣化、切口到瓣膜的距離,以及<b>周邊動脈狀況</b>(決定插管與阻斷位置)",
+          "<b>不適合微創的情況</b>:需同時做冠狀動脈繞道、複雜升主動脈病變與周邊血管疾病、複雜瓣膜病變(心內膜炎合併根部膿瘍、鈣化延伸到二尖瓣或流出道)、肥胖或漏斗胸影響視野;<b class='w'>右側開胸過、放射治療過、肺高壓或嚴重 COPD 者,可能無法承受單肺通氣</b>",
+          "<b>可能的好處</b>:胸骨感染風險較低、呼吸器時間與肺部併發症較少、輸血與術後 AF 較少、加護病房與住院天數較短、疼痛較輕、恢復較快",
+          "<b class='w'>微創並不能避開開心手術本身的併發症</b>:體外循環的發炎與抗凝反應、主動脈操作、灌停期的心肌保護,這些風險依然存在"
+        ],
+        monitor:[
+          "<b>術中以二維與三維 TEE 評估瓣膜病變</b>,確認在有限的術野下能否完整處理"
+        ],
+        intraop:[
+          "<b>Mini-AVR 的切口選擇</b>:上半胸骨切開(往右第三或第四肋間的 J 形切口)、上胸骨橫斷(T 形,視野較好但術後胸骨較不穩定)、或右前胸第二至第三肋間小切口",
+          "<b class='w'>主動脈瓣病人多為高齡、約四分之一合併頸動脈與周邊血管疾病</b> → <b>優先中央主動脈或右腋動脈插管</b>,避免周邊逆行灌流的血管與栓塞風險;<b>要走股動脈則須術前排除周邊血管粥狀病變</b>",
+          "<b>靜脈引流</b>:多直接插右心房,也可走股靜脈以清空術野;<b class='w'>小管徑要搭配真空輔助引流</b>,否則引流不全、右心房脹大會擋住主動脈根部視野",
+          "<b>主動脈阻斷以直接外夾為主</b>;再次手術經小切口時因沾黏較困難;<b class='w'>用主動脈內氣球阻斷時,要以 TEE 反覆確認位置</b>",
+          "<b>灌停經主動脈根部順行給,必要時加上經冠狀竇逆行給</b>;逆行灌停導管的放置在小切口下較困難,可經頸靜脈在 TEE 或透視引導下完成",
+          "<b class='w'>改為全胸骨切開的比例約 2–3%</b>;上機前多因視野不佳,<b>上機後才轉換(出血或心室功能不良)者院內死亡率高達三成</b>,術前知情同意應說明"
+        ],
+        flags:[
+          "半胸骨切開:傷及右側內乳動脈與靜脈,須確認止血以免術後再開刀",
+          "前胸或胸骨旁切口:傷口併發症(切口疝氣、裂開、血清腫、感染)與橫膈神經損傷",
+          "股動脈逆行灌流:入路併發症約 2–4%(血清腫、感染、剝離、狹窄、假性動脈瘤、淋巴漏);<b class='w'>中風風險約為順行灌流的兩倍</b>",
+          "股靜脈血栓少見(約 0.6%)",
+          "單肺通氣合併體外循環:罕見的肺再擴張再灌流損傷",
+          "小切口引流不完全 → 亞急性心包填塞或殘餘心包積液"
+        ]
+      }
     ],
     collapse:true
   },
@@ -4040,7 +4119,188 @@ const SURGERIES = [
     collapse:true
   },
   {
-    updated:"2026-09-11",
+    updated:"2026-09-12",
+    specialty:"心臟外科",
+    name:"主動脈瓣膜手術(AVR/AVP)",
+    en:"Aortic Valve Replacement / Repair (AVR / AVP)",
+    summary:{ position:"Supine", posType:"supine", time:"參考捷格手術排程時間", blood:"中–多", airway:"GA / ETT・CPB" },
+    preop:[
+      "<b>先確認術式與病灶</b>:置換(AVR)或修補(AVP);病灶是 <b>AS</b>、<b>AR</b> 還是兩者合併;是否同時做主動脈根部或升主動脈、CABG、二尖瓣手術",
+      "<b>術前 echo</b>:瓣口面積與跨瓣壓差、LVEF、<b>主動脈瓣環與根部大小</b>、升主動脈是否擴大、有無合併其他瓣膜病變",
+      "<b class='w'>嚴重 AS:維持竇律與前負荷、避免心搏過速,低血壓先拉 SVR</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>嚴重主動脈瓣狹窄的左心室要對抗一個<b>固定的出口阻力</b>,心肌肥厚、舒張變硬。<b>心跳快</b>縮短舒張期,冠狀動脈灌流變少;<b>血管擴張</b>讓舒張壓掉,冠狀動脈灌流壓也跟著掉 → 心肌缺血 → 收縮更差 → 血壓更低,形成惡性循環。所以低血壓時<b>先把 SVR 拉回來</b>,而不是只給強心或大量輸液。</span>",
+      "<b class='w'>AR 的方向與 AS 相反:避免心跳過慢與高血壓</b>;兩者合併時,以較嚴重的病灶為主,心跳與血壓取中間值",
+      "<b>瓣膜選擇影響術後</b>:機械瓣需長期抗凝、生物瓣不需長期抗凝但有退化問題;抗凝藥停藥與銜接依 CVS 醫囑",
+      "<b>再次開心</b>(過去做過瓣膜手術或 CABG):鋸胸骨風險與備血同 CABG 卡的 redo 注意事項"
+    ],
+    airway:[
+      "ETT(同 CABG 卡);<b class='w'>平順誘導</b>:AS 避免心搏過速與血壓驟降,AR 避免心跳過慢與血壓上升",
+      "<b>嚴重 AS 者依醫囑在誘導前先放動脈導管</b>"
+    ],
+    prep:[
+      "<span class='ptit'>用藥</span><span class='pdet'>誘導藥、備用藥、幫浦藥同 CABG 卡;<b>AS 者 phenylephrine 隨手可得;AR 或術前心室功能差者,先與麻醫確認強心藥</b></span>",
+      "<span class='ptit'>備物</span><span class='pdet'>同 CABG 卡:TEE 組、FloTrac 組、PA 壓力組(Swan-Ganz)、Sheath 或 CVC 無菌組與超音波、粗 IV 與輸血 set、ROTEM</span>",
+      "<b class='w'>藥物濃度與泡法一律以本科藥物泡法表及藥局最新規範為準;表外藥品依醫囑泡製,不可自行泡製</b>"
+    ],
+    monitor:[
+      "<span class='ptit'>基本監測與管路</span><span class='pdet'>同 CABG 卡:腦血氧、A-line 局麻下清醒先放、Sheath + Swan-Ganz、兩條粗 IV;ACT 與 ROTEM 時間點相同</span>",
+      "<span class='ptit'>體外電擊片</span><span class='pdet'><b>再次開心者擺位消毒前先貼好 TCP</b></span>",
+      "<span class='ptit'>術前 TEE</span><span class='pdet'>確認病灶與嚴重度、<b>量主動脈瓣環大小(選瓣依據)</b>、根部與升主動脈、LV 功能與肥厚程度、<b>二尖瓣狀況</b>;修補者評估可修補性</span>",
+      "<span class='ptit'>節律器</span><span class='pdet'><b>新瓣膜可能造成傳導阻滯</b> → 備 epicardial pacing,復跳後注意心律</span>"
+    ],
+    hemo:[
+      "<b>AS</b>:<b class='w'>維持竇律</b>、心跳偏慢、前負荷要足、<b>維持或提高 SVR</b>;低血壓首選拉 SVR",
+      "<b>AR</b>:<b class='w'>心跳偏快、SVR 偏低</b>;心跳慢會讓逆流時間變長,血壓高會讓逆流量變多",
+      "<b class='w'>AR 上機後、尚未 cross-clamp 前,心臟一旦停跳或顫動,左心室會快速脹大</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>主動脈瓣關不緊時,體外循環打出去的血會不斷從主動脈<b>逆流回左心室</b>。心臟還在跳的時候,這些血還打得出去;一旦<b>心室顫動或停跳</b>,血只進不出,左心室就會愈脹愈大,造成心肌灌流受損與嚴重肺水腫。這段時間是 AR 病人上機後最危險的空窗。</span>",
+      "<b>換瓣後後負荷解除,可能血壓偏高</b> → 依醫囑控制;<b class='w'>置換者尤其避免高血壓</b>",
+      "<b class='hl'>血壓目標與下機條件同 CABG 卡</b>"
+    ],
+    intraop:[
+      "<b class='w'>時間點、數值與用藥一律依主治醫師與 CVS 醫師醫囑;不熟悉的時候隨時開口問。</b>",
+      "<span class='pbar pbar-a'>一、誘導到體外循環前<em>共通步驟見 CABG 卡 ①–⑩</em></span>",
+      "<span class='ptit ptit-a'><i>①</i>誘導與管路</span><span class='pdet'>同 CABG 卡:監測、A-line、誘導插管、Sheath + Swan-Ganz、兩條粗 IV、放 TEE</span>",
+      "<span class='ptit ptit-a'><i>②</i>術前 TEE</span><span class='pdet'>麻醫完整檢查(見上方監測區);<b>瓣環大小與病灶機轉要在上機前確定</b></span>",
+      "<span class='ptit ptit-a'><i>③</i>鋸胸骨</span><span class='pdet'>同 CABG 卡:深度足夠、SBP ≤120、鋸胸骨當下停呼吸</span>",
+      "<span class='ptit ptit-a'><i>④</i>Heparin</span><span class='pdet'><b class='pk'>瓣膜:依醫囑 300 U/kg</b>;slow push,注意血壓下降;<b class='pk'>5 分鐘後抽 ABG + ACT,ACT >450 秒才能走 pump</b></span>",
+      "<span class='ptit ptit-a'><i>⑤</i>Cannulation</span><span class='pdet'>aortic cannula(<b>SBP 約 100</b>)→ 靜脈插管 → cardioplegia 管 → vent;<b class='w'>中重度 AR 者,外科可能提前放左心室 vent</b></span>",
+      "<span class='ptit ptit-a'><i>⑥</i>放自體血</span><span class='pdet'>同 CABG 卡(Hct >28%);嚴重 AS 者血壓掉得較快,與麻醫確認放血量</span>",
+      "<span class='pbar pbar-c'>二、體外循環中<em>開始:partial CPB;結束:放開 cross-clamp</em></span>",
+      "<span class='ptit ptit-c'><i>⑦</i>上機</span><span class='pdet'>同 CABG 卡:partial 即追加肌鬆、Swan-Ganz 外拉、記錄 partial 與 total 時間</span>",
+      "<span class='ptit ptit-c'><i>⑧</i>灌停與換瓣</span><span class='pdet'>cross-clamp → 灌停 → 切開主動脈 → 切除瓣葉、量瓣環 → 置換或修補;<b class='w'>AR 者順行灌停會從關不緊的瓣膜逆流進左心室,通常改由冠狀動脈開口直接給或走逆行灌停</b></span>",
+      "<span class='ptit ptit-c'><i>⑨</i>維持</span><span class='pdet'>MAP、腦血氧、麻藥與追加藥物、每 30 分鐘 ABG 與 ACT,同 CABG 卡</span>",
+      "<span class='ptit ptit-c'><i>⑩</i>叫血</span><span class='pdet'>同 CABG 卡:partial 回溫時做 ROTEM,依麻醫習慣的溫度回報 Hct 與自體血量</span>",
+      "<span class='pbar pbar-d'>三、排氣、復跳與脫離 CPB<em>開始:排氣;結束:protamine 給完</em></span>",
+      "<span class='ptit ptit-d'><i>⑪</i>排氣</span><span class='pdet'><b class='w'>主動脈與左心都打開過,排氣特別重要</b>:依外科要求頭低位、Ambu 壓放、TEE 看升主動脈與左心殘留氣泡<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>病人平躺時,<b>右冠狀動脈開口在主動脈的最上方</b>,殘留的空氣最容易往上跑進右冠。典型表現是復跳後<b>下壁導程 ST 上升、右心收縮變差、心搏過緩</b>。處理方向是依醫囑<b>提高灌流壓</b>把氣泡推過微血管,嚴重時重新走 CPB 讓心臟休息。</span></span>",
+      "<span class='ptit ptit-d'><i>⑫</i>放 cross-clamp</span><span class='pdet'>同 CABG 卡:記錄時間、VF 或 VT 用 epicardial defibrillation;<b class='w'>注意房室傳導阻滯</b> → 依醫囑 pacing</span>",
+      "<span class='ptit ptit-d'><i>⑬</i>TEE:置換者</span><span class='pdet'><b>瓣周逆流(PVL)</b>、跨瓣 gradient、瓣葉活動、<b class='w'>冠狀動脈開口是否受影響</b>(看室壁運動)</span>",
+      "<span class='ptit ptit-d'><i>⑭</i>TEE:修補者</span><span class='pdet'><b>殘餘 AR</b>、瓣葉接合的高度與長度;<b class='w'>殘餘逆流明顯代表日後復發風險高</b></span>",
+      "<span class='ptit ptit-d'><i>⑮</i>TEE:兩者都看</span><span class='pdet'>LV 與 RV 功能、<b>二尖瓣有無新的逆流</b>、殘留氣泡、升主動脈縫合處</span>",
+      "<span class='ptit ptit-d'><i>⑯</i>結果不理想</span><span class='pdet'><b class='w'>瓣周逆流明顯、gradient 過高或殘餘 AR 太多 → 可能再上 pump 修正</b>;<b>外科確認結果前不給 protamine</b>,體循持續 stand by</span>",
+      "<span class='ptit ptit-d'><i>⑰</i>下機</span><span class='pdet'>下機條件同 CABG 卡;<b>術前心室功能差或嚴重擴大者,依醫囑用強心藥</b>;<b>多數會裝心房與心室的暫時節律器導線</b></span>",
+      "<span class='ptit ptit-d'><i>⑱</i>Protamine 與止血</span><span class='pdet'>給法、輸血順序同 CABG 卡</span>"
+    ],
+    drug:[
+    ],
+    emergence:[
+      "<b class='w'>多帶管轉 ICU</b>;拔 TEE 時機同 CABG 卡",
+      "運送同 CABG 卡:麻醫同行、<b>SBP 勿超過 140</b>;置換者尤其避免高血壓"
+    ],
+    postop:[
+      "ICU:出血與引流、心律(<b>房室傳導阻滯、是否需永久節律器</b>)、心室功能與血壓控制",
+      "機械瓣需長期抗凝,開始時機依 CVS 醫囑"
+    ],
+    flags:[
+      "瓣周逆流、跨瓣 gradient 過高、patient–prosthesis mismatch",
+      "冠狀動脈開口受阻或受損 → 心肌缺血",
+      "房室傳導阻滯需暫時或永久節律器",
+      "修補後殘餘 AR 與日後復發",
+      "AR 者上機後、cross-clamp 前的左心室脹大",
+      "主動脈與左心排氣不完全 → 冠狀動脈空氣栓塞(多為右冠)、腦中風",
+      "主動脈切開處與縫合處出血;CPB 相關:凝血病、急性腎損傷"
+    ],
+    lit:[
+      {
+        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點",
+        preop:[
+          "<b>AS 是美國最常見的瓣膜病變</b>;近年換瓣手術量明顯增加,尤其是高齡與高風險族群",
+          "<b>AS 病因</b>:先天性二葉瓣(占人口 1–2%)與老年退化鈣化;<b>75 歲以上約 3% 有 AS</b>,其中約一成二為中重度",
+          "<b>二葉瓣即使功能正常也會因異常開合而結疤鈣化</b>,中年就可能出現嚴重 AS 或 AR;<b class='w'>瓣葉活動異常造成血流紊亂,可能導致升主動脈擴大、破裂或剝離</b>",
+          "<b>AS 嚴重度</b>:瓣口面積正常 3–4 cm²,<b>≤1.0 cm² 為重度</b>;平均壓差 >40 mmHg 為重度",
+          "<b>AS 的病理生理</b>:收縮期室壁張力上升 → <b>向心性肥厚</b> → 舒張功能不良、LVEDP 上升、<b class='w'>心內膜下缺血</b>",
+          "<b>出現症狀就該考慮換瓣</b>:運動耐受力下降、喘、心絞痛、心衰竭、暈厥;<b>已有症狀卻延遲手術會使預後變差</b>",
+          "<b>慢性 AR 的病因</b>:先天性(如二葉瓣)、退化、風濕性、心內膜炎、結締組織疾病、胸部外傷,以及主動脈根部擴大(長期高血壓、老化、Marfan 症候群等)",
+          "<b>慢性 AR 可以幾十年沒有症狀</b>:左心室以離心性肥厚與腔室擴大代償,LVEDP 相對正常;<b>部分病人冠狀動脈正常卻有心絞痛</b>,原因是脈壓寬、舒張壓低造成冠狀動脈灌流不足",
+          "<b class='w'>急性 AR 預後較差</b>:常見於外傷、感染性心內膜炎與主動脈剝離;左心室來不及擴張,交感反應造成血管收縮反而讓逆流更嚴重,可能需要緊急手術"
+        ],
+        airway:[
+          "<b>術前給藥可減輕焦慮</b>,AS 的目的是避免心搏過速與舒張期充填時間縮短;AR 則建議輕度給藥",
+          "<b class='w'>AS 病人應避免有心肌抑制、加快心跳或血管擴張作用的藥物</b>",
+          "<b class='w'>AR 病人應避免造成心跳過慢或血壓上升的藥物</b>,這些都會增加逆流分率、使 AR 惡化,甚至誘發左心室衰竭"
+        ],
+        monitor:[
+          "<b>依 AS 嚴重度考慮誘導前先放動脈導管</b>;<b>脈壓常變窄,即使 LVEF 正常也可能只有 50 mmHg 或更低</b>",
+          "<b>Swan-Ganz 不是常規</b>:心室功能正常者很少需要;<b class='w'>AS 病人在放置過程中若發生心律不整,冠狀動脈灌流會嚴重受損</b>",
+          "<b class='w'>AS 病人心跳停止時,胸外按壓無法有效把血打過狹窄的瓣膜</b>",
+          "<b>AR 者若肺動脈壓偏高或心室功能不佳,可考慮放 Swan-Ganz</b>",
+          "<b>TEE 量瓣環大小是選瓣的依據</b>:<b class='w'>瓣膜選得不合適</b>會造成瓣周或跨瓣逆流、影響二尖瓣前葉活動,並因 patient–prosthesis mismatch 使存活率下降",
+          "<b>AS 的 TEE 視窗</b>:食道中段短軸與長軸看形態與構造,<b>經胃視窗量跨瓣壓差</b>;食道中段與經胃視窗都可量瓣環",
+          "<b>AR 的 TEE 判讀</b>:比較逆流噴流寬度與流出道寬度、量 vena contracta(<b>>0.6 cm 對重度 AR 敏感度 95%、特異度 90%</b>);<b>降主動脈全舒張期逆流代表中重度</b>;噴流長度受舒張壓影響,不能用來判斷嚴重度"
+        ],
+        hemo:[
+          "<b>AS 的目標</b>:前負荷要足、<b class='w'>心跳偏慢且維持竇律</b>、維持收縮力、<b>提高 SVR</b>、PVR 維持不變",
+          "<b class='w'>AS 急性低血壓的首選是 phenylephrine</b>:拉高舒張壓等於拉高冠狀動脈灌流壓",
+          "<b class='w'>AS 病人的心房收縮可貢獻多達四成的心輸出量</b> → 盡一切努力維持竇律",
+          "<b>AR 的目標</b>:前負荷維持、<b class='w'>心跳偏快(約 90)</b>、維持收縮力、<b>SVR 偏低</b>、PVR 維持不變;周邊血管擴張可改善前向血流"
+        ],
+        intraop:[
+          "<b>AR 換瓣後脫離 CPB 可能因術前左心室功能不良而困難</b>,常需強心藥;<b>機械瓣本身會有輕微跨瓣壓差</b>;<b class='w'>擴大的左心室仍需維持足夠前負荷</b>",
+          "<b>脫離 CPB 後的 TEE 要確認新瓣膜的位置與功能</b>"
+        ],
+        flags:[
+          "瓣膜尺寸不合造成瓣周逆流、跨瓣逆流與 patient–prosthesis mismatch",
+          "AS 病人放置肺動脈導管時誘發心律不整 → 冠狀動脈灌流受損",
+          "二葉瓣相關的升主動脈擴大、破裂或剝離"
+        ]
+      },
+      {
+        tag:"UpToDate", cls:"uptodate", label:"UpToDate 重點",
+        preop:[
+          "<b>75 歲以上約 2% 有中重度 AR</b>",
+          "<b>嚴重慢性 AR 造成左心室長期容積負荷</b>:代償期收縮功能仍正常、心衰竭風險低;失代償期 EF 下降、左心房與肺動脈壓上升",
+          "<b>慢性 AR 的表現</b>:舒張壓低、脈壓寬,多數可耐受,但可能出現運動或夜間心絞痛;雜音為高頻遞減的舒張期雜音,<b>不一定聽得出來</b>",
+          "<b class='w'>急性重度 AR 會造成心因性休克與肺水腫</b>,且不會出現慢性 AR 的寬脈壓;需緊急換瓣或經導管處置",
+          "<b class='w'>急性 AR 禁用主動脈內氣球幫浦(IABP)</b>:會加重逆流與左心室擴張;若手術必須延後,可依醫囑先用血管擴張劑(如 nitroprusside),必要時加強心藥(如 dobutamine)暫時穩定",
+          "<b>術前給藥不宜過重</b>:嚴重 AR 者避免血行不穩與心跳過慢;需要時可給小量短效 benzodiazepine(如 midazolam 1–2 mg)"
+        ],
+        hemo:[
+          "<b>AR 的心跳目標 80–100</b>:<b class='w'>心跳快可縮短逆流發生的舒張期,減少逆流量</b>;避免心跳過慢,因為會增加逆流分率",
+          "<b>AR 心跳過慢的處理</b>:依醫囑用 glycopyrrolate 0.2 mg(可重複);合併低血壓時用 ephedrine 5 mg;仍無效可用低劑量 dobutamine、epinephrine 或 dopamine 輸注",
+          "<b>AR 的心律</b>:竇律較好,但<b>室上性心搏過速的耐受度比 AS 或 MS 好</b>;若血行不穩且藥物控制不住心跳,則以同步電擊回復竇律",
+          "<b>AR 的後負荷</b>:收縮壓維持在偏低的正常範圍(<b>約 100–120</b>)或基準值的兩成內,<b>MAP ≥65</b>;<b class='w'>SVR 一上升,逆流就變多、前向血流就變少</b>",
+          "<b>AR 的血壓要看 MAP 不能只看收縮壓</b>:脈壓大、舒張壓可能很低;<b>合併冠心病者若舒張壓過低,依醫囑用能提升收縮力的藥物(如 ephedrine)處理</b>",
+          "<b>AR 的前負荷</b>:維持但避免過量,以免肺充血;<b>術前已有心衰竭者多採限制性(零平衡)輸液</b>",
+          "<b>AR 的收縮力</b>:避免會明顯抑制心肌的劑量(如高劑量 propofol 或吸入麻醉藥);需要時以 milrinone 或 dobutamine 這類兼具擴張作用的強心藥為主,低血壓且 SVR 低時可加低劑量 epinephrine",
+          "<b>AS 的目標</b>:心跳 <b>60–80</b>、<b class='w'>維持竇律、避免室上性心搏過速與房室分離</b>;維持血管內容積、避免低血容;收縮壓 >100、MAP >70 或在基準值兩成內;避免心肌抑制",
+          "<b class='w'>AS 與 AR 合併時,心跳目標取中間值 70–80</b>,前負荷、後負荷與收縮力也都維持在正常範圍;血行穩定的病人可直接以術前數值為目標",
+          "<b>肺動脈壓偏高者</b>:避免低血氧、高碳酸與代謝性酸中毒,以免 PVR 上升"
+        ],
+        monitor:[
+          "<b>上機前的 TEE(慢性 AR)</b>:確認 AR 存在與嚴重度 —— <b>噴流寬度佔流出道的比例</b>(≤30% 為輕度、<b>≥65% 為重度</b>)、vena contracta、壓力半衰期、<b>降主動脈全舒張期逆流</b>",
+          "<b>評估病因與解剖</b>:量瓣環與竇管交界、看主動脈根部形狀;<b class='w'>單純瓣葉脫垂、或根部擴大但瓣葉活動正常者,修補成功率較高;瓣葉活動明顯受限者通常只能置換</b>;偏心的逆流噴流常提示瓣葉脫垂",
+          "<b>上機前的 TEE(急性 AR)</b>:確認病因(心內膜炎、主動脈剝離、瓣葉外傷破裂);<b>二尖瓣會提早關閉(在 R 波之前)</b>,且即使是重度,降主動脈的逆流也可能不是全舒張期",
+          "<b>其他瓣膜與左心室也要看</b>:左心室收縮功能不良本身就是慢性重度 AR 的手術適應症之一"
+        ],
+        intraop:[
+          "<b class='w'>AR 最大的術中風險是左心室脹大</b>:心室顫動時左心室不再把逆流的血打出去,會快速脹大 → 心肌灌流受損、左心室受傷,並可能出現嚴重二尖瓣逆流與肺水腫",
+          "<b>脹大的偵測</b>:TEE 用經胃短軸連續看左心室大小、注意收縮不完全與舒張期由主動脈回填;<b>二尖瓣環被撐開、收縮與舒張期都有逆流,代表左心室已嚴重擴大</b>",
+          "<b class='w'>肺動脈壓也是警訊:平均 PAP ≥20 mmHg 代表左心室正在脹大</b>",
+          "<b>發生心室顫動時立即以心臟上的電擊板電擊(10–20 焦耳)</b>;<b class='w'>心臟愈空,電擊成功率愈高</b>",
+          "<b>上機後才發現脹大</b>:降低或暫停 CPB flow,讓外科用手擠壓左心室排空後再電擊;之後小心調整動脈端流量,避免主動脈壓突然上升;<b class='w'>此時低血壓以提高 CPB flow 為主,而不是給升壓劑</b>",
+          "<b>cross-clamp 前若心跳太慢</b>:依醫囑用 chronotropic 藥物或心外膜節律器把心跳拉快,以減少左心室脹大;嚴重時儘快上機",
+          "<b>仍無法控制時放左心室 vent</b>:經右上肺靜脈置入;<b class='w'>TEE 要確認 vent 尖端穿過二尖瓣進入左心室但不頂到心尖</b>,否則心室收縮可能讓導管穿破心室壁;之後仍要反覆確認有無滑脫或阻塞",
+          "<b>AR 讓順行灌停打不進去</b>:灌停液會從關不緊的主動脈瓣逆流進左心室;通常先短暫順行給以達成停跳,之後改<b>間歇低壓逆行灌停</b>,或在切開主動脈後<b>直接灌入左右冠狀動脈開口</b>",
+          "<b class='w'>逆行灌停時冠狀竇壓力須維持 <40 mmHg</b>,避免心肌水腫;導管位置以 TEE 的食道中段四腔或雙腔視窗確認",
+          "<b>多數病人會裝上心房與心室的暫時節律器導線</b>,因為術後有房室傳導阻滯的風險"
+        ],
+        postop:[
+          "<b>脫離 CPB 後的 TEE(置換)</b>:確認人工瓣膜功能正常;<b class='w'>功能異常或明顯瓣周逆流須重上 pump 處理</b>",
+          "<b>脫離 CPB 後的 TEE(修補)</b>:三個預測日後復發 AR 的指標 —— <b>殘餘逆流噴流</b>、<b>瓣葉接合長度 <4 mm</b>、<b>接合點低於瓣環平面</b>",
+          "<b>重度 AR 者收縮力多半仍保留</b>,但左心室明顯擴大或術前功能已受損者,下機前後常需強心藥;<b>以 milrinone 或 dobutamine 為主,擴張過頭時再加 phenylephrine 或 norepinephrine</b>"
+        ]
+      }
+    ],
+    collapse:true,
+    refs:[
+      "Praz, F., Borger, M. A., Lanz, J., et al. (2025). 2025 ESC/EACTS Guidelines for the management of valvular heart disease. European Heart Journal, 46(44), 4635–4736.",
+      "Otto, C. M., Nishimura, R. A., Bonow, R. O., et al. (2021). 2020 ACC/AHA guideline for the management of patients with valvular heart disease: A report of the American College of Cardiology/American Heart Association Joint Committee on Clinical Practice Guidelines. Circulation, 143(5), e72–e227.",
+      "Nicoara, A., Skubas, N., Ad, N., et al. (2020). Guidelines for the use of transesophageal echocardiography to assist with surgical decision-making in the operating room: A surgery-based approach. Journal of the American Society of Echocardiography, 33(6), 692–734.",
+      "Wahba, A., Kunst, G., De Somer, F., et al. (2025). 2024 EACTS/EACTAIC/EBCP guidelines on cardiopulmonary bypass in adult cardiac surgery. European Journal of Cardio-Thoracic Surgery, 67(2), ezae354.",
+      "Sarwar, M. F., Rodriguez-Diaz, C., Dabski, M., et al. (2025). Anesthesia for cardiac surgical procedures. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 1577–1682). Elsevier.",
+      "Karamnov, S. (2025, August 12). Anesthesia for patients with aortic regurgitation. In H. P. Grocott, P. A. Pellikka, N. A. Nussmeier, & S. B. Yeon (Eds.), UpToDate. Retrieved September 12, 2026, from https://www.uptodate.com/contents/anesthesia-for-patients-with-aortic-regurgitation",
+      "Hashmi, N. (2026, June 11). Anesthesia for surgical repair of congenital heart defects in adults: Management of specific lesions and reoperation. In J. B. Mark, H. M. Connolly, N. A. Nussmeier, & S. B. Yeon (Eds.), UpToDate. Retrieved September 12, 2026, from https://www.uptodate.com/contents/anesthesia-for-surgical-repair-of-congenital-heart-defects-in-adults-management-of-specific-lesions-and-reoperation"
+    ]
+  },
+  {
+    updated:"2026-09-12",
     specialty:"心臟外科",
     name:"二尖瓣膜手術(MVR/MVP)",
     en:"Mitral Valve Replacement / Repair (MVR / MVP)",
@@ -4120,13 +4380,151 @@ const SURGERIES = [
       "肺高壓、右心衰竭;AF、房室傳導阻滯",
       "CPB 相關:凝血病、急性腎損傷"
     ],
+    lit:[
+      {
+        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點",
+        preop:[
+          "<b>病因</b>:已開發國家多為退化性(黏液樣變性、瓣膜脫垂)或缺血性心臟病造成的功能性 MR;<b>開發中國家風濕性心臟病仍較常見</b>,是 MS 的主要成因",
+          "<b>MR 分成 organic 與 functional</b>:前者瓣膜本身病變,後者瓣膜形態正常、問題出在瓣環或左心室;缺血性(功能性)MR 占冠心病病人的一至二成",
+          "<b>Carpentier 分型</b>:第一型瓣膜正常但瓣環擴大、第二型瓣葉活動過度(最常見)、第三型瓣葉活動受限(IIIa 瓣下結構纖維化、IIIb 心室重塑造成牽扯)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>這套分型講的是<b>瓣膜為什麼關不緊</b>,外科據此決定怎麼修。第一型是瓣環撐大、兩片瓣葉搆不到彼此;第二型是瓣葉或腱索太鬆,收縮時整片翻進左心房;第三型相反,瓣葉被拉住打不開也關不攏。分型不同,修補方式與成功率也不同。</span>",
+          "<b>MS 嚴重度</b>:瓣口面積正常約 4–5 cm²,小於 2.5 cm² 開始出現症狀;<b>小於 1.0 cm²、跨瓣壓差大於 15 mmHg 為重度</b>,常合併肺高壓",
+          "<b>MS 的症狀常由需求增加誘發</b>:壓力、運動、貧血、懷孕、發燒",
+          "<b class='w'>MR 的 EF 會被高估</b>:左心房是低壓出口,等於替左心室卸壓;中重度 MR 時 EF 與真正的收縮功能相關性差,<b>術前隱藏的心室功能不良可能在修補或置換後才顯現</b>",
+          "<b>急性與慢性 MR 不同</b>:急性者左心房來不及代償 → 壓力急升、肺充血明顯、血壓下降;慢性者左心房擴大順應性上升,壓力上升較不明顯",
+          "<b>MR 病人約半數在手術前已出現 AF</b>;但栓塞併發症風險低於 MS"
+        ],
+        airway:[
+          "<b>誘導與插管的血行動力學目標依病灶而定</b>:沒有一套適用所有瓣膜病變的配方",
+          "<b class='w'>缺氧、高碳酸與酸血症會升高 PVR</b>,讓已經負荷過重的右心更難撐;MR 與 MS 都要避免"
+        ],
+        monitor:[
+          "標準 ASA 監測加上動脈導管、CVP 與術中心臟超音波",
+          "<b>Swan-Ganz 對 MS 有幫助</b>(看肺動脈壓與心輸出量),但<b class='w'>長期肺高壓者肺動脈破裂風險較高</b>,置入與操作要格外小心",
+          "<b>TEE 是術中決策的核心</b>:判斷病灶機轉與嚴重度,並確認修補或置換的結果是否足夠",
+          "<b>MR 有動態性</b>:麻醉對前後負荷的影響會明顯改變逆流量,術中看到的嚴重度可能與術前報告不同,判讀時要把當下的血行動力學一起考慮"
+        ],
+        hemo:[
+          "<b>MS 的目標</b>:<b class='w'>心跳維持正常、避免心搏過速</b>;前負荷要夠但不可過量;維持收縮力與 SVR;設法降低 PVR",
+          "<b>MS 為什麼怕快</b>:舒張期縮短 → 左心室充填減少;跨瓣壓差與流速有關,心跳一快壓差就明顯上升、左心房壓跟著升高",
+          "<b class='w'>MS 病人惡化的主因是心搏過速本身,而不是失去心房收縮</b>",
+          "<b>MS 的輸液要拿捏</b>:前負荷不足會直接壓縮心輸出量,但重度 MS 的左心房壓本來就高,<b>從適當充填到肺水腫之間的空間很窄</b>",
+          "<b>MS 降後負荷要謹慎</b>:減少後負荷一定伴隨前負荷下降,對 MS 不一定有利;除非左心室收縮功能明顯不良",
+          "<b>MS 的主要挑戰常是右心而非左心</b>:長期肺高壓、右心功能不良時,<b>撐住右心是第一順位</b>;可依醫囑用 epinephrine 或 milrinone,並調整酸鹼與通氣來降 PVR",
+          "<b>MR 的目標</b>:<b class='w'>維持前向血流</b>;心跳維持在正常偏快(約 80–100)、降低後負荷、維持收縮力與前負荷",
+          "<b class='w'>MR 最怕心跳慢</b>:收縮期拉長 → 逆流時間變長;舒張期拉長 → 左心室過度充填,兩者都讓 MR 惡化",
+          "<b>MR 的前負荷要適中</b>:誘導前補足是合理的,但<b>心室脹大會把瓣環撐得更開,反而讓 MR 更嚴重</b>",
+          "<b class='w'>MR 時純 α1 血管收縮劑(如 phenylephrine)會拉高 SVR、壓低心跳,可能讓逆流更嚴重</b>;需要升壓時可先考慮小量 ephedrine,持續需要則改用強心劑",
+          "<b>MR 低血壓的處理順序</b>:先調心跳與容量;持續不穩定時用強心劑(dobutamine、低劑量 epinephrine、milrinone 皆可)"
+        ],
+        intraop:[
+          "<b>微創或機械手臂二尖瓣手術</b>:多採右側胸壁小切口,經股動脈與股靜脈上機;為了手術視野常需<b>單肺通氣</b>(雙腔管或支氣管阻塞器),病人擺成右側抬高約 30 度",
+          "<b>主動脈阻斷方式</b>:可用經胸壁的 Chitwood 夾,或用主動脈內氣球導管;<b class='w'>氣球導管可能位移</b> → 往遠端跑會擋住無名動脈、往近端跑則阻斷不全、灌停打不進去,需影像持續確認位置",
+          "<b>SAM 的成因</b>:流出道變窄後血流加速產生 Venturi 效應,把二尖瓣前葉吸進流出道,同時造成阻塞與 MR<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>修補時如果把前葉與瓣膜的接合點往中膈方向拉近,收縮期快速通過的血流會產生吸力,把前葉扯向中膈。前葉一被吸走,兩片瓣葉就關不攏,於是<b>流出道被擋住</b>與<b>二尖瓣逆流</b>同時發生。多餘的前葉組織愈多、接合點愈靠前,風險愈高。</span>",
+          "<b class='w'>SAM 的處理與一般低血壓相反</b>:<b>不要用強心劑</b>(心室收縮愈用力阻塞愈嚴重);補足容量、避免後負荷下降,用 phenylephrine 或 vasopressin 提高後負荷;心跳快則依醫囑用 β-blocker 放慢",
+          "<b>要不要重上 pump 修正,由麻醉與外科共同決定</b>,必要時請心臟科一起評估;這不是小決定,需要持續且熟練的超音波判讀"
+        ],
+        flags:[
+          "後內側乳突肌只有迴旋支單一血供,心肌梗塞時容易受損",
+          "後側瓣環處心臟纖維骨架不連續,是相對脆弱的區域",
+          "修補後醫源性的 LVOT 阻塞與 SAM",
+          "微創手術的氣球主動脈阻斷導管位移"
+        ],
+        postop:[
+          "<b>合併 Maze 手術者</b>:切除左心耳可大幅降低中風風險;手術目標是讓病人擺脫抗心律不整藥與抗凝血劑"
+        ]
+      },
+      {
+        tag:"UpToDate", cls:"uptodate", label:"UpToDate 重點",
+        preop:[
+          "<b>MS 的兩大成因</b>:風濕性二尖瓣疾病(commissure 融合 → 瓣口呈漏斗狀,最窄處在瓣葉尖端)與<b>二尖瓣環鈣化(MAC)</b>(瓣口偏管狀,最窄處靠近瓣環)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>兩者狹窄的位置不同,對手術的意義也不同。風濕性的病灶在<b>瓣葉尖端</b>,瓣環相對完好,比較有機會做 commissurotomy 或修補;<b>MAC 的鈣化長在瓣環上</b>,縫線得縫在鈣化組織裡,不但常常非換瓣不可,術後出血與<b>房室溝斷裂</b>的風險也高很多。</span>",
+          "<b>病理生理</b>:左心房出口固定阻塞 → LA 壓上升、LA 重塑、肺靜脈壓上升;<b>多數病人是 postcapillary PH 而 PVR 正常</b>,部分病人肺血管收縮與重塑後變成 pre- 加 postcapillary 混合型",
+          "<b>單純 MS 的 LV 壓力多半正常</b>;極重度時 LV 充填不足 → 每搏量與心輸出量下降;合併 HFpEF(MAC 病人常見)會讓 LV 充填壓上升,<b>嚴重度判讀變複雜</b>",
+          "<b>MS 的超音波分級</b>:瓣口面積 >1.5 cm²、pressure half-time <150 ms 為進展期;<b class='w'>≤1.5 cm²、PHT ≥150 ms、平均壓差 >5 mmHg、PASP >30 mmHg 為重度</b>;≤1.0 cm²、PHT ≥220 ms、平均壓差 >10 mmHg、PASP >50 mmHg 為極重度<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>平均壓差會隨<b>心跳與每搏量</b>變動:心跳快或輸液多的時候,同一個瓣口量出來的壓差會更大。所以壓差不能單獨當嚴重度的標準,判讀時要把當下的心跳與血行動力學一起看;瓣口面積與 pressure half-time 受影響相對小。</span>",
+          "<b>症狀</b>:運動時喘 → 休息時也喘、疲倦,少見咳血;右心衰竭時可見頸靜脈怒張、肝腫大、腹水、下肢水腫;<b class='w'>長期 LA 壓高的病人肺部聽診不一定有囉音</b>;許多人因為喘而長期不動 → 明顯 deconditioning",
+          "<b>AF 來自左心房擴大</b>,在 MS 病人非常常見",
+          "<b>心臟手術術前要看</b>:MS 嚴重度與分期、是否合併 MR 或其他瓣膜病變、AF、<b class='w'>LA 或左心耳血栓</b>、RV 功能與 TR、LV 收縮與舒張功能;進展期右心衰竭的胸部 X 光可見肺水腫與右心擴大",
+          "<b>有症狀的病人不應為了術前優化而明顯延後手術</b>",
+          "<b>術前用藥</b>:抗心律不整與控制心跳的藥物<b class='w'>開到手術當天</b>(避免心搏過速);有適應症的 aspirin 通常繼續",
+          "<b>抗凝</b>:AF、曾經栓塞或有 LA 血栓者多長期使用 VKA;停藥與 bridging 要權衡栓塞與出血風險;<b>急刀來不及停藥、需要緊急逆轉的病人不適合 neuraxial</b>",
+          "<b>Premedication</b>:誘導前或放侵入性管路時,可依醫囑給小劑量短效 benzodiazepine(如 midazolam 1–2 mg),<b>目的是避免焦慮與疼痛引起心搏過速</b>",
+          "<b>曾做過二尖瓣球囊擴張的病人</b>常留有殘餘 MS 或 MR → 依當下的心臟功能重新評估,不能只看以前的診斷"
+        ],
+        airway:[
+          "<b class='w'>缺氧、高碳酸與代謝性酸血症會升高 PVR</b>;重度 MS 合併原有肺高壓時,可能因此急性右心衰竭",
+          "<b>肺高壓病人最怕鎮靜過頭</b>:換氣不足 → 低血氧與高碳酸 → PVR 急升 → 右心功能惡化,有時進展得很快"
+        ],
+        monitor:[
+          "<b>A-line 在誘導前放</b>,從誘導到整台刀連續監測血壓",
+          "<b>CVC</b>:估計右心壓力,也是避免輸液過量造成肺水腫的依據;<b class='w'>重度 MS、休息就喘的清醒病人可能無法忍受頭低位甚至平躺</b> → 多在插管與控制通氣建立後才放,清醒放置的利弊要先權衡",
+          "<b>PA 導管</b>:看肺動脈壓、心輸出量與混合靜脈血氧",
+          "<b>TEE 確認 MS</b>:瓣葉增厚、開放受限,彩色都卜勒可見左心室流入處高速 aliasing 的血流;<b>MAC 造成者</b>在瓣環旁可見回音強、形狀不規則的架狀鈣化與音影",
+          "<b>CW Doppler 量跨瓣壓差</b>:重度 MS 的平均壓差多 >5–10 mmHg,但會隨心跳與每搏量變動",
+          "<b class='w'>術前 TEE 務必看 LA 與左心耳</b>:分辨 spontaneous echo contrast 與血栓,必要時用顯影劑;同時評估 RV 有無擴大或功能不良、三尖瓣環是否擴大(中重度以上 TR 是同時修三尖瓣的適應症)"
+        ],
+        hemo:[
+          "<b>MS 的血行動力學目標</b>:<b class='w'>心跳偏慢至正常,約 50–70</b>、避免心搏過速;不論何種心律都要控制心室速率;維持血管內容積,避免過與不及",
+          "<b>MS 的血壓</b>:收縮壓維持 >100 mmHg、MAP >70 mmHg,或在基準值的兩成內;避免心肌抑制,<b>尤其是右心</b>(常合併肺高壓);避免低血氧與高碳酸",
+          "<b>原發性 MR</b>:<b class='w'>心跳正常偏快,約 80–100</b>、避免心跳過慢;前負荷維持或略減,避免容積過多;收縮壓維持在偏低的正常範圍(約 100–120),<b>高血壓要立即處理</b>",
+          "<b>缺血性心臟病造成的 MR</b>:血壓維持接近術前值,不刻意壓低",
+          "<b>次發性(功能性)MR</b>:心跳<b>偏慢至正常,約 55–80</b>,與原發性相反;血壓維持接近術前值,避免過高或過低;維持血管內容積",
+          "<b>合併 HOCM 與 LVOT 阻塞的 MR</b>:心跳維持 60–80、<b class='w'>維持竇律</b>、維持容積;<b>低血壓只用不具強心作用的血管收縮劑(如 phenylephrine、vasopressin)</b>,並以加深麻醉或 β-blocker 降低收縮力,不用強心劑",
+          "<b>共通目標</b>:不論哪一種病灶,都要維持足夠的前負荷與收縮力",
+          "<b>心跳太慢也不行</b>:MS 的每搏量拉不上來,心輸出量有一部分靠心跳撐;嚴重心搏過緩合併低血壓可依醫囑用 atropine、glycopyrrolate 或 ephedrine",
+          "<b>心律</b>:竇律較佳,但重度 MS 多半已是慢性 AF;<b class='w'>不論何種心律,重點是把心室速率控制好</b>;AF 併快速心室反應要緊急控速",
+          "<b>什麼時候考慮緊急 cardioversion</b>:出現低血壓、肺水腫或心肌缺血時;同時要權衡栓塞風險與短期內再發的機會",
+          "<b>前負荷要維持但不能衝</b>:有 A-line、PA 導管或 TEE 時採 goal-directed,<b>每次 100–250 mL 小量給並看反應</b>",
+          "<b class='w'>任何讓靜脈回流突然增加的情況都可能誘發肺水腫</b>:大量快速輸液、頭低位;容量一多,LA 壓上升、RV 撐大把中膈推向左側,反而更擋住左心充填",
+          "<b>後負荷要守住</b>:MS 病人的代償能力有限(每搏量拉不上來、心跳又不能快),SVR 一掉血壓就撐不住,<b>右心的冠狀動脈灌流也跟著受影響</b>;判定是 SVR 下降造成的低血壓時用 phenylephrine 50–100 mcg bolus 或滴注,無效時改 norepinephrine 或 vasopressin",
+          "<b>MS 病人很少需要處理高血壓</b>(阻塞本身就限制了心輸出量);SBP 維持 <180,處理方式是加深麻醉或小量短效鴉片類,<b class='w'>要用血管擴張劑得非常小心</b>",
+          "<b>收縮力</b>:多數重度 MS 的 <b>LV 收縮功能是保留的,問題在右心</b>;避免高劑量 β-blocker、缺氧與酸血症進一步壓抑心肌;中膈是右心結構的一部分,LV 功能也要顧",
+          "<b>需要強心時首選 milrinone</b>(周邊擴張 + 增加收縮力 + 降肺血管阻力);<b class='w'>但要避免 milrinone 造成低血壓</b>(會影響冠狀動脈灌流);血壓低或很不穩的病人改低劑量 dobutamine 或 epinephrine",
+          "<b>MS 合併 MR 很常見</b>:目標依何者為主、哪一種血行動力學變化最危險來決定;術前穩定且代償良好者,可把心跳與血壓訂在接近術前值(心跳約 70–80、SVR 正常或正常偏低、收縮力正常)"
+        ],
+        intraop:[
+          "<b>誘導藥</b>:重度阻塞性病灶常選 <b>etomidate 0.2–0.3 mg/kg</b>(血行動力學穩、不引起心搏過速);propofol 也可以,起始 0.5–1 mg/kg 慢慢滴定,<b class='w'>但 propofol 讓 MAP 下降的幅度比 etomidate 大,而且升壓藥還用得更多</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>這一句有一篇心臟手術病人的<b>隨機對照試驗</b>支持:誘導後十分鐘內,propofol 組低於基準血壓的面積比 etomidate 組大了約三成,而且 propofol 組給升壓藥的次數還比較多。對 MS 這種每搏量拉不上來、心跳又不能快的病人,誘導時掉下去的血壓特別難救回來。</span>",
+          "<b>避免高劑量 propofol</b>(SVR 下降);<b class='w'>ketamine 一般避免</b>,誘導劑量就會讓心跳變快",
+          "<b>插管前壓住交感反應</b>:依醫囑在 laryngoscopy 前給 fentanyl 1–2 mcg/kg 或 remifentanil 1–2 mcg/kg(高齡者 ≤1 mcg/kg);心跳仍快可依醫囑用 esmolol 20–30 mg、labetalol 2.5–5 mg 或 metoprolol 2.5–5 mg,<b>但要先評估心室功能</b>",
+          "<b>維持</b>:吸入麻醉或 TIVA 都合適;依需要給肌鬆劑配合手術與通氣",
+          "<b>手術徑路</b>:傳統開心走正中胸骨切開、上下腔靜脈分別插管;左心房切口可在右肺靜脈後方,或經右心房切開心房中膈進入左心房",
+          "<b class='w'>鈣化延伸到瓣膜本身時,微創徑路常常做不到</b>;重度 MS、重度 MAC 或 MS 合併 MR 多半要換瓣而不是修補",
+          "<b>可能同時做的手術</b>:中重度以上 TR 修三尖瓣;有肺高壓或中風病史者關 PFO;AF 者做左心耳閉合(縫合器、切除縫合或心外膜夾)與外科電燒",
+          "<b class='w'>同時處理主動脈瓣風險很高</b>:房室溝與主動脈瓣離二尖瓣裝置很近;<b>二尖瓣環是馬鞍形而人工瓣是圓柱形</b>,置入後可能改變 LV 與主動脈瓣的方向,讓原本看不出來的心室或主動脈瓣功能不良浮現;主動脈瓣的<b>左冠瓣與無冠瓣</b>緊貼 aortomitral curtain,最容易受影響",
+          "<b>關左心房後、放 cross-clamp 前先排氣</b>,全程以 TEE 引導",
+          "<b>下機後 TEE 的檢查清單</b>:殘留氣泡、<b>瓣周逆流</b>、跨瓣壓差是否過高(機械瓣葉卡住、瓣膜或瓣環選太小 → <b class='w'>醫源性 MS</b>)、瓣葉活動;左心耳只結紮沒切除者看有無殘餘交通;LV 與 RV 功能;有無傷到鄰近構造",
+          "<b class='w'>迴旋支受傷在左冠或共同優勢的病人風險較高</b>:表現為側壁、後側壁或下壁的室壁運動異常"
+        ],
+        emergence:[
+          "<b class='w'>甦醒與拔管期間把缺氧與高碳酸壓到最低</b>,避免 PVR 上升"
+        ],
+        postop:[
+          "<b class='w'>重度 MS 的 LV 長期處在充填不足的狀態,下機後有急性衰竭的風險</b> → 可能需要同時滴 norepinephrine 或 vasopressin,避免全身血管過度擴張",
+          "<b>出現迴旋支分布區的區域性 LV 功能不良</b>時,要追查迴旋支是否通暢",
+          "<b>右心衰竭</b>:脫離 CPB 時可能出現高 PVR 與頑固性右心衰竭 → 依醫囑用 milrinone 或 dobutamine 等 inodilator,合併肺高壓與 RV 功能不良者尤其;低劑量 epinephrine 也是選項",
+          "<b>心律不整與房室傳導阻滯</b>:AF 在下機後與術後都常見;<b>MVR 後可能出現 AVB</b>(房室結就在瓣環旁邊);<b>單純二尖瓣手術需要裝節律器的機會低於同時處理三尖瓣或主動脈瓣者</b>"
+        ],
+        flags:[
+          "重度二尖瓣環鈣化換瓣後房室溝連續性斷裂:罕見但出血難以控制,常需早期 second look 或重新開胸,死亡率高",
+          "人工瓣膜跨瓣壓差過高的醫源性 MS:機械瓣葉卡住、瓣膜或瓣環選太小",
+          "瓣周逆流;左心耳只結紮未切除造成的殘餘交通",
+          "迴旋支受傷(左冠或共同優勢者風險較高);縫線影響主動脈瓣造成新的逆流",
+          "MVR 後房室傳導阻滯,同時處理三尖瓣或主動脈瓣時需要節律器的機會更高",
+          "脫離 CPB 後急性 LV 衰竭(長期 underloading)與頑固性右心衰竭"
+        ]
+      }
+    ],
     collapse:true,
     refs:[
       "Praz, F., Borger, M. A., Lanz, J., et al. (2025). 2025 ESC/EACTS guidelines for the management of valvular heart disease. European Heart Journal, 46(44), 4635–4736.",
       "Otto, C. M., Nishimura, R. A., Bonow, R. O., et al. (2021). 2020 ACC/AHA guideline for the management of patients with valvular heart disease: A report of the American College of Cardiology/American Heart Association Joint Committee on Clinical Practice Guidelines. Circulation, 143(5), e72–e227.",
       "Nicoara, A., Skubas, N., Ad, N., et al. (2020). Guidelines for the use of transesophageal echocardiography to assist with surgical decision-making in the operating room: A surgery-based approach. Journal of the American Society of Echocardiography, 33(6), 692–734.",
       "Holmes, K., Gibbison, B., & Vohra, H. A. (2017). Mitral valve and mitral valve disease. BJA Education, 17(1), 1–9.",
-      "Wahba, A., Kunst, G., De Somer, F., et al. (2025). 2024 EACTS/EACTAIC/EBCP guidelines on cardiopulmonary bypass in adult cardiac surgery. European Journal of Cardio-Thoracic Surgery, 67(2), ezae354."
+      "Wahba, A., Kunst, G., De Somer, F., et al. (2025). 2024 EACTS/EACTAIC/EBCP guidelines on cardiopulmonary bypass in adult cardiac surgery. European Journal of Cardio-Thoracic Surgery, 67(2), ezae354.",
+      "Sarwar, M. F., Rodriguez-Diaz, C., Dabski, M., et al. (2025). Anesthesia for cardiac surgical procedures. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 1577–1682). Elsevier.",
+      "Hashmi, N. (2026, June 11). Anesthesia for surgical repair of congenital heart defects in adults: Management of specific lesions and reoperation. In J. B. Mark, H. M. Connolly, N. A. Nussmeier, & S. B. Yeon (Eds.), UpToDate. Retrieved September 12, 2026, from https://www.uptodate.com/contents/anesthesia-for-surgical-repair-of-congenital-heart-defects-in-adults-management-of-specific-lesions-and-reoperation",
+      "Fitzsimons, M. G., Steinhorn, R., & Dodge, R. E., III. (2025, June 2). Anesthesia for patients with mitral stenosis. In H. P. Grocott, P. A. Pellikka, N. A. Nussmeier, & S. B. Yeon (Eds.), UpToDate. Retrieved September 12, 2026, from https://www.uptodate.com/contents/anesthesia-for-patients-with-mitral-stenosis",
+      "Thompson, A., Fleischmann, K. E., Smilowitz, N. R., et al. (2024). 2024 AHA/ACC/ACS/ASNC/HRS/SCA/SCCT/SCMR/SVM guideline for perioperative cardiovascular management for noncardiac surgery: A report of the American College of Cardiology/American Heart Association Joint Committee on Clinical Practice Guidelines. Circulation, 150(19), e351–e442.",
+      "McGlothlin, D. P., Granton, J., Klepetko, W., et al. (2022). ISHLT consensus statement: Perioperative management of patients with pulmonary hypertension and right heart failure undergoing surgery. The Journal of Heart and Lung Transplantation, 41(9), 1135–1194.",
+      "Hannam, J. A., Mitchell, S. J., Cumin, D., et al. (2019). Haemodynamic profiles of etomidate vs propofol for induction of anaesthesia: A randomised controlled trial in patients undergoing cardiac surgery. British Journal of Anaesthesia, 122(2), 198–205."
     ]
   },
   {
@@ -4367,10 +4765,48 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v10.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-09-11";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v11.2";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-09-12";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-12",
+    note: "二尖瓣膜手術的 UpToDate 來源大幅擴充。",
+    items: [
+      { t:"二尖瓣膜手術(MVR/MVP):UpToDate 原本只有血流動力學目標,現在術前評估、氣道與呼吸、監測與管路、術中關鍵事項、甦醒與拔管、術後照護與重要併發症都有內容", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):術前評估新增 MS 的兩大成因(風濕性與二尖瓣環鈣化)、超音波嚴重度分級、症狀表現,以及術前用藥、抗凝與 premedication 的處理", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):血流動力學補上心律控制、前後負荷與強心藥的選擇,並提醒大量輸液與頭低位可能誘發肺水腫", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):術中新增誘導藥物的選擇與比較、手術徑路、可能同時進行的手術,以及下機後 TEE 的檢查清單", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):術後照護新增下機後急性左心衰竭、右心衰竭、房室傳導阻滯的處理重點", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):文獻新增四筆,含 2024 AHA/ACC 非心臟手術周術期心血管指引、ISHLT 肺高壓與右心衰竭共識、誘導藥物比較的隨機對照試驗", en:"Mitral Valve Replacement / Repair (MVR / MVP)" }
+    ]
+  },
+  {
+    date: "2026-09-12",
+    note: "心臟外科新增主動脈瓣膜手術(AVR/AVP)。",
+    items: [
+      { t:"主動脈瓣膜手術(AVR/AVP):新增傳統胸骨切開的主動脈瓣置換與修補,包含 AS 與 AR 的麻醉目標、逐步流程、灌停給法與脫離 CPB 的 TEE 檢查重點", en:"Aortic Valve Replacement / Repair (AVR / AVP)" },
+      { t:"主動脈瓣膜手術(AVR/AVP):同時收錄 Miller 與 UpToDate 重點,三個標籤可分別點選查看", en:"Aortic Valve Replacement / Repair (AVR / AVP)" }
+    ]
+  },
+  {
+    date: "2026-09-12",
+    note: "微創主動脈瓣膜置換(Mini-AVR)新增 Miller 與 UpToDate 兩個來源。",
+    items: [
+      { t:"微創主動脈瓣膜置換(Mini-AVR):新增 Miller 教科書重點,涵蓋 AS 與 AR 的病理生理與麻醉目標、瓣膜選size 的重要性、微創手術的插管與排氣、AS 病人放置肺動脈導管與急救的風險", en:"Minimally Invasive Aortic Valve Replacement (Mini-AVR)" },
+      { t:"微創主動脈瓣膜置換(Mini-AVR):新增 UpToDate 重點,涵蓋術前電腦斷層規劃、不適合微創的情況、切口與插管方式的選擇、以及改為全胸骨切開的風險", en:"Minimally Invasive Aortic Valve Replacement (Mini-AVR)" },
+      { t:"微創主動脈瓣膜置換(Mini-AVR):筆記、Miller、UpToDate 三個標籤可分別點選查看", en:"Minimally Invasive Aortic Valve Replacement (Mini-AVR)" }
+    ]
+  },
+  {
+    date: "2026-09-12",
+    note: "二尖瓣膜手術新增 Miller 與 UpToDate 兩個來源。",
+    items: [
+      { t:"二尖瓣膜手術(MVR/MVP):新增 Miller 教科書重點,涵蓋 MS 與 MR 的病理生理與麻醉目標、瓣膜解剖與病因分型、SAM 的成因與處理、微創手術的單肺通氣與主動脈阻斷方式", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):新增 UpToDate 重點,列出 MS、原發性 MR、次發性 MR 與合併 HOCM 者各自的心跳與血壓目標", en:"Mitral Valve Replacement / Repair (MVR / MVP)" },
+      { t:"二尖瓣膜手術(MVR/MVP):筆記、Miller、UpToDate 三個標籤可分別點選查看", en:"Mitral Valve Replacement / Repair (MVR / MVP)" }
+    ]
+  },
   {
     date: "2026-09-11",
     note: "所有術式的區塊改為可收合;移除麻醉計算機與藥物泡法兩個工具頁。",
