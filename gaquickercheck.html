@@ -78,6 +78,10 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .chip.study{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:500}
 .chip.study:hover{border-color:var(--slate)}
 .chip.study[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+/* 外區麻醉 chip:沿用原本的莫蘭迪灰藍色 */
+.chip.nora{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:500}
+.chip.nora:hover{border-color:var(--slate)}
+.chip.nora[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
 /* 危機處理 chip:莫蘭迪黃,與科別、學習區 chip 區隔 */
 .chip.crisis{background:var(--ochre-tint);border-color:#D6C9A8;color:#6E6047;font-weight:600}
 .chip.tx{background:var(--clay-tint);border-color:#DCC7BF;color:#8a6a60;font-weight:500}
@@ -340,6 +344,7 @@ details.fold-flag[open]>summary{margin-bottom:9px}
 .src-chip.note{color:#4C5A4C;background:var(--sage-tint);border-color:#C7D0C4}
 .src-chip.miller{color:#6E6047;background:var(--ochre-tint);border-color:#D8CCB2}
 .src-chip.uptodate{color:#4F5865;background:var(--slate-tint);border-color:#C9D0D8}
+.src-chip.otherlit{color:#7A5D54;background:var(--clay-tint);border-color:#DCC3BB}
 .src-chip.src-toggle{cursor:pointer;font-family:inherit;transition:all .15s;opacity:.62}
 .src-chip.src-toggle:hover{opacity:1;transform:translateY(-1px)}
 .src-chip.src-toggle[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 2px rgba(66,62,57,.10);font-weight:700}
@@ -352,6 +357,8 @@ details.fold-flag[open]>summary{margin-bottom:9px}
 .lit-block .src-h{color:#6E6047}
 .lit-block.uptodate{border-color:#C9D0D8;background:#F1F3F6}
 .lit-block.uptodate .src-h{color:#4F5865}
+.lit-block.otherlit{border-color:#DCC3BB;background:#F7EEEA}
+.lit-block.otherlit .src-h{color:#7A5D54}
 .flag-box .lit-block{background:rgba(255,255,255,.45)}
 /* 指定顏色粗體 */
 .section li b.bl{color:#35609A;font-weight:700}
@@ -3579,6 +3586,115 @@ const SURGERIES = [
     ]
   },
   {
+    updated:"2026-09-13",
+    specialty:"心臟外科",
+    name:"主動脈剝離",
+    en:"Aortic Dissection",
+    summary:{ position:"Supine", posType:"supine", time:"急診手術／依剝離範圍", blood:"極多", airway:"GA / ETT・CPB ± HCA" },
+    heroImage:{ src:"aortic-dissection-icon-v2.png", alt:"主動脈剝離（Aortic Dissection）透明背景醫學卡通圖", caption:"Aortic Dissection · True and False Lumen" },
+    showEmptyNote:true,
+    lit:[
+      {
+        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點",
+        preop:[
+          "<b>DHCA 主要用於橫主動脈弓剝離或動脈瘤修補</b>:先依預期循環暫停時間決定低溫與是否加 selective cerebral perfusion",
+          "若為 descending aorta 剝離需 tube graft，可用 left-heart bypass 維持遠端灌流並控制近端心臟後負荷；複雜手術則需完整 CPB",
+          "胸降主動脈手術常需左開胸與單肺通氣；既有肺病或外傷性肺損傷者可能難以維持氧合，且大量出血與低體溫風險高"
+        ],
+        monitor:[
+          "<b>多點體溫</b>搭配 CPB arterial blood temperature；快速降溫時 arterial blood temperature 會低估腦實質溫度",
+          "<b>EEG 是低溫腦效應的 pharmacodynamic endpoint</b>；開始循環暫停前應由低溫達到 EEG isoelectricity",
+          "右 axillary／innominate cannulation 做 SACP 時，右橈動脈壓可能高於左橈或股動脈壓；<b>降溫與復溫不可只用右橈壓控制全身灌流</b>"
+        ],
+        hemo:[
+          "DHCA 將核心溫度降至約 <b>15–22°C</b> 後完全中斷全身血流；預期暫停 30–40 分鐘時，Miller 認為 18–20°C 通常足夠",
+          "若採 SACP，以冷氧合血維持 cerebral blood pressure 約 <b>30–60 mmHg</b>；所需 flow 依插管位置與灌流頭部分支數而異",
+          "胸降主動脈夾閉會突然增加心臟後負荷並造成 clamp 遠端缺血；LHB flow 用於維持遠端灌流並調整近端 afterload"
+        ],
+        intraop:[
+          "<span class='ptit ptit-c'>降溫</span><span class='pdet'>成人通常採 α-stat；到達目標 arterial blood temperature 後仍需足夠 equilibration time，Miller 提及一般成人 full-flow cooling 可再持續約 20–30 分鐘，並以多點體溫及 EEG 判斷</span>",
+          "<span class='ptit ptit-c'>循環暫停</span><span class='pdet'>停 pump flow、病人血液引流至 ECC reservoir；reservoir 內血液持續 recirculate 防止停滯，並關閉 oxygenator gas flow 以免嚴重 hypocapnia</span>",
+          "<span class='ptit ptit-c'>SACP</span><span class='pdet'>可直接插左頸總動脈，或經 axillary／innominate cannulation 灌流右頸總動脈；Miller 認為正確使用時 antegrade perfusion 優於 retrograde perfusion</span>",
+          "<span class='ptit ptit-d'>再灌流與復溫</span><span class='pdet'><b>先以冷血再灌流 5–10 分鐘</b>再開始復溫；避免術後高熱，因 DHCA 後數小時腦血流仍可能下降</span>"
+        ],
+        drug:[
+          "低溫是完全全腦缺血時唯一可靠的神經保護方法；steroid、barbiturate 或 propofol 等藥物性腦保護的支持證據有限",
+          "若監測 EEG，應先靠低溫達到 isoelectricity，再考慮額外藥物，避免把藥物造成的 burst suppression 誤當作腦已充分降溫"
+        ],
+        postop:[
+          "DHCA 後數小時腦血管阻力上升、腦血流下降；密切神經監測並積極避免／處理高熱",
+          "胸降主動脈開放修補後警覺低氧、低體溫、大量出血及 clamp 遠端器官缺血"
+        ],
+        flags:[
+          "DHCA 時間或降溫不足造成缺血性腦損傷",
+          "選擇性腦灌流不足或壓力監測位置誤判",
+          "胸降主動脈夾閉造成遠端器官／脊髓缺血",
+          "大量出血、低氧與低體溫"
+        ]
+      },
+      {
+        tag:"UpToDate", cls:"uptodate", label:"UpToDate 重點",
+        preop:[
+          "<b class='w'>急性 ascending（Stanford type A）aortic dissection 必須緊急修補</b>；症狀開始後急性 AR、tamponade、stroke 或 MI 等併發症估計每小時增加約 1–2%",
+          "快速確認 <b>acute AR、cardiac tamponade、冠脈受累、急性 stroke</b>，以及腎、腸、脊髓與四肢 malperfusion",
+          "脈搏缺損或 CTA arterial phase flow 下降提示肢體 malperfusion，會直接影響 A-line 與 CPB arterial cannulation site",
+          "Type A 本身可有術前凝血病；深低溫、缺血再灌流、長 CPB、fibrinolysis 與 platelet activation 會進一步加重出血"
+        ],
+        airway:[
+          "<b class='w'>外科、麻醉與灌流團隊全部就位後才誘導</b>；極不穩定者可在清醒時先消毒鋪單，準備誘導後立即建立 CPB",
+          "誘導藥物選擇以最小血流動力變化為原則；有 full stomach 時仍需 RSII",
+          "急性 AR 或 tamponade 休克時避免 beta-blocker，以免心輸出量崩解"
+        ],
+        prep:[
+          "確認足夠 IV 與 rapid transfusion 能力，先通知血庫並準備 RBC、plasma 與 platelets",
+          "預先接妥 vasopressor／inotrope；放置 external defibrillator pads，床旁備妥 pacing／defibrillation",
+          "準備 insulin infusion；深低溫後幾乎都會出現 hyperglycemia，目標通常 <180 mg/dL"
+        ],
+        monitor:[
+          "<b>誘導前放 upper-extremity A-line</b>；多數升主動脈／弓部病例放雙側橈動脈，malperfusion 時以較高側估計 systemic BP，必要時加 femoral A-line",
+          "大口徑 CVC／introducer 供快速輸血與 vasoactive infusion；PAC 可監測 PAP、CVP、CO、SvO₂，PAP 上升可能提示 AR 導致 LV distention",
+          "<b class='w'>TEE</b>:確認 intimal tear／flap 範圍、AR、tamponade、regional wall motion；引導 wire 與 cannula 進 true lumen，並監測 CPB 開始後是否 malperfusion",
+          "雙側 NIRS 可偵測 CPB／SACP 時 unilateral 或 bilateral cerebral hypoperfusion；條件允許時加 EEG 判斷低溫 electrocortical silence"
+        ],
+        hemo:[
+          "Prebypass anti-impulse：小量遞增 beta-blocker（如 esmolol），目標 <b>HR 60–80、SBP <120 mmHg</b>",
+          "<b class='w'>急性 AR 或 tamponade 引起 cardiogenic shock 時不用上述 beta-blocker 策略</b>，以維持冠脈與器官灌流、快速上 CPB 為優先",
+          "循環暫停後再灌流期 UpToDate 建議 MAP 約 <b>50–70 mmHg</b>，並避免過高血壓對新吻合處造成壓力"
+        ],
+        intraop:[
+          "<span class='ptit ptit-a'>TEE 與插管</span><span class='pdet'>Seldinger technique 時辨認 true／false lumen 並確認 guidewire、cannula 在 true lumen；CPB 開始後若 NIRS 下降立即找插管錯位或腦 malperfusion</span>",
+          "<span class='ptit ptit-c'>低溫策略</span><span class='pdet'>依手術與院內 protocol 採 moderately deep 20–28°C 或 deep 16–20°C HCA，常合併 SACP 或 RCP；降溫與復溫以 α-stat 管理</span>",
+          "<span class='ptit ptit-c'>循環暫停前</span><span class='pdet'>先完成麻藥、肌鬆、抗生素及其他必要給藥；暫停期間無法送藥，IV infusion 與 volatile delivery 應停止</span>",
+          "<span class='ptit ptit-d'>恢復麻醉</span><span class='pdet'>復溫至鼻咽約 30°C 或 EEG activity 穩定恢復時重新給麻醉，避免回溫期術中覺醒</span>",
+          "<span class='ptit ptit-d'>復溫</span><span class='pdet'>冷再灌流約 10 分鐘後緩慢復溫；rate ≤0.5°C/min，arterial outlet <30°C 時 venous-arterial gradient ≤10°C、之後 ≤4°C，所有測溫點 ≤37°C</span>"
+        ],
+        drug:[
+          "barbiturate 或 propofol 可用於進一步抑制腦代謝，但應以 EEG electrocortical silence 為目標而非固定劑量；效益未被高品質證據確立",
+          "不支持為腦保護常規使用 glucocorticoid；mannitol 與其他藥物性 adjunct 的腦／腎保護證據不足",
+          "深低溫會延長 heparin 作用；CPB 中至少每 30 分鐘檢查 ACT，復溫時再留意 heparin 濃度下降"
+        ],
+        postop:[
+          "追蹤 persistent／new malperfusion：神經狀態、雙側壓與脈搏、乳酸、腎功能、腹部症狀及肢體灌流",
+          "警覺 bleeding／coagulopathy、tamponade、LV／RV dysfunction、急性 AR，以及 DHCA 再灌流後常見的乳酸性代謝酸中毒",
+          "避免高熱；低溫循環暫停後的缺血再灌流與栓塞性腦傷可能因腦高溫而加重"
+        ],
+        flags:[
+          "Type A 每延誤一小時持續累積致命併發症風險",
+          "急性 AR／tamponade 病人錯用 beta-blocker 導致 cardiovascular collapse",
+          "guidewire 或 arterial cannula 進入 false lumen",
+          "腦、冠脈、腸、腎、脊髓或肢體 malperfusion",
+          "深低溫、長 CPB 與剝離相關嚴重凝血病"
+        ]
+      }
+    ],
+    refs:[
+      "Sarwar, M. F., Rodriguez-Diaz, C., Dabski, M., et al. (2025). Anesthesia for cardiac surgical procedures. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 1577–1682). Elsevier.",
+      "Cheung, A. T., & Heath, M. (2026, July 23). Anesthesia for aortic surgery with hypothermia and elective circulatory arrest in adult patients. UpToDate. Literature review current through August 2026.",
+      "Barbeito, A., JohnBull, E. A., & Heath, M. (2025, September 15). Anesthesia for emergency cardiac surgery. UpToDate. Literature review current through August 2026."
+    ],
+    collapse:true
+  },
+  {
     specialty:"心臟外科",
     name:"保留瓣膜主動脈根部置換(David)",
     en:"Valve-Sparing Aortic Root Replacement (David)",
@@ -4531,10 +4647,11 @@ const SURGERIES = [
     ]
   },
   {
-    updated:"2026-08-20",
+    updated:"2026-09-13",
     specialty:"移植",
     name:"肝臟移植",
     en:"Liver Transplantation (LT)",
+    heroImage:{ src:"liver-transplant-icon-v2.png", alt:"肝臟移植（Liver Transplantation）CABG 同系列莫蘭迪色透明背景醫學卡通圖", caption:"Liver Transplantation · Vascular Anastomosis" },
     summary:{ position:"Supine, arms abducted", posType:"supine", time:"參考捷格手術排程時間", blood:"多", airway:"GA / ETT(做 RSI 準備)" },
     preop:[
       "<b>肝病嚴重度</b>:MELD、腹水量、肝性腦病變分級、食道靜脈瘤、營養與肌少",
@@ -4631,6 +4748,161 @@ const SURGERIES = [
       "低體溫;ETT、NG 與體溫線造成的壓瘡",
       "再灌流時心內血栓或肺栓塞,大量栓塞可致心跳停止"
     ],
+    lit:[
+      {
+        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點", note:"第 10 版，第 56 章",
+        preop:[
+          "採<b>器官系統式再評估</b>:新發肝性腦病、靜脈曲張出血、腹水或血流動力惡化時先排除感染；回顧冠心病、心衰竭、肺高壓、心律不整及最新腎功能",
+          "末期肝病常呈<b>高心輸出、低動脈壓、低 SVR</b>；肝硬化心肌病可能合併收縮／舒張功能障礙、QTc 延長，壓力下代償失敗",
+          "高 MELD、呼吸器／升壓劑／腎替代治療依賴、再移植及已知心肺疾病者屬高風險，需持續多專科評估",
+          "少尿、高血鉀或酸血症者評估術前透析及術中 RRT；並事先通知血庫，確認大量輸血與血品供應"
+        ],
+        airway:[
+          "末期肝病常有胃排空延遲，腹水及急迫手術再增加吸入風險，通常以<b>快速序列誘導與氣管插管</b>開始",
+          "RSI 可選 rocuronium 或 succinylcholine；腎功能差或高血鉀時避免 succinylcholine",
+          "暴發性肝衰竭合併腦水腫時，揮發性麻醉劑宜避免或僅以低濃度審慎使用"
+        ],
+        monitor:[
+          "動脈導管依血流動力穩定度於誘導前或誘導後立即放置；須有<b>大口徑靜脈通路、快速輸液／輸血系統與主動加溫</b>",
+          "中心靜脈可用大口徑 introducer、MAC 或透析導管；預期再移植、沾黏或大量出血時可考慮兩組 introducer",
+          "PA catheter 主要用於門脈性肺高壓或 PA pressure／PVR 偏高者；非肺高壓病人不一定常規使用",
+          "TEE 可連續評估心室衰竭、缺血、心包填塞及心內血栓；即使有食道靜脈瘤，報告中的出血併發症仍低",
+          "定期追蹤血氣、電解質、血糖、游離鈣與 Hb；凝血於基準、矯正後、再灌流後及出現微血管滲血時重測"
+        ],
+        hemo:[
+          "病肝切除期以<b>維持 euvolemia 與器官灌流</b>為原則；放腹水及剝離出血會降前負荷，但過度補液會增加門脈壓與靜脈出血",
+          "完整 IVC 阻斷可使靜脈回流急降，先以 test clamp 評估；嚴重低血壓時鬆夾、調整前負荷後再嘗試",
+          "Piggyback 保留受贈者 IVC，可維持較多靜脈回流並減少 VVB 需求；VVB 雖可維持前負荷，但有空氣／血栓栓塞及脫管風險",
+          "升壓劑用於維持器官灌流很常見，尤其是重症病人或合併肝硬化心肌病者"
+        ],
+        intraop:[
+          "流程分為<b>病肝切除期、無肝期、新肝期</b>：門靜脈夾閉後進入無肝期，解除腔靜脈阻斷並使移植肝再灌流後進入新肝期",
+          "病肝切除期的主要挑戰為腹水引流、側枝與沾黏造成的大出血、稀釋性凝血障礙、低體溫及酸鹼／電解質變化",
+          "無肝期無肝臟代謝與凝血因子生成；t-PA 缺乏肝臟清除且 PAI 不足，可能開始出現纖溶亢進",
+          "再灌流時常見<b>鉀與氫離子上升、前負荷增加、SVR 與血壓下降</b>；PRS 多發生於 1–5 分鐘內，可能合併急性肺高壓、心律不整或循環崩潰",
+          "再灌流後注意心內／肺血栓、腔靜脈或門靜脈出血；TEE 有助迅速區分血栓、右心衰竭及其他原因",
+          "移植肝開始運作的線索包括鈣需求下降、酸血改善、尿量及核心體溫上升與膽汁產生"
+        ],
+        drug:[
+          "目前沒有證據顯示特定維持麻醉方案可改善移植肝功能；可採低至中濃度揮發性麻醉合併 opioid，或以 propofol TIVA 維持",
+          "肌鬆可用 cisatracurium 或 rocuronium 並依 TOF 滴定；cisatracurium 為器官非依賴性清除，rocuronium 在無肝期清除下降、再灌流後隨移植肝功能恢復",
+          "輸血與凝血因子應限於<b>臨床顯著出血</b>並依 ROTEM／TEG 或實驗室檢查導向，不建議預防性補充",
+          "抗纖溶藥僅在顯著出血且懷疑或證實纖溶亢進時使用；不支持常規預防性給藥"
+        ],
+        emergence:[
+          "拔管時機沒有單一標準；血流動力穩定、移植肝功能良好且無持續出血者，可考慮手術室內或早期拔管",
+          "若計畫早期拔管，需確認肌鬆完整逆轉；使用 rocuronium 時可依阻斷深度考慮 sugammadex"
+        ],
+        postop:[
+          "多數病人於 ICU 監測血流動力、代謝恆定、尿量、凝血與出血，並以連續肝功能檢查追蹤早期移植肝功能",
+          "疼痛可採 opioid 為主的多模式策略；合併腎功能異常時 morphine 須審慎，硬膜外通常受既存凝血障礙限制",
+          "早期警訊包括出血、感染、膽道併發症、血管栓塞、早期移植肝功能障礙與 primary nonfunction"
+        ],
+        flags:[
+          "病肝切除期大量出血、稀釋性凝血障礙、低體溫與 citrate 相關低血鈣",
+          "完整 IVC 阻斷造成前負荷驟降、嚴重低血壓或右心衰竭",
+          "再灌流症候群、高血鉀、酸血症、急性肺高壓與心律不整",
+          "心內血栓或肺栓塞造成循環崩潰；必要時以 TEE 快速診斷",
+          "持續出血、早期 graft dysfunction 或 primary nonfunction"
+        ]
+      },
+      {
+        tag:"UpToDate", cls:"uptodate", label:"UpToDate 臨床主題重點", note:"Liver transplantation: Anesthetic management",
+        preop:[
+          "切皮前確認<b>可靠的大口徑靜脈通路、血品、快速輸血裝置、升壓劑與 POC 檢驗</b>均可立即使用",
+          "慢性低 SVR 由交感活性與高心輸出代償；誘導抑制交感後可能嚴重低血壓，propofol 通常減量並同步準備升壓劑",
+          "感染預防性抗生素於切皮前依院內腹部／膽道手術 protocol 給予",
+          "免疫抑制藥依移植中心 protocol；許多中心在無肝期給 steroid，使再灌流時血中濃度達高點"
+        ],
+        airway:[
+          "禁食時間不足或中重度腹水造成腹壓上升時，採<b>RSI 與 ETT</b>並加強防吸入措施",
+          "無高血鉀時可用 succinylcholine；cisatracurium 不經肝代謝但起效較慢，是否適合 RSI 需依情境判斷",
+          "血流動力不穩者可考慮 etomidate、ketamine 或 opioid-based induction，避免誘導後 SVR 與 CO 同時下降",
+          "放置 NG 與 TEE 探頭時充分潤滑、輕柔操作，以降低食道靜脈瘤相關損傷風險"
+        ],
+        monitor:[
+          "許多中心使用<b>兩條動脈導管</b>；第二處常選股動脈，因高劑量升壓劑或牽開器壓迫鎖骨下動脈時，橈動脈壓可能低估中央壓力",
+          "CVC 用於輸液、升壓劑及 CVP 趨勢；CVP 不能單獨判斷容量，但其方向變化可反映門脈壓與右心負荷",
+          "PAC 可監測 CO、PA pressure、PVR 與 SvO₂；TEE 用於鑑別低血容量、低 SVR、左右心衰竭、缺血、心包填塞與空氣／血栓栓塞",
+          "POC 反覆追蹤 Hb、ABG／pH、lactate、K、Na、ionized Ca、glucose，以及 TEG／ROTEM；檢驗頻率依階段與出血調整"
+        ],
+        hemo:[
+          "全程 MAP 通常維持 <b>≥65–75 mmHg</b>；慢性高血壓者可選更高目標，常需 norepinephrine，血管擴張明顯時加 vasopressin",
+          "一般以低至正常 CVP <b>7–10 mmHg</b>減少剝離期靜脈出血；完整腔靜脈夾閉時可能需 10–15 mmHg 才能維持穩定",
+          "不建議一味追求 CVP &lt;5 mmHg；低容量會造成低血壓與器官低灌流，過度補液又會增加門脈壓、出血與右心衰竭風險",
+          "維持液偏好平衡型晶體液；大量腹水流失以 5% albumin 回補，已有臨床凝血障礙者可依情況改用 FFP"
+        ],
+        intraop:[
+          "病肝切除期：放腹水時同步回補、維持 euvolemia 與血壓；後腹膜／IVC 周圍出血可能不明顯，須同步追蹤 Hb 與手術進度",
+          "無肝期：乳酸無法由肝清除，酸血與高血鉀會加劇；UpToDate 建議約進入後 15–20 分鐘抽血，之後依狀況每 15–20 分鐘追蹤",
+          "再灌流前將 K 盡量調至 <b>&lt;4.0–4.5 mEq/L</b>，確認酸鹼、游離鈣、溫度、血壓與急救藥均已準備",
+          "再灌流時 IVC 回流使前負荷增加，portal reperfusion 又帶入酸性代謝物與發炎介質；須預防及立即處理低血壓、肺血管收縮與 RV failure",
+          "PRS 定義為再灌流後 5 分鐘內 MAP 下降 &gt;30% 且持續 &gt;1 分鐘；若快速處置仍不穩，可與外科討論重新夾閉 portal vein",
+          "新肝期若灌流與功能良好，通常可見 lactate、升壓劑需求與凝血逐漸改善；持續惡化要找低 CO、血管吻合或 graft dysfunction"
+        ],
+        drug:[
+          "維持可使用吸入麻醉或 TIVA；末期肝病對揮發性麻醉的 MAC 需求較低，propofol 雖不一定需大幅調整劑量，但藥效敏感度較高、甦醒可能延遲",
+          "RBC 輸血通常以 Hb &lt;7–8 g/dL 為參考；持續或預期大量出血、容量狀況不穩時可採較寬鬆門檻，但需依病人與院內 protocol 個別化",
+          "不要只因 INR 升高就輸 FFP；依臨床出血及 TEG／ROTEM 決定 FFP／PCC、fibrinogen／cryo 與 platelet",
+          "platelet 通常延至 hepatic artery anastomosis 完成後再評估；吻合脆弱時即使血小板低也要權衡血栓風險",
+          "TXA／EACA 用於 TEG／ROTEM 顯示纖溶亢進或瀰漫性微血管出血，不作無指標的常規補充"
+        ],
+        emergence:[
+          "血流動力穩定、無嚴重共病或術中併發症、graft 品質可接受且無持續出血者，可考慮手術室立即或數小時內早期拔管",
+          "預期 36 小時內需再探查、持續出血、graft 功能疑慮或嚴重術中事件者不適合早期拔管"
+        ],
+        postop:[
+          "持續出血時以 TEG／ROTEM 區分凝血障礙與外科止血問題；大量輸血後仍無法控制，可採 packing 與暫時關腹的 damage-control 策略",
+          "移植肝功能延遲表現為 lactate 上升及凝血惡化；立即排除 hepatic artery／portal vein 吻合問題及低 CO 導致的肝動脈低灌流",
+          "早期 Doppler ultrasound 評估 portal vein 與 hepatic artery 流速；真正 nonfunctioning graft 可能需緊急重新列入移植",
+          "術後止痛可採 PCA opioid 合併多模式止痛；硬膜外僅限無嚴重凝血障礙的審慎選擇個案"
+        ],
+        flags:[
+          "PRS：MAP 驟降、CVP／PA pressure／PVR 上升、RV failure、心律不整或心跳停止",
+          "高血鉀與嚴重酸血症，尤其在再灌流及大量輸入庫血時",
+          "過度矯正凝血造成 hepatic artery anastomosis 血栓；再灌流後亦可能出現 hyperfibrinolysis",
+          "肺或心內血栓：以 TEE 快速確認；大型有症狀血栓可致致命性循環崩潰",
+          "持續出血、延遲 graft function、血管吻合低流量或 primary nonfunction"
+        ]
+      },
+      {
+        tag:"其他文獻", cls:"otherlit", label:"其他文獻重點", note:"Guideline、consensus、review 與重要觀察性研究",
+        preop:[
+          "<b>Guideline／consensus：</b>ERAS 建議術前篩檢並處理營養不良；快速通道的適用性仍需依受贈者、移植肝與中心條件個別化",
+          "<b>Guideline：</b>確認是否有 hepatopulmonary syndrome（HPS）或 portopulmonary hypertension（POPH），兩者的評估與移植風險不同",
+          "<b>證據限制：</b>HPS／POPH 指引多建立於病例報告、小型病例系列、登錄資料與專家意見，不能等同高品質 RCT 證據",
+          "<b>Review：</b>慢性低血鈉須列入周術期計畫；避免 24 小時內血鈉上升 ≥8 mEq/L，以降低 osmotic demyelination 風險"
+        ],
+        monitor:[
+          "<b>Consensus：</b>肝移植血流動力不穩定可能同時來自血管擴張／vasoplegia、心肌病、心律不整、左右心室功能障礙、手術操作與移植肝因素，需依機轉評估",
+          "<b>Review／expert recommendations：</b>凝血評估須同時考量出血與血栓；傳統凝血數值不能完整反映末期肝病的 rebalanced hemostasis",
+          "臨床出血時以 TEG／ROTEM 等黏彈性檢查配合手術視野與常規檢驗，進行目標導向血品／凝血因子治療"
+        ],
+        intraop:[
+          "<b>Consensus：</b>低血壓處理先辨識容量、SVR、心輸出與右心負荷，再處理可逆原因；沒有單一數值或藥物可涵蓋所有階段",
+          "<b>觀察性研究：</b>PRS 與較高 30 日 graft failure 風險相關；donor age、BMI、moderate macrosteatosis 與 cold ischemia time 為該研究的獨立預測因子",
+          "<b>觀察性研究：</b>單中心資料顯示 piggyback 技術與較低的術後較高級別 AKI 相關，但一年腎功能未見差異；此結果不能直接證明因果"
+        ],
+        drug:[
+          "<b>Review／expert recommendations：</b>血品與凝血因子治療應由臨床出血、黏彈性檢查與實驗室資料共同導向，避免只為矯正異常檢驗值而經驗性輸注",
+          "抗纖溶、fibrinogen concentrate、PCC 或 platelet 的使用須同時權衡出血與血栓風險，並依院內 massive transfusion／coagulation protocol"
+        ],
+        emergence:[
+          "<b>ERAS guideline／ILTS consensus：</b>條件合適者可考慮早期拔管；評估須納入血流動力、體溫、出血、氧合、移植肝功能與手術複雜度"
+        ],
+        postop:[
+          "<b>ERAS guideline／ILTS consensus：</b>鼓勵早期口服攝取、活動與多模式平衡止痛；實際時機依移植中心 protocol 與個別風險調整",
+          "ERAS 建議不常規預防性放置鼻胃管或腹腔引流，但是否適用仍須配合手術與院內流程",
+          "上述 ERAS 建議主要來自系統性文獻整理與共識程序，部分措施仍需前瞻性研究確認"
+        ],
+        flags:[
+          "慢性低血鈉過快矯正：osmotic demyelination syndrome",
+          "PRS 後持續循環不穩或 graft function 惡化",
+          "凝血治療後仍需警覺 hepatic artery／portal vein 或心肺血栓",
+          "研究關聯不等於因果：手術技術與 PRS 風險資料不可取代個別臨床判斷"
+        ]
+      }
+    ],
     refs:[
       "Brustia, R., Monsel, A., Skurzak, S., et al. (2022). Guidelines for perioperative care for liver transplantation: Enhanced Recovery After Surgery (ERAS) recommendations. Transplantation, 106(3), 552–561.",
       "Bezinover, D., Mukhtar, A., Wagener, G., et al. (2021). Hemodynamic instability during liver transplantation in patients with end-stage liver disease: A consensus document from ILTS, LICAGE, and SATA. Transplantation, 105(10), 2184–2200.",
@@ -4639,7 +4911,9 @@ const SURGERIES = [
       "Bezinover, D., Dirkmann, D., Findlay, J., et al. (2018). Perioperative coagulation management in liver transplant recipients. Transplantation, 102(4), 578–592.",
       "Leise, M., & Cardenas, A. (2018). Hyponatremia in cirrhosis: Implications for liver transplantation. Liver Transplantation, 24(11), 1612–1621.",
       "Bekki, Y., Myers, B., Wang, R., et al. (2022). Postreperfusion syndrome in liver transplantation: Outcomes, predictors, and application for recipient selection. Clinical Transplantation, 36(4), e14587.",
-      "Hannon, V., Kothari, R. P., Zhang, L., et al. (2020). The association between vena cava implantation technique and acute kidney injury after liver transplantation. Transplantation, 104(11), e308–e316."
+      "Hannon, V., Kothari, R. P., Zhang, L., et al. (2020). The association between vena cava implantation technique and acute kidney injury after liver transplantation. Transplantation, 104(11), e308–e316.",
+      "Wray, C. (2025). Anesthesia for abdominal organ transplantation. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's Anesthesia (10th ed., pp. 1833–1870.e8). Elsevier. https://doi.org/10.1016/B978-0-323-93592-0.00056-0",
+      "Wagener, G. (2025, May 13). Liver transplantation: Anesthetic management. In M. F. O'Connor & N. A. Nussmeier (Eds.), UpToDate. Literature review current through August 2026; retrieved September 13, 2026."
     ],
     collapse:true
   },
@@ -4740,6 +5014,76 @@ const SURGERIES = [
       "Panhuizen, I. F., Gold, S. J. A., Buerkle, C., et al. (2015). Efficacy, safety and pharmacokinetics of sugammadex 4 mg kg-1 for reversal of deep neuromuscular blockade in patients with severe renal impairment. British Journal of Anaesthesia, 114(5), 777–784."
     ],
     collapse:true
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"胃鏡／大腸鏡",
+    en:"Gastroscopy / Colonoscopy",
+    summary:{ position:"依檢查需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"電腦斷層檢查",
+    en:"Computed Tomography (CT)",
+    summary:{ position:"依檢查需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"ICRT",
+    en:"ICRT",
+    summary:{ position:"依檢查需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"心臟電燒－心房顫動",
+    en:"RFA – Atrial Fibrillation",
+    summary:{ position:"依術式需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"心臟電燒－心房撲動",
+    en:"RFA – Atrial Flutter",
+    summary:{ position:"依術式需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"心臟電燒－陣發性上心室頻脈",
+    en:"RFA – PSVT",
+    summary:{ position:"依術式需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"心臟脈衝場消融－心房顫動",
+    en:"PFA – Atrial Fibrillation",
+    summary:{ position:"依術式需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"內視鏡逆行性膽胰管攝影",
+    en:"Endoscopic Retrograde Cholangiopancreatography (ERCP)",
+    summary:{ position:"依檢查需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"磁振造影檢查",
+    en:"Magnetic Resonance Imaging (MRI)",
+    summary:{ position:"依檢查需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
+  },
+  {
+    updated:"2026-09-13",
+    specialty:"外區麻醉",
+    name:"血管攝影／經導管動脈栓塞術",
+    en:"Angiography / Transarterial Embolization (TAE)",
+    summary:{ position:"依術式需求", posType:"supine", time:"待補", blood:"待補", airway:"待補" }
   }
 ];
 
@@ -4768,10 +5112,47 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v11.2";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-09-12";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v11.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-09-13";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-13",
+    note: "肝臟移植圖示依 CABG 原圖風格重新繪製。",
+    items: [
+      { t:"肝臟移植：改用 CABG 原圖作直接風格基準，調整為細棕灰輪廓、粉彩層疊筆觸、低對比高光與較緊湊構圖，並保留透明背景及移植吻合縫線", en:"Liver Transplantation (LT)" }
+    ]
+  },
+  {
+    date: "2026-09-13",
+    note: "肝臟移植新增同系列莫蘭迪色醫學圖示。",
+    items: [
+      { t:"肝臟移植：新增透明背景肝臟卡通圖，以 IVC、門靜脈、肝動脈及血管吻合縫線呈現移植特徵，風格與心臟術式圖示一致", en:"Liver Transplantation (LT)" }
+    ]
+  },
+  {
+    date: "2026-09-13",
+    note: "肝臟移植新增「其他文獻」獨立來源區塊。",
+    items: [
+      { t:"肝臟移植：新增可個別篩選的其他文獻標籤，整理 ERAS／ILTS guideline、consensus、review 與重要觀察性研究，並明確標示證據類型與限制", en:"Liver Transplantation (LT)" }
+    ]
+  },
+  {
+    date: "2026-09-13",
+    note: "肝臟移植新增 Miller 與 UpToDate 獨立來源區塊。",
+    items: [
+      { t:"肝臟移植：保留原有院內筆記，新增可個別篩選的 Miller 與 UpToDate 標籤，涵蓋術前、氣道、監測、血流動力、四階段、凝血、甦醒、術後與併發症", en:"Liver Transplantation (LT)" },
+      { t:"肝臟移植：新增兩筆原始資料來源，並將使用者提供的 Miller 與 UpToDate PDF 保存於 references 資料夾", en:"Liver Transplantation (LT)" }
+    ]
+  },
+  {
+    date: "2026-09-13",
+    note: "外區麻醉新增檢查與術式卡片；科別按鈕沿用莫蘭迪灰藍色，臨床內容待後續補入。",
+    items: [
+      { t:"新增胃鏡／大腸鏡、CT、ICRT、ERCP、MRI 與 Angio（TAE）", en:"Gastroscopy / Colonoscopy" },
+      { t:"心臟電燒新增 RFA–Atrial Fibrillation、RFA–Atrial Flutter、RFA–PSVT 與 PFA–Atrial Fibrillation 四張獨立卡片", en:"RFA – Atrial Fibrillation" }
+    ]
+  },
   {
     date: "2026-09-12",
     note: "二尖瓣膜手術的 UpToDate 來源大幅擴充。",
@@ -6049,7 +6430,8 @@ function renderChips(){
   el("chips").innerHTML = specialties.map(sp =>{
     const cls = (sp===EXAM_CHIP || sp===QUIZ_CHIP) ? "chip study"
               : (sp===CRISIS_CHIP) ? "chip crisis"
-              : (sp===TX_SPEC) ? "chip tx" : "chip";
+              : (sp===TX_SPEC) ? "chip tx"
+              : (sp===NORA_SPEC) ? "chip nora" : "chip";
     const isN = specHasNew(sp);
     return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
   }).join("");
@@ -7414,11 +7796,11 @@ function srcChips(s, k){
   if(!lits.length) return '';
   const toggle = hasSourceToggle(s);
   if(toggle){
-    const own = (s[k] && s[k].length) ? `<button type="button" class="src-chip note src-toggle" data-src="note" aria-pressed="false" onclick="return toggleSource(event,this)">筆記</button>` : '';
+    const own = ((s[k] && s[k].length) || s.showEmptyNote) ? `<button type="button" class="src-chip note src-toggle" data-src="note" aria-pressed="false" onclick="return toggleSource(event,this)">筆記</button>` : '';
     const ext = lits.filter(L=>L[k] && L[k].length).map(L=>`<button type="button" class="src-chip ${L.cls||''} src-toggle" data-src="${L.cls||L.tag}" aria-pressed="false" onclick="return toggleSource(event,this)">${L.tag}</button>`).join('');
     return `<span class="src-chips">${own}${ext}</span>`;
   }
-  const own = (s[k] && s[k].length) ? `<span class="src-chip note">筆記</span>` : '';
+  const own = ((s[k] && s[k].length) || s.showEmptyNote) ? `<span class="src-chip note">筆記</span>` : '';
   return `<span class="src-chips">${own}${lits.filter(L=>L[k] && L[k].length).map(L=>`<span class="src-chip ${L.cls||''}">${L.tag}</span>`).join('')}</span>`;
 }
 function flagBoxHtml(s){
