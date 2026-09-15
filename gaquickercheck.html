@@ -390,6 +390,35 @@ details.fold-flag[open]>summary{margin-bottom:9px}
 .step-fig{display:block;margin:9px 0 2px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:8px}
 .step-fig img{display:block;width:100%;height:auto;max-width:440px;margin:0 auto;border-radius:8px}
 .step-fig.wide img{max-width:100%}
+/* 螢光筆(個人標記) */
+mark.umk{color:inherit;border-radius:3px;padding:0 1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.umk-y{background:rgba(245,212,80,.55)}
+.umk-g{background:rgba(143,201,128,.5)}
+.umk-p{background:rgba(239,146,172,.45)}
+.umk-b{background:rgba(124,176,232,.45)}
+.pen-btn{margin-left:auto;align-self:center;font-family:inherit;font-size:14px;line-height:1;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 9px;filter:grayscale(.6);opacity:.75}
+.pen-btn[aria-pressed="true"]{filter:none;opacity:1;background:#FBF1C9;border-color:#E3CF86;box-shadow:0 0 0 2px rgba(227,207,134,.35)}
+.pen-row{display:flex;justify-content:flex-end;margin:0 0 6px}
+.pen-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);z-index:60;
+  width:min(560px,calc(100% - 20px));background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 6px 22px rgba(60,50,40,.18);padding:8px 10px 10px}
+.pen-bar[hidden]{display:none}
+.pen-tip{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-bottom:6px}
+.pen-tools{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.pen-tools button{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;
+  border:1px solid var(--line);border-radius:10px;padding:7px 11px;min-width:44px;background:var(--surface);
+  -webkit-user-select:none;user-select:none}
+.pen-tools .pen-sw[aria-pressed="true"],.pen-tools .pen-erase[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:1px}
+.pen-tools .pen-done{background:var(--sage-tint);border-color:#C7D0C4}
+.pen-tools .pen-sw.umk-y{background:rgba(245,212,80,.55)}
+.pen-tools .pen-sw.umk-g{background:rgba(143,201,128,.5)}
+.pen-tools .pen-sw.umk-p{background:rgba(239,146,172,.45)}
+.pen-tools .pen-sw.umk-b{background:rgba(124,176,232,.45)}
+body.pen-on #detail{padding-bottom:110px}
+body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,60,.5)}
+.pen-stale{margin:6px 0 10px;padding:8px 10px;border-radius:9px;background:#FBF1C9;font-size:13px;color:#6B5722;
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
 /* 通用「點擊展開說明」按鈕與面板 */
 .info-btn{display:inline-flex;align-items:center;margin-left:6px;font-family:inherit;font-size:12.5px;
@@ -5346,10 +5375,17 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v12.0";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v12.1";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-09-15";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-15",
+    note: "新增個人螢光筆標記功能。",
+    items: [
+      "術式詳情頁每個內容區塊右上角新增 🖍 螢光筆:長按選取文字後點顏色即可標示(黃、綠、粉、藍),標記只存在自己的裝置,會隨「匯出／匯入筆記」一起備份"
+    ]
+  },
   {
     date: "2026-09-15",
     note: "CPB 插管與管理卡新增『其他文獻』標籤。",
@@ -6320,10 +6356,10 @@ const BACKUP_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000; /* 按「之後再說」暫停
 let META = { lastExport: 0, snoozeUntil: 0 };
 
 function noteKey(s){ return String(s.en || s.name || "").trim().toLowerCase().replace(/\s+/g," "); }
-function blankNote(){ return { text:"", photos:[], ts:0 }; }
+function blankNote(){ return { text:"", photos:[], marks:[], ts:0 }; }
 function getNote(s){ return NOTES[noteKey(s)] || blankNote(); }
 function hasNote(s){
-  const chk = x => { const n = NOTES[noteKey(x)]; return !!(n && (n.text.trim() || n.photos.length)); };
+  const chk = x => { const n = NOTES[noteKey(x)]; return !!(n && (n.text.trim() || n.photos.length || (n.marks && n.marks.length))); };
   return chk(s) || (s.variants || []).some(chk);
 }
 
@@ -6348,7 +6384,7 @@ function lsWrite(obj){
     const slim = {};
     Object.keys(obj).forEach(k => {
       if(k === META_KEY) return;
-      slim[k] = { text: obj[k].text, photos: [], ts: obj[k].ts };
+      slim[k] = { text: obj[k].text, photos: [], marks: obj[k].marks || [], ts: obj[k].ts };
     });
     localStorage.setItem(LS_KEY, JSON.stringify(slim));
   }catch(e){}
@@ -6444,7 +6480,7 @@ function askPersist(){
 
 async function saveNote(key, note, statusMsg){
   note.ts = Date.now();
-  if(!note.text.trim() && !note.photos.length){
+  if(!note.text.trim() && !note.photos.length && !(note.marks && note.marks.length)){
     delete NOTES[key];
     await storeDel(key);
   }else{
@@ -6604,7 +6640,7 @@ function bindNoteBox(s){
   });
   el("phInput").addEventListener("change", function(){ addPhotos(this); });
   el("noteClear").onclick = async () => {
-    if(!confirm("確定清除這台手術的所有筆記與照片?此動作無法復原。")) return;
+    if(!confirm("確定清除這台手術的所有筆記、照片與螢光標記?此動作無法復原。")) return;
     delete NOTES[key];
     await storeDel(key);
     ta.value = "";
@@ -6653,6 +6689,9 @@ async function importNotes(file){
         : (cur.text.trim() || incText);
       const seen = new Set(cur.photos.map(p => p.src));
       merged.photos = cur.photos.concat((inc.photos || []).filter(p => p && p.src && !seen.has(p.src)));
+      const curMarks = Array.isArray(cur.marks) ? cur.marks : [];
+      const markIds = new Set(curMarks.map(m => m.id));
+      merged.marks = curMarks.concat((Array.isArray(inc.marks) ? inc.marks : []).filter(m => m && m.id && m.q && !markIds.has(m.id)));
       NOTES[key] = merged;
       await saveNote(key, merged, "");
     }
@@ -6671,7 +6710,7 @@ async function initNotes(){
   NOTES = all;
   Object.keys(NOTES).forEach(k => {
     const n = NOTES[k] || {};
-    NOTES[k] = { text: String(n.text || ""), photos: Array.isArray(n.photos) ? n.photos : [], ts: n.ts || 0 };
+    NOTES[k] = { text: String(n.text || ""), photos: Array.isArray(n.photos) ? n.photos : [], marks: Array.isArray(n.marks) ? n.marks : [], ts: n.ts || 0 };
   });
   renderList();
   if(activeId != null) showDetail(activeId);
@@ -8069,15 +8108,322 @@ function flagBoxHtml(s){
   const body = (own.length && hasSourceToggle(s) ? `<div class="src-piece" data-src="note">${ownHtml}</div>` : ownHtml)
     + litBlocks(s,"flags");
   if(s.collapse) return `
-      <details class="flag-box fold-flag">
+      <details class="flag-box fold-flag" data-sec="flags">
         <summary>⚠ 重要併發症${srcChips(s,"flags")}</summary>
         ${body}
       </details>`;
   return `
-      <div class="flag-box">
+      <div class="flag-box" data-sec="flags">
         <h3>⚠ 重要併發症</h3>
         ${body}
       </div>`;
+}
+
+/* ============================================================
+   螢光筆(個人標記)
+   ------------------------------------------------------------
+   與個人筆記存在同一處(只在這台裝置),隨「匯出/匯入筆記」一起備份。
+   每筆標記 = { id, b:區塊代號, q:標示文字, p:前文, x:後文, c:顏色, t:時間 }
+   區塊代號 = 區塊 key + 來源(note / miller / uptodate / otherlit)。
+   內容改版後找不到原文的標記,會在個人筆記區提示為「已失效」。
+   ============================================================ */
+const PEN_COLORS = [
+  { c:"y", name:"黃" }, { c:"g", name:"綠" }, { c:"p", name:"粉" }, { c:"b", name:"藍" }
+];
+const PEN = { on:false, erase:false, color:"y", s:null, sel:null, collapsedAt:0 };
+
+function penMarks(s){ const n = NOTES[noteKey(s)]; return (n && Array.isArray(n.marks)) ? n.marks : []; }
+
+function penBoxes(){
+  const d = el("detail"); if(!d) return [];
+  const out = [];
+  d.querySelectorAll("[data-sec]").forEach(sec => {
+    const key = sec.dataset.sec;
+    const heads = [...sec.querySelectorAll(".src-h")];
+    if(!heads.length){
+      out.push({ id:key + "|note", box:sec, head:null });
+      return;
+    }
+    heads.forEach(h => {
+      const box = h.parentElement;
+      const src = box === sec ? "note"
+        : (box.dataset.src || ["miller","uptodate","otherlit"].find(c => box.classList.contains(c)) || "note");
+      out.push({ id:key + "|" + src, box, head:h });
+    });
+  });
+  return out;
+}
+
+function penNodes(box){
+  const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){
+      const p = n.parentElement;
+      if(!p || p.closest("[data-pen]") !== box) return NodeFilter.FILTER_REJECT;
+      if(!p.closest("ul") || p.closest(".info-btn, .pen-row, .pen-btn")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const a = []; let n; while((n = w.nextNode())) a.push(n);
+  return a;
+}
+
+function penLocate(text, m){
+  const hits = []; let i = text.indexOf(m.q);
+  while(i >= 0){ hits.push(i); i = text.indexOf(m.q, i + 1); }
+  if(!hits.length) return -1;
+  let best = hits[0], bs = -1;
+  hits.forEach(h => {
+    const pre = text.slice(0, h), suf = text.slice(h + m.q.length);
+    let sc = 0;
+    for(let k = 1; k <= (m.p||"").length && pre[pre.length-k] === m.p[m.p.length-k]; k++) sc++;
+    for(let k = 0; k < (m.x||"").length && suf[k] === m.x[k]; k++) sc++;
+    if(sc > bs){ bs = sc; best = h; }
+  });
+  return best;
+}
+
+function penWrap(box, s, e, m){
+  let base = 0;
+  penNodes(box).forEach(n => {
+    const len = n.length, ns = base, ne = base + len; base += len;
+    if(ne <= s || ns >= e) return;
+    let node = n;
+    const a = Math.max(s, ns) - ns, b = Math.min(e, ne) - ns;
+    if(b < len) node.splitText(b);
+    if(a > 0) node = node.splitText(a);
+    const mk = document.createElement("mark");
+    mk.className = "umk umk-" + m.c;
+    mk.dataset.mid = m.id;
+    node.parentNode.insertBefore(mk, node);
+    mk.appendChild(node);
+  });
+}
+
+function penRender(){
+  const d = el("detail"); if(!d || !PEN.s) return;
+  d.querySelectorAll("mark.umk").forEach(mk => {
+    const p = mk.parentNode;
+    while(mk.firstChild) p.insertBefore(mk.firstChild, mk);
+    p.removeChild(mk); p.normalize();
+  });
+  const boxes = {};
+  penBoxes().forEach(b => { boxes[b.id] = b.box; });
+  let stale = 0;
+  penMarks(PEN.s).forEach(m => {
+    const box = boxes[m.b];
+    if(!box){ stale++; return; }
+    const text = penNodes(box).map(n => n.data).join("");
+    const at = penLocate(text, m);
+    if(at < 0){ stale++; return; }
+    penWrap(box, at, at + m.q.length, m);
+  });
+  penStaleNote(stale);
+}
+
+function penStaleNote(n){
+  const nb = document.querySelector("#detail .note-box"); if(!nb) return;
+  let row = nb.querySelector(".pen-stale");
+  if(!n){ if(row) row.remove(); return; }
+  if(!row){
+    row = document.createElement("div");
+    row.className = "pen-stale";
+    const h = nb.querySelector("h3");
+    h ? h.insertAdjacentElement("afterend", row) : nb.prepend(row);
+  }
+  row.innerHTML = `🖍 有 ${n} 個螢光標記因內容更新找不到原本的文字,已無法顯示。<button type="button" class="note-btn ghost" onclick="penClearStale()">清除失效標記</button>`;
+}
+
+async function penClearStale(){
+  if(!PEN.s) return;
+  const boxes = {};
+  penBoxes().forEach(b => { boxes[b.id] = b.box; });
+  const keep = penMarks(PEN.s).filter(m => {
+    const box = boxes[m.b]; if(!box) return false;
+    const text = penNodes(box).map(n => n.data).join("");
+    return penLocate(text, m) >= 0;
+  });
+  await penSave(keep, "已清除失效標記");
+}
+
+async function penSave(marks, msg){
+  const key = noteKey(PEN.s);
+  const n = NOTES[key] || blankNote();
+  n.marks = marks;
+  await saveNote(key, n, msg);
+  penRender();
+}
+
+/* 把目前選取範圍換算成「區塊內的文字位置」 */
+function penRangeInfo(r){
+  const sn = r.startContainer.nodeType === 3 ? r.startContainer.parentElement : r.startContainer;
+  const box = sn && sn.closest && sn.closest("[data-pen]");
+  if(!box || !el("detail").contains(box)) return null;
+  const nodes = penNodes(box);
+  let base = 0, s = -1, e = -1;
+  nodes.forEach(n => {
+    if(r.intersectsNode(n)){
+      const a = n === r.startContainer ? r.startOffset : 0;
+      const b = n === r.endContainer ? r.endOffset : n.length;
+      if(s < 0) s = base + a;
+      e = base + b;
+    }
+    base += n.length;
+  });
+  if(s < 0 || e <= s) return null;
+  const text = nodes.map(n => n.data).join("");
+  while(s < e && /\s/.test(text[s])) s++;
+  while(e > s && /\s/.test(text[e-1])) e--;
+  if(e <= s) return null;
+  return { box, bid:box.dataset.pen, s, e, text };
+}
+
+function penCurrentSel(){
+  const sel = window.getSelection();
+  if(sel && sel.rangeCount && !sel.isCollapsed){
+    const info = penRangeInfo(sel.getRangeAt(0));
+    if(info) return info;
+  }
+  if(PEN.sel && (!PEN.collapsedAt || Date.now() - PEN.collapsedAt < 1200)) return PEN.sel;
+  return null;
+}
+
+function penClearSel(){
+  PEN.sel = null; PEN.collapsedAt = 0;
+  try{ window.getSelection().removeAllRanges(); }catch(e){}
+}
+
+async function penApply(color){
+  PEN.color = color;
+  PEN.erase = false;
+  penBarState();
+  const info = penCurrentSel();
+  if(!info){ penTip("先長按選取要標示的文字,再點顏色"); return; }
+  const q = info.text.slice(info.s, info.e);
+  const m = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    b: info.bid, q,
+    p: info.text.slice(Math.max(0, info.s - 16), info.s),
+    x: info.text.slice(info.e, info.e + 16),
+    c: color, t: Date.now()
+  };
+  penClearSel();
+  await penSave(penMarks(PEN.s).concat([m]), "已儲存螢光標記");
+  penTip("已標示");
+}
+
+async function penErase(){
+  const info = penCurrentSel();
+  if(info){
+    const rm = new Set();
+    info.box.querySelectorAll("mark.umk").forEach(mk => {
+      if(mk.closest("[data-pen]") !== info.box) return;
+      /* 以文字位置判斷是否與選取範圍重疊 */
+      let base = 0, ms = -1, me = -1;
+      penNodes(info.box).forEach(n => {
+        if(mk.contains(n)){ if(ms < 0) ms = base; me = base + n.length; }
+        base += n.length;
+      });
+      if(ms < info.e && me > info.s) rm.add(mk.dataset.mid);
+    });
+    penClearSel();
+    if(!rm.size){ penTip("選取範圍內沒有標記"); return; }
+    await penSave(penMarks(PEN.s).filter(m => !rm.has(m.id)), "已移除螢光標記");
+    penTip("已移除");
+    return;
+  }
+  PEN.erase = !PEN.erase;
+  penBarState();
+  penTip(PEN.erase ? "橡皮擦:點一下要移除的標記" : "選取文字後點顏色");
+}
+
+function penTip(t){ const x = el("penTip"); if(x) x.textContent = t; }
+
+function penBarState(){
+  const bar = el("penBar"); if(!bar) return;
+  bar.hidden = !PEN.on;
+  bar.querySelectorAll(".pen-sw").forEach(b =>
+    b.setAttribute("aria-pressed", (!PEN.erase && b.dataset.c === PEN.color) ? "true" : "false"));
+  const er = bar.querySelector(".pen-erase");
+  if(er) er.setAttribute("aria-pressed", PEN.erase ? "true" : "false");
+  document.querySelectorAll("#detail .pen-btn").forEach(b => b.setAttribute("aria-pressed", PEN.on ? "true" : "false"));
+  document.body.classList.toggle("pen-on", PEN.on);
+  document.body.classList.toggle("pen-erasing", PEN.on && PEN.erase);
+}
+
+function penToggle(ev){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  PEN.on = !PEN.on;
+  PEN.erase = false;
+  penClearSel();
+  penBarState();
+  if(PEN.on) penTip("長按選取文字,再點顏色");
+  return false;
+}
+
+function penEnsureBar(){
+  if(el("penBar")) return;
+  const bar = document.createElement("div");
+  bar.id = "penBar";
+  bar.className = "pen-bar";
+  bar.hidden = true;
+  bar.innerHTML = `
+    <div class="pen-tip" id="penTip">長按選取文字,再點顏色</div>
+    <div class="pen-tools">
+      ${PEN_COLORS.map(x => `<button type="button" class="pen-sw umk-${x.c}" data-c="${x.c}" aria-pressed="false">${x.name}</button>`).join("")}
+      <button type="button" class="pen-erase" aria-pressed="false">擦除</button>
+      <button type="button" class="pen-done">完成</button>
+    </div>`;
+  document.body.appendChild(bar);
+  /* 按下時不讓選取範圍消失(桌機) */
+  bar.addEventListener("mousedown", e => e.preventDefault());
+  bar.querySelectorAll(".pen-sw").forEach(b => b.addEventListener("click", () => penApply(b.dataset.c)));
+  bar.querySelector(".pen-erase").addEventListener("click", penErase);
+  bar.querySelector(".pen-done").addEventListener("click", () => { if(PEN.on) penToggle(); });
+
+  document.addEventListener("selectionchange", () => {
+    if(!PEN.on) return;
+    const sel = window.getSelection();
+    if(!sel || !sel.rangeCount || sel.isCollapsed){
+      if(PEN.sel && !PEN.collapsedAt) PEN.collapsedAt = Date.now();
+      return;
+    }
+    const info = penRangeInfo(sel.getRangeAt(0));
+    if(info){ PEN.sel = info; PEN.collapsedAt = 0; }
+  });
+
+  /* 橡皮擦模式:點標記即移除 */
+  document.addEventListener("click", async e => {
+    if(!PEN.on || !PEN.erase) return;
+    const mk = e.target.closest && e.target.closest("#detail mark.umk");
+    if(!mk) return;
+    e.preventDefault(); e.stopPropagation();
+    const id = mk.dataset.mid;
+    await penSave(penMarks(PEN.s).filter(m => m.id !== id), "已移除螢光標記");
+    penTip("已移除,可繼續點其他標記");
+  }, true);
+}
+
+/* 每次開啟術式詳情時呼叫:放按鈕、套用既有標記 */
+function initPen(s){
+  PEN.s = s;
+  PEN.on = false; PEN.erase = false;
+  PEN.sel = null; PEN.collapsedAt = 0;
+  penEnsureBar();
+  penBoxes().forEach(b => {
+    b.box.setAttribute("data-pen", b.id);
+    const btn = `<button type="button" class="pen-btn" aria-pressed="false" title="螢光筆" onclick="return penToggle(event)">🖍</button>`;
+    if(b.head){
+      b.head.insertAdjacentHTML("beforeend", btn);
+    }else{
+      const row = document.createElement("div");
+      row.className = "pen-row";
+      row.innerHTML = btn;
+      const anchor = b.box.querySelector(":scope > .sec-tools") || b.box.querySelector(":scope > summary, :scope > h3");
+      anchor ? anchor.insertAdjacentElement("afterend", row) : b.box.prepend(row);
+    }
+  });
+  penRender();
+  penBarState();
 }
 
 let currentSurgery = null;
@@ -8105,13 +8451,13 @@ function showDetail(id, vi){
       : "";
     const body = `${own}${dia}${litBlocks(s,d.key)}${panel}`;
     if(fold) return `
-    <details class="section sec-fold ${d.cls}">
+    <details class="section sec-fold ${d.cls}" data-sec="${d.key}">
       <summary><span class="dot"></span>${d.label}${srcChips(s,d.key)}</summary>
       ${btn ? `<div class="sec-tools">${btn}</div>` : ""}
       ${body}
     </details>`;
     return `
-    <div class="section ${d.cls}">
+    <div class="section ${d.cls}" data-sec="${d.key}">
       <h3><span class="dot"></span>${d.label}${btn}</h3>
       ${body}
     </div>`;
@@ -8155,6 +8501,7 @@ function showDetail(id, vi){
   el("backBtn").onclick = back;
   el("backBtnBottom").onclick = back;
   bindNoteBox(s);
+  initPen(s);
   el("app").classList.add("stage-detail");
   renderList();
   el("detail").scrollTop = 0;
@@ -8232,6 +8579,7 @@ function stepBack(){
 /* 返回清單:收起詳情、回到頁面頂端 */
 function goBack(){
   activeVar = null;
+  if(typeof PEN !== "undefined" && PEN.on){ PEN.on = false; PEN.erase = false; penBarState(); }
   el("app").classList.remove("stage-detail");
   el("detail").scrollTop = 0;
   window.scrollTo(0,0);
@@ -8261,6 +8609,7 @@ function goBack(){
     live = false;
     if(e.touches.length !== 1) return;
     if(!el("app").classList.contains("stage-detail")) return;
+    if(typeof PEN !== "undefined" && PEN.on) return;   /* 螢光筆模式時不觸發滑動返回,避免選字時誤觸 */
     if(scrollableX(e.target)) return;
     x0 = e.touches[0].clientX;
     y0 = e.touches[0].clientY;
