@@ -27,8 +27,8 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v3.3";
-var TOOL_UPDATED = "2026-09-10";
+var TOOL_VERSION = "v3.5";
+var TOOL_UPDATED = "2026-09-15";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
 var BUILD_KEY  = "gacalc_build";
@@ -234,6 +234,16 @@ b.w{font-weight:700;color:var(--warn)}
   border:1px solid var(--line);border-radius:9px;padding:8px 18px;cursor:pointer}
 .calc-seg button[aria-pressed="true"]{background:var(--sage-tint);border-color:#BFCBBD;color:var(--ink)}
 .calc-seg .seg-hint{font-size:13.5px;color:var(--ink-soft)}
+.calc-seg[hidden]{display:none}
+/* TIVA 模型配色:Marsh 灰藍、Schnider 灰玫;Marsh 的 Cp/Ce 跟著灰藍 */
+#tSeg button[data-m]::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+  margin-right:8px;vertical-align:1px;background:var(--slate)}
+#tSeg button[data-m="schnider"]::before{background:var(--clay)}
+#tSeg button[data-m="marsh"][aria-pressed="true"],
+#tMode button[aria-pressed="true"]{background:var(--slate-tint);border-color:#C3CAD3;color:#4B5563}
+#tSeg button[data-m="schnider"][aria-pressed="true"]{background:var(--clay-tint);border-color:#D9C4BC;color:#6B4E46}
+#tOut[data-m="marsh"] .calc-cell.hi{background:var(--slate-tint);border-color:#C3CAD3}
+#tOut[data-m="schnider"] .calc-cell.hi{background:var(--clay-tint);border-color:#D9C4BC}
 .calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 132px;min-width:124px}
 .calc-f label{font-size:14px;font-weight:700;color:var(--ink-soft)}
 .calc-f input,.calc-f select{font:inherit;font-size:16.5px;color:var(--ink);background:var(--bg);
@@ -402,9 +412,11 @@ function bmiBand(b){
    Marsh 只吃體重;Schnider 吃年齡、身高、體重與性別(內建 James 淨體重公式)。
    James 公式在 BMI 過高時會反轉(男約 42、女約 35),此時算出的淨體重不減反增,
    幫浦速率被推高,有過量風險。
+   Marsh 在本院幫浦為 modified Marsh,可選 Cp 或 Ce;Ce 模式的 ke0 為 1.21/min
+   (到峰時間約 1.6 分鐘,Struys 2000)。同一個 Ce 數字,Marsh 與 Schnider 推出的量不同。
    ------------------------------------------------------------ */
 const TIVA_CAP = { M:42, F:35 };
-const TIVA_STATE = { model:null };   /* null = 跟著建議走;"marsh" / "schnider" = 使用者自選 */
+const TIVA_STATE = { model:null, mode:"cp" };   /* model:null = 跟著建議走;"marsh" / "schnider" = 使用者自選。mode:Marsh 的靶控 "cp" / "ce" */
 
 function tivaPick(sex, age, ht, wt){
   const r = calcAll(sex, ht, wt);
@@ -434,12 +446,18 @@ function tivaModelOf(o){
 }
 
 /* 產生四格內容 [標題, 數值, 說明] 與注意事項 */
-function tivaView(o, model){
+function tivaView(o, model, mode){
   const marsh = model === "marsh";
+  const mce = marsh && mode === "ce";
   const name = marsh ? "Marsh" : "Schnider";
+  const tgtV = marsh ? (mce ? "Ce 效應室" : "Cp 血漿") : "Ce 效應室";
+  const tgtH = marsh
+    ? (mce ? "modified Marsh,ke0 1.21/min;機器先把血漿衝高再回落,誘導推量約是 Cp 模式的 1.5 倍"
+           : "血漿先到目標,腦部約晚 2–3 分鐘才跟上;誘導推量較小")
+    : "中央室小,走血漿靶控誘導會偏慢";
   if(!o) return {
     rows: [["模型", name, "請先輸入年齡、身高與體重"],
-           ["靶控模式", "—", "—"],
+           ["靶控模式", tgtV, tgtH],
            ["幫浦輸入體重", "—", "—"],
            [marsh ? "校正體重 AdjBW" : "LBM(Schnider 內建)", "—", "—"]],
     warn: ""
@@ -466,9 +484,7 @@ function tivaView(o, model){
         : "實際體重,機器自己用身高年齡換算淨體重");
   const rows = [
     ["模型", name, fit],
-    ["靶控模式", marsh ? "Cp 血漿" : "Ce 效應室",
-      marsh ? "原始 Marsh 走血漿靶控;機器若為 modified Marsh 才走 Ce"
-            : "中央室小,走血漿靶控誘導會偏慢"],
+    ["靶控模式", tgtV, tgtH],
     ["幫浦輸入體重", wtV, wtH],
     marsh
       ? ["校正體重 AdjBW", na ? "—" : o.adj + " kg",
@@ -478,8 +494,11 @@ function tivaView(o, model){
                     : "James 公式;BMI 到 " + o.cap + " 就會反轉"]
   ];
   if(!warn && !na){
-    if(marsh && o.obese)      warn = "Marsh 只吃體重,肥胖者一定要改輸校正體重 " + o.adj + " kg,不要用實際體重";
+    if(marsh && o.obese)      warn = "Marsh 只吃體重,肥胖者一定要改輸校正體重 " + o.adj + " kg,不要用實際體重"
+                                   + (mce ? ";Ce 模式誘導推量更大,目標從低處開始" : "");
+    else if(mce && o.old)     warn = "Marsh 沒有年齡項,Ce 模式誘導推量又比 Cp 大,老年人目標先降 20–40%,誘導時盯緊血壓";
     else if(marsh && o.old)   warn = "Marsh 沒有年齡項,老年人同樣目標濃度會偏深,先降 20–40% 再慢慢加";
+    else if(mce)              warn = "Marsh Ce 與 Schnider Ce 的數字不能互換:同樣設 Ce 3,Marsh 誘導推的量通常較多,體重越重差越多";
     else if(o.old)            warn = "老年人目標濃度先降 20–40%,誘導慢一點,注意低血壓";
     else if(o.obese)          warn = "肥胖者誘導後容易低血壓與呼吸道問題,目標濃度慢慢往上加";
   }
@@ -515,8 +534,8 @@ function calcHtml(){
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   const tv = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
   const tvM = tivaModelOf(tv);
-  const tvV = tivaView(tv, tvM);
-  const tvNew = isNewItem({ updated:"2026-08-21" })
+  const tvV = tivaView(tv, tvM, TIVA_STATE.mode);
+  const tvNew = isNewItem({ updated:"2026-09-15" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   if(!FLUID_STATE.manual && CALC_STATE.wt>0) FLUID_STATE.wt = CALC_STATE.wt;
   if(!EBV_STATE.manual && CALC_STATE.wt>0) EBV_STATE.wt = CALC_STATE.wt;
@@ -600,7 +619,12 @@ function calcHtml(){
         <button type="button" data-m="schnider" aria-pressed="${tvM==="schnider"}">Schnider</button>
         <span class="seg-hint">已依上方年齡體重預選,可自行切換</span>
       </div>
-      <div class="calc-out" id="tOut">
+      <div class="calc-seg" id="tMode"${tvM==="marsh"?"":" hidden"}>
+        <span class="seg-hint">Marsh 靶控</span>
+        <button type="button" data-t="cp" aria-pressed="${TIVA_STATE.mode==="cp"}">Cp 血漿</button>
+        <button type="button" data-t="ce" aria-pressed="${TIVA_STATE.mode==="ce"}">Ce 效應室</button>
+      </div>
+      <div class="calc-out" id="tOut" data-m="${tvM}">
         ${tvV.rows.map((x,i)=>`
         <div class="calc-cell${i===0?" hi":""}">
           <div class="k">${x[0]}</div>
@@ -615,7 +639,8 @@ function calcHtml(){
       <div class="tool-scroll">
         <table class="tool-tbl">
           <tr><th>模型</th><th>機器用到的資料</th><th>靶控</th><th>什麼時候選它</th></tr>
-          <tr><td><b>Marsh</b></td><td>只有體重</td><td>Cp 血漿</td><td>一般成人;機器只有這個模型時</td></tr>
+          <tr><td><b>Marsh Cp</b></td><td>只有體重</td><td>Cp 血漿</td><td>一般成人;想要誘導推量小、慢慢加深時</td></tr>
+          <tr><td><b>Marsh Ce</b></td><td>只有體重(ke0 1.21/min)</td><td>Ce 效應室</td><td>一般成人想加快入睡;推量約是 Cp 的 1.5 倍</td></tr>
           <tr><td><b>Schnider</b></td><td>年齡、身高、體重、性別</td><td>Ce 效應室</td><td>年長、肥胖,或想走效應室靶控時</td></tr>
         </table>
       </div>
@@ -624,13 +649,14 @@ function calcHtml(){
         <table class="tool-tbl">
           <tr><th>情境</th><th>選誰</th><th>為什麼</th></tr>
           <tr><td>一般成人,BMI 未達 30</td><td>兩者皆可</td><td>差異不大,依機器預設;兩個模型都輸實際體重</td></tr>
+          <tr><td>用 Marsh 又想走 Ce</td><td><b>Marsh Ce</b></td><td>入睡較快;老年、低血容或心功能差者改 Cp 或 Schnider,目標往下修</td></tr>
           <tr><td>65 歲以上</td><td><b>Schnider</b></td><td>Marsh 沒有年齡項,同樣目標濃度會偏深</td></tr>
           <tr><td>BMI 30 以上、未到反轉點</td><td><b>Schnider</b></td><td>有淨體重校正;機器沒有 Schnider 時改用 Marsh,並輸校正體重</td></tr>
           <tr><td>男 BMI ≥ 42、女 ≥ 35</td><td><b>Marsh + 校正體重</b></td><td>Schnider 的淨體重公式在此反轉,速率反而被推高;有 Eleveld 就選 Eleveld</td></tr>
           <tr><td>未滿 16 歲</td><td>都不適用</td><td>改用小兒模型(Paedfusor、Kataria)</td></tr>
         </table>
       </div>
-      <div class="calc-note">常用目標濃度僅供起步參考:意識消失多落在 <b>Ce 2.5–3.5 µg/mL</b>;維持併用 remifentanil 約 <b>2.5–3.5</b>、單用 propofol 約 <b>3–6</b>;降到 <b>1.0–1.8</b> 附近多會甦醒。老年、低血容與心功能差者全部往下修。Remifentanil 的 Minto 模型同樣需要年齡與身高體重,體重以 LBW 設定。實際可用的模型與名稱以本院幫浦機型為準。</div>
+      <div class="calc-note">常用目標濃度僅供起步參考:意識消失多落在 <b>Ce 2.5–3.5 µg/mL</b>;維持併用 remifentanil 約 <b>2.5–3.5</b>、單用 propofol 約 <b>3–6</b>;降到 <b>1.0–1.8</b> 附近多會甦醒。老年、低血容與心功能差者全部往下修。這些經驗值多來自 Schnider Ce,<b>Marsh Ce 的同一數字推量較多</b>,換模型時不要直接照搬。Remifentanil 的 Minto 模型同樣需要年齡與身高體重,體重以 LBW 設定。實際可用的模型與名稱以本院幫浦機型為準。</div>
       </details>
     </div>
 
@@ -758,7 +784,7 @@ function calcHtml(){
     <div class="tool-box">
       <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
         <details class="refs-det">
-          <summary><span>文獻出處　References</span><span class="refs-num">12</span></summary>
+          <summary><span>文獻出處　References</span><span class="refs-num">13</span></summary>
           <ol>
             <li>Gross, J. B. (1983). Estimating allowable blood loss: Corrected for dilution. Anesthesiology, 58(3), 277–280.</li>
             <li>Holliday, M. A., &amp; Segar, W. E. (1957). The maintenance need for water in parenteral fluid therapy. Pediatrics, 19(5), 823–832.</li>
@@ -770,6 +796,7 @@ function calcHtml(){
             <li>Absalom, A. R., Mani, V., De Smet, T., &amp; Struys, M. M. R. F. (2009). Pharmacokinetic models for propofol: Defining and illuminating the devil in the detail. British Journal of Anaesthesia, 103(1), 26–37.</li>
             <li>Schnider, T. W., Minto, C. F., Gambus, P. L., et al. (1998). The influence of method of administration and covariates on the pharmacokinetics of propofol in adult volunteers. Anesthesiology, 88(5), 1170–1182.</li>
             <li>Marsh, B., White, M., Morton, N., &amp; Kenny, G. N. C. (1991). Pharmacokinetic model driven infusion of propofol in children. British Journal of Anaesthesia, 67(1), 41–48.</li>
+            <li>Struys, M. M., De Smet, T., Depoorter, B., et al. (2000). Comparison of plasma compartment versus two methods for effect compartment-controlled target-controlled infusion for propofol. Anesthesiology, 92(2), 399–406.</li>
             <li>Eleveld, D. J., Colin, P., Absalom, A. R., &amp; Struys, M. M. R. F. (2018). Pharmacokinetic-pharmacodynamic model for propofol for broad application in anaesthesia and sedation. British Journal of Anaesthesia, 120(5), 942–959.</li>
             <li>Nimmo, A. F., Absalom, A. R., Bagshaw, O., et al. (2019). Guidelines for the safe practice of total intravenous anaesthesia (TIVA): Joint guidelines from the Association of Anaesthetists and the Society for Intravenous Anaesthesia. Anaesthesia, 74(2), 211–224.</li>
           </ol>
@@ -788,7 +815,8 @@ function wireCalc(){
     const box = el("tOut"); if(!box) return;
     const o = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
     const m = tivaModelOf(o);
-    const v = tivaView(o, m);
+    box.dataset.m = m;
+    const v = tivaView(o, m, TIVA_STATE.mode);
     box.querySelectorAll(".calc-cell").forEach((c,i)=>{
       const row = v.rows[i]; if(!row) return;
       const k = c.querySelector(".k"); if(k) k.textContent = row[0];
@@ -799,6 +827,13 @@ function wireCalc(){
     if(seg) seg.querySelectorAll("button").forEach(b=>{
       b.setAttribute("aria-pressed", b.dataset.m === m ? "true" : "false");
     });
+    const md = el("tMode");
+    if(md){
+      md.hidden = m !== "marsh";
+      md.querySelectorAll("button").forEach(b=>{
+        b.setAttribute("aria-pressed", b.dataset.t === TIVA_STATE.mode ? "true" : "false");
+      });
+    }
     const w = el("tWarn");
     if(w) w.innerHTML = tivaWarnHtml(v);
   };
@@ -806,6 +841,10 @@ function wireCalc(){
   const seg = el("tSeg");
   if(seg) seg.querySelectorAll("button").forEach(b=>{
     b.addEventListener("click", ()=>{ TIVA_STATE.model = b.dataset.m; updTiva(); });
+  });
+  const mdSeg = el("tMode");
+  if(mdSeg) mdSeg.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{ TIVA_STATE.model = "marsh"; TIVA_STATE.mode = b.dataset.t; updTiva(); });
   });
 
   const upd = () => {
