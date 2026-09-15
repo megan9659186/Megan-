@@ -410,7 +410,7 @@ function bmiBand(b){
 /* ------------------------------------------------------------
    TIVA propofol TCI 模型選擇
    Marsh 只吃體重;Schnider 吃年齡、身高、體重與性別(內建 James 淨體重公式)。
-   James 公式在 BMI 過高時會反轉(男約 42、女約 35),此時算出的淨體重不減反增,
+   James 公式在 BMI 過高時會反轉(男約 42、女約 35),此時體重再增加,算出的淨體重不增反減,
    幫浦速率被推高,有過量風險。
    Marsh 在本院幫浦為 modified Marsh,可選 Cp 或 Ce;Ce 模式的 ke0 為 1.21/min
    (到峰時間約 1.6 分鐘,Struys 2000)。同一個 Ce 數字,Marsh 與 Schnider 推出的量不同。
