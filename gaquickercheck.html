@@ -232,7 +232,7 @@ button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
   background:var(--surface);border:1px solid var(--line);border-radius:10px;
   color:var(--sage);font-size:15.5px;font-weight:500}
 .back-bottom:hover{border-color:var(--sage);background:var(--sage-tint)}
-.d-title{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.3px}
+.d-title{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.3px;overflow-wrap:anywhere;-webkit-hyphens:auto;hyphens:auto}
 .d-title-zh{font-size:16.5px;color:var(--ink-soft);margin-top:2px}
 .d-en{color:var(--ink-soft);font-size:13.5px;margin-top:6px;letter-spacing:.4px}
 .d-summary{
@@ -5651,10 +5651,17 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v13.4";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v13.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-09-23";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-09-23",
+    note: "修正術式英文名稱過長時被卡通圖蓋住。",
+    items: [
+      "所有術式:英文名稱過長時(如 ERCP)會自動斷行,不再與標題右側卡通圖重疊"
+    ]
+  },
   {
     date: "2026-09-23",
     note: "ICRT、ERCP、MRI、心房撲動電燒新增卡通示意圖。",
@@ -8841,7 +8848,7 @@ function showDetail(id, vi){
       ${vars ? `<div class="v-crumb">${base.en}　${base.name}</div>` : ""}
       <div class="d-title-row">
         <div class="d-title-main">
-          <div class="d-title">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
+          <div class="d-title" lang="en">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
           <div class="d-title-zh">${s.name}</div>
           <div class="d-en">${s.specialty}</div>
         </div>
@@ -8900,7 +8907,7 @@ function showVariantPick(id){
     <div class="d-head">
       <div class="d-title-row">
         <div class="d-title-main">
-          <div class="d-title">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
+          <div class="d-title" lang="en">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
           <div class="d-title-zh">${s.name}</div>
           <div class="d-en">${s.specialty}</div>
         </div>
