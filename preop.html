@@ -56,13 +56,21 @@ details.anes>summary::-webkit-details-marker{display:none}
 details.anes>summary::after{content:"＋";color:var(--pine);font-weight:700}
 details.anes[open]>summary::after{content:"－"}
 details.anes>summary .sum{font-weight:500;font-size:15px;color:var(--muted);margin-left:auto}
-details.anes .sug{margin:0 14px 12px}
 details.item>summary{list-style:none;cursor:pointer}
 details.item>summary::-webkit-details-marker{display:none}
 details.item>summary .name::after{content:" ⓘ";color:var(--muted);font-weight:400;font-size:14px}
 details.item[open]>summary .name::after{content:""}
 .badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .badge{font-size:13px;padding:1px 8px;border-radius:999px;background:var(--amber-bg);color:var(--amber)}
+details.opt{border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:10px;margin:10px 0;background:var(--paper)}
+details.opt>summary{list-style:none;cursor:pointer;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:16px}
+details.opt>summary::-webkit-details-marker{display:none}
+details.opt>summary::after{content:"＋";color:var(--amber)}
+details.opt[open]>summary::after{content:"－"}
+details.opt>summary .sum{margin-left:auto;font-weight:500;color:var(--muted);font-size:15px}
+details.opt .sug,details.opt>.note{margin:0 12px 10px}
+.card-body{padding:0 14px 12px}
+.card-body .sug{margin:0}
 .total{display:flex;justify-content:space-between;font-weight:700;padding:10px 0 0;color:var(--pine)}
 button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--pine);outline-offset:2px}
 .status{margin-top:14px;font-size:16px;color:var(--muted);min-height:1.6em}
@@ -97,7 +105,7 @@ h3{font-size:17px;margin:20px 0 8px;color:var(--pine);font-weight:700}
 .pick{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;font:inherit;color:var(--ink);cursor:pointer}
 .pick small{display:block;color:var(--muted);font-size:14px}
 .dx{display:flex;flex-wrap:wrap;gap:8px}
-.dx span{border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:15px;background:var(--card)}
+.dx button{border:1px solid var(--line);border-radius:10px;padding:4px 10px;font:inherit;font-size:15px;background:var(--card);color:var(--ink);cursor:pointer}
 .dx b{font-weight:500;margin-right:4px}
 .empty{margin-top:18px;padding:14px;border-radius:12px;background:var(--amber-bg);color:var(--amber)}
 
@@ -188,7 +196,7 @@ details.browse summary{cursor:pointer;font-weight:700;font-size:17px;padding:6px
 一般外科,Colostomy,Colostomy|結腸造口,結腸造口術,把結腸拉到腹壁做人工肛門,全身麻醉（氣管插管）,B|IVPCA
 一般外科,Sleeve gastrectomy,Sleeve gastrectomy|LSG|Bariatric|Gastric bypass|縮胃|減重手術,袖狀胃切除（減重手術）,切除大部分胃達到減重,全身麻醉（氣管插管）,B|IVPCA|NB|ONDAN
 一般外科,Excision of mass,Excision|Excision of mass|Lipoma|Sebaceous cyst|Epidermal cyst|Soft tissue tumor|腫瘤切除|腫塊切除|切除|割除,腫塊切除術,切除皮下或軟組織腫塊,全身麻醉（喉罩）、局部麻醉、監測麻醉照護（MAC）,A
-一般外科,Debridement,Debridement|Wound debridement|清創|擴創,擴創術（清創）,清除傷口壞死或感染組織,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
+一般外科,Debridement,Debridement|Wound debridement|清創|擴創,擴創術（清創）,清除傷口壞死或感染組織,全身麻醉（喉罩）、脊椎麻醉（半身）,AIRWAY|BIS|WARM|PAIN|ONDAN
 一般外科,Split-thickness skin graft,STSG|Split-thickness skin graft|植皮|S.T.S.G|Split Thickness Skin Graft,部分層皮膚移植,取一片皮膚移植到傷口,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB
 整形外科,Full-thickness skin graft,FTSG|F.T.S.G|Full Thickness Skin Graft|全層皮膚移植|全層植皮,全層皮膚移植,取全層皮膚移植到傷口（臉部、手部等）,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB
 一般外科,Amputation,Amputation|Toe amputation|Ray amputation|截肢,截肢手術（腳趾／肢端）,切除無法保留的肢體（常見糖尿病足）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA|SEDSPINAL
@@ -197,14 +205,16 @@ details.browse summary{cursor:pointer;font-weight:700;font-size:17px;padding:6px
 骨科,Bipolar hemiarthroplasty,Bipolar hemiarthroplasty|Bipolar|Hemiarthroplasty|BHA|半髖,人工半髖關節置換術,股骨頸骨折時置換股骨頭,脊椎麻醉（半身）、神經阻斷,NB|SEDSPINAL|IVPCA|REMI
 骨科,Hip fracture fixation,PFNA|DHS|Gamma nail|Intramedullary nail hip|Cannulated screw|CCS|股骨轉子,髖部骨折內固定術,平躺在牽引床上，用髓內釘或骨板固定髖部骨折,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|SEDSPINAL|IVPCA|REMI
 骨科,Compression hip screw,CHS|C.H.S|Compression Hip Screw|壓迫性骨釘,壓迫性骨釘,用骨釘骨板固定髖部骨折，平躺於牽引床,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|SEDSPINAL|IVPCA|REMI
-骨科,Open reduction internal fixation,ORIF|Open reduction internal fixation|Open reduction|Plating|開放性復位|O.R.I.F,開放性內固定復位術,打開骨折處復位，用骨板骨釘固定。平躺可用喉罩；趴姿或側躺時需插管（改推組套B）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,Shoulder ORIF,Shoulder ORIF|ORIF shoulder|ORIF of shoulder|ORIF Rt shoulder|ORIF Lt shoulder|Proximal humerus ORIF|ORIF proximal humerus|Proximal humerus fracture|PHILOS|肩膀骨折|肱骨近端|肩 ORIF,肩部開放性內固定復位術,打開肩部骨折處（如肱骨近端骨折）復位並用骨板骨釘固定，半坐姿,全身麻醉（氣管插管）、斜角肌間神經阻斷,B|NB|IVPCA
+骨科,Clavicle ORIF,Clavicle ORIF|ORIF clavicle|ORIF of clavicle|ORIF Rt clavicle|ORIF Lt clavicle|Clavicle fracture|Clavicular fracture|Hook plate|AC joint|Acromioclavicular|AC separation|鎖骨|鎖骨骨折|肩鎖關節,鎖骨開放性內固定復位術,打開鎖骨骨折處（或肩鎖關節脫位）復位，用骨板或勾狀骨板固定，半坐姿,全身麻醉（氣管插管）、神經阻斷,B|NB|IVPCA
+骨科,Open reduction internal fixation,ORIF|Open reduction internal fixation|Open reduction|Plating|開放性復位|O.R.I.F,開放性內固定復位術,打開骨折處復位，用骨板骨釘固定。平躺可用喉罩；趴姿或側躺時需插管（改推組套B）；肩膀與鎖骨手術一律插管、不做半身麻醉,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
 骨科,Closed reduction internal fixation,CRIF|Closed reduction|CRPP|K-wire|Kirschner wire|閉鎖性復位,閉鎖性復位內固定術,不切開皮膚，透視下復位並打鋼針或髓內釘固定。趴姿或側躺時需插管（改推組套B）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
 骨科,Intramedullary nailing,IMN|Intramedullary nail|Interlocking nail|髓內釘,髓內釘固定術,長骨骨折用髓內釘固定（股骨、脛骨）,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|IVPCA
 骨科,Implant removal,Implant removal|Removal of implant|Remove plate|Remove screw|Hardware removal|拆除骨釘|取出鋼釘,骨內固定物取出術,把之前固定骨折的鋼板骨釘取出,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
 骨科,Knee arthroscopy,Arthroscopy|Knee arthroscopy|Meniscectomy|Meniscus repair|Arthroscopic|關節鏡,關節鏡檢查,用關節鏡處理半月板、軟骨等問題,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|SEDSPINAL
-骨科,ACL reconstruction,ACLR|ACL reconstruction|十字韌帶|ACL repair|A.C.L. repair|Anterior Cruciate Ligament repair|Anterior Cruciate Ligment repair,前十字韌帶修補／重建術,用自體或異體肌腱重建斷裂的十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
-骨科,Arthroscopic PCL reconstruction,PCL reconstruction|Arthroscope PCL Reconstruction|Arthroscopic PCL|後十字韌帶重建,關節鏡後十字韌帶重建,用關節鏡重建斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
-骨科,PCL repair,PCL repair|P.C.L. Repair|Post Cruciate Ligament Repair|Posterior cruciate ligament repair|後十字韌帶修補,後十字韌帶修補術,修補斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,ACL reconstruction,ACLR|ACL reconstruction|十字韌帶|ACL repair|A.C.L. repair|Anterior Cruciate Ligament repair|Anterior Cruciate Ligment repair|ACL|A.C.L,前十字韌帶修補／重建術,用自體或異體肌腱重建斷裂的十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,Arthroscopic PCL reconstruction,PCL reconstruction|Arthroscope PCL Reconstruction|Arthroscopic PCL|後十字韌帶重建|PCL,關節鏡後十字韌帶重建,用關節鏡重建斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,PCL repair,PCL repair|P.C.L. Repair|Post Cruciate Ligament Repair|Posterior cruciate ligament repair|後十字韌帶修補|PCL,後十字韌帶修補術,修補斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
 骨科,Rotator cuff repair,RCR|Rotator cuff repair|Arthroscopic rotator cuff|Shoulder arthroscopy|Bankart|旋轉肌,肩旋轉肌袖修補術,關節鏡修補肩膀破裂的肌腱,全身麻醉（氣管插管）、斜角肌間神經阻斷,B|NB|ONDAN
 骨科,Total shoulder arthroplasty,TSA|Reverse TSA|RSA|Shoulder arthroplasty|人工肩關節|TSR|T.S.R|Total Shoulder Replacement,肩關節置換術,以人工關節取代肩關節,全身麻醉（氣管插管）、神經阻斷,B|NB|IVPCA
 骨科,Carpal tunnel release,CTR|Carpal tunnel release|Carpal tunnel|腕隧道,腕隧道症候群減壓術,切開腕橫韌帶解除正中神經壓迫,局部麻醉、神經阻斷,NB
@@ -568,8 +578,8 @@ function search(raw){
 }
 
 /* ---------- 病人狀況與自費配對 ---------- */
-const TAGS = ["女性","全身麻醉","會暈車","之前術後有暈吐","高齡","慢性病","腹腔鏡手術"];
-const tags = new Set(); let budget = "full"; const openCards = new Set();
+const TAGS = ["女性","全身麻醉","會暈車","之前術後有暈吐","高齡","慢性病","腹腔鏡手術","止痛"];
+const tags = new Set(); const openCards = new Set();
 const PKG = { A:["AIRWAY","BIS","WARM","NB","PAIN","ONDAN"], B:["AIRWAY","BIS","NMT","WARM","NB","PAIN","ONDAN"] };
 const GA_ONLY = new Set(["A","B","NMT","PAIN","AIRWAY","OLV","CV","NIVATS","SPINE","SELFGA","BIS"]);
 const SA_ONLY = new Set(["SEDSPINAL","ITM"]);
@@ -615,38 +625,50 @@ function plan(p, mode){
     if (ga) add("BIS","慢性病");
     if (ga && (codes.includes("B") || p.anes.some(a => a.includes("插管")))) add("NMT","慢性病","肌肉鬆弛完全逆轉，減少心肺慢性病人術後呼吸併發症");
   }
-  if (lap && ga){ add("NMT","腹腔鏡手術","腹腔鏡需要良好的肌肉放鬆，結束時快速逆轉，醒得快"); add("NB","腹腔鏡手術"); }
+  // 可做神經阻斷的術式：資料中明確列有神經阻斷者（清創等不做的術式已排除）
+  const nbOK = p.pay.includes("NB");
+  if (lap && ga){ add("NMT","腹腔鏡手術","腹腔鏡需要良好的肌肉放鬆，結束時快速逆轉，醒得快"); if (nbOK) add("NB","腹腔鏡手術"); }
+  if (tags.has("止痛") && !p.pay.some(c => MAIN.has(c))){
+    const regional = mode === "SA" || (mode === null && p.anes.some(a => a.includes("脊椎") || a.includes("硬脊膜外")));
+    if (nbOK) add("NB","止痛");
+    if (ga) add(p.pay.includes("EPCA") ? "EPCA" : "IVPCA", "止痛");
+    else if (regional) add("ITM","止痛");
+  }
 
-  // 依經濟考量調整
+  // 依需求單選：只收被「已選標籤」觸發的項目
+  const tagOnly = items.filter(i => i.why.some(w => tags.has(w))).map(i => ({ ...i, why: i.why.filter(w => tags.has(w)) }));
+  // 組套方案：組套內已含的項目併入組套
   const pkg = items.find(i => PKG[i.code]);
-  if (budget === "full"){
-    if (pkg){
-      const inside = PKG[pkg.code];
-      items.filter(i => inside.includes(i.code)).forEach(i => i.why.forEach(w => { if (!pkg.why.includes(w)) pkg.why.push(w); }));
-      return order(items.filter(i => !inside.includes(i.code)));
-    }
-    return order(items);
-  }
-  let list = items;
+  let full = items;
   if (pkg){
-    const comps = PKG[pkg.code].map(c => get(c) || { code:c, why:[], reason:"" });
-    const keep = comps.filter(i => i.why.length || i.code === "NB" || i.code === "ONDAN" || (i.code === "NMT" && pkg.code === "B"));
-    list = [...keep, ...items.filter(i => i !== pkg && !PKG[pkg.code].includes(i.code))];
+    const inside = PKG[pkg.code];
+    items.filter(i => inside.includes(i.code)).forEach(i => i.why.forEach(w => { if (!pkg.why.includes(w)) pkg.why.push(w); }));
+    full = items.filter(i => !inside.includes(i.code));
   }
-  if (budget === "select") return order(list);
-  // 預算有限：保留主要麻醉項目與最有價值的少數項目
-  list = list.filter(i => !BIG_PKG.has(i.code) && i.code !== "SPINE");
-  const main = list.filter(i => MAIN.has(i.code));
-  const prio = ["ONDAN","SEDSPINAL","NB","ITM","IVPCA","REMI","EPCA"];
-  const rest = list.filter(i => !MAIN.has(i.code) && prio.includes(i.code) && (i.code !== "ONDAN" || i.why.length) && (i.code !== "REMI" || i.why.length))
-    .sort((a, b) => prio.indexOf(a.code) - prio.indexOf(b.code));
-  const onePain = []; let pain = false;
-  for (const i of rest){ const isPain = ["ITM","IVPCA","EPCA"].includes(i.code); if (isPain && pain) continue; if (isPain) pain = true; onePain.push(i); }
-  return order([...main, ...onePain.slice(0, 3)]);
+  return { full: order(full), tagOnly: order(tagOnly), hasPkg: !!pkg };
 }
 function order(items){
   const rank = c => PKG[c] || BIG_PKG.has(c) ? 0 : MAIN.has(c) ? 1 : 2;
   return items.slice().sort((a, b) => rank(a.code) - rank(b.code));
+}
+function summaryText(pl){
+  const a = pl.full.length ? "$" + fmt(sum(pl.full)) : "無";
+  return tags.size && pl.tagOnly.length ? `${pl.hasPkg ? "組套" : "建議"} ${a}／單選 $${fmt(sum(pl.tagOnly))}` : a;
+}
+function renderPlan(pl, key){
+  const f = document.createDocumentFragment();
+  if (!tags.size){ f.append(renderItems(pl.full)); return f; }
+  const opt = (id, title, items, empty) => {
+    const d = el("details","opt"); const k = key + id; if (openCards.has(k)) d.open = true;
+    d.addEventListener("toggle", () => { d.open ? openCards.add(k) : openCards.delete(k); });
+    const s = el("summary"); s.append(el("span","", title), el("span","sum", items.length ? "$" + fmt(sum(items)) : "無"));
+    d.append(s);
+    if (items.length) d.append(renderItems(items)); else d.append(el("p","note", empty));
+    return d;
+  };
+  f.append(opt("1", pl.hasPkg ? "方案一：組套" : "方案一：基本建議", pl.full, "這個麻醉方式通常不需要自費項目。"));
+  f.append(opt("2", "方案二：只選需求相關項目", pl.tagOnly, "所選的需求在這個麻醉方式下沒有對應的單項。"));
+  return f;
 }
 function renderItems(items){
   const wrap = document.createDocumentFragment();
@@ -694,6 +716,7 @@ function renderProc(p){
     frag.append(el("h3","","常見麻醉方式"));
     const c = el("div","chips"); p.anes.forEach(a => c.append(el("span","chip", a))); frag.append(c);
   }
+  if (p.isDx) frag.append(el("p","note","這是診斷或病歷用語，不是術式；請輸入術式（或點下方相關術式）查詢自費項目。"));
   if (!p.isDx){
     frag.append(el("h3","","建議自費項目"));
     const hasGA = p.anes.some(a => a.includes("全身麻醉")), hasSA = p.anes.some(a => a.includes("脊椎麻醉"));
@@ -701,15 +724,15 @@ function renderProc(p){
       // 全身麻醉與半身麻醉都可選：做成可收合卡片
       const gaLabel = p.anes.find(a => a.includes("全身麻醉"));
       [[gaLabel,"GA"],["脊椎麻醉（半身）","SA"]].forEach(([label, mode]) => {
-        const items = plan(p, mode);
+        const pl = plan(p, mode);
         const d = el("details","anes"); if (openCards.has(p.en + mode)) d.open = true;
         d.addEventListener("toggle", () => { d.open ? openCards.add(p.en + mode) : openCards.delete(p.en + mode); });
-        const s = el("summary"); s.append(el("span","", label), el("span","sum", items.length ? "合計 $" + fmt(sum(items)) : "無"));
-        d.append(s, renderItems(items)); frag.append(d);
+        const s = el("summary"); s.append(el("span","", label), el("span","sum", summaryText(pl)));
+        const body = el("div","card-body"); body.append(renderPlan(pl, p.en + mode));
+        d.append(s, body); frag.append(d);
       });
     } else {
-      const mode = hasGA ? "GA" : null;
-      frag.append(renderItems(plan(p, mode)));
+      frag.append(renderPlan(plan(p, hasGA ? "GA" : null), p.en + "single"));
     }
     frag.append(el("p","note","點項目名稱可看說明。價格依本院清單；建議僅供參考，實際依麻醉醫師評估。"));
   }
@@ -725,11 +748,14 @@ function show(matches, fromPhoto, keep){
       : "⚠️ 清單中找不到這個術式，請換個寫法（英文全名、縮寫或中文），或請麻醉醫師確認。");
     result.append(e); return;
   }
+  const top = matches[0] && matches[0].p.isDx && matches[0].score === 999 ? matches[0] : null;
+  if (top) result.append(renderProc(top.p));
   if (procs.length){
-    result.append(renderProc(procs[0].p));
-    if (procs.length > 1){
-      const o = el("div","others"); o.append(el("h3","", fromPhoto ? "照片中還有這些術式" : "其他可能的術式"));
-      procs.slice(1, 8).forEach(m => {
+    if (!top) result.append(renderProc(procs[0].p));
+    const restP = top ? procs : procs.slice(1);
+    if (restP.length){
+      const o = el("div","others"); o.append(el("h3","", top ? "相關術式" : fromPhoto ? "照片中還有這些術式" : "其他可能的術式"));
+      restP.slice(0, 8).forEach(m => {
         const b = el("button","pick"); b.type = "button";
         b.append(m.p.zh); b.append(el("small","", m.p.en));
         b.onclick = () => { openCards.clear(); show([m, ...procs.filter(x => x !== m), ...dxs], fromPhoto); window.scrollTo({top: result.offsetTop - 12, behavior:"smooth"}); };
@@ -739,9 +765,13 @@ function show(matches, fromPhoto, keep){
     }
   }
   if (dxs.length){
-    const h = el("h3","","診斷、縮寫與術語"); result.append(h);
+    if (dxs.some(m => m !== top)){ const h = el("h3","","診斷、縮寫與術語"); result.append(h); }
     const d = el("div","dx");
-    dxs.slice(0, 12).forEach(m => { const s = el("span"); s.append(el("b","", m.p.aliases[0]), m.p.zh); d.append(s); });
+    dxs.filter(m => m !== top).slice(0, 12).forEach(m => {
+      const s = el("button"); s.type = "button"; s.append(el("b","", m.p.aliases[0]), m.p.zh);
+      s.onclick = () => { openCards.clear(); show([{...m, score:999}, ...matches.filter(x => x !== m)], fromPhoto); window.scrollTo({top: result.offsetTop - 12, behavior:"smooth"}); };
+      d.append(s);
+    });
     result.append(d);
   }
   result.classList.add("show");

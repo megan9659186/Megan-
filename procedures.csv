@@ -37,7 +37,7 @@
 一般外科,Colostomy,Colostomy|結腸造口,結腸造口術,把結腸拉到腹壁做人工肛門,全身麻醉（氣管插管）,B|IVPCA
 一般外科,Sleeve gastrectomy,Sleeve gastrectomy|LSG|Bariatric|Gastric bypass|縮胃|減重手術,袖狀胃切除（減重手術）,切除大部分胃達到減重,全身麻醉（氣管插管）,B|IVPCA|NB|ONDAN
 一般外科,Excision of mass,Excision|Excision of mass|Lipoma|Sebaceous cyst|Epidermal cyst|Soft tissue tumor|腫瘤切除|腫塊切除|切除|割除,腫塊切除術,切除皮下或軟組織腫塊,全身麻醉（喉罩）、局部麻醉、監測麻醉照護（MAC）,A
-一般外科,Debridement,Debridement|Wound debridement|清創|擴創,擴創術（清創）,清除傷口壞死或感染組織,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
+一般外科,Debridement,Debridement|Wound debridement|清創|擴創,擴創術（清創）,清除傷口壞死或感染組織,全身麻醉（喉罩）、脊椎麻醉（半身）,AIRWAY|BIS|WARM|PAIN|ONDAN
 一般外科,Split-thickness skin graft,STSG|Split-thickness skin graft|植皮|S.T.S.G|Split Thickness Skin Graft,部分層皮膚移植,取一片皮膚移植到傷口,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB
 整形外科,Full-thickness skin graft,FTSG|F.T.S.G|Full Thickness Skin Graft|全層皮膚移植|全層植皮,全層皮膚移植,取全層皮膚移植到傷口（臉部、手部等）,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB
 一般外科,Amputation,Amputation|Toe amputation|Ray amputation|截肢,截肢手術（腳趾／肢端）,切除無法保留的肢體（常見糖尿病足）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA|SEDSPINAL
@@ -46,14 +46,16 @@
 骨科,Bipolar hemiarthroplasty,Bipolar hemiarthroplasty|Bipolar|Hemiarthroplasty|BHA|半髖,人工半髖關節置換術,股骨頸骨折時置換股骨頭,脊椎麻醉（半身）、神經阻斷,NB|SEDSPINAL|IVPCA|REMI
 骨科,Hip fracture fixation,PFNA|DHS|Gamma nail|Intramedullary nail hip|Cannulated screw|CCS|股骨轉子,髖部骨折內固定術,平躺在牽引床上，用髓內釘或骨板固定髖部骨折,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|SEDSPINAL|IVPCA|REMI
 骨科,Compression hip screw,CHS|C.H.S|Compression Hip Screw|壓迫性骨釘,壓迫性骨釘,用骨釘骨板固定髖部骨折，平躺於牽引床,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|SEDSPINAL|IVPCA|REMI
-骨科,Open reduction internal fixation,ORIF|Open reduction internal fixation|Open reduction|Plating|開放性復位|O.R.I.F,開放性內固定復位術,打開骨折處復位，用骨板骨釘固定。平躺可用喉罩；趴姿或側躺時需插管（改推組套B）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,Shoulder ORIF,Shoulder ORIF|ORIF shoulder|ORIF of shoulder|ORIF Rt shoulder|ORIF Lt shoulder|Proximal humerus ORIF|ORIF proximal humerus|Proximal humerus fracture|PHILOS|肩膀骨折|肱骨近端|肩 ORIF,肩部開放性內固定復位術,打開肩部骨折處（如肱骨近端骨折）復位並用骨板骨釘固定，半坐姿,全身麻醉（氣管插管）、斜角肌間神經阻斷,B|NB|IVPCA
+骨科,Clavicle ORIF,Clavicle ORIF|ORIF clavicle|ORIF of clavicle|ORIF Rt clavicle|ORIF Lt clavicle|Clavicle fracture|Clavicular fracture|Hook plate|AC joint|Acromioclavicular|AC separation|鎖骨|鎖骨骨折|肩鎖關節,鎖骨開放性內固定復位術,打開鎖骨骨折處（或肩鎖關節脫位）復位，用骨板或勾狀骨板固定，半坐姿,全身麻醉（氣管插管）、神經阻斷,B|NB|IVPCA
+骨科,Open reduction internal fixation,ORIF|Open reduction internal fixation|Open reduction|Plating|開放性復位|O.R.I.F,開放性內固定復位術,打開骨折處復位，用骨板骨釘固定。平躺可用喉罩；趴姿或側躺時需插管（改推組套B）；肩膀與鎖骨手術一律插管、不做半身麻醉,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
 骨科,Closed reduction internal fixation,CRIF|Closed reduction|CRPP|K-wire|Kirschner wire|閉鎖性復位,閉鎖性復位內固定術,不切開皮膚，透視下復位並打鋼針或髓內釘固定。趴姿或側躺時需插管（改推組套B）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
 骨科,Intramedullary nailing,IMN|Intramedullary nail|Interlocking nail|髓內釘,髓內釘固定術,長骨骨折用髓內釘固定（股骨、脛骨）,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|IVPCA
 骨科,Implant removal,Implant removal|Removal of implant|Remove plate|Remove screw|Hardware removal|拆除骨釘|取出鋼釘,骨內固定物取出術,把之前固定骨折的鋼板骨釘取出,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
 骨科,Knee arthroscopy,Arthroscopy|Knee arthroscopy|Meniscectomy|Meniscus repair|Arthroscopic|關節鏡,關節鏡檢查,用關節鏡處理半月板、軟骨等問題,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|SEDSPINAL
-骨科,ACL reconstruction,ACLR|ACL reconstruction|十字韌帶|ACL repair|A.C.L. repair|Anterior Cruciate Ligament repair|Anterior Cruciate Ligment repair,前十字韌帶修補／重建術,用自體或異體肌腱重建斷裂的十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
-骨科,Arthroscopic PCL reconstruction,PCL reconstruction|Arthroscope PCL Reconstruction|Arthroscopic PCL|後十字韌帶重建,關節鏡後十字韌帶重建,用關節鏡重建斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
-骨科,PCL repair,PCL repair|P.C.L. Repair|Post Cruciate Ligament Repair|Posterior cruciate ligament repair|後十字韌帶修補,後十字韌帶修補術,修補斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,ACL reconstruction,ACLR|ACL reconstruction|十字韌帶|ACL repair|A.C.L. repair|Anterior Cruciate Ligament repair|Anterior Cruciate Ligment repair|ACL|A.C.L,前十字韌帶修補／重建術,用自體或異體肌腱重建斷裂的十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,Arthroscopic PCL reconstruction,PCL reconstruction|Arthroscope PCL Reconstruction|Arthroscopic PCL|後十字韌帶重建|PCL,關節鏡後十字韌帶重建,用關節鏡重建斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
+骨科,PCL repair,PCL repair|P.C.L. Repair|Post Cruciate Ligament Repair|Posterior cruciate ligament repair|後十字韌帶修補|PCL,後十字韌帶修補術,修補斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
 骨科,Rotator cuff repair,RCR|Rotator cuff repair|Arthroscopic rotator cuff|Shoulder arthroscopy|Bankart|旋轉肌,肩旋轉肌袖修補術,關節鏡修補肩膀破裂的肌腱,全身麻醉（氣管插管）、斜角肌間神經阻斷,B|NB|ONDAN
 骨科,Total shoulder arthroplasty,TSA|Reverse TSA|RSA|Shoulder arthroplasty|人工肩關節|TSR|T.S.R|Total Shoulder Replacement,肩關節置換術,以人工關節取代肩關節,全身麻醉（氣管插管）、神經阻斷,B|NB|IVPCA
 骨科,Carpal tunnel release,CTR|Carpal tunnel release|Carpal tunnel|腕隧道,腕隧道症候群減壓術,切開腕橫韌帶解除正中神經壓迫,局部麻醉、神經阻斷,NB
