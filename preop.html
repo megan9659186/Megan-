@@ -71,6 +71,12 @@ details.opt>summary .sum{margin-left:auto;font-weight:500;color:var(--muted);fon
 details.opt .sug,details.opt>.note{margin:0 12px 10px}
 .card-body{padding:0 14px 12px}
 .card-body .sug{margin:0}
+.sug li.on,.sug li.off{display:flex;gap:10px;align-items:flex-start}
+.sug li>details{flex:1;min-width:0}
+.pick-toggle{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--pine);background:var(--pine);color:var(--pine-ink);font:inherit;font-size:22px;font-weight:900;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+.sug li.off .pick-toggle{background:transparent;color:var(--muted);border-color:var(--line)}
+.sug li.off .name,.sug li.off .price{color:var(--muted);font-weight:400}
+.sug li.off .badges{opacity:.6}
 .total{display:flex;justify-content:space-between;font-weight:700;padding:10px 0 0;color:var(--pine)}
 button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--pine);outline-offset:2px}
 .status{margin-top:14px;font-size:16px;color:var(--muted);min-height:1.6em}
@@ -587,6 +593,9 @@ const BIG_PKG = new Set(["CV","OLV","NIVATS"]);
 const HIGH = [["UGI","HUGI"],["LGI","HLGI"],["ULGI","HULGI"],["ERCP","HERCP"]];
 const MAIN = new Set(["UGI","HUGI","LGI","HLGI","ULGI","HULGI","EUS","EUSBX","ENTUP","ENTLOW","ESDA","ERCP","HERCP","LABOR","ITLABOR","DENTAL","BISSED"]);
 const sum = items => items.reduce((t, i) => t + (PAY[i.code]?.price || 0), 0);
+const picks = new Map(), openItems = new Set();
+const isOn = (key, it) => picks.has(key + "|" + it.code) ? picks.get(key + "|" + it.code) : it.def !== false;
+const sumOn = (items, key) => sum(items.filter(i => isOn(key, i)));
 
 function plan(p, mode){
   let codes = [...p.pay];
@@ -635,56 +644,79 @@ function plan(p, mode){
     else if (regional) add("ITM","止痛");
   }
 
-  // 依需求單選：只收被「已選標籤」觸發的項目
-  const tagOnly = items.filter(i => i.why.some(w => tags.has(w))).map(i => ({ ...i, why: i.why.filter(w => tags.has(w)) }));
-  // 組套方案：組套內已含的項目併入組套
   const pkg = items.find(i => PKG[i.code]);
+  const isCore = c => PKG[c] || BIG_PKG.has(c) || c === "SPINE" || MAIN.has(c) || (mode === "SA" && c === "SEDSPINAL");
+  // 方案一：組套內已含的項目併入組套；預設只勾組套（其餘額外項目呈灰色，可自行加選）
   let full = items;
   if (pkg){
     const inside = PKG[pkg.code];
     items.filter(i => inside.includes(i.code)).forEach(i => i.why.forEach(w => { if (!pkg.why.includes(w)) pkg.why.push(w); }));
     full = items.filter(i => !inside.includes(i.code));
   }
-  return { full: order(full), tagOnly: order(tagOnly), hasPkg: !!pkg };
+  full = full.map(i => ({ ...i, def: isCore(i.code) }));
+  if (!full.some(i => i.def)) full.forEach(i => { if (!i.why.length) i.def = true; });   // 無組套的術式（如清創）：預設勾選基本項目
+  // 方案二：已選需求觸發的項目＋進階呼吸道＋保溫毯＋主要麻醉項目（預設勾選），其他可加選項目呈灰色
+  const tagOnly = [];
+  const put = (c, why, def, reason) => {
+    if (!PAY[c]) return; let it = tagOnly.find(x => x.code === c);
+    if (!it){ it = { code:c, why:[], reason: reason || "", def }; tagOnly.push(it); } else if (def) it.def = true;
+    why.forEach(w => { if (!it.why.includes(w)) it.why.push(w); });
+  };
+  items.filter(i => !PKG[i.code] && !BIG_PKG.has(i.code) && i.why.some(w => tags.has(w))).forEach(i => put(i.code, i.why.filter(w => tags.has(w)), true, i.reason));
+  items.filter(i => MAIN.has(i.code)).forEach(i => put(i.code, [], true));
+  put("AIRWAY", [], true);
+  put("WARM", [], true);
+  const cands = [...(pkg ? PKG[pkg.code] : []), ...items.map(i => i.code).filter(c => !PKG[c] && !BIG_PKG.has(c) && !MAIN.has(c))];
+  cands.forEach(c => put(c, [], false));
+  // 方案二：進階呼吸道固定排第一
+  const t2 = order(tagOnly), ai = t2.findIndex(i => i.code === "AIRWAY");
+  if (ai > 0) t2.unshift(...t2.splice(ai, 1));
+  return { full: order(full), tagOnly: t2, hasPkg: !!pkg };
 }
 function order(items){
-  const rank = c => PKG[c] || BIG_PKG.has(c) ? 0 : MAIN.has(c) ? 1 : 2;
-  return items.slice().sort((a, b) => rank(a.code) - rank(b.code));
+  const rank = i => (PKG[i.code] || BIG_PKG.has(i.code) ? 0 : MAIN.has(i.code) ? 1 : 2) + (i.def === false ? 3 : 0);
+  return items.slice().sort((a, b) => rank(a) - rank(b));
 }
-function summaryText(pl){
-  const a = pl.full.length ? "$" + fmt(sum(pl.full)) : "無";
-  return tags.size && pl.tagOnly.length ? `${pl.hasPkg ? "組套" : "建議"} ${a}／單選 $${fmt(sum(pl.tagOnly))}` : a;
+function summaryText(pl, key){
+  const a = "$" + fmt(sumOn(pl.full, key + "1"));
+  return tags.size ? `${pl.hasPkg ? "組套" : "建議"} ${a}／單選 $${fmt(sumOn(pl.tagOnly, key + "2"))}` : a;
 }
 function renderPlan(pl, key){
   const f = document.createDocumentFragment();
-  if (!tags.size){ f.append(renderItems(pl.full)); return f; }
+  if (!tags.size){ f.append(renderItems(pl.full, key + "1")); return f; }
   const opt = (id, title, items, empty) => {
     const d = el("details","opt"); const k = key + id; if (openCards.has(k)) d.open = true;
     d.addEventListener("toggle", () => { d.open ? openCards.add(k) : openCards.delete(k); });
-    const s = el("summary"); s.append(el("span","", title), el("span","sum", items.length ? "$" + fmt(sum(items)) : "無"));
+    const s = el("summary"); s.append(el("span","", title), el("span","sum", items.length ? "$" + fmt(sumOn(items, k)) : "無"));
     d.append(s);
-    if (items.length) d.append(renderItems(items)); else d.append(el("p","note", empty));
+    if (items.length) d.append(renderItems(items, k)); else d.append(el("p","note", empty));
     return d;
   };
   f.append(opt("1", pl.hasPkg ? "方案一：組套" : "方案一：基本建議", pl.full, "這個麻醉方式通常不需要自費項目。"));
   f.append(opt("2", "方案二：只選需求相關項目", pl.tagOnly, "所選的需求在這個麻醉方式下沒有對應的單項。"));
   return f;
 }
-function renderItems(items){
+function renderItems(items, key){
   const wrap = document.createDocumentFragment();
   if (!items.length){ wrap.append(el("p","note","這個選擇下通常不需要自費項目，依麻醉醫師評估。")); return wrap; }
   const ul = el("ul","sug");
   items.forEach(it => {
-    const s = PAY[it.code], li = el("li"), d = el("details","item"), sm = el("summary"), row = el("div","row");
+    const s = PAY[it.code], on = isOn(key, it), li = el("li", on ? "on" : "off");
+    const tg = el("button","pick-toggle", on ? "✓" : "＋"); tg.type = "button";
+    tg.setAttribute("aria-pressed", on); tg.setAttribute("aria-label", (on ? "取消選取 " : "加選 ") + s.name);
+    tg.onclick = () => { picks.set(key + "|" + it.code, !on); rerender(); };
+    const ik = key + "|" + it.code, d = el("details","item"); if (openItems.has(ik)) d.open = true;
+    d.addEventListener("toggle", () => { d.open ? openItems.add(ik) : openItems.delete(ik); });
+    const sm = el("summary"), row = el("div","row");
     row.append(el("span","name", s.name), el("span","price", "$" + fmt(s.price)));
     sm.append(row);
     if (it.why.length){ const b = el("div","badges"); it.why.forEach(w => b.append(el("span","badge", w))); sm.append(b); }
     d.append(sm);
     const reason = it.reason || s.reason; if (reason) d.append(el("div","why", reason));
     if (s.inside) d.append(el("div","inside", "內含：" + s.inside));
-    li.append(d); ul.append(li);
+    li.append(tg, d); ul.append(li);
   });
-  const tot = el("li","total"); tot.append(el("span","", "合計"), el("span","", "$" + fmt(sum(items)))); ul.append(tot);
+  const tot = el("li","total"); tot.append(el("span","", "合計（已勾選）"), el("span","", "$" + fmt(sumOn(items, key)))); ul.append(tot);
   wrap.append(ul); return wrap;
 }
 let last = null;
@@ -698,7 +730,7 @@ function rerender(){ if (last) show(last.matches, last.fromPhoto, true); }
   });
 })();
 function resetPanel(){
-  tags.clear(); openCards.clear();
+  tags.clear(); openCards.clear(); picks.clear(); openItems.clear();
   document.querySelectorAll("#tags .tag").forEach(b => b.setAttribute("aria-pressed","false"));
 }
 
@@ -727,7 +759,7 @@ function renderProc(p){
         const pl = plan(p, mode);
         const d = el("details","anes"); if (openCards.has(p.en + mode)) d.open = true;
         d.addEventListener("toggle", () => { d.open ? openCards.add(p.en + mode) : openCards.delete(p.en + mode); });
-        const s = el("summary"); s.append(el("span","", label), el("span","sum", summaryText(pl)));
+        const s = el("summary"); s.append(el("span","", label), el("span","sum", summaryText(pl, p.en + mode)));
         const body = el("div","card-body"); body.append(renderPlan(pl, p.en + mode));
         d.append(s, body); frag.append(d);
       });
@@ -758,7 +790,7 @@ function show(matches, fromPhoto, keep){
       restP.slice(0, 8).forEach(m => {
         const b = el("button","pick"); b.type = "button";
         b.append(m.p.zh); b.append(el("small","", m.p.en));
-        b.onclick = () => { openCards.clear(); show([m, ...procs.filter(x => x !== m), ...dxs], fromPhoto); window.scrollTo({top: result.offsetTop - 12, behavior:"smooth"}); };
+        b.onclick = () => { openCards.clear(); openItems.clear(); show([m, ...procs.filter(x => x !== m), ...dxs], fromPhoto); window.scrollTo({top: result.offsetTop - 12, behavior:"smooth"}); };
         o.append(b);
       });
       result.append(o);
