@@ -43,7 +43,27 @@ h1{font-size:24px;line-height:1.3;margin:4px 0;font-weight:700;letter-spacing:.0
 .spacer{flex:1}
 .clear{height:48px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:16px;cursor:pointer}
 input[type=file]{display:none}
-.hint{font-size:14px;color:var(--muted);margin:6px 2px 0}
+.patient{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.plabel{font-size:14px;color:var(--muted);margin:2px 0 6px}
+.plabel:not(:first-child){margin-top:12px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font:inherit;font-size:16px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.tag[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
+details.anes{border:1.5px solid var(--line);border-radius:14px;margin:10px 0;background:var(--card)}
+details.anes[open]{border-color:var(--pine)}
+details.anes>summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700}
+details.anes>summary::-webkit-details-marker{display:none}
+details.anes>summary::after{content:"＋";color:var(--pine);font-weight:700}
+details.anes[open]>summary::after{content:"－"}
+details.anes>summary .sum{font-weight:500;font-size:15px;color:var(--muted);margin-left:auto}
+details.anes .sug{margin:0 14px 12px}
+details.item>summary{list-style:none;cursor:pointer}
+details.item>summary::-webkit-details-marker{display:none}
+details.item>summary .name::after{content:" ⓘ";color:var(--muted);font-weight:400;font-size:14px}
+details.item[open]>summary .name::after{content:""}
+.badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.badge{font-size:13px;padding:1px 8px;border-radius:999px;background:var(--amber-bg);color:var(--amber)}
+.total{display:flex;justify-content:space-between;font-weight:700;padding:10px 0 0;color:var(--pine)}
 button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--pine);outline-offset:2px}
 .status{margin-top:14px;font-size:16px;color:var(--muted);min-height:1.6em}
 .err{color:var(--danger)}
@@ -104,13 +124,16 @@ details.browse summary{cursor:pointer;font-weight:700;font-size:17px;padding:6px
       <button class="icon" id="libBtn" type="button" aria-label="從相簿選照片">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 5 5 3-3 5 5"/></svg></button>
       <span class="spacer"></span>
-      <button class="clear" id="clearBtn" type="button">清除</button>
+      <button class="clear" id="clearBtn" type="button">下一位</button>
     </div>
   </div>
-  <p class="hint">打字會即時查詢；也可以把截圖直接貼進輸入框。</p>
   <input type="file" id="camInput" accept="image/*" capture="environment">
   <input type="file" id="libInput" accept="image/*">
 
+  <section class="patient" aria-label="手術者需求">
+    <div class="plabel">手術者需求（可複選）</div>
+    <div class="tags" id="tags"></div>
+  </section>
   <div class="status" id="status" aria-live="polite"></div>
   <div id="ocrBox"></div>
   <section id="result" aria-live="polite"></section>
@@ -544,6 +567,119 @@ function search(raw){
   return res.sort((a,b) => b.score - a.score);
 }
 
+/* ---------- 病人狀況與自費配對 ---------- */
+const TAGS = ["女性","全身麻醉","會暈車","之前術後有暈吐","高齡","慢性病","腹腔鏡手術"];
+const tags = new Set(); let budget = "full"; const openCards = new Set();
+const PKG = { A:["AIRWAY","BIS","WARM","NB","PAIN","ONDAN"], B:["AIRWAY","BIS","NMT","WARM","NB","PAIN","ONDAN"] };
+const GA_ONLY = new Set(["A","B","NMT","PAIN","AIRWAY","OLV","CV","NIVATS","SPINE","SELFGA","BIS"]);
+const SA_ONLY = new Set(["SEDSPINAL","ITM"]);
+const BIG_PKG = new Set(["CV","OLV","NIVATS"]);
+const HIGH = [["UGI","HUGI"],["LGI","HLGI"],["ULGI","HULGI"],["ERCP","HERCP"]];
+const MAIN = new Set(["UGI","HUGI","LGI","HLGI","ULGI","HULGI","EUS","EUSBX","ENTUP","ENTLOW","ESDA","ERCP","HERCP","LABOR","ITLABOR","DENTAL","BISSED"]);
+const sum = items => items.reduce((t, i) => t + (PAY[i.code]?.price || 0), 0);
+
+function plan(p, mode){
+  let codes = [...p.pay];
+  const ga = mode === "GA";
+  if (mode === "GA") codes = codes.filter(c => !SA_ONLY.has(c));
+  if (mode === "SA"){ codes = codes.filter(c => !GA_ONLY.has(c)); if (!codes.includes("SEDSPINAL")) codes.unshift("SEDSPINAL"); }
+  const risky = tags.has("高齡") || tags.has("慢性病");
+  for (const [n, hi] of HIGH){
+    const i = codes.findIndex(c => c === n || c === hi);
+    if (i >= 0){ codes = codes.filter(c => c !== n && c !== hi); codes.splice(i, 0, risky ? hi : n); }
+  }
+  const items = [], get = c => items.find(x => x.code === c);
+  const add = (c, why, reason) => {
+    if (!PAY[c]) return; let it = get(c);
+    if (!it){ it = { code:c, why:[], reason: reason || "" }; items.push(it); }
+    else if (reason && !it.reason) it.reason = reason;
+    if (why && !it.why.includes(why)) it.why.push(why);
+  };
+  codes.forEach(c => add(c));
+
+  const lap = tags.has("腹腔鏡手術") || /腹腔鏡|laparoscop/i.test(p.zh + p.en);
+  const gaFactor = ga || (mode === null && tags.has("全身麻醉"));
+  const ponv = [];
+  if (tags.has("女性")) ponv.push("女性");
+  if (tags.has("會暈車") || tags.has("之前術後有暈吐")) ponv.push(tags.has("之前術後有暈吐") ? "之前術後有暈吐" : "會暈車");
+  if (gaFactor) ponv.push("全身麻醉");
+  if (lap) ponv.push("腹腔鏡手術");
+  if (ponv.length >= 2) ponv.forEach(w => add("ONDAN", w, `有 ${ponv.length} 項術後噁心嘔吐的危險因子（${ponv.join("、")}），建議預防性止吐`));
+  if (tags.has("高齡")){
+    if (ga || mode === "SA") add("REMI","高齡");
+    if (ga) add("BIS","高齡");
+    if (ga || mode === "SA") add("WARM","高齡","高齡者較容易失溫，保溫可減少術後發抖與併發症");
+  }
+  if (tags.has("慢性病")){
+    if (ga || mode === "SA") add("REMI","慢性病");
+    if (ga) add("BIS","慢性病");
+    if (ga && (codes.includes("B") || p.anes.some(a => a.includes("插管")))) add("NMT","慢性病","肌肉鬆弛完全逆轉，減少心肺慢性病人術後呼吸併發症");
+  }
+  if (lap && ga){ add("NMT","腹腔鏡手術","腹腔鏡需要良好的肌肉放鬆，結束時快速逆轉，醒得快"); add("NB","腹腔鏡手術"); }
+
+  // 依經濟考量調整
+  const pkg = items.find(i => PKG[i.code]);
+  if (budget === "full"){
+    if (pkg){
+      const inside = PKG[pkg.code];
+      items.filter(i => inside.includes(i.code)).forEach(i => i.why.forEach(w => { if (!pkg.why.includes(w)) pkg.why.push(w); }));
+      return order(items.filter(i => !inside.includes(i.code)));
+    }
+    return order(items);
+  }
+  let list = items;
+  if (pkg){
+    const comps = PKG[pkg.code].map(c => get(c) || { code:c, why:[], reason:"" });
+    const keep = comps.filter(i => i.why.length || i.code === "NB" || i.code === "ONDAN" || (i.code === "NMT" && pkg.code === "B"));
+    list = [...keep, ...items.filter(i => i !== pkg && !PKG[pkg.code].includes(i.code))];
+  }
+  if (budget === "select") return order(list);
+  // 預算有限：保留主要麻醉項目與最有價值的少數項目
+  list = list.filter(i => !BIG_PKG.has(i.code) && i.code !== "SPINE");
+  const main = list.filter(i => MAIN.has(i.code));
+  const prio = ["ONDAN","SEDSPINAL","NB","ITM","IVPCA","REMI","EPCA"];
+  const rest = list.filter(i => !MAIN.has(i.code) && prio.includes(i.code) && (i.code !== "ONDAN" || i.why.length) && (i.code !== "REMI" || i.why.length))
+    .sort((a, b) => prio.indexOf(a.code) - prio.indexOf(b.code));
+  const onePain = []; let pain = false;
+  for (const i of rest){ const isPain = ["ITM","IVPCA","EPCA"].includes(i.code); if (isPain && pain) continue; if (isPain) pain = true; onePain.push(i); }
+  return order([...main, ...onePain.slice(0, 3)]);
+}
+function order(items){
+  const rank = c => PKG[c] || BIG_PKG.has(c) ? 0 : MAIN.has(c) ? 1 : 2;
+  return items.slice().sort((a, b) => rank(a.code) - rank(b.code));
+}
+function renderItems(items){
+  const wrap = document.createDocumentFragment();
+  if (!items.length){ wrap.append(el("p","note","這個選擇下通常不需要自費項目，依麻醉醫師評估。")); return wrap; }
+  const ul = el("ul","sug");
+  items.forEach(it => {
+    const s = PAY[it.code], li = el("li"), d = el("details","item"), sm = el("summary"), row = el("div","row");
+    row.append(el("span","name", s.name), el("span","price", "$" + fmt(s.price)));
+    sm.append(row);
+    if (it.why.length){ const b = el("div","badges"); it.why.forEach(w => b.append(el("span","badge", w))); sm.append(b); }
+    d.append(sm);
+    const reason = it.reason || s.reason; if (reason) d.append(el("div","why", reason));
+    if (s.inside) d.append(el("div","inside", "內含：" + s.inside));
+    li.append(d); ul.append(li);
+  });
+  const tot = el("li","total"); tot.append(el("span","", "合計"), el("span","", "$" + fmt(sum(items)))); ul.append(tot);
+  wrap.append(ul); return wrap;
+}
+let last = null;
+function rerender(){ if (last) show(last.matches, last.fromPhoto, true); }
+(function initPanel(){
+  const tg = document.getElementById("tags");
+  TAGS.forEach(t => {
+    const b = el("button","tag", t); b.type = "button"; b.setAttribute("aria-pressed","false");
+    b.onclick = () => { tags.has(t) ? tags.delete(t) : tags.add(t); b.setAttribute("aria-pressed", tags.has(t)); rerender(); };
+    tg.append(b);
+  });
+})();
+function resetPanel(){
+  tags.clear(); openCards.clear();
+  document.querySelectorAll("#tags .tag").forEach(b => b.setAttribute("aria-pressed","false"));
+}
+
 /* ---------- 顯示 ---------- */
 function el(tag, cls, text){ const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
 function renderProc(p){
@@ -559,27 +695,29 @@ function renderProc(p){
     const c = el("div","chips"); p.anes.forEach(a => c.append(el("span","chip", a))); frag.append(c);
   }
   if (!p.isDx){
-    frag.append(el("h3","","建議介紹的自費項目"));
-    const items = p.pay.map(c => PAY[c]).filter(Boolean);
-    if (!items.length) frag.append(el("p","note","通常不需要麻醉自費項目，依麻醉醫師評估。"));
-    else {
-      const ul = el("ul","sug");
-      items.forEach(s => {
-        const li = el("li"), row = el("div","row");
-        row.append(el("span","name", s.name), el("span","price", "$" + fmt(s.price)));
-        li.append(row);
-        if (s.reason) li.append(el("div","why", s.reason));
-        if (s.inside) li.append(el("div","inside", s.inside));
-        ul.append(li);
+    frag.append(el("h3","","建議自費項目"));
+    const hasGA = p.anes.some(a => a.includes("全身麻醉")), hasSA = p.anes.some(a => a.includes("脊椎麻醉"));
+    if (hasGA && hasSA){
+      // 全身麻醉與半身麻醉都可選：做成可收合卡片
+      const gaLabel = p.anes.find(a => a.includes("全身麻醉"));
+      [[gaLabel,"GA"],["脊椎麻醉（半身）","SA"]].forEach(([label, mode]) => {
+        const items = plan(p, mode);
+        const d = el("details","anes"); if (openCards.has(p.en + mode)) d.open = true;
+        d.addEventListener("toggle", () => { d.open ? openCards.add(p.en + mode) : openCards.delete(p.en + mode); });
+        const s = el("summary"); s.append(el("span","", label), el("span","sum", items.length ? "合計 $" + fmt(sum(items)) : "無"));
+        d.append(s, renderItems(items)); frag.append(d);
       });
-      frag.append(ul);
+    } else {
+      const mode = hasGA ? "GA" : null;
+      frag.append(renderItems(plan(p, mode)));
     }
-    frag.append(el("p","note","價格依本院清單；建議僅供介紹參考，實際依麻醉醫師評估。"));
+    frag.append(el("p","note","點項目名稱可看說明。價格依本院清單；建議僅供參考，實際依麻醉醫師評估。"));
   }
   return frag;
 }
-function show(matches, fromPhoto){
-  result.replaceChildren(); result.classList.remove("show");
+function show(matches, fromPhoto, keep){
+  last = { matches, fromPhoto };
+  result.replaceChildren(); if (!keep) result.classList.remove("show");
   const procs = matches.filter(m => !m.p.isDx), dxs = matches.filter(m => m.p.isDx);
   if (!procs.length && !dxs.length){
     const e = el("div","empty", fromPhoto
@@ -594,7 +732,7 @@ function show(matches, fromPhoto){
       procs.slice(1, 8).forEach(m => {
         const b = el("button","pick"); b.type = "button";
         b.append(m.p.zh); b.append(el("small","", m.p.en));
-        b.onclick = () => { show([m, ...procs.filter(x => x !== m), ...dxs], fromPhoto); window.scrollTo({top: result.offsetTop - 12, behavior:"smooth"}); };
+        b.onclick = () => { openCards.clear(); show([m, ...procs.filter(x => x !== m), ...dxs], fromPhoto); window.scrollTo({top: result.offsetTop - 12, behavior:"smooth"}); };
         o.append(b);
       });
       result.append(o);
@@ -616,11 +754,11 @@ txt.addEventListener("input", () => {
   clearTimeout(timer);
   timer = setTimeout(() => {
     ocrBox.replaceChildren(); statusEl.textContent = "";
-    if (!txt.value.trim()){ result.replaceChildren(); return; }
+    if (!txt.value.trim()){ result.replaceChildren(); last = null; return; }
     show(search(txt.value), false);
   }, 250);
 });
-$("clearBtn").onclick = () => { txt.value = ""; result.replaceChildren(); ocrBox.replaceChildren(); statusEl.textContent = ""; txt.focus(); };
+$("clearBtn").onclick = () => { txt.value = ""; last = null; resetPanel(); result.replaceChildren(); ocrBox.replaceChildren(); statusEl.textContent = ""; txt.focus(); };
 
 /* ---------- 拍照 OCR ---------- */
 $("camBtn").onclick = () => $("camInput").click();
