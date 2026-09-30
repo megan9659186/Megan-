@@ -115,6 +115,13 @@ h3{font-size:17px;margin:20px 0 8px;color:var(--pine);font-weight:700}
 .dx b{font-weight:500;margin-right:4px}
 .empty{margin-top:18px;padding:14px;border-radius:12px;background:var(--amber-bg);color:var(--amber)}
 
+.manual{margin-top:0}
+details.manualbox{margin-top:20px}
+.manual-total{position:sticky;bottom:0;display:flex;align-items:center;gap:12px;margin:12px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--pine);color:var(--pine-ink);font-size:17px;border-radius:14px 14px 0 0}
+.manual-total span{flex:1}
+.manual-total small{display:block;font-size:13px;opacity:.9}
+.manual-total b{font-size:22px;font-variant-numeric:tabular-nums}
+.manual-total .small-btn{margin:0;border-color:var(--pine-ink);color:var(--pine-ink)}
 details.browse{margin-top:36px;border-top:1px solid var(--line);padding-top:12px}
 details.browse summary{cursor:pointer;font-weight:700;font-size:17px;padding:6px 0}
 .list h4{font-size:15px;color:var(--pine);margin:16px 0 4px}
@@ -151,6 +158,7 @@ details.browse summary{cursor:pointer;font-weight:700;font-size:17px;padding:6px
   <div class="status" id="status" aria-live="polite"></div>
   <div id="ocrBox"></div>
   <section id="result" aria-live="polite"></section>
+  <details class="anes manualbox" id="manualBox"><summary><span>自行勾選自費項目</span><span class="sum" id="manualSum"></span></summary><div class="card-body" id="manualBody"></div></details>
 
   <details class="browse">
     <summary>瀏覽全部術式</summary>
@@ -696,7 +704,7 @@ function renderPlan(pl, key){
   f.append(opt("2", "方案二：只選需求相關項目", pl.tagOnly, "所選的需求在這個麻醉方式下沒有對應的單項。"));
   return f;
 }
-function renderItems(items, key){
+function renderItems(items, key, noTotal){
   const wrap = document.createDocumentFragment();
   if (!items.length){ wrap.append(el("p","note","這個選擇下通常不需要自費項目，依麻醉醫師評估。")); return wrap; }
   const ul = el("ul","sug");
@@ -716,11 +724,53 @@ function renderItems(items, key){
     if (s.inside) d.append(el("div","inside", "內含：" + s.inside));
     li.append(tg, d); ul.append(li);
   });
-  const tot = el("li","total"); tot.append(el("span","", "合計（已勾選）"), el("span","", "$" + fmt(sumOn(items, key)))); ul.append(tot);
+  if (!noTotal){ const tot = el("li","total"); tot.append(el("span","", "合計（已勾選）"), el("span","", "$" + fmt(sumOn(items, key)))); ul.append(tot); }
   wrap.append(ul); return wrap;
 }
+/* ---------- 自行勾選（術式不在清單時） ---------- */
+const MK = "manual";
+function renderManual(){
+  const box = el("section","manual");
+  box.append(el("p","note","依病人需要與您的評估勾選，下方會即時計算合計。"));
+  const all = PAYLIST.map(s => ({ code:s.code, why:[], reason:"", def:false }));
+  const on = all.filter(i => isOn(MK, i)).map(i => i.code);
+  // 已勾選組套時，標出組套內已含的單項，避免重複收費
+  const inPkg = {};
+  on.forEach(c => { const inside = PKG[c] || (c === "OLV" ? PKG.B : null); if (inside) inside.forEach(x => (inPkg[x] ||= []).push(PAY[c].name.replace(/^常見麻醉/,""))); });
+  all.forEach(i => { if (inPkg[i.code]) i.why = inPkg[i.code].map(n => "已含於" + n); });
+  const groups = {};
+  all.forEach(i => (groups[PAY[i.code].cat] ||= []).push(i));
+  Object.entries(groups).forEach(([cat, items], idx) => {
+    const k = MK + "-" + cat, d = el("details","opt");
+    const n = items.filter(i => isOn(MK, i)).length;
+    if (openCards.has(k) || (!openCards.has(k + "-closed") && (idx === 0 || n))) d.open = true;
+    d.addEventListener("toggle", () => { if (d.open){ openCards.add(k); openCards.delete(k + "-closed"); } else { openCards.delete(k); openCards.add(k + "-closed"); } });
+    const s = el("summary"); s.append(el("span","", cat), el("span","sum", n ? `已選 ${n} 項` : ""));
+    d.append(s, renderItems(items, MK, true));
+    box.append(d);
+  });
+  const dup = on.filter(c => inPkg[c]).length;
+  const bar = el("div","manual-total");
+  const left = el("span","", on.length ? `已勾選 ${on.length} 項` : "尚未勾選");
+  if (dup) left.append(el("small","", `⚠️ 有 ${dup} 項已含在組套內`));
+  bar.append(left, el("b","", "$" + fmt(sumOn(all, MK))));
+  if (on.length){
+    const c = el("button","small-btn","全部取消"); c.type = "button";
+    c.onclick = () => { [...picks.keys()].filter(x => x.startsWith(MK + "|")).forEach(x => picks.delete(x)); rerender(); };
+    bar.append(c);
+  }
+  box.append(bar);
+  return box;
+}
 let last = null;
-function rerender(){ if (last) show(last.matches, last.fromPhoto, true); }
+function drawManual(){
+  const body = document.getElementById("manualBody"); if (!body || !PAYLIST.length) return;
+  const n = [...picks.entries()].filter(([k, v]) => k.startsWith(MK + "|") && v).length;
+  body.replaceChildren(renderManual());
+  document.getElementById("manualSum").textContent = n ? `已選 ${n} 項` : "術式不在清單時使用";
+}
+function openManual(){ const d = document.getElementById("manualBox"); if (d) d.open = true; }
+function rerender(){ if (last) show(last.matches, last.fromPhoto, true); drawManual(); }
 (function initPanel(){
   const tg = document.getElementById("tags");
   TAGS.forEach(t => {
@@ -776,9 +826,9 @@ function show(matches, fromPhoto, keep){
   const procs = matches.filter(m => !m.p.isDx), dxs = matches.filter(m => m.p.isDx);
   if (!procs.length && !dxs.length){
     const e = el("div","empty", fromPhoto
-      ? "⚠️ 照片中沒有比對到清單內的術式。可能是手寫、反光或不在清單中，請打開下方「辨識出的文字」修改，或直接手動輸入。"
-      : "⚠️ 清單中找不到這個術式，請換個寫法（英文全名、縮寫或中文），或請麻醉醫師確認。");
-    result.append(e); return;
+      ? "⚠️ 照片中沒有比對到清單內的術式。可能是手寫、反光或不在清單中，請打開下方「辨識出的文字」修改、手動輸入，或直接在下方自行勾選自費項目。"
+      : "⚠️ 清單中找不到這個術式，請換個寫法（英文全名、縮寫或中文），或直接在下方自行勾選自費項目。");
+    result.append(e); openManual(); return;
   }
   const top = matches[0] && matches[0].p.isDx && matches[0].score === 999 ? matches[0] : null;
   if (top) result.append(renderProc(top.p));
@@ -820,7 +870,7 @@ txt.addEventListener("input", () => {
     show(search(txt.value), false);
   }, 250);
 });
-$("clearBtn").onclick = () => { txt.value = ""; last = null; resetPanel(); result.replaceChildren(); ocrBox.replaceChildren(); statusEl.textContent = ""; txt.focus(); };
+$("clearBtn").onclick = () => { txt.value = ""; last = null; resetPanel(); drawManual(); $("manualBox").open = false; result.replaceChildren(); ocrBox.replaceChildren(); statusEl.textContent = ""; txt.focus(); };
 
 /* ---------- 拍照 OCR ---------- */
 $("camBtn").onclick = () => $("camInput").click();
@@ -933,7 +983,7 @@ function renderLists(){
       anes: String(anes||"").split("、").map(s => s.trim()).filter(Boolean),
       pay: String(pay||"").split("|").map(s => s.trim()).filter(Boolean),
     }));
-    prepare(); renderLists();
+    prepare(); renderLists(); drawManual();
   }catch{
     statusEl.replaceChildren(el("span","err","資料檔讀取失敗。請確認 procedures.csv 和 selfpay.csv 與此網頁放在同一個資料夾，並從 GitHub Pages 網址開啟。"));
   }
