@@ -82,6 +82,9 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 .aux p{margin:0 0 6px}
 .aux .ok{color:var(--green);font-weight:600}
 #fmsg{flex-basis:100%;min-height:1.2em}
+select{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:var(--field);color:var(--ink);max-width:100%}
+select:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+textarea.small{min-height:120px}
 </style>
 </head>
 <body>
@@ -307,7 +310,7 @@ const store = {
   set(v){ mem.v = v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} },
   clear(){ mem = {}; try{ localStorage.removeItem(KEY); }catch(e){} }
 };
-const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G' });
+const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G', rev:{ sel:'', items:{} } });
 const blank = () => ({ kit:'reading', reading:blankKit(), case:blankKit() });
 let ALL = Object.assign(blank(), store.get() || {});
 if (!KITS[ALL.kit]) ALL.kit = 'reading';
@@ -396,7 +399,8 @@ function renderRail(){
   rail.innerHTML = K().stages.map((st,i) =>
     `<button data-i="${i}" class="${cur === i ? 'cur' : ''}" ${cur===i?'aria-current="step"':''}>
       <span class="num">${st.num}</span><span>${st.name}</span></button>`).join('') +
-  `<button data-i="${n}" class="${cur === n ? 'cur' : ''}"><span class="num">終</span><span>送審前自我檢查</span></button>`;
+  `<button data-i="${n}" class="${cur === n ? 'cur' : ''}"><span class="num">終</span><span>送審前自我檢查</span></button>` +
+  `<button data-i="${n+1}" class="${cur === n+1 ? 'cur' : ''}"><span class="num">修</span><span>依評審意見修改</span></button>`;
   rail.querySelectorAll('button').forEach(b => b.onclick = () => { S().cur = +b.dataset.i; flash = null; save(); render(); });
 }
 function renderFinal(){
@@ -450,7 +454,8 @@ function renderAsk(i){
 function render(){
   renderHead(); renderRail();
   const i = S().cur;
-  if (i >= K().stages.length) return renderFinal();
+  if (i === K().stages.length) return renderFinal();
+  if (i > K().stages.length) return renderRevise();
   const st = K().stages[i];
   if (st.ask) return renderAsk(i);
   const panel = document.getElementById('panel'), label = st.inputName || st.name;
@@ -493,6 +498,96 @@ function showFlash(){
   if (el) el.innerHTML = flash ? `<p class="msg ${flash.warn?'warn':''}" role="status">${esc(flash.text)}</p>` : '';
 }
 
+
+
+/* ---------- 依評審意見修改 ---------- */
+function revState(){ const x = S(); if (!x.rev) x.rev = { sel:'', items:{} }; if (!x.rev.items) x.rev.items = {}; return x.rev; }
+function revSections(){ return K().stages.filter(st => !st.ask).concat([{ id:'overall', name:'總評', kind:'overall' }]); }
+function revBlocks(st){
+  const T = S().text, out = [];
+  const add = k => { if (has(k)) out.push(block('修改後的內容：' + (byId(k).kind === 'all' ? '題目' : byId(k).name), T[k])); };
+  if (st.kind === 'overall') K().stages.filter(x => !x.ask && !x.noInput).forEach(x => add(x.id));
+  else if (st.kind === 'whole') st.parts.forEach(add);
+  else if (st.kind === 'all'){ add(st.id); K().body.forEach(add); }
+  else {
+    add(st.id);
+    if (st.kind === 'refs' && hasBody()) out.push(block('內文，用來比對文內引用', K().body.filter(has).map(k => T[k]).join('\n\n')));
+  }
+  return out;
+}
+function revReady(st){ return (st.kind === 'overall' || st.kind === 'whole') ? revBlocks(st).length > 0 : has(st.id); }
+function buildRevise(st){
+  const it = revState().items[st.id] || {}, t = K().title;
+  const p = [`你是台灣麻醉專科護理學會（TANA）${t}的審核者。使用者的${t}送審後收到評審意見，已依意見修改。請檢查修改後的內容是否回應了評審的要求。
+請全程使用繁體中文，以提攜後進的態度給予具體、專業的意見，並嚴格遵守以下規則。
+
+【規則】
+1. 只檢查，不代寫。不提供改寫後的句子、範例或範本。即使使用者要求「幫我改」「給我範例」，也只用提問引導。
+2. 不提供、不推薦、不補充任何文獻或數據。
+3. 只依評審的意見檢查，不自行增加評審沒有提出的要求。
+4. 內容若出現機構名稱、人員姓名或可辨識的病人資料，先提醒刪除（學會規定送審稿件不得出現）。
+5. 只根據貼上的文字判斷，不推測沒寫出來的內容。
+6. 不給分數，不預測學會的審查結果。
+
+【步驟】
+1. 把評審意見拆成一條一條的要求，標明來自哪一位評審，保留評審的原意。
+2. 逐條檢查修改後的內容：
+   - 判定：已回應／部分回應／未回應
+   - 依據：引用修改後內容的原句（沒寫到就註明「未提及」）
+   - 引導問題：一個問題，幫助使用者自己想出怎麼改（已回應者可省略）
+3. 兩位評審的意見互相矛盾時，指出矛盾之處，請使用者自行決定如何處理，不替評審下結論。
+4. 評審意見不夠具體、無法判斷時，說明無法判斷的原因。`];
+  let head = `【本項：${st.name}】`;
+  if (st.crit) head += '\n學會對本項的評審重點，只用來理解評審意見，不要另外逐項審核：\n' + num(st.crit.concat(st.critBody || []));
+  p.push(head);
+  if ((it.r1 || '').trim()) p.push(block('評審一的意見', it.r1));
+  if ((it.r2 || '').trim()) p.push(block('評審二的意見', it.r2));
+  return p.concat(revBlocks(st)).join('\n\n');
+}
+function renderRevise(){
+  const panel = document.getElementById('panel'), rv = revState(), secs = revSections();
+  const st = secs.find(x => x.id === rv.sel);
+  let h = `<h2>依評審意見修改</h2>
+    <p class="lead">送審後收到評審意見時使用。選一個大項，貼上兩位評審對這一項的意見和你修改後的內容，AI 會把意見拆成一條一條，逐條檢查有沒有回應到。</p>
+    <h3><label for="sec">要修改的大項</label></h3>
+    <select id="sec"><option value="">請選擇</option>${secs.map(x =>
+      `<option value="${x.id}" ${rv.sel === x.id ? 'selected' : ''}>${x.num ? x.num + '、' : ''}${x.name}</option>`).join('')}</select>`;
+  if (st){
+    const shared = st.kind === 'overall' || st.kind === 'whole';
+    h += `<h3><label for="r1">評審一的意見</label></h3><textarea id="r1" class="small" placeholder="貼上評審一對這一項的意見。"></textarea>
+      <h3><label for="r2">評審二的意見</label></h3><textarea id="r2" class="small" placeholder="貼上評審二對這一項的意見。沒有的話可以留白。"></textarea>`;
+    if (shared) h += `<h3>修改後的內容</h3><p class="lead">這一項使用你在其他大項貼過的內容。請先到各大項把內容更新成修改後的版本。</p>`;
+    else h += `<h3><label for="txt">修改後的${st.inputName || st.name}</label></h3>
+      <textarea id="txt" placeholder="貼上修改後的內容。" ${st.kind==='all'?'style="min-height:90px"':''}></textarea>
+      <p class="note">這裡和「${st.num}、${st.name}」是同一份內容，在這裡修改，那一項也會跟著更新。${st.kind === 'all' ? '指令會一併帶入其他大項的內容。' : ''}</p>`;
+    h += `<h3>送給 AI 檢查</h3>
+      <p class="lead">複製指令後，到你常用的 AI 開一個新對話，貼上送出。</p>
+      <div class="row" style="margin-top:10px"><button class="btn" id="copy">複製修改檢查指令</button></div>
+      <div id="flash"></div>
+      <details id="peek"><summary>看指令內容</summary><pre id="prompt"></pre></details>
+      <p class="note">AI 只檢查評審提出的意見。想依學會評審重點完整審一次，請用該大項本身的指令。</p>`;
+  }
+  panel.innerHTML = h;
+  document.getElementById('sec').onchange = e => { rv.sel = e.target.value; flash = null; save(); render(); };
+  if (!st) return;
+  const it = rv.items[st.id] || (rv.items[st.id] = {});
+  const refresh = () => { document.getElementById('prompt').textContent = buildRevise(st); };
+  ['r1','r2'].forEach(k => { const el = document.getElementById(k); el.value = it[k] || ''; el.oninput = () => { it[k] = el.value; save(); refresh(); }; });
+  const txt = document.getElementById('txt');
+  if (document.getElementById('txt') && !(st.kind === 'overall' || st.kind === 'whole')){ txt.value = S().text[st.id] || ''; txt.oninput = () => { S().text[st.id] = txt.value; save(); refresh(); }; }
+  refresh(); showFlash();
+  document.getElementById('copy').onclick = async () => {
+    if (!(it.r1 || '').trim() && !(it.r2 || '').trim()){ flash = { warn:true, text:'還沒有評審意見。先貼上至少一位評審的意見。' }; return showFlash(); }
+    if (!revReady(st)){ flash = { warn:true, text:'還沒有修改後的內容。' + (st.kind === 'overall' || st.kind === 'whole' ? '先到各大項貼上修改後的版本。' : '先在上面貼上。') }; return showFlash(); }
+    const ok = await copyText(buildRevise(st));
+    const ids = findIdentifiers(revBlocks(st).join('\n'));
+    let text = ok ? '已複製修改檢查指令。到 AI 開新對話貼上。' : '無法自動複製。請展開「看指令內容」，手動全選複製。';
+    if (ids.length) text += `　內容裡可能有${ids.join('、')}。貼到 AI 之前請先刪除。`;
+    flash = { warn: !ok || ids.length > 0, text };
+    showFlash();
+    if (!ok) document.getElementById('peek').open = true;
+  };
+}
 
 /* ---------- 引用與參考文獻比對（不經過 AI） ---------- */
 const escRe = x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -574,6 +669,10 @@ function exportText(){
     if (st.ask){ add('舉手發問', T.ask); if (st.modes) add('舉手發問：護理問題', T.askR); }
     else if (!st.noInput) add(st.num + '、' + st.name + (st.inputName ? '（' + st.inputName + '）' : ''), T[st.id]);
   });
+  const rv = revState();
+  revSections().forEach(st => { const it = rv.items[st.id] || {};
+    if ((it.r1 || '').trim()) add('評審一的意見：' + st.name, it.r1);
+    if ((it.r2 || '').trim()) add('評審二的意見：' + st.name, it.r2); });
   return n ? out.join('\n') : '';
 }
 const fmsg = t => { document.getElementById('fmsg').textContent = t; };
