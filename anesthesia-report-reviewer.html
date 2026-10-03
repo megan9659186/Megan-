@@ -87,6 +87,7 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 select{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:var(--field);color:var(--ink);max-width:100%}
 select:focus-visible{outline:2px solid var(--green);outline-offset:2px}
 textarea.small{min-height:120px}
+input[type=number]{font:inherit;width:6em;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--field);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -125,6 +126,8 @@ function block(title, text){ return `【${title}】\n<<<\n${(text||'').trim()}\n
 /* ================= 讀書報告 ================= */
 const READING = {
   title:'讀書報告',
+  deck:{ bg:'F4E8E4' },
+  talkFlow:'依序：為什麼選這個主題（動機與目的）→ 文獻查證的重點整理 → 對臨床麻醉照護的建議 → 結論。',
   sub:'依台灣麻醉專科護理學會讀書報告評分表審核你的報告。可以照順序，也可以只選想審的大項。每一項會產生一段指令，貼到你常用的 AI 就能得到回饋。',
   body:['intro','lit','concl'],
   common:`你是台灣麻醉專科護理學會（TANA）讀書報告的審核者。使用者是撰寫讀書報告的麻醉護理人員。
@@ -218,6 +221,8 @@ ${block('使用者的舉手發問', T.ask)}
 /* ================= 病例報告 ================= */
 const CASE = {
   title:'病例報告',
+  deck:{ bg:'F1EBE2' },
+  talkFlow:'依序：選案理由 → 病例介紹與評估 → 問題確立與分析 → 麻醉照護措施 → 結果評值 → 討論與對臨床的建議。',
   sub:'依台灣麻醉專科護理學會病例報告評分表審核你的報告。可以照順序，也可以只選想審的大項。每一項會產生一段指令，貼到你常用的 AI 就能得到回饋。',
   banner:'貼上內容前先去識別化：刪除病人姓名、病歷號、床號、生日，以及機構名稱和人員姓名。貼到 AI 的內容會離開你的裝置。',
   body:['abstract','intro','lit','case','problem','plan','eval','disc'],
@@ -305,6 +310,8 @@ ${FMT}`,
 /* ================= 麻醉照護計畫 ================= */
 const PLAN = {
   title:'麻醉照護計畫',
+  deck:{ bg:'E8ECEF' },
+  talkFlow:'依序：病人簡介 → 檢驗檢查的重要發現 → 麻醉評估（呼吸道、心血管、呼吸系統、ASA）→ 麻醉照護計畫（術前、術中、術後）→ 這個個案的照護重點。',
   sub:'依台灣麻醉專科護理學會麻醉照護計畫評分表審核你的計畫。可以照順序，也可以只選想審的大項。每一項會產生一段指令，貼到你常用的 AI 就能得到回饋。',
   banner:'貼上內容前先去識別化：刪除病人姓名、病歷號、床號、生日，以及機構名稱和人員姓名。貼到 AI 的內容會離開你的裝置。',
   body:['patient','labs','assess','plan'],
@@ -358,7 +365,7 @@ const store = {
   set(v){ mem.v = v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} },
   clear(){ mem = {}; try{ localStorage.removeItem(KEY); }catch(e){} }
 };
-const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G', rev:{ sel:'' } });
+const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G', rev:{ sel:'' }, talk:{ min:30, outline:'' } });
 const blank = () => ({ kit:'plan', plan:blankKit(), reading:blankKit(), case:blankKit() });
 let ALL = Object.assign(blank(), store.get() || {});
 if (!KITS[ALL.kit]) ALL.kit = 'plan';
@@ -448,7 +455,8 @@ function renderRail(){
     `<button data-i="${i}" class="${cur === i ? 'cur' : ''}" ${cur===i?'aria-current="step"':''}>
       <span class="num">${st.num}</span><span>${st.name}</span></button>`).join('') +
   `<button data-i="${n}" class="${cur === n ? 'cur' : ''}"><span class="num">終</span><span>送審前自我檢查</span></button>` +
-  `<button data-i="${n+1}" class="${cur === n+1 ? 'cur' : ''}"><span class="num">修</span><span>依評審意見修改</span></button>`;
+  `<button data-i="${n+1}" class="${cur === n+1 ? 'cur' : ''}"><span class="num">修</span><span>依評審意見修改</span></button>` +
+  `<button data-i="${n+2}" class="${cur === n+2 ? 'cur' : ''}"><span class="num">講</span><span>口頭報告</span></button>`;
   rail.querySelectorAll('button').forEach(b => b.onclick = () => { S().cur = +b.dataset.i; flash = null; save(); render(); });
 }
 function renderFinal(){
@@ -503,7 +511,8 @@ function render(){
   renderHead(); renderRail();
   const i = S().cur;
   if (i === K().stages.length) return renderFinal();
-  if (i > K().stages.length) return renderRevise();
+  if (i === K().stages.length + 1) return renderRevise();
+  if (i > K().stages.length + 1) return renderTalk();
   const st = K().stages[i];
   if (st.ask) return renderAsk(i);
   const panel = document.getElementById('panel'), label = st.inputName || st.name;
@@ -674,6 +683,156 @@ function renderRevise(){
     flash = { warn: !ok || ids.length > 0, text };
     showFlash();
     if (!ok) document.getElementById('peek').open = true;
+  };
+}
+
+/* ---------- 口頭報告 ---------- */
+function talkState(){ const x = S(); if (!x.talk) x.talk = { min:30, outline:'' }; return x.talk; }
+function talkBlocks(){
+  return K().stages.filter(st => !st.ask && !st.noInput && has(st.id))
+    .map(st => block(st.kind === 'all' ? '題目' : st.name, S().text[st.id]));
+}
+function buildTalk(){
+  const min = Math.min(90, Math.max(5, +talkState().min || 30));
+  const talk = Math.max(3, min - 5), lo = Math.max(4, Math.round(talk / 2)), hi = Math.max(lo + 1, Math.round(talk / 1.5));
+  return [`你是麻醉護理臨床教師，協助使用者把寫好的${K().title}整理成晨會口頭報告的投影片大綱。
+請全程使用繁體中文，並嚴格遵守以下規則。
+
+【規則】
+1. 只能使用下方報告裡已有的內容，不新增報告沒有的資料、文獻、數據或臨床建議。
+2. 不修改報告的事實內容。報告前後不一致的地方，在大綱之後另外列出提醒，不要自行決定哪個正確。
+3. 不出現機構名稱、人員姓名或可辨識的病人資料；報告內容若有，先提醒使用者刪除。
+4. 不給分數，不預測學會的審查結果。
+
+【報告條件】
+- 場合：單位晨會，聽眾是麻醉科的護理同仁
+- 時間：共 ${min} 分鐘，最後保留約 5 分鐘討論
+- 投影片：${lo} 至 ${hi} 張（含第一張標題頁與最後一張討論頁）
+
+【內容安排】
+${K().talkFlow}
+每張投影片只講一個重點。檢驗數值等表格資料，只挑與麻醉照護有關的重要數值。
+
+【輸出格式】嚴格依照下面的格式，把整份大綱放在一個程式碼區塊裡，不要加其他說明文字：
+【投影片 1】標題（20 字以內）
+・條列重點（每點 25 字以內，每張 3 至 5 點）
+・條列重點
+備註：這一張要講的內容，2 至 4 句口語化的講稿，最後註明建議時間
+
+第一張是標題頁：標題寫報告題目，條列點只寫「${K().title}」。
+最後一張是討論頁：列出 2 至 3 個可以和同仁討論的問題，問題必須來自報告內容。`].concat(talkBlocks()).join('\n\n');
+}
+function parseOutline(t){
+  const slides = []; let cur = null, inNotes = false;
+  const clean = x => x.replace(/\*\*/g, '').replace(/`/g, '').trim();
+  (t || '').split('\n').forEach(line => {
+    const raw = line.trim();
+    if (!raw || /^```/.test(raw)) return;
+    let m = raw.match(/^(?:[#>*\s]*)[【\[［]?\s*投影片\s*\d+\s*[】\]］]?\s*[:：]?\s*(.*)$/);
+    if (!m && /^#{1,3}\s+\S/.test(raw)) m = [raw, raw.replace(/^#{1,3}\s+/, '')];
+    if (m){ cur = { title:clean(m[1]), bullets:[], notes:'' }; slides.push(cur); inNotes = false; return; }
+    if (!cur) return;
+    const nm = raw.match(/^[・•\-*－\s]*(?:\*\*)?(?:備註|講稿)(?:\*\*)?\s*[:：]\s*(.*)$/);
+    if (nm){ cur.notes = clean(nm[1]); inNotes = true; return; }
+    const isBullet = /^([・•\-*－]|\d+[.、)])/.test(raw);
+    if (inNotes && !isBullet){ cur.notes += (cur.notes ? '\n' : '') + clean(raw); return; }
+    inNotes = false;
+    if (!cur.title && !isBullet){ cur.title = clean(raw); return; }
+    const b = clean(raw.replace(/^([・•\-*－]\s*|\d+[.、)]\s*)/, ''));
+    if (b) cur.bullets.push(b);
+  });
+  return slides.filter(x => x.title || x.bullets.length);
+}
+function buildDeck(Pptx, slides, th, title){
+  const pres = new Pptx();
+  pres.layout = 'LAYOUT_16x9';
+  pres.title = title;
+  const F = 'Microsoft JhengHei';
+  slides.forEach((sl, i) => {
+    const s = pres.addSlide();
+    s.background = { color: th.bg };
+    const n = sl.bullets.length, chars = sl.bullets.join('').length;
+    if (i === 0){
+      s.addShape(pres.ShapeType.rect, { x:0.6, y:1.75, w:0.12, h:1.5, fill:{ color:th.accent }, line:{ color:th.accent } });
+      s.addText(sl.title || title, { x:0.95, y:1.5, w:8.4, h:2.0, fontFace:F, fontSize: (sl.title || '').length > 22 ? 30 : 36,
+        bold:true, color:th.ink, valign:'middle', margin:0, isTextBox:true, fit:'shrink' });
+      if (n) s.addText(sl.bullets.map((b, j) => ({ text:b, options:{ breakLine: j < n - 1 } })),
+        { x:0.95, y:3.65, w:8.4, h:1.2, fontFace:F, fontSize:18, color:th.muted, valign:'top', margin:0, isTextBox:true });
+    } else {
+      s.addShape(pres.ShapeType.rect, { x:0.5, y:0.5, w:0.1, h:0.6, fill:{ color:th.accent }, line:{ color:th.accent } });
+      s.addText(sl.title, { x:0.78, y:0.4, w:8.7, h:0.8, fontFace:F, fontSize: sl.title.length > 20 ? 22 : 26,
+        bold:true, color:th.ink, valign:'middle', margin:0, isTextBox:true, fit:'shrink' });
+      const fs = (n <= 4 && chars <= 110) ? 22 : (n <= 6 && chars <= 190) ? 19 : 16;
+      if (n) s.addText(sl.bullets.map((b, j) => ({ text:b, options:{ bullet:true, breakLine: j < n - 1 } })),
+        { x:0.78, y:1.45, w:8.6, h:3.5, fontFace:F, fontSize:fs, color:th.ink, valign:'top', paraSpaceAfter:10, margin:0, isTextBox:true });
+      s.addText(String(i + 1), { x:9.0, y:5.12, w:0.6, h:0.3, fontFace:F, fontSize:11, color:th.muted, align:'right', margin:0, isTextBox:true });
+    }
+    if (sl.notes) s.addNotes(sl.notes);
+  });
+  return pres;
+}
+const PPTX_URLS = ['https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.bundle.js', 'https://unpkg.com/pptxgenjs@4.0.1/dist/pptxgen.bundle.js'];
+function loadPptx(){
+  if (window.PptxGenJS) return Promise.resolve();
+  const tryUrl = url => new Promise((ok, no) => { const sc = document.createElement('script'); sc.src = url; sc.onload = ok; sc.onerror = no; document.head.appendChild(sc); });
+  return PPTX_URLS.reduce((p, url) => p.catch(() => tryUrl(url)), Promise.reject()).then(() => { if (!window.PptxGenJS) throw new Error('load'); });
+}
+function renderTalk(){
+  const panel = document.getElementById('panel'), tk = talkState();
+  panel.innerHTML = `<h2>口頭報告</h2>
+    <p class="lead">把寫好的${K().title}做成晨會口頭報告的投影片。先請 AI 整理大綱，再由這個網頁做成 PPT 檔。</p>
+    <h3>第一步：請 AI 整理投影片大綱</h3>
+    <p class="lead">指令會帶入你在各大項貼過的內容。AI 只能用報告裡已有的內容，不會另外加資料。</p>
+    <p style="margin:10px 0 0"><label for="min">報告時間（分鐘）</label>　<input type="number" id="min" min="5" max="90" value="${+tk.min || 30}"></p>
+    <div class="row" style="margin-top:10px"><button class="btn" id="copy">複製大綱指令</button></div>
+    <div id="flash"></div>
+    <details id="peek"><summary>看指令內容</summary><pre id="prompt"></pre></details>
+    <h3><label for="outline">第二步：貼上 AI 產生的大綱</label></h3>
+    <textarea id="outline" placeholder="【投影片 1】標題&#10;・條列重點&#10;・條列重點&#10;備註：這一張要講的內容"></textarea>
+    <div id="outinfo"></div>
+    <p class="note">可以直接在這裡修改文字。每張投影片以「【投影片 1】標題」開頭，重點各佔一行，「備註：」後面是講稿。</p>
+    <h3>第三步：下載 PPT 檔</h3>
+    <div class="row"><button class="btn" id="mk">下載 PPT 檔（.pptx）</button></div>
+    <div id="flashB"></div>
+    <p class="note">講稿會放在每張投影片的備註欄，配色和目前的報告類型一致。表格和圖片不會自動放進去，請下載後自己加上。製作 PPT 檔需要連上網路。</p>`;
+  const say = (id, warn, text) => { document.getElementById(id).innerHTML = `<p class="msg ${warn ? 'warn' : ''}" role="status">${esc(text)}</p>`; };
+  const info = () => {
+    const sl = parseOutline(tk.outline), el = document.getElementById('outinfo');
+    if (!(tk.outline || '').trim()){ el.innerHTML = ''; return; }
+    if (!sl.length){ el.innerHTML = '<p class="msg warn">辨識不出投影片。請確認每張以「【投影片 1】標題」開頭。</p>'; return; }
+    const long = sl.filter((x, i) => i > 0 && (x.bullets.length > 6 || x.bullets.join('').length > 190)).length;
+    el.innerHTML = `<div class="aux"><h4>辨識出 ${sl.length} 張投影片</h4><ul>${sl.map((x, i) =>
+      `<li>${i + 1}. ${esc(x.title || '（沒有標題）')}　${x.bullets.length} 點${x.notes ? '' : '，沒有講稿'}</li>`).join('')}</ul>` +
+      (long ? `<p>有 ${long} 張的內容偏多，字會縮小。可以刪減重點或拆成兩張。</p>` : '') + '</div>';
+  };
+  const mn = document.getElementById('min'), ol = document.getElementById('outline');
+  const refresh = () => { document.getElementById('prompt').textContent = buildTalk(); };
+  mn.oninput = () => { tk.min = mn.value; save(); refresh(); };
+  ol.value = tk.outline || '';
+  ol.oninput = () => { tk.outline = ol.value; save(); info(); };
+  refresh(); info(); showFlash();
+  document.getElementById('copy').onclick = async () => {
+    if (!talkBlocks().length){ flash = { warn:true, text:'還沒有報告內容。先到各大項貼上內容。' }; return showFlash(); }
+    const ok = await copyText(buildTalk());
+    const ids = findIdentifiers(talkBlocks().join('\n'));
+    let text = ok ? '已複製大綱指令。到 AI 開新對話貼上，再把 AI 產生的大綱貼回第二步。' : '無法自動複製。請展開「看指令內容」，手動全選複製。';
+    if (ids.length) text += `　內容裡可能有${ids.join('、')}。貼到 AI 之前請先刪除。`;
+    flash = { warn: !ok || ids.length > 0, text }; showFlash();
+    if (!ok) document.getElementById('peek').open = true;
+  };
+  document.getElementById('mk').onclick = async () => {
+    const sl = parseOutline(tk.outline);
+    if (!sl.length) return say('flashB', true, '還沒有可以製作的大綱。先完成第二步。');
+    say('flashB', false, '製作中，請稍候。');
+    try{
+      await loadPptx();
+      const d = new Date(), stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+      const pres = buildDeck(window.PptxGenJS, sl, { bg:K().deck.bg, ink:'5A4038', muted:'75584F', accent:'486356' }, sl[0].title || K().title);
+      await pres.writeFile({ fileName:`${K().title}口頭報告-${stamp}.pptx` });
+      say('flashB', false, `已製作 ${sl.length} 張投影片的 PPT 檔。沒有出現下載的話，請確認瀏覽器沒有封鎖下載。`);
+    }catch(e){
+      say('flashB', true, '無法製作 PPT 檔，可能是網路連不上簡報元件。請確認網路後再試；仍然不行的話，可以把第二步的大綱直接貼到 PowerPoint。');
+    }
   };
 }
 
