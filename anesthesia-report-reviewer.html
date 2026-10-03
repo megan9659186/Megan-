@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麻醉護理報告審核引導</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#EBD8D3; --field:#F6ECE9; --ink:#5A4038; --muted:#75584F; --surface:#E0C8C2; --line:#CDB1AA;
+  --green:#486356; --green-ink:#FFFFFF; --amber:#8A5A1E; --amber-bg:#F0DFC0;
+  --kai:"DFKai-SB","BiauKai","Kaiti TC","KaiTi","標楷體",serif;
+  --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 20px 56px}
+header h1{font-family:var(--kai);font-size:2rem;font-weight:700;margin:0 0 4px;letter-spacing:.04em}
+header p{margin:0;color:var(--muted);max-width:38em}
+.layout{display:grid;grid-template-columns:200px 1fr;gap:36px;margin-top:28px}
+#rail{display:flex;flex-direction:column;gap:2px;border-left:2px solid var(--line)}
+#rail button{all:unset;cursor:pointer;display:flex;align-items:baseline;gap:10px;padding:8px 14px;margin-left:-2px;
+  border-left:2px solid transparent;color:var(--muted)}
+#rail button .num{font-family:var(--kai);font-size:1.35rem;font-weight:700;width:1.3em}
+#rail button .st{margin-left:auto;font-size:.8rem}
+#rail button.done{color:var(--ink)}
+#rail button.cur{border-left-color:var(--green);color:var(--green);font-weight:600}
+#rail button:disabled{cursor:not-allowed;opacity:.45}
+#rail button:focus-visible,.btn:focus-visible,.type:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+h2{font-family:var(--kai);font-size:1.6rem;margin:0 0 6px;letter-spacing:.03em}
+h3{font-size:1rem;margin:26px 0 8px}
+.lead{color:var(--muted);margin:0 0 4px;max-width:40em}
+ol.crit{margin:0;padding-left:1.4em;max-width:40em}
+ol.crit li{margin:2px 0}
+.note{color:var(--muted);font-size:.92rem;max-width:40em;margin:8px 0 0}
+textarea{width:100%;min-height:200px;padding:12px 14px;font:inherit;line-height:1.7;color:var(--ink);
+  background:var(--field);border:1px solid var(--line);border-radius:6px;resize:vertical}
+.count{font-size:.9rem;color:var(--muted);margin-top:4px}
+.count.over{color:var(--amber);font-weight:600}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:40em}
+.type{all:unset;cursor:pointer;padding:12px 14px;border:1px solid var(--line);border-radius:6px}
+.type b{display:block}
+.type span{color:var(--muted);font-size:.92rem}
+.type.on{border-color:var(--green);background:var(--surface);box-shadow:inset 3px 0 0 var(--green)}
+.btn{font:inherit;cursor:pointer;padding:9px 18px;border-radius:6px;border:1px solid var(--green);background:var(--green);color:var(--green-ink);font-weight:600}
+.btn.ghost{background:transparent;color:var(--green)}
+.btn.warn{border-color:var(--amber);color:var(--amber);background:transparent}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.msg{margin:10px 0 0;padding:10px 14px;border-radius:6px;background:var(--surface);max-width:40em}
+.msg.warn{background:var(--amber-bg);color:var(--amber)}
+details{margin-top:10px;max-width:46em}
+summary{cursor:pointer;color:var(--muted);font-size:.92rem}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--surface);padding:12px 14px;border-radius:6px;
+  font-family:var(--sans);font-size:.88rem;max-height:320px;overflow:auto;margin:8px 0 0}
+.check label{display:flex;gap:10px;align-items:flex-start;padding:4px 0;max-width:40em}
+.check input{margin-top:.5em;accent-color:var(--green)}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center}
+@media (max-width:760px){
+  .layout{grid-template-columns:1fr;gap:20px}
+  #rail{flex-direction:row;overflow-x:auto;border-left:0;border-bottom:2px solid var(--line)}
+  #rail button{flex:0 0 auto;margin:0 0 -2px;border-left:0;border-bottom:2px solid transparent;padding:6px 12px;gap:6px}
+  #rail button.cur{border-bottom-color:var(--green)}
+  #rail button .st{display:none}
+  .types{grid-template-columns:1fr}
+  header h1{font-size:1.6rem}
+}
+
+:root[data-kit="case"]{--bg:#E6DDD0;--field:#F5EFE6;--muted:#6F5A4E;--surface:#D8CCBB;--line:#C2B29E;--amber:#7F521A;--amber-bg:#EDDBB5}
+.switch{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:16px}
+.switch button{all:unset;cursor:pointer;padding:8px 22px;font-family:var(--kai);font-size:1.15rem;font-weight:700;color:var(--muted)}
+.switch button.on{background:var(--green);color:var(--green-ink)}
+.switch button:focus-visible{outline:2px solid var(--green);outline-offset:-3px}
+.banner{margin:14px 0 0;padding:10px 14px;border-radius:6px;background:var(--amber-bg);color:var(--amber);max-width:46em}
+#sub{margin-top:12px}
+.aux{margin-top:14px;padding:12px 16px;border:1px solid var(--line);border-radius:6px;max-width:46em;background:var(--field)}
+.aux h4{margin:0 0 4px;font-size:1rem}
+.aux ul{margin:2px 0 10px;padding-left:1.3em}
+.aux p{margin:0 0 6px}
+.aux .ok{color:var(--green);font-weight:600}
+#fmsg{flex-basis:100%;min-height:1.2em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>麻醉護理報告審核引導</h1>
+    <div class="switch" id="switch" role="group" aria-label="選擇報告類型"></div>
+    <p id="sub"></p>
+    <p class="banner" id="banner"></p>
+  </header>
+  <div class="layout">
+    <nav id="rail" aria-label="審核大項"></nav>
+    <main id="panel"></main>
+  </div>
+  <footer>
+    <span>你貼上的內容只存在這台裝置的瀏覽器裡，這個網頁不會傳送到任何地方。</span>
+    <div class="row">
+      <button class="btn ghost" id="dl">下載內容（.txt）</button>
+      <button class="btn ghost" id="cp">複製全部內容</button>
+      <button class="btn warn" id="reset">清除內容</button>
+    </div>
+    <span id="fmsg" role="status"></span>
+  </footer>
+</div>
+<script>
+const YEAR = new Date().getFullYear();
+
+const FMT = `【回饋格式】每個評審重點逐項列出：
+- 判定：達成／部分達成／未達成
+- 依據：引用使用者的原句（沒寫到就註明「未提及」）
+- 引導問題：一個問題，幫助使用者自己想出怎麼改`;
+const RETRY = '有「部分達成」或「未達成」時，請使用者修改後再貼上，重新審核。';
+const num = a => a.map((c,n) => `${n+1}. ${c}`).join('\n');
+function block(title, text){ return `【${title}】\n<<<\n${(text||'').trim()}\n>>>`; }
+
+/* ================= 讀書報告 ================= */
+const READING = {
+  title:'讀書報告',
+  sub:'依台灣麻醉專科護理學會讀書報告評分表審核你的報告。可以照順序，也可以只選想審的大項。每一項會產生一段指令，貼到你常用的 AI 就能得到回饋。',
+  body:['intro','lit','concl'],
+  common:`你是台灣麻醉專科護理學會（TANA）讀書報告的審核者。使用者是撰寫讀書報告的麻醉護理人員。
+請全程使用繁體中文，以提攜後進的態度給予具體、專業的意見，並嚴格遵守以下規則。
+
+【規則】
+1. 只審核，不代寫。不提供改寫後的句子、範例或範本。即使使用者要求「幫我改」「給我範例」，也只用提問引導。
+2. 不提供、不推薦、不補充任何文獻或數據。
+3. 只審核下方「本項」的評審重點，不評論其他部分。
+4. 內容若出現機構名稱、人員姓名或可辨識的病人資料，先提醒刪除（學會規定送審稿件不得出現）。
+5. 只根據貼上的文字判斷，不推測沒寫出來的內容。
+6. 不給分數，不預測學會的審查結果。
+
+${FMT}`,
+  stages:[
+    { id:'ask', num:'問', name:'舉手發問', ask:true,
+      lead:'把你在臨床上遇到、想弄懂的事，用自己的話寫下來。不用管格式，像舉手發問一樣就可以。',
+      label:'你想問的事',
+      placeholder:'例如：上週跟了一台機器人輔助攝護腺切除手術，病人頭低腳高很久，拔管後臉很腫。我想知道為什麼會這樣、麻醉護理可以怎麼預防。',
+      how:'複製指令後，到你常用的 AI 開一個新對話，貼上送出。AI 會一次問你一個問題，陪你把問題想清楚，最後由你自己寫出題目，AI 再幫你檢查。',
+      critTitle:'題目寫出來後，AI 會檢查這些重點',
+      after:'題目定好後，把題目和關鍵字貼到「壹、主題」，後面各項的指令會自動帶入。',
+      crit:['題目含關鍵字，且訂有可供檢索的關鍵字','簡潔明確','具特殊性及參考價值，有助於提升護理同仁的照護知能',
+            '具護理重要性與實用性','與麻醉全期照護相關（學會規定必須相關）','有足夠的文獻可以查證'] },
+    { id:'topic', num:'壹', name:'主題',
+      lead:'貼上報告題目與關鍵字。', placeholder:'題目：\n關鍵字：',
+      crit:['題目含關鍵字，且訂有可供檢索的關鍵字','簡潔明確','具特殊性及參考價值',
+            '具護理重要性與實用性','與麻醉全期照護相關（學會規定必須相關）'] },
+    { id:'intro', num:'貳', name:'前言', limit:500, ctx:['topic'],
+      lead:'貼上前言。學會規定含標點 500 字內，超過即不合格。', placeholder:'貼上前言全文。',
+      crit:['說明主題的背景','明確說明主題的重要性及對專業的重要性','具體闡明撰寫動機','具體闡明目的'] },
+    { id:'lit', num:'參', name:'文獻查證', ctx:['topic'],
+      lead:'貼上文獻查證全文，文內引用要保留。', placeholder:'貼上文獻查證全文。',
+      crit:['引述有系統，段落之間有組織','文字有條理、語詞清楚、無錯字','是融會貫通後整理的敘述，不是逐篇摘錄或堆疊',
+            '涵蓋相關知識理論與實證研究','內容與麻醉照護相關','每一處引用皆註明出處',
+            `包含近 5 年的中文與英文文獻，無老舊過時的文獻（今年是西元 ${YEAR} 年）`],
+      extra:'審核結束時提醒使用者：學會規定連續七個字不得與文獻相同，你無法比對原文，請自行逐段檢查。',
+      note:'AI 無法檢查「連續七個字不得與文獻相同」，這一項要自己逐段對照原文。' },
+    { id:'concl', num:'肆', name:'結論', ctx:['topic'],
+      lead:'貼上結論（討論與建議）。', placeholder:'貼上結論全文。',
+      crit:['有重點總結','有文獻查證後的心得','有完成本文後的感想','提出需要討論的問題','對臨床麻醉照護提出具體建議'] },
+    { id:'refs', num:'伍', name:'參考文獻', kind:'refs',
+      lead:'貼上參考文獻列表。指令會帶入你前面貼過的內文，讓 AI 比對文內引用。', placeholder:'貼上參考文獻列表。',
+      crit:['符合 APA 第七版格式','與內文的引用一一對應：列出「文內有引用但列表沒有」及「列表有但文內未引用」者',
+            '中文在前、英文在後；中文依姓名筆劃，英文依姓氏字母排序','文獻與主題相關且合適'],
+      extra:'審核結束時提醒使用者：你無法確認文獻是否真實存在，請自行核對原文。',
+      note:'AI 無法確認文獻是否真實存在，每一篇都要自己核對原文。' },
+    { id:'whole', num:'陸', name:'整體', kind:'whole', noInput:true, parts:['topic','intro','lit','concl'],
+      lead:'這一項使用你在主題、前言、文獻查證、結論貼過的內容，不用再貼。',
+      crit:['整篇結構與組織是否適當','以文章敘述方式撰寫，而非條列或簡報式','文字簡潔、清晰、通順','無錯別字、簡體字、中英文夾雜'] }
+  ],
+  selfCheck:[
+    '近二年內著作（收案日至學會受稿截止日）','前言含標點 500 字內（以 Word 字數統計為準）',
+    '內文至多 16 頁（不含參考文獻），自前言開始編頁碼','每頁 600 字（30 字 × 20 行）以內',
+    '中文標楷體，英文與數字 Times New Roman','大標題 16 號、小標題 14 號（粗體齊左），內文 12 號，表格 10 號',
+    '單行間距，上下邊界 2 公分，左右邊界 3.17 公分','標題層級依「壹、一、（一）、1.、(1)、a.、(a)」',
+    '稿件、圖表、附件都沒有機構名稱、人員姓名及對象','連續七個字不與文獻相同，每處引用都有出處','每一篇參考文獻都核對過原文'],
+  buildAsk(T){
+    return `你是麻醉護理臨床教師，正在陪一位麻醉護理人員把臨床上遇到的問題，整理成一個適合讀書報告的題目。
+請全程使用繁體中文，態度溫和、具體，並嚴格遵守以下規則。
+
+【規則】
+1. 不代寫。不直接給題目、範例題目或改寫後的句子；題目必須由使用者自己寫出來。即使使用者要求「直接給我題目」，也只用提問引導。
+2. 不提供、不推薦任何文獻或數據。
+3. 內容若出現機構名稱、人員姓名或可辨識的病人資料，先提醒刪除。
+4. 不給分數，不預測學會的審查結果。
+
+【第一階段：引導】
+一次只問一個問題，等使用者回答後再問下一個。幫使用者想清楚：
+- 這件事發生在什麼對象、什麼手術或麻醉情境
+- 使用者最想弄懂的是什麼
+- 這件事和麻醉照護的關係，為什麼對麻醉護理同仁重要
+- 範圍是否聚焦到一篇讀書報告寫得完
+可以條列整理使用者已經說過的重點，但只能用使用者自己說過的內容。
+重點清楚後，請使用者自己寫出題目和關鍵字。
+
+【第二階段：檢查題目】
+使用者寫出題目和關鍵字後，改以審核者的角度，依下列評審重點逐項檢查：
+${num(this.stages[0].crit)}
+第 6 項你無法代為確認，請問使用者是否已初步檢索、找到哪些類型的文獻。
+
+${FMT}
+${RETRY}
+
+${block('使用者的舉手發問', T.ask)}
+
+請從第一階段開始，先用一兩句話回應使用者的提問，再問第一個問題。`;
+  }
+};
+
+/* ================= 病例報告 ================= */
+const CASE = {
+  title:'病例報告',
+  sub:'依台灣麻醉專科護理學會病例報告評分表審核你的報告。可以照順序，也可以只選想審的大項。每一項會產生一段指令，貼到你常用的 AI 就能得到回饋。',
+  banner:'貼上內容前先去識別化：刪除病人姓名、病歷號、床號、生日，以及機構名稱和人員姓名。貼到 AI 的內容會離開你的裝置。',
+  body:['abstract','intro','lit','case','problem','plan','eval','disc'],
+  common:`你是台灣麻醉專科護理學會（TANA）病例報告的審核者。使用者是撰寫病例報告的麻醉護理人員。
+請全程使用繁體中文，以提攜後進的態度給予具體、專業的意見，並嚴格遵守以下規則。
+
+【規則】
+1. 只審核，不代寫。不提供改寫後的句子、範例或範本。即使使用者要求「幫我改」「給我範例」，也只用提問引導。
+2. 不提供、不推薦、不補充任何文獻或數據。
+3. 只審核下方「本項」的評審重點，不評論其他部分。
+4. 內容若出現機構名稱、人員姓名或可辨識的病人資料（姓名、病歷號、床號、生日等），先提醒刪除（學會規定送審稿件不得出現）。
+5. 只根據貼上的文字判斷，不推測沒寫出來的內容。
+6. 不給分數，不預測學會的審查結果。
+
+${FMT}`,
+  stages:[
+    { id:'general', num:'壹', name:'通則', inputName:'題目', kind:'all',
+      lead:'貼上報告題目。指令會帶入你在其他大項貼過的內容，一起審核病例的特殊性、架構與文字。', placeholder:'貼上報告題目。',
+      crit:['題目清楚表達病例報告的核心問題，能引起讀者興趣，且與麻醉專師的專業領域密切相關'],
+      critBody:['病例具獨特性或在臨床實務中不常見，可提供學習或反思的機會，或提供臨床實務的參考價值、解決問題的新思維或方法',
+                '架構清晰，完整展現麻醉專師在專業照護中的思考過程','文字流暢、簡明扼要，能準確傳達訊息','沒有錯別字'] },
+    { id:'abstract', num:'貳', name:'摘要', limit:400, limitNote:'，含關鍵詞一起計算',
+      lead:'貼上摘要與關鍵詞。學會規定摘要含標點 400 字以內，超過即不合格。', placeholder:'貼上摘要全文與關鍵詞。',
+      crit:['選案理由：清楚描述為何選擇此病例，說明其麻醉照護實務或學術上的意義','照護期間：以西元年月日呈現病人的麻醉照護期間',
+            '病情簡要描述：包含病人基本病情，讓讀者能快速了解病例背景',
+            '醫療處置或具體照護建議：具體說明醫療處置或麻醉照護措施，突顯麻醉專師的專業判斷和臨床照護的獨特性',
+            '預後結果與建議：說明病人的預後結果，並提供相關的建議或反思','提供適當的關鍵詞'],
+      note:'收案照護期間必須在二年內（收案日至學會受稿截止日），請自行確認。摘要引用文獻時可以不列出處。' },
+    { id:'intro', num:'參', name:'前言', lead:'貼上前言。', placeholder:'貼上前言全文。',
+      crit:['清楚描述撰寫此文的原因或背景動機，並強調對麻醉臨床照護實務的重要性或應用價值',
+            '強調麻醉專業照護在臨床實務中的核心角色，並說明其對病人預後的影響',
+            '臨床表徵：描述此病例的疾病臨床表徵，提供足夠的知識背景解釋其重要性',
+            '診斷與處置學理：描述診斷與處置的學理基礎，並說明麻醉專業照護在其中的關鍵角色'] },
+    { id:'lit', num:'肆', name:'文獻查證', ctx:['case'], lead:'貼上文獻查證全文，文內引用要保留。', placeholder:'貼上文獻查證全文。',
+      crit:['具系統、組織與條理','不過於冗長，沒有與本病例無關的文獻',
+            `含五年內的中、英文獻；主題罕見、無近 5 年文獻可引用者除外（今年是西元 ${YEAR} 年）`,
+            '引用文獻以專業期刊或政府網站公告資料為主',
+            '有效呈現與病例麻醉照護過程相關的內容：能反應、對照或解釋病人問題、臨床發現及醫護措施，並描述該疾病的流行病學、一般診斷與治療',
+            '是否引用高證據等級的實證文獻或照護指引（學會規定未呈現不扣分，有呈現加分；未呈現時請判定為「達成」並註明可加強）'] },
+    { id:'case', num:'伍', name:'病例介紹', lead:'貼上病例介紹。貼上前先刪除所有可辨識病人的資料。', placeholder:'貼上病例介紹全文。',
+      crit:['以病人為中心；家屬或照顧者角色重要時可為共同主體，但不是唯一主體',
+            '現在病史：完整且準確記錄病情的發展過程，包括病徵、症狀、病程及其影響',
+            '過去病史：記錄相關疾病、手術、過敏、用藥史及家族病史，且有助於理解病人現況',
+            '資料來源可靠（如病人訪談、病歷記錄）','身體評估兼具病人的主觀表述與客觀數據',
+            '時效性：評估在適當時間內完成，能反映病人當下的健康狀態','清楚描述臨床表徵，包括初步身體檢查結果',
+            '系統性整合重要的檢驗、檢查與影像學資料，並與身體評估結果做整體分析',
+            '清楚分辨並報告異常與正常的結果，並對異常結果深入探討'] },
+    { id:'problem', num:'陸', name:'問題確立與分析', ctx:['case'], lead:'貼上問題確立與分析。', placeholder:'貼上問題確立與分析全文。',
+      crit:['說明問題是如何從麻醉專師的全面性評估產生的','問題確立與評估的主客觀資料及結果前後一致、合理正確',
+            '客觀性：以病人或家屬的表述和數據進行分析，避免個人偏見','時效性：問題剖析及時進行，並隨病情進展更新',
+            '正確性：分析結果有充分證據和合理的推理，能指引臨床決策',
+            '區辨診斷：利用各項檢查及身體評估的結果，區分不同疾病的可能性，並適當解釋檢查結果',
+            '清楚說明臆測診斷（初步判斷），依此給予進一步的理學檢查、檢驗、檢查或影像學，並說明最後的確認診斷',
+            '有實證文獻支持，討論個案典型與非典型的表現或處置方式，並與文獻出處或學理比較',
+            '整合主客觀資料及相關因素（如年齡、性別、過去病史、家族病史）'] },
+    { id:'plan', num:'柒', name:'問題解決', ctx:['problem','lit'], lead:'貼上問題解決（麻醉照護措施）。表格可以直接貼成文字。', placeholder:'貼上問題解決全文。',
+      crit:['確立診斷後擬定初步的麻醉照護計劃，包括所需的醫療處置和照護措施','照護措施具體明確，直接針對診斷結果和病人的具體需求',
+            '照護目標展現麻醉專科護理師的專業知識和獨特性，並依病人的個別狀況設立','照護措施與問題確立一致、連貫且適當，措施之間相互支持',
+            '具個別性：考慮病人的健康狀況、病史和個人偏好','具可行性：可實際運用於臨床實務','照護措施與文獻查證內容一致，並能從文獻得到支持'],
+      extra:'學會規定：目標不一定要有短、中、長期；以表格或條列方式撰寫皆可，不要因此判定未達成。' },
+    { id:'eval', num:'捌', name:'結果評值', ctx:['plan'], lead:'貼上結果評值。', placeholder:'貼上結果評值全文。',
+      crit:['針對麻醉照護目標與措施兩者評值是否達成，不是只評值目標','探討照護措施是否有效，以及如何影響病人的麻醉經驗和恢復品質',
+            '沒有在結果評值處敘述新的護理措施','只評值麻醉照護期間的問題',
+            '整體成效：以較廣的角度評估（如病人滿意度、術後復原速度、併發症的管理），並比較實際成效與預期成效、分析差異原因',
+            '後續麻醉照護計畫明確具體，依病人實際恢復情況調整，並有實證支持'] },
+    { id:'disc', num:'玖', name:'討論與結論', lead:'貼上討論與結論。', placeholder:'貼上討論與結論全文。',
+      crit:['討論影響該病例麻醉照護成效的相關因素，具特殊性、創新或臨床教學的重要性','突顯該病例對麻醉臨床教學或實務的貢獻',
+            '引用文獻分析影響照護成效的因素','清楚描述照護過程中遇到的具體限制與困難，以及它們對照護成效和病人結果的影響',
+            '提出應對限制與困難的策略或已採取的措施','對爾後麻醉臨床照護的建議具體可行，能提升照護品質與病人安全'] },
+    { id:'refs', num:'拾', name:'參考文獻', kind:'refs',
+      lead:'貼上參考文獻列表。指令會帶入你在其他大項貼過的內文，讓 AI 比對文內引用。', placeholder:'貼上參考文獻列表。',
+      crit:['依 APA 第七版格式撰寫，中文文獻不需加英譯','與內文的引用一一對應：列出「文內有引用但列表沒有」及「列表有但文內未引用」者',
+            '中文在前、英文在後；中文依姓名筆劃，英文依姓氏字母排序'],
+      extra:'審核結束時提醒使用者：你無法確認文獻是否真實存在，請自行核對原文。',
+      note:'AI 無法確認文獻是否真實存在，每一篇都要自己核對原文。' }
+  ],
+  selfCheck:[
+    '近二年內著作，收案照護期間在二年內（收案日至學會受稿截止日）','摘要含標點 400 字以內，並附關鍵詞（以 Word 字數統計為準）',
+    '內文至多 20 頁（不含摘要及參考文獻），含圖表及所有附件','首頁只列題目及摘要，不列作者基本資料，不需封面及目錄；自前言開始編頁碼',
+    '每頁 600 字（30 字 × 20 行）以內','中文標楷體，英文與數字 Times New Roman',
+    '大標題 16 號、小標題 14 號（粗體齊左），內文 12 號，表格 10 號','單行間距，上下邊界 2 公分，左右邊界 3.17 公分',
+    '標題層級依「壹、一、（一）、1.、(1)、a.、(a)」','稿件、圖表、附件都沒有機構名稱、人員姓名及對象',
+    '護理評估、問題確立等照護過程的內容都是自己寫的（與他人內容高度相似會被認定為抄襲）','每一篇參考文獻都核對過原文']
+};
+const KITS = { reading:READING, case:CASE };
+
+/* ---------- 狀態 ---------- */
+let mem = {};
+const KEY = 'tana-report-review';
+const store = {
+  get(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return mem.v||null; } },
+  set(v){ mem.v = v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} },
+  clear(){ mem = {}; try{ localStorage.removeItem(KEY); }catch(e){} }
+};
+const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G' });
+const blank = () => ({ kit:'reading', reading:blankKit(), case:blankKit() });
+let ALL = Object.assign(blank(), store.get() || {});
+if (!KITS[ALL.kit]) ALL.kit = 'reading';
+let flash = null;
+const K = () => KITS[ALL.kit];
+const S = () => ALL[ALL.kit];
+const save = () => store.set(ALL);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const has = id => !!(S().text[id] || '').trim();
+const hasBody = () => K().body.some(has);
+const byId = id => K().stages.find(x => x.id === id);
+
+/* ---------- 工具 ---------- */
+function countWords(s){
+  const c = (s.match(/[\u3001-\u303f\u3400-\u9fff\uff01-\uffef]/g) || []).length;
+  const rest = s.replace(/[\u3000-\u303f\u3400-\u9fff\uff00-\uffef]/g, ' ').trim();
+  return c + (rest ? rest.split(/\s+/).length : 0);
+}
+function findIdentifiers(s){
+  s = s || ''; const out = [];
+  const org = (s.match(/[\u4e00-\u9fff]{2,8}(醫院|醫學中心)/g) || []).filter(x => !/(某|本|該|各|一家|教學)(醫院|醫學中心)$/.test(x));
+  if (org.length) out.push('機構名稱（' + [...new Set(org)].slice(0,3).join('、') + '）');
+  if (/(病歷號|床號|身分證)/.test(s) || /(?<![\d.])\d{7,10}(?![\d.])/.test(s)) out.push('病歷號、床號或證號');
+  return out;
+}
+function critFor(st){
+  if (st.critBody) return hasBody() ? st.crit.concat(st.critBody) : st.crit;
+  if (st.kind === 'refs' && !hasBody()) return st.crit.filter(c => !c.includes('一一對應'));
+  return st.crit;
+}
+function missingNote(st){
+  if (st.kind === 'refs' && !hasBody()) return '你還沒在其他大項貼上內文，AI 無法比對文內引用。貼上內文後，這裡的指令就會加入比對。';
+  if (st.kind === 'all' && !hasBody()) return '你還沒在其他大項貼上內容，這裡只會審題目。貼上內文後，指令會加入病例特殊性、架構與文字的審核。';
+  if (st.kind === 'whole' && !st.parts.some(has)) return '還沒有可以審核的內容。先到主題、前言、文獻查證或結論貼上內容。';
+  return '';
+}
+function askKey(st){ return st.modes && S().mode === 'R' ? 'askR' : 'ask'; }
+function contentFor(st){
+  const T = S().text;
+  if (st.ask) return T[askKey(st)];
+  if (st.kind === 'whole') return st.parts.map(k => T[k]).join('\n');
+  if (st.kind === 'all' || st.kind === 'refs') return [T[st.id]].concat(K().body.map(k => T[k])).join('\n');
+  return T[st.id];
+}
+function buildPrompt(i){
+  const st = K().stages[i], T = S().text;
+  if (st.ask) return K().buildAsk(T, S().mode);
+  const p = [K().common];
+  p.push(`【本項：${st.name}】\n評審重點：\n` + num(critFor(st)));
+  if (st.extra) p.push(st.extra);
+  (st.ctx || []).filter(has).forEach(k => p.push(block(byId(k).name + '，僅供參考', T[k])));
+  if (st.kind === 'refs' && hasBody()) p.push(block('內文，用來比對文內引用', K().body.filter(has).map(k => T[k]).join('\n\n')));
+  if (st.kind === 'whole'){
+    st.parts.filter(has).forEach(k => p.push(block('要審核的內容：' + byId(k).name, T[k])));
+  } else if (st.kind === 'all'){
+    p.push(block('要審核的內容：題目', T[st.id]));
+    K().body.filter(has).forEach(k => p.push(block('要審核的內容：' + byId(k).name, T[k])));
+  } else {
+    p.push(block('要審核的內容：' + st.name, T[st.id]));
+  }
+  return p.join('\n\n');
+}
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try{ ok = document.execCommand('copy'); }catch(e2){}
+    ta.remove(); return ok;
+  }
+}
+
+/* ---------- 畫面 ---------- */
+function renderHead(){
+  document.documentElement.setAttribute('data-kit', ALL.kit);
+  document.getElementById('switch').innerHTML = Object.keys(KITS).map(k =>
+    `<button data-k="${k}" class="${ALL.kit === k ? 'on' : ''}" aria-pressed="${ALL.kit === k}">${KITS[k].title}</button>`).join('');
+  document.querySelectorAll('#switch button').forEach(b => b.onclick = () => { ALL.kit = b.dataset.k; flash = null; save(); render(); });
+  document.getElementById('sub').textContent = K().sub;
+  const bn = document.getElementById('banner');
+  bn.textContent = K().banner || ''; bn.style.display = K().banner ? '' : 'none';
+}
+function renderRail(){
+  const rail = document.getElementById('rail'), n = K().stages.length, cur = S().cur;
+  rail.innerHTML = K().stages.map((st,i) =>
+    `<button data-i="${i}" class="${cur === i ? 'cur' : ''}" ${cur===i?'aria-current="step"':''}>
+      <span class="num">${st.num}</span><span>${st.name}</span></button>`).join('') +
+  `<button data-i="${n}" class="${cur === n ? 'cur' : ''}"><span class="num">終</span><span>送審前自我檢查</span></button>`;
+  rail.querySelectorAll('button').forEach(b => b.onclick = () => { S().cur = +b.dataset.i; flash = null; save(); render(); });
+}
+function renderFinal(){
+  document.getElementById('panel').innerHTML = `
+    <h2>送審前自我檢查</h2>
+    <p class="lead">下面這些項目 AI 審不到，其中幾項不符合就不合格，送審前請逐項確認。</p>
+    <div class="check" style="margin-top:14px">
+      ${K().selfCheck.map((c,n) => `<label><input type="checkbox" data-n="${n}" ${S().check[n]?'checked':''}><span>${c}</span></label>`).join('')}
+    </div>
+    <p class="note">AI 的回饋不等於學會的審查結果。</p>`;
+  document.querySelectorAll('.check input').forEach(el => el.onchange = () => { S().check[el.dataset.n] = el.checked; save(); });
+}
+function wireCopy(i, st, key, emptyMsg, okMsg){
+  document.getElementById('copy').onclick = async () => {
+    if (!st.noInput && !has(key)){ flash = { warn:true, text:emptyMsg }; return showFlash(); }
+    if (st.kind === 'whole' && missingNote(st)){ flash = { warn:true, text:missingNote(st) }; return showFlash(); }
+    const ok = await copyText(buildPrompt(i));
+    const ids = findIdentifiers(contentFor(st));
+    let text = ok ? okMsg : '無法自動複製。請展開「看指令內容」，手動全選複製。';
+    if (ids.length) text += `　內容裡可能有${ids.join('、')}。貼到 AI 之前請先刪除。`;
+    flash = { warn: !ok || ids.length > 0, text };
+    showFlash();
+    if (!ok) document.getElementById('peek').open = true;
+  };
+}
+function renderAsk(i){
+  const st = K().stages[i], panel = document.getElementById('panel');
+  const mk = S().mode === 'R' ? 'R' : 'G';
+  const m = st.modes ? st.modes[mk] : st, key = askKey(st);
+  let h = `<h2>${st.name}</h2><p class="lead">${st.lead}</p>`;
+  if (st.modes) h += `<div class="types" style="margin-top:14px">` + ['G','R'].map(k =>
+    `<button class="type ${mk === k ? 'on' : ''}" data-m="${k}"><b>${st.modes[k].title}</b><span>${st.modes[k].desc}</span></button>`).join('') + `</div>`;
+  h += `<h3><label for="txt">${m.label}</label></h3>
+    <textarea id="txt" placeholder="${esc(m.placeholder)}"></textarea>
+    <h3>送給 AI</h3><p class="lead">${m.how}</p>
+    <div class="row" style="margin-top:10px"><button class="btn" id="copy">複製舉手發問指令</button></div>
+    <div id="flash"></div>
+    <details id="peek"><summary>看指令內容</summary><pre id="prompt"></pre></details>
+    <h3>${m.critTitle}</h3><ol class="crit">${st.crit.map(c => `<li>${esc(c)}</li>`).join('')}</ol>
+    <p class="note">${st.after}</p>`;
+  panel.innerHTML = h;
+  panel.querySelectorAll('.type').forEach(b => b.onclick = () => { S().mode = b.dataset.m; flash = null; save(); render(); });
+  const txt = document.getElementById('txt');
+  const refresh = () => { document.getElementById('prompt').textContent = buildPrompt(i); };
+  txt.value = S().text[key] || '';
+  txt.oninput = () => { S().text[key] = txt.value; save(); refresh(); };
+  refresh(); showFlash();
+  wireCopy(i, st, key, '還沒有內容。先在上面用自己的話寫下來。',
+    mk === 'R' ? '已複製指令。到 AI 開新對話貼上。' : '已複製指令。到 AI 開新對話貼上，然後依 AI 的提問一題一題回答。');
+}
+function render(){
+  renderHead(); renderRail();
+  const i = S().cur;
+  if (i >= K().stages.length) return renderFinal();
+  const st = K().stages[i];
+  if (st.ask) return renderAsk(i);
+  const panel = document.getElementById('panel'), label = st.inputName || st.name;
+  let h = `<h2>${st.num}、${st.name}</h2><p class="lead">${st.lead}</p>
+    <h3>評審重點</h3><ol class="crit">${critFor(st).map(c => `<li>${esc(c)}</li>`).join('')}</ol>`;
+  if (st.note) h += `<p class="note">${st.note}</p>`;
+  if (missingNote(st)) h += `<p class="msg warn">${missingNote(st)}</p>`;
+  if (!st.noInput){
+    h += `<h3><label for="txt">你的${label}</label></h3>
+      <textarea id="txt" placeholder="${esc(st.placeholder)}" ${st.kind==='all'?'style="min-height:90px"':''}></textarea>`;
+    if (st.limit) h += `<div class="count" id="count"></div>`;
+    if (st.kind === 'refs') h += `<div id="refcheck"></div>`;
+  }
+  h += `<h3>送給 AI 審核</h3>
+    <p class="lead">複製指令後，到你常用的 AI 開一個新對話，貼上送出。</p>
+    <div class="row" style="margin-top:10px"><button class="btn" id="copy">複製本項指令</button></div>
+    <div id="flash"></div>
+    <details id="peek"><summary>看指令內容</summary><pre id="prompt"></pre></details>
+    <p class="note">依照 AI 的引導問題修改內容後，可以再複製指令，開新對話重審。</p>`;
+  panel.innerHTML = h;
+  const txt = document.getElementById('txt');
+  const refresh = () => {
+    document.getElementById('prompt').textContent = buildPrompt(i);
+    if (st.kind === 'refs') document.getElementById('refcheck').innerHTML = refCheckHTML();
+    if (st.limit){
+      const cEl = document.getElementById('count'), n = countWords(S().text[st.id] || '');
+      cEl.textContent = `約 ${n} 字／上限 ${st.limit} 字${st.limitNote || ''}（以 Word 字數統計為準）` + (n > st.limit ? '，已超過上限' : '');
+      cEl.className = 'count' + (n > st.limit ? ' over' : '');
+    }
+  };
+  if (!st.noInput){
+    txt.value = S().text[st.id] || '';
+    txt.oninput = () => { S().text[st.id] = txt.value; save(); refresh(); };
+  }
+  refresh(); showFlash();
+  wireCopy(i, st, st.id, `還沒有內容。先在上面貼上你的${label}。`, '已複製本項指令。到 AI 開新對話貼上。');
+}
+function showFlash(){
+  const el = document.getElementById('flash');
+  if (el) el.innerHTML = flash ? `<p class="msg ${flash.warn?'warn':''}" role="status">${esc(flash.text)}</p>` : '';
+}
+
+
+/* ---------- 引用與參考文獻比對（不經過 AI） ---------- */
+const escRe = x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const isCJK = x => /^[\u4e00-\u9fff]/.test(x);
+function parseRefs(text){
+  const refs = [], bad = [];
+  (text || '').split(/\n+/).map(x => x.trim()).filter(Boolean).forEach(ln => {
+    const m = ln.match(/[（(]\s*((?:19|20)\d{2}[a-z]?|n\.d\.|無日期)[^（）()]*[)）]/);
+    if (!m || m.index === 0){ bad.push(ln); return; }
+    const a = ln.slice(0, m.index).trim();
+    const first = isCJK(a) ? a.split(/[、，,；;&]/)[0].replace(/等$/, '').trim()
+                           : (a.includes(',') ? a.split(',')[0] : a.replace(/\.$/, '')).trim();
+    if (!first){ bad.push(ln); return; }
+    refs.push({ first, year:m[1], line:ln });
+  });
+  return { refs, bad };
+}
+function authorRe(first){ return isCJK(first) ? escRe(first) : '(?<![A-Za-z])' + escRe(first) + '(?![A-Za-z])'; }
+function crossCheck(body, refText){
+  const { refs, bad } = parseRefs(refText);
+  const uncited = refs.filter(r =>
+    !new RegExp(authorRe(r.first) + '[^。；;）)\\n]{0,80}?' + escRe(r.year) + '(?![0-9a-z])', 'i').test(body));
+  const seen = new Set(), missing = [];
+  const same = (a, b) => a.toLowerCase().replace(/\s+/g, ' ') === b.toLowerCase().replace(/\s+/g, ' ');
+  const yearRe = /(?<![\d\/\-.])((?:19|20)\d{2}[a-z]?)(?![\d年\/\-.])/g;
+  for (const g of body.matchAll(/[（(]([^（）()]{1,200})[)）]/g)){
+    const pre = body.slice(Math.max(0, g.index - 40), g.index);
+    let lastAuthor = '';
+    g[1].split(/[;；]/).forEach(part => {
+      const ys = [...part.matchAll(yearRe)];
+      if (!ys.length) return;
+      let ap = part.slice(0, ys[0].index).replace(/\[[^\]]*\]/g, '').replace(/^\s*(引自|參見|如|e\.g\.,?|see)\s*/i, '').replace(/[\s,，]+$/, '').trim();
+      if (/\d/.test(ap) || /[=<>:：]/.test(ap)) return;                 // 不是引用（數值、日期等）
+      const narrative = !ap && !lastAuthor;
+      if (narrative && !/^\s*(?:19|20)\d{2}[a-z]?(\s*[,，、]\s*(?:19|20)\d{2}[a-z]?)*\s*$/.test(g[1])) return;
+      const author = ap ? ap.split(/[、,，&]|\s+et\s+al|\s+and\s+|等/i)[0].trim() : lastAuthor;
+      if (ap) lastAuthor = author;
+      ys.forEach(y => {
+        const year = y[1];
+        let ok, label;
+        if (narrative){
+          ok = refs.some(r => r.year === year && new RegExp(authorRe(r.first) + '[^。；;）)\\n]{0,30}$', 'i').test(pre));
+          label = '…' + pre.slice(-12).replace(/\s+/g, ' ') + '（' + year + '）';
+        } else {
+          ok = refs.some(r => r.year === year && same(r.first, author));
+          label = author + '（' + year + '）';
+          if (!ok && refs.some(r => same(r.first, author))) label += '，列表有這位作者但年份不同';
+        }
+        const key = (narrative ? pre.slice(-12) : author.toLowerCase()) + '|' + year;
+        if (seen.has(key)) return; seen.add(key);
+        if (!ok) missing.push(label);
+      });
+    });
+  }
+  return { refs, bad, uncited, missing, cites: seen.size };
+}
+function refCheckHTML(){
+  if (!has('refs')) return '';
+  const body = K().body.filter(has).map(k => S().text[k]).join('\n');
+  let h = '<div class="aux"><h4>輔助檢查：引用與參考文獻比對</h4>';
+  if (!body.trim()) return h + '<p>還沒有內文可以比對。先到其他大項貼上內文。</p></div>';
+  const r = crossCheck(body, S().text.refs);
+  const li = a => '<ul>' + a.map(x => `<li>${esc(x.length > 70 ? x.slice(0, 70) + '…' : x)}</li>`).join('') + '</ul>';
+  h += `<p>列表辨識出 ${r.refs.length} 筆文獻，內文找到 ${r.cites} 個不同的引用。</p>`;
+  if (!r.missing.length && !r.uncited.length && !r.bad.length) h += '<p class="ok">沒有發現對不上的項目。</p>';
+  if (r.missing.length) h += `<p>文內有引用，列表找不到（${r.missing.length}）</p>` + li(r.missing);
+  if (r.uncited.length) h += `<p>列表有，內文找不到引用（${r.uncited.length}）</p>` + li(r.uncited.map(x => x.line));
+  if (r.bad.length) h += `<p>列表中無法辨識作者或年份的行（${r.bad.length}）</p>` + li(r.bad);
+  return h + '<p class="note" style="margin:0">這是網頁用規則比對文字的結果，不經過 AI。每筆文獻要各佔一行；格式不標準的引用可能漏判或誤判，請自己再核對一次。</p></div>';
+}
+
+/* ---------- 匯出 ---------- */
+function exportText(){
+  const T = S().text, d = new Date();
+  const out = [`麻醉護理${K().title}　匯出日期 ${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`, ''];
+  let n = 0;
+  const add = (title, text) => { if ((text || '').trim()){ out.push(`【${title}】`, text.trim(), ''); n++; } };
+  K().stages.forEach(st => {
+    if (st.ask){ add('舉手發問', T.ask); if (st.modes) add('舉手發問：護理問題', T.askR); }
+    else if (!st.noInput) add(st.num + '、' + st.name + (st.inputName ? '（' + st.inputName + '）' : ''), T[st.id]);
+  });
+  return n ? out.join('\n') : '';
+}
+const fmsg = t => { document.getElementById('fmsg').textContent = t; };
+document.getElementById('dl').onclick = () => {
+  const t = exportText();
+  if (!t) return fmsg(`${K().title}還沒有內容可以下載。`);
+  const d = new Date(), stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + t], { type:'text/plain;charset=utf-8' }));
+  a.download = `${K().title}內容-${stamp}.txt`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  fmsg(`已下載${K().title}的內容。沒有出現下載的話，請改用「複製全部內容」。`);
+};
+document.getElementById('cp').onclick = async () => {
+  const t = exportText();
+  if (!t) return fmsg(`${K().title}還沒有內容可以複製。`);
+  fmsg((await copyText(t)) ? `已複製${K().title}的全部內容。` : '無法自動複製，請改用下載。');
+};
+
+/* ---------- 清除 ---------- */
+const resetBtn = document.getElementById('reset');
+let armed = false;
+const resetLabel = () => `清除${K().title}的內容`;
+resetBtn.onclick = () => {
+  if (!armed){ armed = true; resetBtn.textContent = '再按一次確認清除';
+    setTimeout(() => { armed = false; resetBtn.textContent = resetLabel(); }, 4000); return; }
+  ALL[ALL.kit] = blankKit(); save(); flash = null; armed = false; render();
+};
+const _render = render;
+render = function(){ _render(); fmsg(''); if (!armed) resetBtn.textContent = resetLabel(); };
+render();
+</script>
+</body>
+</html>
