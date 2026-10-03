@@ -9,7 +9,7 @@
 <style>
 :root{
   color-scheme:light;
-  --bg:#EBD8D3; --field:#F6ECE9; --ink:#5A4038; --muted:#75584F; --surface:#E0C8C2; --line:#CDB1AA;
+  --bg:#F4E8E4; --field:#FBF6F4; --ink:#5A4038; --muted:#75584F; --surface:#EAD8D3; --line:#CDB1AA;
   --green:#486356; --green-ink:#FFFFFF; --amber:#8A5A1E; --amber-bg:#F0DFC0;
   --kai:"DFKai-SB","BiauKai","Kaiti TC","KaiTi","標楷體",serif;
   --sans:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
@@ -69,7 +69,9 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
   header h1{font-size:1.6rem}
 }
 
-:root[data-kit="case"]{--bg:#E6DDD0;--field:#F5EFE6;--muted:#6F5A4E;--surface:#D8CCBB;--line:#C2B29E;--amber:#7F521A;--amber-bg:#EDDBB5}
+:root[data-kit="plan"]{--bg:#E8ECEF;--field:#F6F8F9;--muted:#5E5550;--surface:#D8DFE4;--line:#B2BDC6;--amber:#7F521A;--amber-bg:#EDDBB5}
+@media (max-width:760px){.switch button{padding:8px 12px;font-size:1rem}}
+:root[data-kit="case"]{--bg:#F1EBE2;--field:#FAF7F2;--muted:#6F5A4E;--surface:#E4DACC;--line:#C2B29E;--amber:#7F521A;--amber-bg:#EDDBB5}
 .switch{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:16px}
 .switch button{all:unset;cursor:pointer;padding:8px 22px;font-family:var(--kai);font-size:1.15rem;font-weight:700;color:var(--muted)}
 .switch button.on{background:var(--green);color:var(--green-ink)}
@@ -300,7 +302,53 @@ ${FMT}`,
     '標題層級依「壹、一、（一）、1.、(1)、a.、(a)」','稿件、圖表、附件都沒有機構名稱、人員姓名及對象',
     '護理評估、問題確立等照護過程的內容都是自己寫的（與他人內容高度相似會被認定為抄襲）','每一篇參考文獻都核對過原文']
 };
-const KITS = { reading:READING, case:CASE };
+/* ================= 麻醉照護計畫 ================= */
+const PLAN = {
+  title:'麻醉照護計畫',
+  sub:'依台灣麻醉專科護理學會麻醉照護計畫評分表審核你的計畫。可以照順序，也可以只選想審的大項。每一項會產生一段指令，貼到你常用的 AI 就能得到回饋。',
+  banner:'貼上內容前先去識別化：刪除病人姓名、病歷號、床號、生日，以及機構名稱和人員姓名。貼到 AI 的內容會離開你的裝置。',
+  body:['patient','labs','assess','plan'],
+  common:`你是台灣麻醉專科護理學會（TANA）麻醉照護計畫的審核者。使用者是撰寫麻醉照護計畫的麻醉護理人員。
+請全程使用繁體中文，以提攜後進的態度給予具體、專業的意見，並嚴格遵守以下規則。
+
+【規則】
+1. 只審核，不代寫。不提供改寫後的句子、範例或範本。即使使用者要求「幫我改」「給我範例」，也只用提問引導。
+2. 不提供、不推薦、不補充任何文獻或數據。
+3. 只審核下方「本項」的評審重點，不評論其他部分。
+4. 內容若出現機構名稱、人員姓名或可辨識的病人資料（姓名、病歷號、床號、生日等），先提醒刪除（學會規定送審稿件不得出現）。
+5. 只根據貼上的文字判斷，不推測沒寫出來的內容。
+6. 不給分數，不預測學會的審查結果。
+
+${FMT}`,
+  stages:[
+    { id:'general', num:'壹', name:'通則', kind:'whole', noInput:true, parts:['patient','labs','assess','plan'],
+      lead:'這一項使用你在病人簡介、檢驗檢查、麻醉評估、麻醉照護計畫與措施貼過的內容，不用再貼。',
+      crit:['文字清晰易懂，沒有冗長或過於複雜的句子','段落之間有邏輯性，並以適當的標題或副標題區分',
+            '內容依序排列，例如：病人簡介、檢驗檢查、麻醉評估、麻醉照護計畫與措施','每個部分有明確的標題，並以簡潔的文字說明重點','沒有錯字'],
+      note:'學會的寫作指引另外提到：個案的選擇應具特殊性及參考價值，能凸顯案例的有趣、創新、臨床重要性或教育意義。' },
+    { id:'patient', num:'貳', name:'病人簡介', lead:'貼上病人簡介（含現在及過去病史）。貼上前先刪除所有可辨識病人的資料。', placeholder:'貼上病人簡介全文。',
+      crit:['詳細描述病人的主要症狀，包括發病時間、症狀持續時間、嚴重程度等','避免使用過於難懂的用語',
+            '列出病人的過去病史，包括既往病史、手術史、用藥史及過敏史等','說明病人的家族病史，包括是否有家族遺傳疾病等'] },
+    { id:'labs', num:'參', name:'檢驗檢查', lead:'貼上檢驗檢查。表格可以直接貼成文字。', placeholder:'貼上檢驗檢查全文。',
+      crit:['列出所有與麻醉相關的檢驗、檢查和影像結果','每個項目都有說明結果，不是只列出項目名稱（學會規定只列項目不給分）',
+            '分析檢驗結果的意義，並說明其與麻醉的關係','以專科護理師的角度提出可能影響麻醉的因素（例如電解質異常、肝腎功能不全）'] },
+    { id:'assess', num:'肆', name:'麻醉評估', ctx:['patient','labs'], lead:'貼上麻醉評估。', placeholder:'貼上麻醉評估全文。',
+      crit:['焦點式麻醉評估包含呼吸道、心血管、呼吸系統及 ASA 評估','詳細描述病人的呼吸道、心血管、呼吸系統狀況，並說明其與麻醉的關係',
+            '評估病人的 ASA 分級，並說明評估的意義','麻醉評估有異常的部分（例如呼吸道狹窄、心臟功能不全），詳細說明其原因、嚴重程度和可能影響麻醉的因素'] },
+    { id:'plan', num:'伍', name:'麻醉照護計畫與措施', ctx:['patient','labs','assess'], lead:'貼上麻醉照護計畫與措施。表格可以直接貼成文字。', placeholder:'貼上麻醉照護計畫與措施全文。',
+      crit:['具個別性：依病人的個別情況制定（例如年齡、體重、病史、手術類型）','適當性：說明選擇適當的麻醉藥物和方法，以確保病人的安全和舒適',
+            '完整性：包括術前、術中和術後的照護措施','術前評估：病人的生命徵象、藥物過敏史、既往病史等',
+            '術中監測：監測項目、病人的生命徵象、麻醉深度、血壓、血氧飽和度或進階監測項目等',
+            '術後照顧：針對術式的照護重點、傷口及引流管路狀況、使用的止痛藥物及止痛效果等'] }
+  ],
+  selfCheck:[
+    '照護日至送審日在二年內','內文至多 15 頁，自病人簡介開始編頁碼，含圖表及所有附件','每頁 600 字（30 字 × 20 行）以內',
+    '中文標楷體，英文與數字 Times New Roman','大標題 16 號、小標題 14 號（粗體齊左），內文 12 號，表格 10 號',
+    '單行間距，上下邊界 2 公分，左右邊界 3.17 公分','標題層級依「壹、一、（一）、1.、(1)、a.、(a)」',
+    '稿件、圖表、附件都沒有機構名稱、人員姓名及對象','內容是自己寫的，不是抄襲或以舊稿更改日期','送審電子檔為 PDF，小於 10MB']
+};
+
+const KITS = { plan:PLAN, reading:READING, case:CASE };
 
 /* ---------- 狀態 ---------- */
 let mem = {};
@@ -310,10 +358,10 @@ const store = {
   set(v){ mem.v = v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} },
   clear(){ mem = {}; try{ localStorage.removeItem(KEY); }catch(e){} }
 };
-const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G', rev:{ sel:'', items:{} } });
-const blank = () => ({ kit:'reading', reading:blankKit(), case:blankKit() });
+const blankKit = () => ({ text:{}, check:{}, cur:0, mode:'G', rev:{ sel:'' } });
+const blank = () => ({ kit:'plan', plan:blankKit(), reading:blankKit(), case:blankKit() });
 let ALL = Object.assign(blank(), store.get() || {});
-if (!KITS[ALL.kit]) ALL.kit = 'reading';
+if (!KITS[ALL.kit]) ALL.kit = 'plan';
 let flash = null;
 const K = () => KITS[ALL.kit];
 const S = () => ALL[ALL.kit];
@@ -344,7 +392,7 @@ function critFor(st){
 function missingNote(st){
   if (st.kind === 'refs' && !hasBody()) return '你還沒在其他大項貼上內文，AI 無法比對文內引用。貼上內文後，這裡的指令就會加入比對。';
   if (st.kind === 'all' && !hasBody()) return '你還沒在其他大項貼上內容，這裡只會審題目。貼上內文後，指令會加入病例特殊性、架構與文字的審核。';
-  if (st.kind === 'whole' && !st.parts.some(has)) return '還沒有可以審核的內容。先到主題、前言、文獻查證或結論貼上內容。';
+  if (st.kind === 'whole' && !st.parts.some(has)) return '還沒有可以審核的內容。先到其他大項貼上內容。';
   return '';
 }
 function askKey(st){ return st.modes && S().mode === 'R' ? 'askR' : 'ask'; }
@@ -501,8 +549,15 @@ function showFlash(){
 
 
 /* ---------- 依評審意見修改 ---------- */
-function revState(){ const x = S(); if (!x.rev) x.rev = { sel:'', items:{} }; if (!x.rev.items) x.rev.items = {}; return x.rev; }
+function revState(){ const x = S(); if (!x.rev) x.rev = { sel:'' }; return x.rev; }
 function revSections(){ return K().stages.filter(st => !st.ask).concat([{ id:'overall', name:'總評', kind:'overall' }]); }
+const revHasComments = () => { const rv = revState(); return !!((rv.r1 || '').trim() || (rv.r2 || '').trim()); };
+function revComments(){
+  const rv = revState(), out = [];
+  if ((rv.r1 || '').trim()) out.push(block('評審一的意見', rv.r1));
+  if ((rv.r2 || '').trim()) out.push(block('評審二的意見', rv.r2));
+  return out;
+}
 function revBlocks(st){
   const T = S().text, out = [];
   const add = k => { if (has(k)) out.push(block('修改後的內容：' + (byId(k).kind === 'all' ? '題目' : byId(k).name), T[k])); };
@@ -516,8 +571,28 @@ function revBlocks(st){
   return out;
 }
 function revReady(st){ return (st.kind === 'overall' || st.kind === 'whole') ? revBlocks(st).length > 0 : has(st.id); }
+function buildOrganize(){
+  const t = K().title;
+  return [`你是台灣麻醉專科護理學會（TANA）${t}的審核者。使用者的${t}送審後收到評審的意見。請把評審意見整理成一份修改清單，方便使用者逐項修改。
+請全程使用繁體中文，並嚴格遵守以下規則。
+
+【規則】
+1. 只整理，不代寫。不提供改寫後的句子、範例或範本。
+2. 保留評審的原意，不自行增加評審沒有提出的要求，也不省略任何一條意見。
+3. 不提供、不推薦任何文獻或數據。
+4. 不給分數，不預測學會的審查結果。
+5. 內容若出現姓名、會員編號或機構名稱，提醒使用者刪除。
+
+【步驟】
+1. 把評審意見拆成一條一條，每條標明來自評審一或評審二。
+2. 依下列大項分組；不屬於任何大項的意見（例如版面格式、前後內容不一致）放在「其他」：
+   ${K().stages.filter(st => !st.ask).map(st => st.name).join('、')}
+3. 每條註明類型：「需要修改」或「肯定，不需修改」。評審的語氣無法判斷時，註明「無法判斷」。
+4. 兩位評審提到同一件事時，合併成一條並標示兩位都有提出；意見互相矛盾時，指出矛盾之處，請使用者自行決定如何處理。
+5. 最後列出各大項「需要修改」的條數。`].concat(revComments()).join('\n\n');
+}
 function buildRevise(st){
-  const it = revState().items[st.id] || {}, t = K().title;
+  const t = K().title, all = st.kind === 'overall';
   const p = [`你是台灣麻醉專科護理學會（TANA）${t}的審核者。使用者的${t}送審後收到評審意見，已依意見修改。請檢查修改後的內容是否回應了評審的要求。
 請全程使用繁體中文，以提攜後進的態度給予具體、專業的意見，並嚴格遵守以下規則。
 
@@ -530,55 +605,68 @@ function buildRevise(st){
 6. 不給分數，不預測學會的審查結果。
 
 【步驟】
-1. 把評審意見拆成一條一條的要求，標明來自哪一位評審，保留評審的原意。
+1. ${all ? '把評審意見拆成一條一條，標明來自哪一位評審，保留評審的原意。評審肯定、不需修改的部分可以略過。'
+         : `評審意見是整段的，涵蓋多個大項。先挑出與「${st.name}」有關、需要修改的意見，逐條列出並標明來自哪一位評審，保留評審的原意。與本項無關的意見略過，不要檢查。`}
 2. 逐條檢查修改後的內容：
    - 判定：已回應／部分回應／未回應
    - 依據：引用修改後內容的原句（沒寫到就註明「未提及」）
    - 引導問題：一個問題，幫助使用者自己想出怎麼改（已回應者可省略）
 3. 兩位評審的意見互相矛盾時，指出矛盾之處，請使用者自行決定如何處理，不替評審下結論。
-4. 評審意見不夠具體、無法判斷時，說明無法判斷的原因。`];
+4. 評審意見不夠具體、無法判斷時，說明無法判斷的原因。${all ? '' : '\n5. 評審對本項沒有提出需要修改的意見時，直接說明，不要自行找問題。'}`];
   let head = `【本項：${st.name}】`;
   if (st.crit) head += '\n學會對本項的評審重點，只用來理解評審意見，不要另外逐項審核：\n' + num(st.crit.concat(st.critBody || []));
   p.push(head);
-  if ((it.r1 || '').trim()) p.push(block('評審一的意見', it.r1));
-  if ((it.r2 || '').trim()) p.push(block('評審二的意見', it.r2));
-  return p.concat(revBlocks(st)).join('\n\n');
+  return p.concat(revComments(), revBlocks(st)).join('\n\n');
 }
 function renderRevise(){
   const panel = document.getElementById('panel'), rv = revState(), secs = revSections();
   const st = secs.find(x => x.id === rv.sel);
+  const shared = st && (st.kind === 'overall' || st.kind === 'whole');
   let h = `<h2>依評審意見修改</h2>
-    <p class="lead">送審後收到評審意見時使用。選一個大項，貼上兩位評審對這一項的意見和你修改後的內容，AI 會把意見拆成一條一條，逐條檢查有沒有回應到。</p>
-    <h3><label for="sec">要修改的大項</label></h3>
-    <select id="sec"><option value="">請選擇</option>${secs.map(x =>
+    <p class="lead">送審後收到學會通知信時使用。評審意見只要貼一次，之後每個大項都會自動帶入。</p>
+    <h3><label for="r1">評審一的意見</label></h3>
+    <textarea id="r1" class="small" placeholder="把通知信裡評審一的整段意見貼上。只貼意見本身，不要貼姓名和會員編號。"></textarea>
+    <h3><label for="r2">評審二的意見</label></h3>
+    <textarea id="r2" class="small" placeholder="把通知信裡評審二的整段意見貼上。"></textarea>
+    <h3>第一步：整理成修改清單</h3>
+    <p class="lead">AI 會把整段意見拆成一條一條，依大項分組，並標出哪些需要修改、哪些是肯定。</p>
+    <div class="row" style="margin-top:10px"><button class="btn" id="org">複製整理意見指令</button></div>
+    <div id="flashA"></div>
+    <details><summary>看指令內容</summary><pre id="promptA"></pre></details>
+    <h3><label for="sec">第二步：逐項檢查修改後的內容</label></h3>
+    <p class="lead">選一個大項，貼上修改後的內容。AI 會從評審意見中挑出和這一項有關的部分，逐條檢查有沒有回應到。</p>
+    <select id="sec" style="margin-top:10px"><option value="">請選擇大項</option>${secs.map(x =>
       `<option value="${x.id}" ${rv.sel === x.id ? 'selected' : ''}>${x.num ? x.num + '、' : ''}${x.name}</option>`).join('')}</select>`;
   if (st){
-    const shared = st.kind === 'overall' || st.kind === 'whole';
-    h += `<h3><label for="r1">評審一的意見</label></h3><textarea id="r1" class="small" placeholder="貼上評審一對這一項的意見。"></textarea>
-      <h3><label for="r2">評審二的意見</label></h3><textarea id="r2" class="small" placeholder="貼上評審二對這一項的意見。沒有的話可以留白。"></textarea>`;
-    if (shared) h += `<h3>修改後的內容</h3><p class="lead">這一項使用你在其他大項貼過的內容。請先到各大項把內容更新成修改後的版本。</p>`;
+    if (shared) h += `<p class="note">${st.name}使用你在各大項貼過的內容。請先到各大項把內容更新成修改後的版本。${st.kind === 'overall' ? '這一項會檢查全部的評審意見，適合用來確認跨大項的問題，例如前後內容不一致。' : ''}</p>`;
     else h += `<h3><label for="txt">修改後的${st.inputName || st.name}</label></h3>
       <textarea id="txt" placeholder="貼上修改後的內容。" ${st.kind==='all'?'style="min-height:90px"':''}></textarea>
       <p class="note">這裡和「${st.num}、${st.name}」是同一份內容，在這裡修改，那一項也會跟著更新。${st.kind === 'all' ? '指令會一併帶入其他大項的內容。' : ''}</p>`;
-    h += `<h3>送給 AI 檢查</h3>
-      <p class="lead">複製指令後，到你常用的 AI 開一個新對話，貼上送出。</p>
-      <div class="row" style="margin-top:10px"><button class="btn" id="copy">複製修改檢查指令</button></div>
+    h += `<div class="row" style="margin-top:10px"><button class="btn" id="copy">複製修改檢查指令</button></div>
       <div id="flash"></div>
       <details id="peek"><summary>看指令內容</summary><pre id="prompt"></pre></details>
       <p class="note">AI 只檢查評審提出的意見。想依學會評審重點完整審一次，請用該大項本身的指令。</p>`;
   }
   panel.innerHTML = h;
+  const refresh = () => {
+    document.getElementById('promptA').textContent = buildOrganize();
+    if (st) document.getElementById('prompt').textContent = buildRevise(st);
+  };
+  ['r1','r2'].forEach(k => { const el = document.getElementById(k); el.value = rv[k] || ''; el.oninput = () => { rv[k] = el.value; save(); refresh(); }; });
   document.getElementById('sec').onchange = e => { rv.sel = e.target.value; flash = null; save(); render(); };
-  if (!st) return;
-  const it = rv.items[st.id] || (rv.items[st.id] = {});
-  const refresh = () => { document.getElementById('prompt').textContent = buildRevise(st); };
-  ['r1','r2'].forEach(k => { const el = document.getElementById(k); el.value = it[k] || ''; el.oninput = () => { it[k] = el.value; save(); refresh(); }; });
-  const txt = document.getElementById('txt');
-  if (document.getElementById('txt') && !(st.kind === 'overall' || st.kind === 'whole')){ txt.value = S().text[st.id] || ''; txt.oninput = () => { S().text[st.id] = txt.value; save(); refresh(); }; }
+  if (st && !shared){ const txt = document.getElementById('txt'); txt.value = S().text[st.id] || ''; txt.oninput = () => { S().text[st.id] = txt.value; save(); refresh(); }; }
   refresh(); showFlash();
+  const say = (id, warn, text) => { document.getElementById(id).innerHTML = `<p class="msg ${warn ? 'warn' : ''}" role="status">${esc(text)}</p>`; };
+  const noComments = '還沒有評審意見。先在上面貼上至少一位評審的意見。';
+  document.getElementById('org').onclick = async () => {
+    if (!revHasComments()) return say('flashA', true, noComments);
+    const ok = await copyText(buildOrganize());
+    say('flashA', !ok, ok ? '已複製整理意見指令。到 AI 開新對話貼上。' : '無法自動複製。請展開「看指令內容」，手動全選複製。');
+  };
+  if (!st) return;
   document.getElementById('copy').onclick = async () => {
-    if (!(it.r1 || '').trim() && !(it.r2 || '').trim()){ flash = { warn:true, text:'還沒有評審意見。先貼上至少一位評審的意見。' }; return showFlash(); }
-    if (!revReady(st)){ flash = { warn:true, text:'還沒有修改後的內容。' + (st.kind === 'overall' || st.kind === 'whole' ? '先到各大項貼上修改後的版本。' : '先在上面貼上。') }; return showFlash(); }
+    if (!revHasComments()){ flash = { warn:true, text:noComments }; return showFlash(); }
+    if (!revReady(st)){ flash = { warn:true, text:'還沒有修改後的內容。' + (shared ? '先到各大項貼上修改後的版本。' : '先在上面貼上。') }; return showFlash(); }
     const ok = await copyText(buildRevise(st));
     const ids = findIdentifiers(revBlocks(st).join('\n'));
     let text = ok ? '已複製修改檢查指令。到 AI 開新對話貼上。' : '無法自動複製。請展開「看指令內容」，手動全選複製。';
@@ -662,17 +750,14 @@ function refCheckHTML(){
 /* ---------- 匯出 ---------- */
 function exportText(){
   const T = S().text, d = new Date();
-  const out = [`麻醉護理${K().title}　匯出日期 ${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`, ''];
+  const out = [`${K().title}　匯出日期 ${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`, ''];
   let n = 0;
   const add = (title, text) => { if ((text || '').trim()){ out.push(`【${title}】`, text.trim(), ''); n++; } };
   K().stages.forEach(st => {
     if (st.ask){ add('舉手發問', T.ask); if (st.modes) add('舉手發問：護理問題', T.askR); }
     else if (!st.noInput) add(st.num + '、' + st.name + (st.inputName ? '（' + st.inputName + '）' : ''), T[st.id]);
   });
-  const rv = revState();
-  revSections().forEach(st => { const it = rv.items[st.id] || {};
-    if ((it.r1 || '').trim()) add('評審一的意見：' + st.name, it.r1);
-    if ((it.r2 || '').trim()) add('評審二的意見：' + st.name, it.r2); });
+  add('評審一的意見', revState().r1); add('評審二的意見', revState().r2);
   return n ? out.join('\n') : '';
 }
 const fmsg = t => { document.getElementById('fmsg').textContent = t; };
