@@ -875,6 +875,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
             <option value="事">事假</option>
             <option value="病">病假</option>
             <option value="公">公假</option>
+            <option value="家照">家照假</option>
           </select>
         </div>
       </div>
@@ -1251,8 +1252,8 @@ function renderBal(){
   g+='<div class="bal-line sum"><span>積休淨增減</span><b class="'+(rg.net<0?'minus':'plus')+'">'+(rg.net<0?'－':'＋')+fmtH(Math.abs(rg.net))+' hr</b></div>';
   g+='<div class="bal-line"><span>年休使用</span><b class="minus">－'+fmtH(rg.nianU)+' hr</b></div>';
   g+='<div class="bal-line"><span>延休使用</span><b class="minus">－'+fmtH(rg.yanU)+' hr</b></div>';
-  const lv=['事','病','公'].filter(k=>rg.leave[k]);
-  if(lv.length)g+='<div class="bal-line"><span>事病公假</span><b>'+lv.map(k=>k+'假 '+rg.leave[k]+' 天').join('　')+'</b></div>';
+  const lv=['事','病','公','家照'].filter(k=>rg.leave[k]);
+  if(lv.length)g+='<div class="bal-line"><span>事病公／家照假</span><b>'+lv.map(k=>k+'假 '+rg.leave[k]+' 天').join('　')+'</b></div>';
   document.getElementById('balRangeDetail').innerHTML=g;
   let h='';
   h+='<div class="bal-line"><span>'+(cum.jijiReset?'積休起始（'+ymdTxt(cum.jijiFrom)+' 重設）':'積休初始')+'</span><b>'+fmtH(cum.jijiBase)+'</b></div>';
