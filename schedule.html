@@ -27,6 +27,33 @@
   --accent2:#5a4a3a;
   --red:#c0392b;
   --red-soft:#f5ebe9;
+
+  /* 主題連動的統計區塊配色；原始主題保留原有色彩。 */
+  --jiji-soft:#f0f7f2;
+  --jiji-border:#c8ddd0;
+  --jiji-label:#4a7a5a;
+  --jiji-ink:#1a4a2a;
+  --jiji-active:#ddeee5;
+  --nian-soft:#f2f0f8;
+  --nian-border:#ccc8dc;
+  --nian-label:#6a5a90;
+  --nian-ink:#3a2a70;
+  --nian-active:#e4e0f0;
+  --yan-soft:#fdf6e8;
+  --yan-border:#e0cc90;
+  --yan-label:#8a6800;
+  --yan-ink:#8a6800;
+  --yan-active:#fdf6e8;
+  --take-soft:#f8e8e8;
+  --take-border:#dfb8bb;
+  --take-label:#934b54;
+  --take-ink:#843d47;
+  --take-active:#f0d5d8;
+  --swap-soft:#fdf8ef;
+  --swap-border:#e0d2b4;
+  --swap-label:#8a6a30;
+  --swap-ink:#8a6a30;
+  --swap-active:#f0e6d2;
   --radius:12px;
   --radius-sm:8px;
 }
@@ -55,11 +82,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 .who-row{display:flex;gap:6px;align-items:center;margin-top:6px}
 .who-del{width:38px;height:38px;flex-shrink:0;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink3);font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif}
 /* 換班預告條 */
-.swap-bar{display:none;margin-top:10px;background:var(--surface);border:1px solid #e0d2b4;border-radius:var(--radius);overflow:hidden}
+.swap-bar{display:none;margin-top:10px;background:var(--surface);border:1px solid var(--swap-border);border-radius:var(--radius);overflow:hidden}
 .swap-bar.show{display:block}
-.swap-bar-head{padding:11px 14px;font-size:15px;font-weight:600;color:#8a6a30;letter-spacing:0.5px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.swap-bar-head.open{border-bottom:1px solid #f0e6d2}
-.swap-bar-head:active{background:#fdf8ef}
+.swap-bar-head{padding:11px 14px;font-size:15px;font-weight:600;color:var(--swap-label);letter-spacing:0.5px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.swap-bar-head.open{border-bottom:1px solid var(--swap-active)}
+.swap-bar-head:active{background:var(--swap-soft)}
 .swap-bar-toggle{font-size:14px;color:var(--ink3);font-weight:400;letter-spacing:0}
 .swap-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer}
 .swap-item:last-child{border-bottom:none}
@@ -156,31 +183,31 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 /* ── 時數功能 ── */
 .hours-summary{display:flex;gap:6px;margin-top:10px}
 .hs-card{flex:1;border-radius:var(--radius-sm);padding:8px 9px;border:1px solid var(--border);background:var(--surface)}
-.hs-card.jiji{background:#f0f7f2;border-color:#c8ddd0}
-.hs-card.nian{background:#f2f0f8;border-color:#ccc8dc}
-.hs-card.yan{background:#fdf6e8;border-color:#e0cc90}
+.hs-card.jiji{background:var(--jiji-soft);border-color:var(--jiji-border)}
+.hs-card.nian{background:var(--nian-soft);border-color:var(--nian-border)}
+.hs-card.yan{background:var(--yan-soft);border-color:var(--yan-border)}
 .hs-card-label{font-size:14px;font-weight:700;letter-spacing:.8px;margin-bottom:4px;text-transform:uppercase}
-.hs-card.jiji .hs-card-label{color:#4a7a5a}
-.hs-card.nian .hs-card-label{color:#6a5a90}
-.hs-card.yan  .hs-card-label{color:#8a6800}
+.hs-card.jiji .hs-card-label{color:var(--jiji-label)}
+.hs-card.nian .hs-card-label{color:var(--nian-label)}
+.hs-card.yan  .hs-card-label{color:var(--yan-label)}
 .hs-card-val{font-family:'Libre Baskerville',serif;font-size:21px;font-weight:400;line-height:1}
-.hs-card.jiji .hs-card-val{color:#1a4a2a}
-.hs-card.nian .hs-card-val{color:#3a2a70}
-.hs-card.yan  .hs-card-val{color:#8a6800}
+.hs-card.jiji .hs-card-val{color:var(--jiji-ink)}
+.hs-card.nian .hs-card-val{color:var(--nian-ink)}
+.hs-card.yan  .hs-card-val{color:var(--yan-label)}
 .hs-card-unit{font-size:10px;color:var(--ink3);margin-top:2px}
 /* 年休/延年休進度條 */
 .nian-bar-row{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:8px}
 .nbl{font-size:13px;font-weight:600;color:var(--ink3);width:28px;flex-shrink:0;letter-spacing:0.3px}
 .nbt{flex:1;height:4px;background:var(--surface2);border-radius:99px;overflow:hidden}
 .nbf{height:100%;background:var(--accent);border-radius:99px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
-.nbf.yan-bar{background:#c8a030}
+.nbf.yan-bar{background:var(--yan-label)}
 .nbn{font-size:13px;color:var(--ink3);white-space:nowrap;min-width:80px;text-align:right}
 /* 設定 */
 .hours-settings{display:flex;gap:14px;margin-top:6px;padding:0 2px;flex-wrap:wrap}
 .nts-group{display:flex;align-items:center;gap:6px}
 .nts-label{font-size:13px;color:var(--ink3)}
 .nts-input{width:54px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);text-align:center;font-family:'DM Sans',sans-serif}
-.nts-input.jiji-color{color:#1a4a2a}
+.nts-input.jiji-color{color:var(--jiji-ink)}
 /* 年度 / 代金 */
 .yr-nav-btn{background:transparent;border:1.5px solid var(--border2);border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;color:var(--ink2);padding:0;flex-shrink:0}
 .yr-nav-btn:active{background:var(--surface2)}
@@ -221,17 +248,17 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .zone-rec-nav{display:flex;align-items:center;justify-content:center;gap:10px}
 .zone-rec-nav button{background:transparent;color:var(--ink);border:1.5px solid var(--border2);border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
 .zone-rec-nav button:active{background:var(--surface2)}
-.zone-rec-title{font-size:13px;font-weight:600;color:#4a7a5a}
+.zone-rec-title{font-size:13px;font-weight:600;color:var(--jiji-label)}
 .zone-rec-range{text-align:center;font-size:11px;color:var(--ink3);margin-top:1px;margin-bottom:3px}
 .zone-today-btn{display:none;margin:0 auto 6px;padding:2px 10px;background:transparent;color:var(--accent2);border:1px solid var(--border2);border-radius:99px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:background 0.15s}
 .zone-today-btn:active{background:var(--surface2)}
 .zone-rec-summary{display:flex;gap:6px}
 .zone-rec-box{flex:1;border-radius:var(--radius-sm);padding:11px 8px;text-align:center;border:1px solid var(--border)}
-.zone-rec-box.add{background:#f0f7f2;border-color:#c8ddd0}
-.zone-rec-box.take{background:#faf0ee;border-color:#e0c8c4}
+.zone-rec-box.add{background:var(--jiji-soft);border-color:var(--jiji-border)}
+.zone-rec-box.take{background:var(--take-soft);border-color:var(--take-border)}
 .zone-rec-box-label{font-size:13px;font-weight:700;color:var(--ink3);margin-bottom:4px}
-.zone-rec-box.add .zone-rec-box-val{color:#1a4a2a;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
-.zone-rec-box.take .zone-rec-box-val{color:#7a2018;font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.add .zone-rec-box-val{color:var(--jiji-ink);font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
+.zone-rec-box.take .zone-rec-box-val{color:var(--take-label);font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400}
 /* hbadge */
 .hbadge{display:block;max-width:100%;font-size:10px;font-weight:700;padding:1px 3px;border-radius:4px;line-height:1.2;text-align:center;margin:0;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bot.overtime{color:#8b2020!important;font-weight:600}
@@ -425,10 +452,10 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 /* 備份匯出入 */
 .backup-row{display:flex;gap:8px;margin-top:10px}
 .backup-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s}
-.backup-btn.export{background:#f0f7f2;color:#1a4a2a;border:1px solid #c8ddd0}
-.backup-btn.export:active{background:#ddeee5}
-.backup-btn.import{background:#f2f0f8;color:#3a2a70;border:1px solid #ccc8dc}
-.backup-btn.import:active{background:#e4e0f0}
+.backup-btn.export{background:var(--jiji-soft);color:var(--jiji-ink);border:1px solid var(--jiji-border)}
+.backup-btn.export:active{background:var(--jiji-active)}
+.backup-btn.import{background:var(--nian-soft);color:var(--nian-ink);border:1px solid var(--nian-border)}
+.backup-btn.import:active{background:var(--nian-active)}
 /* 夜班津貼 */
 .allow-wrap{margin-top:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .allow-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -516,7 +543,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 </div>
 <!-- 延年休進度條 -->
 <div class="nian-bar-row">
-  <span class="nbl" style="color:#c8a030">延休</span>
+  <span class="nbl" style="color:var(--yan-label)">延休</span>
   <div class="nbt"><div class="nbf yan-bar" id="yanFill" style="width:0%"></div></div>
   <span class="nbn" id="yanNums">已用 0 / 0 hr</span>
 </div>
@@ -2097,7 +2124,7 @@ function renderZoneRecList(){
 }
 const THEMES=['','#5a6f82','#6f8a76','#9a7b6a','#8a6f92','#b0787a','#4f7f86','#a08a4e'];
 function hexHsl(hex){const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let h=0,sa=0;if(mx!==mn){const d=mx-mn;sa=l>0.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;h*=60;}return[h,sa*100,l*100];}
-const THEME_VARS=['--bg','--surface2','--border','--border2','--ink','--ink2','--ink3','--accent','--accent2'];
+const THEME_VARS=['--bg','--surface2','--border','--border2','--ink','--ink2','--ink3','--accent','--accent2',...['jiji','nian','yan','take','swap'].flatMap(name=>['soft','border','label','ink','active'].map(role=>'--'+name+'-'+role))];
 function applyTheme(hex){
   const st=document.documentElement.style;
   if(!/^#[0-9a-f]{6}$/i.test(hex||'')){THEME_VARS.forEach(v=>st.removeProperty(v));return;}
@@ -2106,6 +2133,15 @@ function applyTheme(hex){
   st.setProperty('--border',c(sa*0.35,87));st.setProperty('--border2',c(sa*0.3,79));
   st.setProperty('--ink',c(sa*0.3,11));st.setProperty('--ink2',c(sa*0.18,40));st.setProperty('--ink3',c(sa*0.15,60));
   st.setProperty('--accent',c(sa,Math.round(Math.min(l0,40))));st.setProperty('--accent2',c(sa,Math.round(Math.min(l0,40))+12));
+  // 以主題色搭配鄰近色與對比色，讓卡片清楚區別於頁面底色。
+  [['jiji',0],['nian',55],['yan',-55],['swap',-25]].forEach(([name,offset])=>{
+    const hue=(h+offset+360)%360;
+    const cardSat=Math.max(32,Math.min(s0,62));
+    const shade=(sat,light)=>'hsl('+Math.round(hue)+','+Math.round(sat)+'%,'+light+'%)';
+    [['soft',0.90,86],['border',0.85,65],['label',1,30],['ink',0.90,22],['active',0.90,78]].forEach(([role,factor,light])=>{
+      st.setProperty('--'+name+'-'+role,shade(cardSat*factor,light));
+    });
+  });
 }
 let setupTheme='',skipDelKey=null,setupSkips=[],setupAdded=[],addDelKey=null;
 function fmtWeek(mk){const a=kd(mk),b=ad(a,6);return a.getFullYear()+'/'+(a.getMonth()+1)+'/'+a.getDate()+'（一）～ '+(b.getMonth()+1)+'/'+b.getDate()+'（日）';}
