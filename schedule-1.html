@@ -45,7 +45,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);padd
 /* badge 防裁切 */
 .grid#grid{overflow:visible;margin-top:6px;grid-auto-rows:118px}
 .cell.today{background:#fdfaf7}
-.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.cell.today .dn{background:var(--accent);color:#fff;border-radius:50%;width:25px;height:25px;line-height:1;display:flex;align-items:center;justify-content:center;font-size:14px}
 .cell.swapped .badge{background:#d4b896;color:#6a4828}
 .hb-swap{background:#e8dcc0;color:#6a4828}
 .who-row{display:flex;gap:6px;align-items:center;margin-top:6px}
@@ -401,6 +401,7 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
 .lb-counter{color:rgba(255,255,255,0.7);font-size:13px;min-width:48px;text-align:center}
 /* 班表設定 */
 .backup-btn.setup{background:var(--surface2);color:var(--ink);border:1px solid var(--border2)}
+.setup-line input[type=date]{min-height:44px;min-width:0;-webkit-appearance:none;appearance:none}
 .setup-line{display:flex;align-items:center;gap:10px;margin-top:8px}
 .setup-line span{font-size:14px;color:var(--ink2);white-space:nowrap;min-width:56px}
 .setup-sub{font-size:12px;color:var(--ink3);margin:4px 0 0 66px;min-height:16px}
@@ -606,9 +607,9 @@ select{width:100%;padding:11px 14px;border:1px solid var(--border2);border-radiu
     </div>
     <div class="quick-plan-preview" id="quickPlanPreview"></div>
     <div class="quick-body">
+      <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
       <button class="quick-btn" onclick="quickAction('week')"><span class="qi">🔄</span>換號碼班（整週）</button>
       <button class="quick-btn" onclick="quickAction('day')"><span class="qi">✏️</span>修改當天班別</button>
-      <button class="quick-btn" onclick="quickAction('plan')"><span class="qi">📌</span>行程／圖片</button>
       <button class="quick-btn" onclick="quickAction('hours')"><span class="qi">⏱</span>記錄時數（積休／年休／延年休）</button>
       <button class="quick-btn" onclick="quickAction('bal')"><span class="qi">📊</span>查詢餘額（可自訂起訖日）</button>
     </div>
@@ -2115,6 +2116,7 @@ function openSetup(first){
   document.getElementById('setupCancel').style.display=first?'none':'';
   document.getElementById('skipBlock').style.display=first?'none':'';
   document.getElementById('setupOverlay').classList.add('open');
+  const _sb=document.querySelector('#setupOverlay .hs-body');_sb.scrollTop=0;setTimeout(()=>{_sb.scrollTop=0;},60);
 }
 function closeSetup(){if(!CFG.anchors.length)return;_addedView=null;applyTheme(CFG.theme);document.getElementById('setupOverlay').classList.remove('open');}
 function onAncDate(keep){
