@@ -299,6 +299,17 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
 .dpick b{border-bottom:1.5px dashed var(--border2);padding-bottom:1px}
 .dpick::after{content:'▾';font-size:.7rem;color:var(--ink3)}
 .dpick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;-webkit-appearance:none;appearance:none;border:0;padding:0;margin:0}
+.ppl-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.6rem}
+.ppl-btn{padding:.4rem .8rem;font-size:.85rem}
+.ppl-btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ppl-note{font-size:.8rem;color:var(--ink3)}
+.ppick{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.7rem;margin-bottom:.7rem}
+.ppick.open{display:block}
+.ppick .quick{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.6rem}
+.ppick .quick button{padding:.35rem .7rem;font-size:.8rem;border:1px solid var(--border2);background:var(--surface);border-radius:99px;cursor:pointer;color:var(--ink2)}
+.ppick .names{display:flex;flex-wrap:wrap;gap:.35rem;max-height:14rem;overflow-y:auto}
+.ppick .names button{padding:.35rem .7rem;font-size:.85rem;border:1px solid var(--border2);background:var(--surface);border-radius:99px;cursor:pointer;color:var(--ink2);line-height:1.2}
+.ppick .names button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 @media (min-width:900px){
   body{padding-left:24px;padding-right:24px}
   .simgrid{grid-template-columns:1fr 1fr}
@@ -356,6 +367,8 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
       </div>
     </div>
     <div class="chips" id="monthChips"></div>
+    <div class="ppl-bar"><button class="btn ppl-btn" id="pplBtn" onclick="togglePick()"></button><span class="ppl-note" id="pplNote"></span></div>
+    <div class="ppick" id="pplPick"></div>
     <div class="mbox" id="mBox"></div>
     <div class="summary" style="margin-top:.6rem">最上面一列是醫院的四週區間，區間交界有粗線。號碼欄是那週輪到的號碼班。點名字可以看那個人的所有週次。</div>
   </section>
@@ -940,11 +953,26 @@ function applyZoom(){const i=ZS.indexOf(cfg.z);const z=i<0?1:cfg.z;document.docu
 function zoom(d){let i=ZS.indexOf(cfg.z);if(i<0)i=1;i=Math.max(0,Math.min(ZS.length-1,i+d));cfg.z=ZS[i];save('cfg',cfg);applyZoom();fixMonthSticky()}
 
 /* ── 每月總表 ── */
-let mMode='month',mRef=null,mZone=0,mFilter='all';
+let mMode='month',mRef=null,mZone=0,mFilter='all',mPeople=[],mPickOpen=false;
 const MONTH_F=[['all','全部'],['sN','大夜 N','sN'],['sE','小夜 E','sE'],['s12','12-8','s12'],['sOFF','休假','sOFF']];
 function zoneOf(date){return periodIdxOf(date)}
 function setMonthMode(m){mMode=m;renderMonth()}
 function setMonthFilter(f){mFilter=f;renderMonth()}
+function togglePick(){mPickOpen=!mPickOpen;renderMonth()}
+function togglePerson(id){const i=mPeople.indexOf(id);if(i<0)mPeople.push(id);else mPeople.splice(i,1);renderMonth()}
+function pickAll(){mPeople=[];renderMonth()}
+function pickMe(){mPeople=[meId];renderMonth()}
+function renderPick(){
+  const btn=document.getElementById('pplBtn'),note=document.getElementById('pplNote'),box=document.getElementById('pplPick');
+  const sel=roster.filter(p=>mPeople.includes(p.id));
+  btn.textContent='人員：'+(sel.length?sel.length+' 人':'全部')+' ▾';
+  btn.classList.toggle('on',sel.length>0);
+  note.textContent=sel.length?sel.slice(0,4).map(short).join('、')+(sel.length>4?' 等':''):'';
+  box.classList.toggle('open',mPickOpen);
+  if(!mPickOpen){box.innerHTML='';return}
+  box.innerHTML='<div class="quick"><button onclick="pickAll()">全部人</button><button onclick="pickMe()">只有我</button></div>'
+    +'<div class="names">'+roster.slice().sort(byCode).map(p=>'<button class="'+(mPeople.includes(p.id)?'on':'')+'" onclick="togglePerson(\''+esc(p.id)+'\')">'+esc(short(p))+'</button>').join('')+'</div>';
+}
 function monthMove(d){
   const t=today();
   if(d===0){mRef=new Date(t.getFullYear(),t.getMonth(),1);mZone=zoneOf(t)}
@@ -969,6 +997,7 @@ function renderMonth(){
   if(!mRef){const t=today();mRef=new Date(t.getFullYear(),t.getMonth(),1);mZone=zoneOf(t)}
   document.getElementById('mModeSeg').innerHTML=[['month','月份'],['period','公告期 4 週']].map(([k,l])=>'<button class="'+(mMode===k?'on':'')+'" onclick="setMonthMode(\''+k+'\')">'+l+'</button>').join('');
   document.getElementById('monthChips').innerHTML=chipHTML(MONTH_F,mFilter,'setMonthFilter');
+  renderPick();
   const ds=monthDates(),t=today(),tk=dk(t);
   document.getElementById('mTitle').textContent=mMode==='month'?ds[0].getFullYear()+' 年 '+(ds[0].getMonth()+1)+' 月':md(ds[0])+' – '+md(ds[ds.length-1]);
   const isNow=mMode==='month'?(mRef.getFullYear()===t.getFullYear()&&mRef.getMonth()===t.getMonth()):mZone===zoneOf(t);
@@ -990,7 +1019,7 @@ function renderMonth(){
     h2+='<th class="'+cl+'">'+WD[(d.getDay()+6)%7]+(hol?'<small class="hn">'+esc(hol)+'</small>':'')+'</th>';
   });
   h1+='</tr>';h2+='</tr>';
-  const ppl=roster.filter(p=>cols.some(c=>c.no&&inRot(p,wo(c.d)))).slice().sort(byCode);
+  const ppl=roster.filter(p=>(!mPeople.length||mPeople.includes(p.id))&&cols.some(c=>c.no&&inRot(p,wo(c.d)))).slice().sort(byCode);
   const rows=ppl.map(p=>{
     let r='<tr class="'+(p.id===meId?'me':'')+'">';
     cols.forEach(c=>{
@@ -1006,7 +1035,7 @@ function renderMonth(){
   const left=ppl.map(p=>'<tr class="'+(p.id===meId?'me':'')+'"><td class="nm" onclick="setView(\''+esc(p.id)+'\');setTab(\'mine\')"><b>'+esc(p.name||p.id)+'</b><span>'+(p.name?esc(p.id)+' ':'')+esc(p.grade)+'</span></td></tr>').join('');
   const box=document.getElementById('mBox'),keepX=document.getElementById('mRight')?document.getElementById('mRight').scrollLeft:0;
   box.innerHTML=ppl.length?'<div class="mgrid"><div class="mleft" id="mLeft"><table class="mt"><thead><tr><th class="nm">人員</th></tr></thead><tbody>'+left+'</tbody></table><div id="mSpacer"></div></div>'
-    +'<div class="mright" id="mRight"><table class="mt'+(mFilter!=='all'?' f':'')+'"><thead>'+h0+h1+h2+'</thead><tbody>'+rows+'</tbody></table></div></div>':'<div class="empty">名單裡還沒有人。</div>';
+    +'<div class="mright" id="mRight"><table class="mt'+(mFilter!=='all'?' f':'')+'"><thead>'+h0+h1+h2+'</thead><tbody>'+rows+'</tbody></table></div></div>':'<div class="empty">'+(mPeople.length?'選到的人這段期間都不在號碼班。':'名單裡還沒有人。')+'</div>';
   const L=document.getElementById('mLeft'),R=document.getElementById('mRight');
   if(L&&R){
     // 上下捲動兩邊同步；左右捲動只有右邊的日期會動
