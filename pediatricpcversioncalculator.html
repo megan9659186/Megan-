@@ -428,6 +428,8 @@
   .ref-fold summary::before{content:'▸ ';}
   .ref-fold[open] summary::before{content:'▾ ';}
   .ref-fold[open] summary{margin-bottom:6px;}
+  /* 藥物分類選單不固定，隨頁面正常捲動 */
+  .drug-tabs{position:static !important;top:auto !important;}
   .cap-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:10px;background:rgba(181,140,133,.2);color:#8a5a52;font-size:.68rem;font-weight:700;vertical-align:middle;white-space:nowrap;}
   .mini-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:14px;}
   .mini-form .field{min-width:150px;flex:1;}
@@ -517,7 +519,7 @@
       </div>
     </div>
 
-    <div class="weight-note">體重估算公式（無實際體重時使用）：0–12個月 <b>(月齡×0.5)+4</b>　·　1–5歲 <b>(歲×2)+8</b>　·　6–12歲 <b>(歲×3)+7</b>　·　建議 &gt;12歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b><br>公式為英國 APLS 第 5 版之年齡估算公式，源自英國兒童資料、<b>未經台灣兒童驗證</b>，僅供無法取得體重時暫時估計，請以實際體重為準。<details class="ref-fold"><summary>參考資料</summary>Luscombe M, Owens B. Weight estimation in resuscitation: is the current formula still valid? <i>Arch Dis Child</i>. 2007;92(5):412–415.<br>Advanced Life Support Group. <i>Advanced Paediatric Life Support</i>, 5th ed.（2011 年起採用三段式公式）</details></div>
+    <div class="weight-note">體重估算公式（無實際體重時使用，APLS）：0–12 個月 <b>(月齡×0.5)+4</b>　·　1–5 歲 <b>(歲×2)+8</b>　·　6–12 歲 <b>(歲×3)+7</b>　·　建議 &gt;12 歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b><br>公式為英國 APLS 第 5 版之年齡估算公式，源自英國兒童資料、<b>未經台灣兒童驗證</b>，僅供無法取得體重時暫時估計，請以實際體重為準。<details class="ref-fold"><summary>參考資料</summary>Luscombe M, Owens B. Weight estimation in resuscitation: is the current formula still valid? <i>Arch Dis Child</i>. 2007;92(5):412–415.<br>Advanced Life Support Group. <i>Advanced Paediatric Life Support</i>, 5th ed.（2011 年起採用三段式公式）</details></div>
   </div>
 
   <div class="wave">
@@ -803,10 +805,9 @@ function calculate(){
 
   // ---- weight estimate ----
   let estWeight;
-  if(ageMonths<=12) estWeight = (ageMonths*0.5)+4;
-  else if(ageYears<=5) estWeight = (ageYears*2)+8;
-  else if(ageYears<=12) estWeight = (ageYears*3)+7;
-  else estWeight = (ageYears*3)+7; // rough extrapolation, flagged below
+  if(ageMonths<12) estWeight = (ageMonths*0.5)+4;        // APLS：0–12 個月
+  else if(ageYears<6) estWeight = (ageYears*2)+8;        // APLS：1–5 歲（未滿 6 歲）
+  else estWeight = (ageYears*3)+7;                       // APLS：6–12 歲（>12 歲為外推，下方提示）
   const weight = (!isNaN(actualWtRaw) && actualWtRaw>0) ? actualWtRaw : estWeight;
   const usingEstimate = isNaN(actualWtRaw) || actualWtRaw<=0;
 
@@ -1339,8 +1340,6 @@ function renderEquip(ageMonths, w, ett, lma){
     + readout('口咽呼吸道 OPA', e.opa, '', '#a9a595')
     + readout('鼻咽呼吸道 NPA', e.npa, 'mm ID', '#a9a595')
     + readout('氣管內抽吸管', e.suction, 'Fr', '#a9a595')
-    + readout('鼻胃管 NG', e.ng, 'Fr', 'var(--hr)')
-    + readout('導尿管', e.foley, 'Fr', 'var(--hr)')
     + readout('周邊靜脈留置針', e.iv, 'G', 'var(--bp)')
     + readout('動脈導管', e.aline, 'G', 'var(--bp)')
     + readout('中心靜脈導管（尺寸・長度）', e.cvc, '', 'var(--bp)');
