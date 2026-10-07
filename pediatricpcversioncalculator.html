@@ -450,6 +450,9 @@
   #prepSheet table.ps-self{border:2px solid #b9a5c4;}
   #prepSheet table{page-break-inside:avoid;}
   #prepSheet tr.ps-topup td{background:#f6e1db;}
+  #prepSheet .ps-in{border:none;border-bottom:1px solid #888;background:transparent;font:inherit;color:#111;padding:1px 4px;outline:none;border-radius:0;}
+  #prepSheet .ps-in:focus{border-bottom-color:var(--hr);background:#f7f4ee;}
+  @media print{#prepSheet .ps-in::placeholder{color:transparent;}}
   #prepSheet{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   #prepSheet .ps-foot{font-size:.76rem;color:#666;line-height:1.6;}
   .app-meta{margin-top:8px;font-size:.74rem;line-height:1.7;letter-spacing:0;text-transform:none;}
@@ -573,6 +576,7 @@
 
     <!-- ===== 第二畫面：藥物分類（浮動選單）→ 點選後顯示對應藥物 ===== -->
     <div class="section-title"><span class="dot" style="background:var(--rr)"></span>藥物劑量（依體重計算）</div>
+    <div class="drug-section">
     <div class="drug-tabs" id="drugTabs">
       <button data-cat="induction" onclick="selectDrugCat('induction')">誘導</button>
       <button data-cat="relaxant" onclick="selectDrugCat('relaxant')">肌肉鬆弛劑</button>
@@ -591,6 +595,7 @@
       </table>
     </div>
     <div class="info-box" id="drugReminder" style="display:none;"><b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。</div>
+    </div><!-- /drug-section：分類選單只在藥物區塊內固定 -->
 
     <div class="section-title"><span class="dot" style="background:var(--rr)"></span>持續輸注速率換算</div>
     <div class="mini-form">
@@ -1452,7 +1457,7 @@ function buildPrepSheet(o){
 
   let h = '<h2>小兒麻醉準備單</h2>'
     + '<div class="ps-meta">年齡：<b>'+o.ageLabel+'</b>　體重：<b>'+w.toFixed(1)+' kg</b>'+(o.usingEstimate?'（估算，請以實際體重確認）':'')+'　製表日期：'+d
-    + '<br>術式：＿＿＿＿＿＿＿＿＿＿　手術房：＿＿＿＿　覆核者：＿＿＿＿＿＿</div>';
+    + '<br><label>術式：<input class="ps-in" type="text" style="width:16em" placeholder="可輸入或列印後手寫"></label>　<label>手術房：<input class="ps-in" type="text" style="width:5em"></label>　<label>覆核者：<input class="ps-in" type="text" style="width:8em"></label></div>';
 
   h += head('氣道與器材')
     + r2('氣管內管 Cuffed／Uncuffed（mm ID）', o.ett.cuffed+' ／ '+o.ett.uncuffed)
