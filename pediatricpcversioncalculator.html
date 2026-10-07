@@ -319,6 +319,20 @@
     background:var(--panel);
   }
 
+  /* ---- 藥品仿單連結（藥名下方） ---- */
+  .pi-row{
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    margin-top:7px;font-size:.68rem;font-weight:600;line-height:1.3;
+  }
+  .stripe-badge .pi-row{justify-content:center;}
+  .pi-link{
+    color:#2c2823;text-decoration:underline;text-underline-offset:2px;
+    background:rgba(255,253,248,0.6);border:1px solid rgba(44,40,35,0.28);
+    border-radius:6px;padding:3px 8px;white-space:nowrap;
+  }
+  .pi-link:hover{background:rgba(255,253,248,0.95);}
+  .pi-net{font-size:.6rem;font-weight:500;color:#5d574c;white-space:nowrap;}
+
   footer{
     text-align:center;
     font-size:.7rem;
@@ -393,6 +407,60 @@
     }
     .warn-cell .flag{font-size:.88rem;}
   }
+  /* ---- 可收合參考區塊（小兒麻醉風險重點） ---- */
+  .ref-block{margin:28px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .ref-block summary{cursor:pointer;list-style:none;padding:15px 18px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px;}
+  .ref-block summary::-webkit-details-marker{display:none;}
+  .ref-block summary::after{content:'＋';margin-left:auto;color:var(--muted);font-weight:500;}
+  .ref-block[open] summary::after{content:'－';}
+  .ref-block summary .dot{width:9px;height:9px;border-radius:2px;background:var(--bp);flex-shrink:0;}
+  .ref-block summary small{font-weight:500;color:var(--muted);font-size:.78em;}
+  .ref-body{padding:2px 20px 18px;border-top:1px solid var(--line);font-size:.92rem;line-height:1.7;color:var(--text);}
+  .ref-body h4{margin:16px 0 6px;font-size:.86rem;color:var(--bp);letter-spacing:.03em;}
+  .ref-body ul{margin:0;padding-left:1.2em;}
+  .ref-body li{margin:4px 0;}
+  .ref-body .src{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:.8rem;color:var(--muted);line-height:1.6;}
+  .note-list{margin:6px 0 0;padding-left:1.25em;}
+  .note-list li{margin:5px 0;line-height:1.65;}
+  .ref-fold{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:.86em;}
+  .ref-fold summary{cursor:pointer;font-weight:700;color:var(--muted);list-style:none;}
+  .ref-fold summary::-webkit-details-marker{display:none;}
+  .ref-fold summary::before{content:'▸ ';}
+  .ref-fold[open] summary::before{content:'▾ ';}
+  .ref-fold[open] summary{margin-bottom:6px;}
+  .cap-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:10px;background:rgba(181,140,133,.2);color:#8a5a52;font-size:.68rem;font-weight:700;vertical-align:middle;white-space:nowrap;}
+  .mini-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:14px;}
+  .mini-form .field{min-width:150px;flex:1;}
+  .tool-row{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 0;}
+  .ghost-btn{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px 18px;font-weight:700;font-size:.9rem;font-family:var(--sans);cursor:pointer;}
+  .ghost-btn:hover{background:var(--panel2);}
+  #prepSheet{display:none;margin:26px 0 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;color:#222;}
+  #prepSheet.show{display:block;}
+  #prepSheet h2{margin:0 0 4px;font-size:1.25rem;}
+  #prepSheet .ps-meta{font-size:.86rem;color:#555;margin-bottom:12px;line-height:1.7;}
+  #prepSheet table{width:100%;border-collapse:collapse;margin:0 0 12px;font-size:.9rem;}
+  #prepSheet th{background:#eee9df;text-align:left;padding:6px 9px;border:1px solid #cfc7b8;font-size:.82rem;}
+  #prepSheet td{padding:5px 9px;border:1px solid #cfc7b8;vertical-align:top;}
+  #prepSheet td:first-child{width:36%;color:#444;}
+  #prepSheet td:nth-child(2){font-family:var(--mono);font-weight:600;}
+  #prepSheet td.ps-max{width:34%;font-size:.84rem;color:#7a4a42;}
+  #prepSheet tr.ps-sub td{background:#f7f4ee;font-size:.74rem;color:#777;font-family:var(--sans);font-weight:600;padding:3px 9px;}
+  #prepSheet .ps-rule{font-size:.76rem;color:#777;}
+  #prepSheet table.ps-self th{background:#e6dcec;color:#4d3d57;}
+  #prepSheet table.ps-self{border:2px solid #b9a5c4;}
+  #prepSheet table{page-break-inside:avoid;}
+  #prepSheet tr.ps-topup td{background:#f6e1db;}
+  #prepSheet{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  #prepSheet .ps-foot{font-size:.76rem;color:#666;line-height:1.6;}
+  .app-meta{margin-top:8px;font-size:.74rem;line-height:1.7;letter-spacing:0;text-transform:none;}
+  .app-meta a{color:inherit;text-decoration:underline;}
+  @media print{
+    body{background:#fff !important;}
+    .wrap > *{display:none !important;}
+    .wrap > #prepSheet{display:block !important;border:none;padding:0;margin:0;}
+    .no-print{display:none !important;}
+    @page{margin:12mm;}
+  }
 </style>
 </head>
 <body>
@@ -446,7 +514,7 @@
       </div>
     </div>
 
-    <div class="weight-note">體重估算公式（無實際體重時使用）：0–12個月 <b>(月齡×0.5)+4</b>　·　1–5歲 <b>(歲×2)+8</b>　·　6–12歲 <b>(歲×3)+7</b>　·　建議 &gt;12歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b></div>
+    <div class="weight-note">體重估算公式（無實際體重時使用）：0–12個月 <b>(月齡×0.5)+4</b>　·　1–5歲 <b>(歲×2)+8</b>　·　6–12歲 <b>(歲×3)+7</b>　·　建議 &gt;12歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b><br>公式為英國 APLS 第 5 版之年齡估算公式，源自英國兒童資料、<b>未經台灣兒童驗證</b>，僅供無法取得體重時暫時估計，請以實際體重為準。<details class="ref-fold"><summary>參考資料</summary>Luscombe M, Owens B. Weight estimation in resuscitation: is the current formula still valid? <i>Arch Dis Child</i>. 2007;92(5):412–415.<br>Advanced Life Support Group. <i>Advanced Paediatric Life Support</i>, 5th ed.（2011 年起採用三段式公式）</details></div>
   </div>
 
   <div class="wave">
@@ -483,6 +551,10 @@
     <div class="monitor-grid" id="airwayGrid"></div>
     <div class="info-box" id="lmaNote"></div>
 
+    <div class="section-title"><span class="dot" style="background:#a9a595"></span>器材尺寸參考</div>
+    <div class="monitor-grid" id="equipGrid"></div>
+    <div class="info-box" id="equipNote"></div>
+
     <div class="section-title"><span class="dot" style="background:#7fc0b6"></span>輸液</div>
     <div class="drug-table-wrap">
       <table class="drug-table">
@@ -490,6 +562,14 @@
         <tbody id="fluidTableBody"></tbody>
       </table>
     </div>
+
+    <div class="section-title"><span class="dot" style="background:var(--bp)"></span>失血與輸血計算</div>
+    <div class="mini-form">
+      <div class="field"><label>起始 Hct（%）</label><input type="number" id="hctStart" placeholder="例如 36" min="1" max="70" step="0.1" oninput="updateBlood()"></div>
+      <div class="field"><label>可接受最低 Hct（%）</label><input type="number" id="hctTarget" value="25" min="1" max="70" step="0.1" oninput="updateBlood()"></div>
+    </div>
+    <div class="monitor-grid" id="bloodGrid"></div>
+    <div class="info-box" id="bloodNote"></div>
 
     <!-- ===== 第二畫面：藥物分類（浮動選單）→ 點選後顯示對應藥物 ===== -->
     <div class="section-title"><span class="dot" style="background:var(--rr)"></span>藥物劑量（依體重計算）</div>
@@ -499,6 +579,9 @@
       <button data-cat="opioid" onclick="selectDrugCat('opioid')">鴉片止痛藥</button>
       <button data-cat="reversal" onclick="selectDrugCat('reversal')">逆轉藥 Reverse</button>
       <button data-cat="other" onclick="selectDrugCat('other')">其他</button>
+      <button data-cat="resus" onclick="selectDrugCat('resus')">急救</button>
+      <button data-cat="local" onclick="selectDrugCat('local')">局麻／LAST</button>
+      <button data-cat="mh" onclick="selectDrugCat('mh')">惡性高熱</button>
     </div>
     <div class="drug-prompt" id="drugPrompt">↑ 點選上方分類以顯示對應藥物劑量</div>
     <div class="drug-table-wrap" id="drugTableWrap" style="display:none;">
@@ -509,9 +592,188 @@
     </div>
     <div class="info-box" id="drugReminder" style="display:none;"><b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。</div>
 
+    <div class="section-title"><span class="dot" style="background:var(--rr)"></span>持續輸注速率換算</div>
+    <div class="mini-form">
+      <div class="field"><label>藥物</label>
+        <select id="infDrug" onchange="onInfDrugChange()">
+          <option value="propofol">Propofol</option>
+          <option value="dex">Dexmedetomidine</option>
+          <option value="remi">Remifentanil</option>
+          <option value="epi">Epinephrine</option>
+          <option value="norepi">Norepinephrine</option>
+        </select>
+      </div>
+      <div class="field"><label id="infDoseLabel">劑量</label><input type="number" id="infDose" min="0" step="0.01" oninput="updateInfusion()"></div>
+      <div class="field"><label id="infConcLabel">藥品濃度</label><input type="number" id="infConc" min="0" step="0.01" placeholder="請輸入本院泡法" oninput="updateInfusion()"></div>
+    </div>
+    <div class="monitor-grid" id="infGrid"></div>
+    <div class="info-box" id="infNote"></div>
+
+    <div class="tool-row no-print">
+      <button class="calc-btn" type="button" onclick="showPrepSheet()">📋 產生病童麻醉準備單</button>
+    </div>
+
   </div>
 
-  <footer>FOR CLINICAL REFERENCE ONLY · 僅供臨床參考，不取代專業判斷</footer>
+  <div id="prepSheet"></div>
+
+  <details class="ref-block" id="riskBlock">
+    <summary><span class="dot"></span>小兒麻醉風險重點 <small>Miller · Risk of Anesthesia（點擊展開）</small></summary>
+    <div class="ref-body">
+      <h4>誰的風險最高</h4>
+      <ul>
+        <li><b>年齡越小風險越高</b>：新生兒與 &lt;1 歲嬰兒的周術期死亡與心跳停止發生率明顯高於較大兒童。</li>
+        <li><b>ASA III–V、嚴重潛在疾病、先天性心臟病、急診手術</b>為主要危險因子。</li>
+        <li>在具備小兒麻醉專責團隊與設備的醫院，麻醉相關風險較低。</li>
+      </ul>
+      <h4>不同年齡的常見事件</h4>
+      <ul>
+        <li><b>嬰兒</b>：以呼吸道事件為主（氣道問題、吸入）。</li>
+        <li><b>較大兒童</b>：呼吸與心血管事件，多發生在<b>誘導期與甦醒期</b>；術後以噁心嘔吐較常見。</li>
+        <li><b>扁桃腺切除</b>：有 OSA 風險的兒童，不良事件多與<b>呼吸暫停</b>有關，且常與術後鴉片類使用相關；無 OSA 風險者則以出血為主。</li>
+      </ul>
+      <h4>發生率（大型研究）</h4>
+      <ul>
+        <li>麻醉相關死亡：約 <b>1/10,000</b>（墨爾本 101,885 例；所有個案皆合併既有疾病）。</li>
+        <li>周術期心跳停止：非心臟手術約 <b>2.9/10,000</b>，心臟手術約 <b>127/10,000</b>；可歸因於麻醉者約 0.65/10,000（Mayo Clinic 92,881 例）。</li>
+        <li>POCA 登錄：麻醉相關心跳停止約 <b>1.4/10,000</b>，死亡率 26%。</li>
+      </ul>
+      <h4>麻醉相關心跳停止的原因（POCA）</h4>
+      <ul>
+        <li>1994–1997：<b>藥物相關</b>與心血管原因最常見。</li>
+        <li>1998–2004：<b>心血管原因居首（41%）</b>，其中以<b>失血造成的低血容</b>及<b>輸注庫存血引起的高血鉀</b>最常見；藥物相關降至 18%。</li>
+        <li>合併心臟病的兒童：多為 ASA III–V，心跳停止後死亡率較高（33% vs 23%）。</li>
+      </ul>
+      <h4>麻醉與神經發育</h4>
+      <ul>
+        <li>3 歲前<b>單次</b>全身麻醉：手足配對研究未發現智商或發展指標有顯著差異。</li>
+        <li>部分世代研究則發現語言理解等分項分數較低；整體結論尚不一致，仍待更多研究。</li>
+      </ul>
+      <div class="src">
+        整理自：Cotter S, Yen A, Fleisher LA. Risk of anesthesia. In M. A. Gropper et al. (Eds.), <i>Miller's Anesthesia</i> (10th ed., pp. 782–807). Elsevier.<br>
+        主要原始文獻：van der Griend BF, et al. <i>Anesth Analg</i>. 2011;112:1440–1447 ｜ Flick RP, et al. <i>Anesthesiology</i>. 2007;106:226–237 ｜ Morray JP, et al. <i>Anesthesiology</i>. 2000;93:6–14 ｜ Bhananker SM, et al. <i>Anesth Analg</i>. 2007;105:344–350 ｜ Ramamoorthy C, et al. <i>Anesth Analg</i>. 2010;110:1376–1382 ｜ Coté CJ, et al. <i>Anesth Analg</i>. 2014;118(6):1276–1283 ｜ Sun LS, et al. <i>JAMA</i>. 2016;315(21):2312–2320.
+      </div>
+    </div>
+  </details>
+
+  <details class="ref-block" id="millerBlock">
+    <summary><span class="dot" style="background:var(--hr)"></span>小兒麻醉臨床重點 <small>Miller · Pediatric Anesthesia（點擊展開）</small></summary>
+    <div class="ref-body">
+      <h4>感冒（URI）兒童的麻醉決策</h4>
+      <ul>
+        <li><b>為什麼重要</b>：症狀約 7–10 天，但氣道過度反應可持續 6 週以上；常見事件為喉痙攣、支氣管痙攣、閉氣、低血氧、肺塌陷。</li>
+        <li><b>先分級</b>：
+          <br>・<b>輕度</b>：清鼻水、乾咳 → 可進行。
+          <br>・<b>中度</b>：鼻水、濕咳、膿性鼻塞 → 權衡風險與效益後決定。
+          <br>・<b>重度</b>：濕咳、喘鳴、膿性分泌物、<b>發燒</b>、倦怠 → <b>延後至少 2 週</b>再評估。</li>
+        <li><b>風險因子</b>：&lt;1 歲、二手菸、肺部共病（氣喘、早產、BPD 等）、氣道／耳鼻喉／眼科手術、<b>氣管內插管</b>。RSV 感染的嬰兒風險特別高。</li>
+        <li><b>支持進行的因素</b>：耳鼻喉手術本身即為感染源處理（腺樣體／扁桃腺）、團隊有處理感冒病童的經驗、家屬配合度佳。</li>
+        <li><b>決定進行時</b>：術前吸入 Salbutamol；<b>IV Propofol 誘導</b>優於吸入誘導；<b>盡量用 LMA、避免插管</b>；<b>避免 Desflurane</b>。IV Lidocaine 的預防效果證據不足。</li>
+        <li>不必一律等 6 週；專家共識建議症狀緩解後約 <b>2 週</b>。</li>
+      </ul>
+      <h4>喉痙攣與上呼吸道阻塞</h4>
+      <ul>
+        <li>自主呼吸下給予 <b>CPAP／PEEP 約 10–15 cmH₂O</b>，可撐開聲帶與塌陷的上呼吸道，常能解除喉痙攣或喘鳴；無效時再給較積極的正壓通氣。舌後墜造成的阻塞需放置合適的口咽呼吸道。</li>
+        <li><b>Succinylcholine</b>：因高血鉀、橫紋肌溶解與惡性高熱疑慮，已不作常規插管用藥，但仍用於<b>嚴重喉痙攣</b>與飽胃 RSI 等緊急氣道處置；嬰兒使用時（2 mg/kg）先給 Atropine 0.02 mg/kg 預防心搏過緩。大劑量 Rocuronium 為替代選擇。</li>
+        <li>Desflurane 不建議用於<b>未插管</b>兒童的維持（喉痙攣發生率高）。Uncuffed 氣管內管的喉痙攣發生率較高。</li>
+        <li>POCA 登錄中，喉痙攣是呼吸性心跳停止的原因之一。</li>
+        <li>逐步處置流程與依體重換算的劑量，見下方 UpToDate 區塊。</li>
+      </ul>
+      <h4>甦醒期躁動（Emergence delirium）</h4>
+      <ul>
+        <li><b>Sevoflurane</b> 的甦醒期躁動發生率高於 Halothane。</li>
+        <li><b>α2 作用劑</b>（Dexmedetomidine、Clonidine）可用於預防；Clonidine 作為術前用藥，在術後躁動方面有證據優於 Midazolam。</li>
+        <li><b>Ketamine</b> 作為術前用藥可能引起幻覺與甦醒期躁動。</li>
+        <li>本章對此主題著墨不多，評估量表與處置細節需另參考專題文獻。</li>
+      </ul>
+      <h4>早產兒術後呼吸暫停</h4>
+      <ul>
+        <li><b>高風險</b>：出生胎齡 &lt;37 週的早產兒；PMA 與出生胎齡越小風險越高，最晚可發生至 <b>PMA 60 週</b>。</li>
+        <li><b>貧血（Hct &lt;30%）</b>為獨立危險因子；持續性代謝性鹼中毒（如幽門狹窄未矯正）也會增加風險。</li>
+        <li>使用 Sevoflurane 或 Desflurane <b>仍會發生</b>。清醒區域麻醉（脊髓麻醉）可降低<b>早期</b>呼吸暫停，但晚期風險相近；脊髓麻醉<b>加上鎮靜</b>會增加風險。</li>
+        <li>預防性 Caffeine 可降低術後呼吸暫停風險，但不改變晚期呼吸暫停。</li>
+        <li><b>處置原則</b>：PMA <b>&lt;56–60 週</b>的早產兒術後應住院，以呼吸暫停監測器與脈衝式血氧監測；足月兒在 PMA 44 週前仍視為易發族群。</li>
+      </ul>
+      <h4>非預期困難氣道流程（1–8 歲）</h4>
+      <ul>
+        <li><b>共通原則</b>：100% O₂、<b>及早求援</b>、限制嘗試次數；每個麻醉場所應備有小兒困難氣道車與書面流程。</li>
+        <li><b>面罩通氣困難</b>：
+          <br>・A：調整頭位（&lt;2 歲墊肩、&gt;2 歲中立位）、chin lift／jaw thrust、雙人面罩通氣；檢查管路、面罩與接頭。
+          <br>・B：放口咽呼吸道、CPAP、<b>加深麻醉（Propofol 首選）</b>；找原因：麻醉太淺、喉痙攣、胃脹氣（放 OG／NG 管減壓）。
+          <br>・C：放 SGA／LMA（<b>不超過 3 次</b>）；SpO₂ &lt;80% 且無法改善 → 喚醒病人或進入 CICV 流程。</li>
+        <li><b>插管困難（面罩通氣可）</b>：
+          <br>・A：直接喉鏡<b>不超過 4 次</b>；調整頭頸位置與喉外壓迫、確認肌鬆足夠；視野差時用 bougie、直葉片、較小管徑或影像喉鏡；以 EtCO₂ 確認位置，<b>有疑慮就拔管</b>。
+          <br>・B：失敗但氧合良好 → 放 SGA／LMA 維持氧合，評估以 SGA 完成手術、經 SGA 以纖維支氣管鏡插管 1 次，或<b>延後手術、喚醒病人</b>。
+          <br>・氧合失敗（FiO₂ 1.0 下 SpO₂ &lt;90%）→ 改回面罩雙人通氣、逆轉肌鬆 → 仍失敗進入 CICV。</li>
+        <li><b>無法插管且無法通氣（CICV）</b>：
+          <br>・A：持續嘗試氧合（頭位、口咽呼吸道或 SGA、雙人通氣、胃減壓）。
+          <br>・B：SpO₂ 尚 &gt;80% → 嘗試喚醒；使用 Rocuronium／Vecuronium 者給 <b>Sugammadex 16 mg/kg</b> 完全逆轉。
+          <br>・C：SpO₂ &lt;80% 且持續下降或心跳變慢 → 緊急頸前氣道：有 ENT 在場由其行氣管切開或硬式支氣管鏡；無 ENT 則以 14／16G 套管行環甲膜穿刺並以限壓方式給氧，失敗則外科環甲膜切開。</li>
+        <li><b>實證提醒</b>：插管嘗試 &gt;2 次、體重 &lt;10 kg、甲頦距離短者併發症較多；主要操作者失敗 2 次後，應換人並改用間接（影像）喉鏡。</li>
+        <li>已知困難氣道：兒童多無法配合清醒插管，常採吸入誘導、<b>保留自主呼吸</b>下以纖維支氣管鏡插管。</li>
+      </ul>
+      <div class="info-box" id="dawCalc" style="margin-top:10px;"><b>ℹ</b> 按「計算」後，這裡會顯示依體重換算的 Sugammadex 16 mg/kg 緊急逆轉劑量。</div>
+      <div class="src">
+        整理自：Vutskits, L., Davidson, A., &amp; Soriano, S. G. Pediatric anesthesia. In M. A. Gropper et al. (Eds.), <i>Miller's Anesthesia</i> (10th ed., Chapter 72). Elsevier.<br>
+        流程原始文獻：Becke K. <i>Curr Opin Anaesthesiol</i>. 2012;25(3):333–339 ｜ Black AE, et al. <i>Paediatr Anaesth</i>. 2015;25(4):346–362.
+      </div>
+    </div>
+  </details>
+
+  <details class="ref-block" id="utdBlock">
+    <summary><span class="dot" style="background:var(--spo2)"></span>小兒全身麻醉重點 <small>UpToDate（點擊展開）</small></summary>
+    <div class="ref-body">
+      <h4>喉痙攣（Laryngospasm）處置</h4>
+      <ul>
+        <li><b>辨識</b>：吸氣喘鳴、氣管牽拉／胸凹、胸腹矛盾運動；多發生在<b>淺麻醉期</b>（誘導與甦醒）。</li>
+        <li><b>立即</b>：停止刺激、抽吸分泌物；面罩 <b>100% O₂ + CPAP</b>，jaw thrust、頸後仰、張口，必要時口咽呼吸道；可加 Larson’s maneuver（下頜支後方喉痙攣切跡加壓）。</li>
+        <li><b>仍有氣流（不完全）</b>：加深麻醉，Propofol 給<b>誘導劑量的 20%</b> 或提高 Sevoflurane 濃度。</li>
+        <li><b>無氣流（完全）</b>：<b>求援</b>，Propofol 誘導劑量 20% IV + 正壓通氣。</li>
+        <li><b>無改善</b>：Succinylcholine 0.25–0.5 mg/kg IV（無 IV：3–4 mg/kg IM）；<b>禁忌時改 Rocuronium 1.2 mg/kg IV</b>（無 IV：&lt;1 歲 1 mg/kg IM、&gt;1 歲 1.8 mg/kg IM，作用時間會延長）。心搏過緩：Atropine 0.02 mg/kg IV/IM。</li>
+        <li><b>之後</b>：嚴重喉痙攣於 PACU 觀察 ≥2 小時；若血氧下降，聽診並照胸部 X 光排除負壓性肺水腫。</li>
+      </ul>
+      <div class="info-box" id="laryngoCalc" style="margin-top:10px;"><b>ℹ</b> 輸入年齡／體重並按「計算」後，這裡會顯示依體重換算的急救劑量。</div>
+      <h4>預防喉痙攣與拔管</h4>
+      <ul>
+        <li><b>不在淺麻醉期（Stage II）拔管或操作氣道</b>；抽吸要在夠深或完全清醒時進行。</li>
+        <li>拔管前 2–5 分鐘 Lidocaine 1–1.5 mg/kg IV 可降低發生率。</li>
+        <li><b>清醒拔管指標</b>（越多項越可靠）：眼球居中共軛、皺臉、睜眼、有目的的動作、潮氣量 &gt;5 mL/kg；肌鬆須完全逆轉。</li>
+        <li><b>宜清醒拔管</b>：吸入風險、氣道阻塞風險（OSA、顎裂修補、顱顏異常）、神經肌肉無力。<b>可考慮深麻醉拔管</b>：氣喘等支氣管痙攣高風險、需避免嗆咳的手術。</li>
+        <li><b>SGA／LMA</b>：多在深麻醉下移除（自主呼吸規則、呼氣濃度 ≥1 MAC、抽吸無反應）；分泌物多、氣道出血或解剖性阻塞者宜清醒移除。</li>
+      </ul>
+      <h4>術前用藥</h4>
+      <ul>
+        <li>Midazolam 口服 0.25–0.5 mg/kg（上限 10–15 mg），誘導前約 20 分鐘；OSA 病童慎用。</li>
+        <li>Dexmedetomidine 鼻內 1–3 mcg/kg；不合作病童可用 Ketamine 3 mg/kg IM。</li>
+      </ul>
+      <h4>誘導</h4>
+      <ul>
+        <li>誘導前備妥 <b>Atropine 0.02 mg/kg</b>。嬰幼兒心輸出量依賴心跳，高濃度吸入麻醉引起心搏過緩時：Atropine 0.01 mg/kg IV（或 0.02 mg/kg IM）。</li>
+        <li><b>優先 IV 誘導</b>：肥胖、吸入高風險（需 RSI）、惡性高熱體質；近期上呼吸道感染或反覆喘鳴者亦可考慮。</li>
+        <li>Propofol 兒童誘導劑量較成人高（約 3 mg/kg）；Sevoflurane 誘導後不用肌鬆插管時，常追加 Propofol 2–3 mg/kg。</li>
+        <li>嬰兒 RSI：意識消失後可給<b>輕柔正壓通氣</b>，避免等待肌鬆期間缺氧。</li>
+      </ul>
+      <h4>術中</h4>
+      <ul>
+        <li><b>低血壓</b>：健康兒童多對輸液有反應，等張晶體液 10–20 mL/kg bolus。</li>
+        <li><b>血糖</b>：&lt;6 個月、手術 &gt;60 分鐘且使用無糖輸液者，術中監測血糖。</li>
+        <li><b>血量</b>：70–90 mL/kg，幼兒少量失血即可能低血壓。</li>
+        <li><b>通氣</b>：潮氣量約 6 mL/kg、PEEP 約 5 cmH₂O；EtCO₂ 35–40 mmHg；新生兒 SpO₂ 目標 90–94%。呼吸快時 EtCO₂ 可能假性偏低。</li>
+        <li><b>保溫</b>：&lt;6 個月或 &lt;5 kg 者，入室前先將室溫調高（約 27°C 以上），並使用加溫毯與輸液加溫。</li>
+      </ul>
+      <h4>術後觀察</h4>
+      <ul>
+        <li><b>早產兒</b>：術後呼吸暫停風險高，多數中心建議 PMA 60 週前過夜監測。</li>
+        <li><b>足月兒</b>：PMA ≤44 週多需住院觀察。</li>
+        <li><b>明顯 OSA</b>（尤其 &lt;3 歲）接受扁桃腺／腺樣體切除後應住院監測。</li>
+      </ul>
+      <div class="src">
+        整理自：Black, S. A., &amp; Maxwell, L. G. (2026). General anesthesia in infants and children: Agents and techniques. In N. A. Nussmeier (Ed.), <i>UpToDate</i>. Retrieved October 7, 2026, from https://www.uptodate.com
+      </div>
+    </div>
+  </details>
+
+  <footer>FOR CLINICAL REFERENCE ONLY · 僅供臨床參考，不取代專業判斷<div class="app-meta" id="appMeta"></div></footer>
 </div>
 
 <script>
@@ -555,6 +817,9 @@ function calculate(){
   `;
   if(ageYears>12 && usingEstimate){
     document.getElementById('basicGrid').innerHTML += `<div class="flag" style="margin-top:2px">⚠ &gt;12歲體重估算誤差大，強烈建議輸入實際體重</div>`;
+  }
+  if(weight>=50){
+    document.getElementById('basicGrid').innerHTML += `<div class="flag" style="margin-top:2px">⚠ 體重 ≥50 kg：依體重換算的劑量可能超過成人常用量。已設上限的藥物會標示「已達成人上限」，其餘請以成人劑量為上限；肥胖兒童建議以理想體重或除脂體重計算。</div>`;
   }
 
   // ---- preterm ----
@@ -627,7 +892,7 @@ function calculate(){
   document.getElementById('airwayGrid').innerHTML = `
     ${readout('Uncuffed ETT', ett.uncuffed, 'mm ID', '#a9a595')}
     ${readout('Cuffed ETT', ett.cuffed, 'mm ID', '#a9a595')}
-    ${readout('插管深度（唇端）', ett.depth, 'cm', 'var(--rr)')}
+    ${readout('插管深度（嘴角）', ett.depth, 'cm', 'var(--rr)')}
     ${readout('建議喉鏡片', blade, '', 'var(--hr)')}
     ${readout('LMA 建議尺寸', lma, '', 'var(--spo2)')}
   `;
@@ -643,7 +908,28 @@ function calculate(){
   // ---- 藥物：儲存目前體重/年齡，重設分類選單（點選分類後才顯示對應藥物） ----
   currentWeight = weight;
   currentAgeMonths = ageMonths;
+
+  // ---- 喉痙攣急救劑量（依體重） ----
+  (function(){
+    const el = document.getElementById('laryngoCalc');
+    if(!el || !(weight>0)) return;
+    const f = v => (v<10 ? v.toFixed(1) : Math.round(v).toString());
+    el.innerHTML = '<b>ℹ 依本次體重 '+f(weight)+' kg 換算：</b><br>'
+      + '• Propofol（誘導 3 mg/kg 的 20% ≈ 0.6 mg/kg）：<b>'+f(weight*0.6)+' mg</b> IV<br>'
+      + '• Rocuronium 1.2 mg/kg：<b>'+f(weight*1.2)+' mg</b> IV<br>'
+      + '• Succinylcholine 0.25–0.5 mg/kg：<b>'+f(weight*0.25)+'–'+f(weight*0.5)+' mg</b> IV<br>'
+      + '• Atropine 0.02 mg/kg（上限 0.5 mg）：<b>'+Math.min(weight*0.02,0.5).toFixed(2)+' mg</b> IV/IM';
+    const d = document.getElementById('dawCalc');
+    if(d) d.innerHTML = '<b>ℹ 依本次體重 '+f(weight)+' kg 換算：</b>Sugammadex 16 mg/kg（CICV 緊急完全逆轉 Rocuronium）＝ <b>'+f(weight*16)+' mg</b> IV';
+  })();
   resetDrugSelector();
+
+  // ---- 器材、失血、輸注、準備單 ----
+  renderEquip(ageMonths, weight, ett, lma);
+  updateBlood();
+  onInfDrugChange();
+  buildPrepSheet({ageLabel, weight, usingEstimate, ageMonths, ett, lma, blade, maint421});
+  document.getElementById('prepSheet').classList.remove('show');
 
   document.getElementById('results').className='results visible';
   document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
@@ -676,6 +962,15 @@ function selectDrugCat(cat){
       + '• <b>術後續留插管／送ICU</b>：上限大幅放寬（fentanyl 可達 10–50 mcg/kg，心臟手術更高），此時限制因子為血行動力學而非呼吸。<br>'
       + '• 上述為<b>術中累積總量</b>參考，非單次劑量、亦非每日總量；務必依手術刺激、併用藥物與個別反應滴定。<br>'
       + '<span style="font-size:.92em;">參考：Brown KA, et al. <i>Anesthesiology</i>. 2006;105(4):665–669（反覆缺氧與鴉片類敏感性）；Coté CJ, Lerman J, Anderson BJ. <i>A Practice of Anesthesia for Infants and Children</i>, 6th ed.</span>';
+  } else if(cat==='resus'){
+    rem.innerHTML = '<b>⚕ 提醒：</b>急救劑量依 PALS 指引換算，已套用單次劑量上限；實際處置請依現場流程與本院規範，並由第二人覆核劑量與濃度。<br>'
+      + '<span style="font-size:.92em;">參考：Lasa JJ, et al. Part 8: Pediatric Advanced Life Support: 2025 American Heart Association and American Academy of Pediatrics Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. <i>Circulation</i>. 2025;152(16_suppl_2):S479–S537.</span>';
+  } else if(cat==='local'){
+    rem.innerHTML = '<b>⚕ 提醒：</b>最大劑量為<b>所有途徑合計</b>（外科浸潤 + 神經阻斷 + IV），&lt;6 個月已自動減量 30%。肥胖兒童建議以理想體重計算。<br>'
+      + '<span style="font-size:.92em;">參考：Neal JM, et al. American Society of Regional Anesthesia and Pain Medicine Local Anesthetic Systemic Toxicity checklist: 2020 version. <i>Reg Anesth Pain Med</i>. 2021;46(1):81–82；Coté CJ, Lerman J, Anderson BJ. <i>A Practice of Anesthesia for Infants and Children</i>, 6th ed.</span>';
+  } else if(cat==='mh'){
+    rem.innerHTML = '<b>⚕ 提醒：</b>惡性高熱處置依 MHAUS 建議整理；Dantrolene 瓶數以 20 mg／瓶計算，請依本院實際製劑確認，並熟悉本院 MH 急救車位置。<br>'
+      + '<span style="font-size:.92em;">參考：Malignant Hyperthermia Association of the United States (MHAUS). Managing an MH crisis. https://www.mhaus.org</span>';
   } else {
     rem.innerHTML = '<b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。';
   }
@@ -755,6 +1050,40 @@ function lmaFor(w){
   return 'Size 5';
 }
 
+/* 藥品仿單連結：key 必須與下方 row() 的藥名（去掉 HTML 標籤後的文字）完全一致。
+   沒列在這裡的藥物不顯示連結；同藥多廠牌/劑型可放多筆並加 label。
+   新增方式：'藥名':[{url:'網址'}] 或 [{label:'廠牌',url:'網址'},…] */
+const PI_LINKS = {
+  'Propofol':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC027593%E8%99%9F'}],
+  'Ketamine (IV)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC003542%E8%99%9F'}],
+  'Midazolam':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC046285%E8%99%9F'}],
+  'Dexmedetomidine':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC024002%E8%99%9F'}],
+  'Lidocaine IV（減緩插管反應）':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC060394%E8%99%9F'}],
+  'Rocuronium':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC026336%E8%99%9F'}],
+  'Cisatracurium':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC022770%E8%99%9F'}],
+  'Succinylcholine (SCC)':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC044085%E8%99%9F'}],
+  'Fentanyl':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC044332%E8%99%9F'}],
+  'Morphine':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC005891%E8%99%9F'}],
+  'Demerol (Meperidine)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC005874%E8%99%9F'}],
+  'Neostigmine':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E5%85%A7%E8%A1%9B%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC001976%E8%99%9F'}],
+  'Sugammadex':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=ISUGA&P=DL'}],
+  'Atropine（併用）':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC014355%E8%99%9F'}],
+  'Glycopyrrolate（併用）':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=IGLYCO&P=DL'}],
+  'Acetamol (Acetaminophen)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC028631%E8%99%9F'}],
+  'Dynastat (Parecoxib)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC024143%E8%99%9F'}],
+  'Ephedrine':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=IEPHE&P=DL'}],
+  'Ondansetron':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=IZOFR&P=DL'}],
+  'Dexamethasone':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC015279%E8%99%9F'}],
+  'Hydrocortisone':[{url:'https://admincp.ktgh.com.tw/Upload/Medicine/202302201707557055.pdf'}]
+};
+function piLink(name){
+  const list = PI_LINKS[name.replace(/<[^>]+>/g,'')];
+  if(!list || !list.length) return '';
+  return '<div class="pi-row">'
+    + list.map(l=>`<a class="pi-link" href="${l.url.replace(/&/g,'&amp;')}" target="_blank" rel="noopener noreferrer">仿單${l.label?'・'+l.label:''} ↗</a>`).join('')
+    + '<span class="pi-net">需連網</span></div>';
+}
+
 /* 依選取的分類渲染對應藥物。分類：induction 誘導 / relaxant 肌肉鬆弛劑 /
    opioid 鴉片止痛藥 / reversal 逆轉藥 / other 其他 */
 function buildDrugTable(cat, weight, ageMonths){
@@ -763,8 +1092,8 @@ function buildDrugTable(cat, weight, ageMonths){
   function row(bg,name,dose,calcFn,flag,flagDanger,striped){
     const calc = calcFn(weight);
     const nameCell = striped
-      ? `<td class="dname-cell striped-cell"><span class="stripe-badge">${name}</span></td>`
-      : `<td class="dname-cell" style="background:${bg}">${name}</td>`;
+      ? `<td class="dname-cell striped-cell"><span class="stripe-badge">${name}${piLink(name)}</span></td>`
+      : `<td class="dname-cell" style="background:${bg}">${name}${piLink(name)}</td>`;
     rows.push(`<tr>
       ${nameCell}
       <td class="dose-cell" data-label="劑量"><span style="color:var(--muted);font-weight:400;font-size:.72rem;display:block;margin-bottom:2px;">${dose}</span>${calc}</td>
@@ -812,25 +1141,25 @@ function buildDrugTable(cat, weight, ageMonths){
         w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">誘導</span> '+rangeCalc(w,0.05,0.1)+' mg'
           +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">計畫拔管累積上限</span><br>'+rangeCalc(w,0.1,0.2)+' mg</div>',
         '超過約0.2 mg/kg 需準備術後延長監測・腎功能不全代謝物(M6G)蓄積<br>'+hiRiskNote, infant6);
-    row('var(--bg-opioid)','Demerol (Meperidine)','0.5–1 mg/kg IV/IM（單次上限約50–100mg）', w=>rangeCalc(w,0.5,1)+' mg',
+    row('var(--bg-opioid)','Demerol (Meperidine)','0.5–1 mg/kg IV/IM（單次上限約50–100mg）', w=>capRange(w,0.5,1,100,' mg'),
         '腎功能不全/重複給藥時normeperidine蓄積→癲癇風險,小兒不建議常規使用', true);
   }
   else if(cat==='reversal'){
-    row(null,'Neostigmine','0.05–0.07 mg/kg（併用Glycopyrrolate）', w=>rangeCalc(w,0.05,0.07)+' mg',
+    row(null,'Neostigmine','0.05–0.07 mg/kg（上限 5 mg，併用Glycopyrrolate）', w=>capRange(w,0.05,0.07,5,' mg'),
         '務必併用抗膽鹼藥(嬰幼兒心搏徐緩風險更高)・腸阻塞/腹膜炎禁用', true, true);
     row(null,'Sugammadex','2–4 mg/kg', w=>rangeCalc(w,2,4)+' mg',
         '僅能逆轉roc/vec・監測心搏徐緩・重度腎功能不全避免・建議2歲以上使用', true, true);
-    row('var(--bg-anticholinergic)','Atropine<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.02 mg/kg（最低劑量0.1mg）', w=>Math.max(w*0.02,0.1).toFixed(2)+' mg',
+    row('var(--bg-anticholinergic)','Atropine<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.02 mg/kg（最低 0.1 mg，上限 1 mg）', w=>capOne(Math.max(w*0.02,0.1),1,' mg'),
         '劑量低於0.1mg可能致反常性心搏徐緩(嬰幼兒)・心搏過速時慎用', false);
     row('var(--bg-anticholinergic)','Glycopyrrolate<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.01 mg/kg', w=>(w*0.01).toFixed(2)+' mg',
         '不易通過血腦障壁,小兒中樞副作用較少・心搏過速時慎用', false);
   }
   else if(cat==='other'){
-    row('var(--bg-other)','Acetamol (Acetaminophen)','10–15 mg/kg IV/PO（依年齡調整）', w=>rangeCalc(w,10,15)+' mg',
+    row('var(--bg-other)','Acetamol (Acetaminophen)','IV 依體重分級：≤10 kg 7.5 mg/kg；10–50 kg 15 mg/kg；&gt;50 kg 1 g（自費）', w=>{const p=paracetamolIV(w);return p.single+'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> '+p.max+'</div>';},
         '嚴重肝功能不全禁用・每日總量(含各途徑)依體重年齡設上限,過量致肝衰竭・新生兒嬰兒清除率低需減量', true);
-    row('var(--bg-other)','Dynastat (Parecoxib)','成人劑量40 mg IV；兒科尚無公定劑量', w=>'兒科劑量未確立',
-        '18歲以下安全性與劑量未確立,不建議常規使用・磺胺過敏禁用', true);
-    row('var(--bg-vasopressor)','Ephedrine','0.1–0.2 mg/kg IV bolus', w=>rangeCalc(w,0.1,0.2)+' mg',
+    row('var(--bg-other)','Dynastat (Parecoxib)','≥2 歲依體重分級：10–15 kg 0.9、15–25 kg 0.8、25–40 kg 0.7、&gt;40 kg 0.6 mg/kg（自費）', w=>{const p=parecoxibDose(w,ageMonths);return p.single+'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> '+p.max+'</div>';},
+        '<b>兒童為仿單外使用</b>（仿單未核准 &lt;18 歲）・&lt;2 歲不建議・磺胺過敏禁用・腎功能不全、脫水、出血風險高者避免・多為單次術中給予・超過 1 mg/kg 無額外止痛效果', true);
+    row('var(--bg-vasopressor)','Ephedrine','0.1–0.2 mg/kg IV bolus（單次上限 10 mg）', w=>capRange(w,0.1,0.2,10,' mg'),
         '心律不整時慎用・重複給藥易產生耐受性(tachyphylaxis)', false);
     row('var(--bg-skin)','Ondansetron','0.1–0.15 mg/kg（上限4mg）', w=>Math.min(rangeHigh(w,0.1,0.15),4).toFixed(2)+' mg',
         'QT延長/電解質不平衡時慎用(TdP風險)・依體重給藥,單次上限4mg', true);
@@ -838,6 +1167,86 @@ function buildDrugTable(cat, weight, ageMonths){
         '全身性黴菌感染禁用・免疫抑制/化療病童感染風險慎用', false);
     row('var(--bg-other)','Hydrocortisone','1–2 mg/kg IV（壓力劑量/腎上腺功能不足覆蓋）', w=>rangeCalc(w,1,2)+' mg',
         '感染時可能掩蓋徵象・長期使用注意腎上腺抑制', false);
+    row('var(--bg-other)','Ibuprofen (PO)','5–10 mg/kg PO（單次上限 400 mg）', w=>capRange(w,5,10,400,' mg'),
+        (ageMonths<6 ? '&lt;6 個月不建議使用・' : '') + '腎功能不全、脫水、出血風險高或活動性消化道出血時避免・氣喘病童慎用', ageMonths<6);
+  }
+  else if(cat==='resus'){
+    const V='var(--bg-vasopressor)';
+    const lab = t => '<span style="color:var(--muted);font-weight:600;font-size:.78rem;">'+t+'</span> ';
+    const sep = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">';
+    row(V,'Epinephrine<br><span style="font-weight:600;font-size:.72rem;">（心跳停止 IV/IO）</span>','0.01 mg/kg（0.1 mg/mL 製劑 0.1 mL/kg），每 3–5 分鐘；上限 1 mg',
+        w=>capOne(w*0.01,1,' mg')+sep+lab('0.1 mg/mL')+Math.min(w*0.1,10).toFixed(1)+' mL</div>',
+        '務必確認濃度：急救用 <b>0.1 mg/mL（1:10,000）</b>；1 mg/mL 原液需先稀釋 10 倍', true);
+    row(V,'Epinephrine<br><span style="font-weight:600;font-size:.72rem;">（過敏性休克 IM）</span>','0.01 mg/kg IM（1 mg/mL 原液 0.01 mL/kg）；上限 0.5 mg',
+        w=>capOne(w*0.01,0.5,' mg')+sep+lab('1 mg/mL')+Math.min(w*0.01,0.5).toFixed(2)+' mL</div>',
+        '大腿前外側肌肉注射・5–15 分鐘可重複・同時給予輸液 bolus', false);
+    row(V,'Amiodarone','5 mg/kg IV/IO bolus；上限 300 mg', w=>capOne(w*5,300,' mg',0),
+        'VF／無脈性 VT 電擊無效時使用，可重複至共 3 劑・有脈搏之心律不整需緩慢給予(20–60 分鐘)，注意低血壓與 QT 延長', false);
+    row('var(--bg-local)','Lidocaine<br><span style="font-weight:600;font-size:.72rem;">（VF／pVT 替代）</span>','1 mg/kg IV/IO；上限 100 mg', w=>capOne(w*1,100,' mg',1),
+        'Amiodarone 的替代選擇，兩者擇一', false);
+    row(V,'Adenosine','首劑 0.1 mg/kg（上限 6 mg）→ 第二劑 0.2 mg/kg（上限 12 mg）',
+        w=>lab('首劑')+capOne(w*0.1,6,' mg')+sep+lab('第二劑')+capOne(w*0.2,12,' mg')+'</div>',
+        'SVT 使用・靠近心臟的靜脈<b>快速推注</b>後立即以生理食鹽水沖管', false);
+    row('var(--bg-anticholinergic)','Atropine','0.02 mg/kg IV/IO；單次上限 0.5 mg', w=>capOne(w*0.02,0.5,' mg'),
+        '迷走神經張力過高或原發性房室傳導阻滯所致之心搏過緩・缺氧性心搏過緩應先改善氧合與通氣，並以 Epinephrine 為主', false);
+    row(V,'Calcium chloride 10%','20 mg/kg（0.2 mL/kg）緩慢 IV；上限 2 g',
+        w=>capOne(w*20,2000,' mg',0)+sep+Math.min(w*0.2,20).toFixed(1)+' mL</div>',
+        '低血鈣、高血鉀、大量輸血時使用・建議由<b>中心靜脈</b>給予，周邊外滲會造成組織壞死', true);
+    row(V,'Calcium gluconate 10%','60 mg/kg（0.6 mL/kg）緩慢 IV；上限 3 g',
+        w=>capOne(w*60,3000,' mg',0)+sep+Math.min(w*0.6,30).toFixed(1)+' mL</div>',
+        '可由周邊靜脈給予・給藥時監測心電圖', false);
+    row('var(--bg-other)','Sodium bicarbonate','1 mEq/kg 緩慢 IV；上限 50 mEq', w=>capOne(w*1,50,' mEq',1),
+        '不作心跳停止常規用藥・用於高血鉀、TCA 等鈉離子通道阻斷劑中毒・須確保通氣足夠'+(ageMonths<=1?'・新生兒使用 4.2% 濃度':''), false);
+    row('var(--bg-other)','Dextrose（D10W）','0.5–1 g/kg ＝ D10W 5–10 mL/kg；上限 25 g',
+        w=>capRange(w,5,10,250,' mL'),
+        '確認低血糖後給予・給藥後複測血糖・避免高血糖', false);
+    row('var(--bg-other)','Naloxone','完全逆轉 0.1 mg/kg（上限 2 mg）；術後呼吸抑制 1–5 mcg/kg 滴定',
+        w=>lab('完全逆轉')+capOne(w*0.1,2,' mg')+sep+lab('滴定')+rangeCalc(w,1,5)+' mcg</div>',
+        '作用時間短於多數鴉片類，須持續監測以防再度呼吸抑制・術後病童以小劑量滴定避免疼痛與躁動反彈', false);
+    row('var(--bg-relaxant)','去顫（VF／pVT）','第一次 2 J/kg → 第二次 4 J/kg → 之後 ≥4 J/kg（上限 10 J/kg 或成人劑量）',
+        w=>lab('第一次')+capOne(w*2,200,' J',0)+sep+lab('第二次')+capOne(w*4,200,' J',0)+'</div>',
+        '電擊後立即恢復 CPR 2 分鐘再評估心律・<10 kg 或 <1 歲使用嬰兒電擊貼片', true);
+    row('var(--bg-relaxant)','同步電擊（SVT／有脈搏 VT）','0.5–1 J/kg → 無效時 2 J/kg',
+        w=>lab('首次')+rangeCalc(w,0.5,1)+' J'+sep+lab('再次')+capOne(w*2,200,' J',0)+'</div>',
+        '確認已開啟<b>同步模式</b>・清醒病童先給予鎮靜', false);
+  }
+  else if(cat==='local'){
+    const G='var(--bg-local)';
+    const k = ageMonths<6 ? 0.7 : 1;
+    const lab = t => '<span style="color:var(--muted);font-weight:600;font-size:.78rem;">'+t+'</span> ';
+    const sep = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">';
+    const infNote = ageMonths<6 ? '<b>目前年齡 &lt;6 個月：已自動減量 30%</b>（蛋白結合率低、清除慢）・' : '';
+    row(G,'Bupivacaine／Levobupivacaine','最大 2.5 mg/kg（上限 150 mg）',
+        w=>capOne(w*2.5*k,150,' mg',1)+sep+lab('0.25%')+(Math.min(w*2.5*k,150)/2.5).toFixed(1)+' mL<br>'+lab('0.5%')+(Math.min(w*2.5*k,150)/5).toFixed(1)+' mL</div>',
+        infNote+'心毒性最強，注射前回抽、分次給予・多部位阻斷時須<b>合計</b>總劑量', true);
+    row(G,'Ropivacaine','最大 3 mg/kg（上限 200 mg）',
+        w=>capOne(w*3*k,200,' mg',1)+sep+lab('0.2%')+(Math.min(w*3*k,200)/2).toFixed(1)+' mL</div>',
+        infNote+'與外科傷口浸潤的局麻藥合併計算', ageMonths<6);
+    row(G,'Lidocaine（不含 Epinephrine）','最大 5 mg/kg（上限 300 mg）',
+        w=>capOne(w*5*k,300,' mg',0)+sep+lab('1%')+(Math.min(w*5*k,300)/10).toFixed(1)+' mL<br>'+lab('2%')+(Math.min(w*5*k,300)/20).toFixed(1)+' mL</div>',
+        infNote+'含 IV Lidocaine（插管、拔管前）之劑量須一併計入', ageMonths<6);
+    row(G,'Lidocaine（含 Epinephrine）','最大 7 mg/kg（上限 500 mg）',
+        w=>capOne(w*7*k,500,' mg',0)+sep+lab('1%')+(Math.min(w*7*k,500)/10).toFixed(1)+' mL<br>'+lab('2%')+(Math.min(w*7*k,500)/20).toFixed(1)+' mL</div>',
+        infNote+'末梢動脈供應區（手指、腳趾、陰莖）避免使用含 Epinephrine 製劑', ageMonths<6);
+    row('var(--bg-fluidcell, #7fc0b6)','20% Lipid emulsion<br><span style="font-weight:600;font-size:.72rem;">（LAST 急救）</span>','Bolus 1.5 mL/kg（2–3 分鐘）→ 輸注 0.25 mL/kg/min；總量上限約 12 mL/kg',
+        w=> (w>=70
+              ? lab('Bolus')+'100 mL'+sep+lab('輸注')+'200–250 mL／15–20 分鐘</div>'
+              : lab('Bolus')+(w*1.5).toFixed(1)+' mL'+sep+lab('輸注')+(w*0.25).toFixed(1)+' mL/min（'+(w*15).toFixed(0)+' mL/hr）<br>'+lab('總量上限')+(w*12).toFixed(0)+' mL</div>'),
+        '<b>LAST 處置：</b>停止注射、求援、取得 Lipid・100% O₂ 與氣道處置・抽搐首選 Benzodiazepine・循環不穩可重複 bolus 或輸注加倍・Epinephrine 減量至 <b>≤1 mcg/kg</b>・<b>避免</b> Vasopressin、鈣離子阻斷劑、β 阻斷劑與局麻藥・穩定後續滴至少 15 分鐘', true);
+  }
+  else if(cat==='mh'){
+    const lab = t => '<span style="color:var(--muted);font-weight:600;font-size:.78rem;">'+t+'</span> ';
+    const sep = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">';
+    row('var(--bg-relaxant2)','Dantrolene','2.5 mg/kg 快速 IV，可重複至症狀緩解（可能需達 10 mg/kg）',
+        w=>(w*2.5).toFixed(0)+' mg'+sep+lab('20 mg／瓶')+Math.ceil(w*2.5/20)+' 瓶（每瓶加 60 mL 無菌注射用水）<br>'+lab('累積 10 mg/kg')+(w*10).toFixed(0)+' mg</div>',
+        '<b>立即：</b>停用吸入性麻醉藥與 Succinylcholine、求援・100% O₂ 高流量並加大分鐘通氣量・改用 TIVA・通知外科盡快結束手術・泡製需多人協助・瓶數依本院製劑規格確認', true);
+    row('var(--bg-other)','Sodium bicarbonate','1–2 mEq/kg IV（代謝性酸中毒）', w=>rangeCalc(w,1,2)+' mEq',
+        '依血液氣體分析結果給予', false);
+    row('var(--bg-vasopressor)','高血鉀處置','Calcium chloride 10 mg/kg；Insulin 0.1 U/kg + Dextrose 0.5 g/kg',
+        w=>lab('CaCl₂')+capOne(w*10,2000,' mg',0)+sep+lab('Insulin')+capOne(w*0.1,10,' U',1)+'<br>'+lab('D10W')+capOne(w*5,250,' mL',0)+'</div>',
+        '<b>避免鈣離子阻斷劑</b>（與 Dantrolene 併用可致高血鉀與心跳停止）・心律不整依一般流程處置', true);
+    row('#7fc0b6','降溫','體溫 &gt;39°C：冰生理食鹽水 IV、體表降溫；降至 38°C 停止', w=>'—',
+        '監測核心體溫、EtCO₂、血液氣體、K⁺、CK、尿量（目標 &gt;1 mL/kg/hr）・症狀緩解後仍須 ICU 觀察至少 24 小時，防復發', false);
   }
 
   return rows.join('');
@@ -869,6 +1278,267 @@ function buildFluidTable(weight, ageMonths){
   row('急救輸液 Bolus','10–20 mL/kg', w=>rangeCalc(w,10,20)+' mL',
       '心功能不全/慢性腎病者需減量並每次給予後重新評估', false);
   return rows.join('');
+}
+
+/* ===== 版本與校閱資訊（更新內容時一併修改）===== */
+const APP_VERSION = '2026.10.07';
+const APP_UPDATED = '2026-10-07';
+const REVIEWED_BY = '';     // 臨床校閱者，例如 '麻醉部 ○○○'；留空則不顯示
+const FEEDBACK_URL = '';    // 問題回報連結（表單網址或 mailto:）；留空則不顯示
+(function(){
+  const el = document.getElementById('appMeta');
+  if(!el) return;
+  let h = '版本 '+APP_VERSION+'　·　最後更新 '+APP_UPDATED;
+  if(REVIEWED_BY) h += '　·　臨床校閱：'+REVIEWED_BY;
+  h += '<br>內容由生成式 AI 協作整理，並經臨床人員對照文獻查核；所有計算結果給藥前須由臨床人員覆核。';
+  if(FEEDBACK_URL) h += '<br><a href="'+FEEDBACK_URL+'" target="_blank" rel="noopener">發現錯誤或有建議？點此回報</a>';
+  el.innerHTML = h;
+})();
+
+/* ===== 劑量上限 ===== */
+const CAP_TAG = '<span class="cap-tag">已達成人上限</span>';
+function capOne(v, max, unit, dec){
+  if(dec===undefined) dec = 2;
+  return v>max ? max.toFixed(dec)+unit+CAP_TAG : v.toFixed(dec)+unit;
+}
+function capRange(w, lo, hi, max, unit){
+  const a = Math.min(w*lo, max), b = Math.min(w*hi, max);
+  const t = (a===b ? a.toFixed(2) : a.toFixed(2)+'–'+b.toFixed(2)) + unit;
+  return w*hi>max ? t+CAP_TAG : t;
+}
+
+/* ===== 器材尺寸 ===== */
+function lmaCuffFor(w){
+  if(w<5) return 4; if(w<10) return 7; if(w<20) return 10; if(w<30) return 14;
+  if(w<50) return 20; if(w<70) return 30; return 40;
+}
+function equipFor(ageMonths, w, ett){
+  const y = ageMonths/12, neo = ageMonths<=1;
+  const cuffedNum = neo ? null : (y/4+3.5);
+  const e = {};
+  e.opa = neo ? '00（40 mm）' : ageMonths<12 ? '0（50 mm）' : y<5 ? '1（60 mm）' : y<10 ? '2（70 mm）' : '3（80 mm）';
+  e.npa = neo ? '3.0' : (cuffedNum-0.5).toFixed(1)+'–'+cuffedNum.toFixed(1);
+  e.suction = neo ? '6' : String(Math.floor(cuffedNum*2));
+  e.ng = neo ? '5–8' : ageMonths<12 ? '8' : y<6 ? '10' : y<12 ? '12' : '14–16';
+  e.foley = neo ? '5–6' : ageMonths<12 ? '6–8' : y<5 ? '8–10' : y<12 ? '10–12' : '12–14';
+  e.iv = ageMonths<12 ? '24' : y<8 ? '22–24' : '20–22';
+  e.aline = w<10 ? '24' : w<40 ? '22' : '20';
+  e.cvc = w<5 ? '4 Fr・5 cm' : w<15 ? '4–5 Fr・5–8 cm' : w<30 ? '5 Fr・8–12 cm' : '5–7 Fr・12–15 cm';
+  e.lmaCuff = lmaCuffFor(w);
+  return e;
+}
+function renderEquip(ageMonths, w, ett, lma){
+  const e = equipFor(ageMonths, w, ett);
+  document.getElementById('equipGrid').innerHTML =
+      readout('LMA 氣囊最大充氣量（'+lma+'）', e.lmaCuff, 'mL', 'var(--spo2)')
+    + readout('口咽呼吸道 OPA', e.opa, '', '#a9a595')
+    + readout('鼻咽呼吸道 NPA', e.npa, 'mm ID', '#a9a595')
+    + readout('氣管內抽吸管', e.suction, 'Fr', '#a9a595')
+    + readout('鼻胃管 NG', e.ng, 'Fr', 'var(--hr)')
+    + readout('導尿管', e.foley, 'Fr', 'var(--hr)')
+    + readout('周邊靜脈留置針', e.iv, 'G', 'var(--bp)')
+    + readout('動脈導管', e.aline, 'G', 'var(--bp)')
+    + readout('中心靜脈導管（尺寸・長度）', e.cvc, '', 'var(--bp)');
+  document.getElementById('equipNote').innerHTML = '<b>ℹ 說明</b>'
+    + '<ul class="note-list">'
+    + '<li>尺寸為常用參考值，各廠牌規格不同，請對照本院備品並依病童體型調整。</li>'
+    + '<li><b>LMA</b>：充氣量為 LMA Classic 廠商建議上限，氣囊壓力宜 ≤60 cmH₂O；其他廠牌依其仿單。</li>'
+    + '<li><b>OPA</b>：以嘴角至下頜角的長度為準。</li>'
+    + '<li><b>NPA</b>：長度以鼻尖至耳屏為準。</li>'
+    + '<li><b>抽吸管</b>：約為氣管內管內徑 ×2（Fr）。</li>'
+    + '<li><b>右內頸 CVC 深度</b>（以身高估算）：身高 ≤100 cm 為 身高(cm)/10 − 1；&gt;100 cm 為 身高(cm)/10 − 2。</li>'
+    + '<li><b>血壓袖帶</b>：氣囊寬度約為上臂圍的 40%，長度包覆上臂圍 80–100%；過小會高估、過大會低估。</li>'
+    + '</ul>'
+    + '<details class="ref-fold"><summary>參考資料</summary>'
+    + 'Coté CJ, Lerman J, Anderson BJ. <i>A Practice of Anesthesia for Infants and Children</i>, 6th ed.<br>'
+    + 'Andropoulos DB, et al. <i>Anesth Analg</i>. 2001;93(4):883–886.'
+    + '</details>';
+}
+
+/* ===== 失血與輸血 ===== */
+function ebvPerKg(ageMonths){
+  const preterm = document.getElementById('isPreterm').checked;
+  if(preterm && ageMonths<3) return {v:100, label:'早產兒 100–120 mL/kg（以 100 計）'};
+  if(ageMonths<3) return {v:90, label:'足月新生兒／小嬰兒 90 mL/kg'};
+  if(ageMonths<12) return {v:75, label:'3–12 個月 70–80 mL/kg（以 75 計）'};
+  return {v:70, label:'&gt;1 歲 70 mL/kg'};
+}
+function updateBlood(){
+  if(currentWeight===null) return;
+  const w = currentWeight, e = ebvPerKg(currentAgeMonths), ebv = w*e.v;
+  const h0 = parseFloat(document.getElementById('hctStart').value);
+  const ht = parseFloat(document.getElementById('hctTarget').value);
+  let mabl = '輸入起始 Hct', unit = '';
+  if(!isNaN(h0) && !isNaN(ht) && h0>0){
+    if(ht>=h0){ mabl = '已低於可接受值'; }
+    else { mabl = Math.round(ebv*(h0-ht)/h0); unit = 'mL'; }
+  }
+  document.getElementById('bloodGrid').innerHTML =
+      readout('估計血量 EBV', Math.round(ebv), 'mL', 'var(--bp)')
+    + readout('最大容許失血量 MABL', mabl, unit, 'var(--bp)')
+    + readout('pRBC 10–15 mL/kg', Math.round(w*10)+'–'+Math.round(w*15), 'mL', 'var(--bp)')
+    + readout('FFP 10–15 mL/kg', Math.round(w*10)+'–'+Math.round(w*15), 'mL', 'var(--rr)')
+    + readout('血小板 5–10 mL/kg', Math.round(w*5)+'–'+Math.round(w*10), 'mL', 'var(--rr)');
+  document.getElementById('bloodNote').innerHTML = '<b>ℹ 說明：</b>EBV 採用 '+e.label+'。<b>MABL ＝ EBV ×（起始 Hct − 可接受最低 Hct）÷ 起始 Hct</b>，為估算值，實際輸血決策須綜合失血速度、血行動力學與檢驗值。'
+    + '血品劑量為一般參考，請依本院輸血規範；大量輸血時注意低血鈣、高血鉀與低體溫。'
+    + '<br><span style="font-size:.92em;">參考：Vutskits L, Davidson A, Soriano SG. Pediatric anesthesia. In <i>Miller\'s Anesthesia</i>, 10th ed., Chapter 72.</span>';
+}
+
+/* ===== 持續輸注換算 ===== */
+const INFUSIONS = {
+  propofol:{name:'Propofol', unit:'mcg/kg/min', perMin:true, dose:150, range:'100–250', conc:10, concUnit:'mg/mL', k:1000},
+  dex:{name:'Dexmedetomidine', unit:'mcg/kg/hr', perMin:false, dose:0.5, range:'0.2–1', conc:4, concUnit:'mcg/mL', k:1},
+  remi:{name:'Remifentanil', unit:'mcg/kg/min', perMin:true, dose:0.1, range:'0.05–0.3', conc:'', concUnit:'mcg/mL', k:1},
+  epi:{name:'Epinephrine', unit:'mcg/kg/min', perMin:true, dose:0.05, range:'0.02–0.3', conc:'', concUnit:'mcg/mL', k:1},
+  norepi:{name:'Norepinephrine', unit:'mcg/kg/min', perMin:true, dose:0.05, range:'0.05–0.3', conc:'', concUnit:'mcg/mL', k:1}
+};
+function onInfDrugChange(){
+  const d = INFUSIONS[document.getElementById('infDrug').value];
+  document.getElementById('infDoseLabel').textContent = '劑量（'+d.unit+'，常用 '+d.range+'）';
+  document.getElementById('infConcLabel').textContent = '藥品濃度（'+d.concUnit+'）';
+  document.getElementById('infDose').value = d.dose;
+  document.getElementById('infConc').value = d.conc;
+  updateInfusion();
+}
+function updateInfusion(){
+  if(currentWeight===null) return;
+  const d = INFUSIONS[document.getElementById('infDrug').value];
+  const dose = parseFloat(document.getElementById('infDose').value);
+  const conc = parseFloat(document.getElementById('infConc').value);
+  let rate = '請輸入濃度', unit = '';
+  if(!isNaN(dose) && !isNaN(conc) && dose>0 && conc>0){
+    const r = dose*currentWeight*(d.perMin?60:1)/(conc*d.k);
+    rate = r<10 ? r.toFixed(2) : r.toFixed(1); unit = 'mL/hr';
+  }
+  document.getElementById('infGrid').innerHTML =
+      readout(d.name+' 輸注速率', rate, unit, 'var(--rr)')
+    + readout('計算體重', currentWeight.toFixed(1), 'kg', 'var(--hr)');
+  document.getElementById('infNote').innerHTML = '<b>ℹ 說明：</b>速率 ＝ 劑量 × 體重 '+(d.perMin?'× 60 ':'')+'÷ 濃度。<b>濃度請依本院泡法輸入並由第二人覆核</b>；Propofol 預設為 1% 原液（10 mg/mL），其餘藥物泡法各院不同。常用劑量範圍僅供參考，須依臨床反應滴定。';
+}
+
+/* ===== 病童麻醉準備單 ===== */
+/* 自費藥物：依體重與年齡給劑量（準備單與藥物表共用） */
+function paracetamolIV(w){
+  // 依 IV Paracetamol 仿單之體重分級
+  if(w<=10) return {single:(w*7.5).toFixed(0)+' mg', rule:'≤10 kg：7.5 mg/kg', max:'每日 30 mg/kg ＝ '+(w*30).toFixed(0)+' mg'};
+  if(w<=33) return {single:(w*15).toFixed(0)+' mg', rule:'10–33 kg：15 mg/kg', max:'每日 60 mg/kg ＝ '+Math.min(w*60,2000).toFixed(0)+' mg（不超過 2 g）'};
+  if(w<=50) return {single:(w*15).toFixed(0)+' mg', rule:'33–50 kg：15 mg/kg', max:'每日 60 mg/kg ＝ '+Math.min(w*60,3000).toFixed(0)+' mg（不超過 3 g）'};
+  return {single:'1000 mg', rule:'&gt;50 kg：每次 1 g', max:'每日 4 g'};
+}
+function parecoxibDose(w, ageMonths){
+  if(ageMonths<24 || w<10) return {single:'不建議使用', rule:'&lt;2 歲或 &lt;10 kg', max:'—'};
+  const k = w<15 ? 0.9 : w<25 ? 0.8 : w<=40 ? 0.7 : 0.6;
+  return {single:Math.min(w*k,40).toFixed(0)+' mg', rule:k+' mg/kg（依體重分級）', max:'單次與每日皆 40 mg'};
+}
+function ondansetronDose(w, ageMonths){
+  if(ageMonths<1) return {single:'不建議使用', rule:'&lt;1 個月', max:'—'};
+  const lo=Math.min(w*0.1,4), hi=Math.min(w*0.15,4);
+  return {single:(lo===hi?lo.toFixed(1):lo.toFixed(1)+'–'+hi.toFixed(1))+' mg', rule:'0.1–0.15 mg/kg', max:'單次 4 mg'};
+}
+
+function buildPrepSheet(o){
+  const w = o.weight, am = o.ageMonths, e = equipFor(am, w, o.ett);
+  const r2 = (a,b) => '<tr><td>'+a+'</td><td colspan="2">'+b+'</td></tr>';
+  const r3 = (a,b,c) => '<tr><td>'+a+'</td><td>'+b+'</td><td class="ps-max">'+(c||'—')+'</td></tr>';
+  const head = (t,cls) => '<table'+(cls?' class="'+cls+'"':'')+'><tr><th colspan="3">'+t+'</th></tr>';
+  const sub = '<tr class="ps-sub"><td>項目</td><td>依體重換算</td><td>上限</td></tr>';
+  const n1 = v => (v<1 ? v.toFixed(2) : v<100 ? String(Math.round(v*10)/10) : v.toFixed(0));
+  const rg = (lo,hi,u) => n1(w*lo)+'–'+n1(w*hi)+' '+u;
+  const cp = (v,max,u) => (v>max ? n1(max)+' '+u+'（已達上限）' : n1(v)+' '+u);
+  const cpr = (lo,hi,max,u) => { const a=Math.min(w*lo,max), b=Math.min(w*hi,max); return (a===b? n1(a) : n1(a)+'–'+n1(b))+' '+u+(w*hi>max?'（已達上限）':''); };
+  const k6 = am<6 ? 0.7 : 1;
+  const today = new Date();
+  const d = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+
+  let h = '<h2>小兒麻醉準備單</h2>'
+    + '<div class="ps-meta">年齡：<b>'+o.ageLabel+'</b>　體重：<b>'+w.toFixed(1)+' kg</b>'+(o.usingEstimate?'（估算，請以實際體重確認）':'')+'　製表日期：'+d
+    + '<br>術式：＿＿＿＿＿＿＿＿＿＿　手術房：＿＿＿＿　覆核者：＿＿＿＿＿＿</div>';
+
+  h += head('氣道與器材')
+    + r2('氣管內管 Cuffed／Uncuffed（mm ID）', o.ett.cuffed+' ／ '+o.ett.uncuffed)
+    + r2('插管深度（嘴角，cm）', o.ett.depth)
+    + r2('喉鏡片', o.blade)
+    + r2('喉罩 LMA／氣囊最大充氣量', o.lma+' ／ '+e.lmaCuff+' mL')
+    + r2('口咽呼吸道（OPA）', e.opa)
+    + r2('氣管內抽吸管', e.suction+' Fr')
+    + r2('周邊靜脈留置針', e.iv+' G')
+    + '</table>';
+
+  const r3c = (a,b,c,cls) => '<tr class="'+cls+'"><td>'+a+'</td><td>'+b+'</td><td class="ps-max">'+(c||'—')+'</td></tr>';
+
+  h += head('誘導藥物') + sub
+    + r3('Propofol 2.5–3.5 mg/kg', rg(2.5,3.5,'mg'), '依反應滴定')
+    + r3('Fentanyl 1–2 mcg/kg', rg(1,2,'mcg'), '計畫拔管術中累積 3–5 mcg/kg ＝ '+rg(3,5,'mcg'))
+    + r3('Lidocaine IV 1–1.5 mg/kg', rg(1,1.5,'mg'), '與局麻合計 5 mg/kg ＝ '+n1(Math.min(w*5*k6,300))+' mg')
+    + r3('Dexamethasone 0.15 mg/kg', cp(w*0.15,5,'mg'), '5 mg')
+    + r3('Rocuronium 插管 0.6–1.2 mg/kg', rg(0.6,1.2,'mg'), 'RSI 1.2 mg/kg ＝ '+n1(w*1.2)+' mg')
+    + r3('Cisatracurium 插管 0.1–0.2 mg/kg', rg(0.1,0.2,'mg'), '0.2 mg/kg ＝ '+n1(w*0.2)+' mg')
+    + r3('Ketamine IV 1–2 mg/kg', rg(1,2,'mg'), '依反應滴定')
+    + r3('Midazolam IV 0.05–0.1 mg/kg', rg(0.05,0.1,'mg'), am<72 ? '單次 6 mg（&lt;6 歲）' : '單次 10 mg')
+    + '</table>';
+
+  h += head('常用藥物') + sub
+    + r3('Ephedrine 0.1–0.2 mg/kg', cpr(0.1,0.2,10,'mg'), '單次 10 mg')
+    + r3('Atropine 0.02 mg/kg', cp(Math.max(w*0.02,0.1),0.5,'mg'), '單次 0.5 mg（最低 0.1 mg）')
+    + '</table>';
+
+  h += head('肌肉鬆弛劑') + sub
+    + r3('Rocuronium 插管 0.6–1.2 mg/kg', rg(0.6,1.2,'mg'), 'RSI 1.2 mg/kg ＝ '+n1(w*1.2)+' mg')
+    + r3c('Rocuronium <b>術中追加</b> 0.1–0.2 mg/kg', rg(0.1,0.2,'mg'), '依 TOF 追加', 'ps-topup')
+    + r3('Cisatracurium 插管 0.1–0.2 mg/kg', rg(0.1,0.2,'mg'), '0.2 mg/kg ＝ '+n1(w*0.2)+' mg')
+    + r3c('Cisatracurium <b>術中追加</b> 0.02–0.03 mg/kg', (w*0.02).toFixed(2)+'–'+(w*0.03).toFixed(2)+' mg', '依 TOF 追加', 'ps-topup')
+    + '</table>';
+
+  h += head('逆轉藥物') + sub
+    + r3('Sugammadex 2–4 mg/kg', rg(2,4,'mg'), '緊急逆轉 16 mg/kg ＝ '+n1(w*16)+' mg')
+    + r3('Neostigmine 0.05–0.07 mg/kg', cpr(0.05,0.07,5,'mg'), '5 mg')
+    + r3('Atropine（併用）0.02 mg/kg', cp(Math.max(w*0.02,0.1),1,'mg'), '1 mg（最低 0.1 mg）')
+    + r3('Glycopyrrolate（併用）0.01 mg/kg', (w*0.01).toFixed(2)+' mg', '—')
+    + '</table>';
+
+  h += head('止痛藥（含上限）') + sub
+    + r3('Fentanyl 1–2 mcg/kg', rg(1,2,'mcg'), '<b>計畫拔管術中累積 3–5 mcg/kg ＝ '+rg(3,5,'mcg')+'</b>')
+    + r3('Morphine 0.05–0.1 mg/kg', (w*0.05).toFixed(2)+'–'+(w*0.1).toFixed(2)+' mg', '<b>計畫拔管術中累積 0.1–0.2 mg/kg ＝ '+(w*0.1).toFixed(1)+'–'+(w*0.2).toFixed(1)+' mg</b>')
+    + '</table>'
+    + (am<6 ? '<div class="ps-foot" style="margin:-6px 0 12px;">⚠ &lt;6 個月：鴉片類建議由上述劑量的一半起始並延長給藥間隔。</div>' : '');
+
+  const pa = paracetamolIV(w), px = parecoxibDose(w, am), od = ondansetronDose(w, am);
+  h += head('自費藥物（使用前請確認已完成自費同意）','ps-self') + sub
+    + r3('Paracetamol IV<br><span class="ps-rule">'+pa.rule+'；間隔至少 4–6 小時</span>', pa.single, pa.max)
+    + r3('Dynastat（Parecoxib）IV<br><span class="ps-rule">'+px.rule+'；兒童為仿單外使用</span>', px.single, px.max)
+    + r3('Ondansetron IV<br><span class="ps-rule">'+od.rule+'</span>', od.single, od.max)
+    + '</table>';
+
+  h += head('急救備用') + sub
+    + r3('Epinephrine 0.01 mg/kg（0.1 mg/mL）', cp(w*0.01,1,'mg')+' ＝ '+Math.min(w*0.1,10).toFixed(1)+' mL', '單次 1 mg')
+    + r3('喉痙攣：Propofol 0.6 mg/kg', n1(w*0.6)+' mg', '—')
+    + r3('喉痙攣：Succinylcholine 0.25–0.5 mg/kg', rg(0.25,0.5,'mg'), '插管 1–2 mg/kg ＝ '+rg(1,2,'mg'))
+    + r3('去顫 2 J/kg → 4 J/kg', cp(w*2,200,'J')+' → '+cp(w*4,200,'J'), '10 J/kg 或成人劑量')
+    + '</table>';
+
+  h += head('輸液與血液')
+    + r2('維持輸液（4-2-1）', o.maint421+' mL/hr')
+    + r2('輸液 Bolus 10–20 mL/kg', Math.round(w*10)+'–'+Math.round(w*20)+' mL')
+    + r2('估計血量 EBV', Math.round(w*ebvPerKg(am).v)+' mL')
+    + r2('pRBC 10–15 mL/kg', Math.round(w*10)+'–'+Math.round(w*15)+' mL')
+    + '</table>';
+
+  h += '<div class="ps-foot">本單由小兒麻醉快速參考計算機（版本 '+APP_VERSION+'）依輸入之年齡與體重產生，不含任何病人識別資料；所有數值給藥前須由臨床人員覆核，並依病童狀況與本院規範調整。</div>'
+    + '<div class="tool-row no-print"><button class="calc-btn" type="button" onclick="printPrep()">🖨 列印</button><button class="ghost-btn" type="button" onclick="document.getElementById(\'prepSheet\').classList.remove(\'show\')">關閉</button></div>'
+    + '<div class="ps-foot no-print" id="printHint" style="display:none;margin-top:10px;color:#8a5a52;">⚠ 目前是在預覽視窗中開啟，瀏覽器不允許預覽視窗呼叫列印。請先<b>下載檔案</b>，用 Chrome／Edge 直接開啟（或從 GitHub Pages 網址開啟）後再按列印；也可以按 Ctrl+P（Mac 為 ⌘+P）。</div>';
+  document.getElementById('prepSheet').innerHTML = h;
+}
+function printPrep(){
+  let framed = false;
+  try { framed = window.self !== window.top; } catch(e){ framed = true; }
+  if(framed){ const h = document.getElementById('printHint'); if(h) h.style.display = 'block'; }
+  try { window.focus(); window.print(); } catch(e){ const h = document.getElementById('printHint'); if(h) h.style.display = 'block'; }
+}
+function showPrepSheet(){
+  if(currentWeight===null){ alert('請先輸入年齡並按「計算」'); return; }
+  const el = document.getElementById('prepSheet');
+  el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function rangeCalc(w, lo, hi){
