@@ -439,6 +439,8 @@
   #prepSheet{display:none;margin:26px 0 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;color:#222;}
   #prepSheet.show{display:block;}
   #prepSheet h2{margin:0 0 4px;font-size:1.25rem;}
+  #prepSheet .ps-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
+  #prepSheet .ps-top .calc-btn{padding:8px 18px;font-size:.86rem;}
   #prepSheet .ps-meta{font-size:.86rem;color:#555;margin-bottom:12px;line-height:1.7;}
   #prepSheet table{width:100%;border-collapse:collapse;margin:0 0 12px;font-size:.9rem;}
   #prepSheet th{background:#eee9df;text-align:left;padding:6px 9px;border:1px solid #cfc7b8;font-size:.82rem;}
@@ -506,6 +508,7 @@
         <input type="number" id="actualWeight" placeholder="留空則自動估算" min="0" step="0.1">
       </div>
       <button class="calc-btn" onclick="calculate()">計算 →</button>
+      <button class="calc-btn" type="button" onclick="prepFromTop()">📋 產生病童麻醉準備單</button>
     </div>
 
     <div class="preterm-toggle">
@@ -615,10 +618,6 @@
     </div>
     <div class="monitor-grid" id="infGrid"></div>
     <div class="info-box" id="infNote"></div>
-
-    <div class="tool-row no-print">
-      <button class="calc-btn" type="button" onclick="showPrepSheet()">📋 產生病童麻醉準備單</button>
-    </div>
 
   </div>
 
@@ -1032,8 +1031,10 @@ function ettFor(ageMonths, weight){
     return {uncuffed, cuffed:'一般不建議 <2.5kg 使用', depth:(weight+6).toFixed(1)+'（體重+6公式）'};
   }
   const ageYears = ageMonths/12;
-  const uncuffed = (ageYears/4 + 4).toFixed(1);
-  const cuffed = (ageYears/4 + 3.5).toFixed(1);
+  // 取至最接近的 0.5 mm（實際管徑規格）；剛好介於兩個尺寸時取較小者
+  const half = x => Math.ceil(x*2 - 0.5 - 1e-9)/2;
+  const uncuffed = half(ageYears/4 + 4).toFixed(1);
+  const cuffed = half(ageYears/4 + 3.5).toFixed(1);
   const depth = (ageYears/2 + 12).toFixed(1);
   return {uncuffed, cuffed, depth};
 }
@@ -1320,11 +1321,11 @@ function lmaCuffFor(w){
 }
 function equipFor(ageMonths, w, ett){
   const y = ageMonths/12, neo = ageMonths<=1;
-  const cuffedNum = neo ? null : (y/4+3.5);
+  const cuffedNum = neo ? null : parseFloat(ett.cuffed);
   const e = {};
   e.opa = neo ? '00（40 mm）' : ageMonths<12 ? '0（50 mm）' : y<5 ? '1（60 mm）' : y<10 ? '2（70 mm）' : '3（80 mm）';
   e.npa = neo ? '3.0' : (cuffedNum-0.5).toFixed(1)+'–'+cuffedNum.toFixed(1);
-  e.suction = neo ? '6' : String(Math.floor(cuffedNum*2));
+  e.suction = neo ? '6' : String(Math.floor(cuffedNum)*2);   // 不超過內徑×2，取偶數規格
   e.ng = neo ? '5–8' : ageMonths<12 ? '8' : y<6 ? '10' : y<12 ? '12' : '14–16';
   e.foley = neo ? '5–6' : ageMonths<12 ? '6–8' : y<5 ? '8–10' : y<12 ? '10–12' : '12–14';
   e.iv = ageMonths<12 ? '24' : y<8 ? '22–24' : '20–22';
@@ -1346,10 +1347,11 @@ function renderEquip(ageMonths, w, ett, lma){
   document.getElementById('equipNote').innerHTML = '<b>ℹ 說明</b>'
     + '<ul class="note-list">'
     + '<li>尺寸為常用參考值，各廠牌規格不同，請對照本院備品並依病童體型調整。</li>'
+    + '<li><b>氣管內管</b>：公式值取至最接近的 0.5 mm（剛好介於兩個尺寸時取較小者），請另備大、小各半號。</li>'
     + '<li><b>LMA</b>：充氣量為 LMA Classic 廠商建議上限，氣囊壓力宜 ≤60 cmH₂O；其他廠牌依其仿單。</li>'
     + '<li><b>OPA</b>：以嘴角至下頜角的長度為準。</li>'
     + '<li><b>NPA</b>：長度以鼻尖至耳屏為準。</li>'
-    + '<li><b>抽吸管</b>：約為氣管內管內徑 ×2（Fr）。</li>'
+    + '<li><b>抽吸管</b>：不超過氣管內管內徑 ×2（Fr），取常見的偶數規格。</li>'
     + '<li><b>右內頸 CVC 深度</b>（以身高估算）：身高 ≤100 cm 為 身高(cm)/10 − 1；&gt;100 cm 為 身高(cm)/10 − 2。</li>'
     + '<li><b>血壓袖帶</b>：氣囊寬度約為上臂圍的 40%，長度包覆上臂圍 80–100%；過小會高估、過大會低估。</li>'
     + '</ul>'
@@ -1455,8 +1457,10 @@ function buildPrepSheet(o){
   const d = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
 
   let h = '<h2>小兒麻醉準備單</h2>'
-    + '<div class="ps-meta">年齡：<b>'+o.ageLabel+'</b>　體重：<b>'+w.toFixed(1)+' kg</b>'+(o.usingEstimate?'（估算，請以實際體重確認）':'')+'　製表日期：'+d
-    + '<br><label>術式：<input class="ps-in" type="text" style="width:16em" placeholder="可輸入或列印後手寫"></label>　<label>手術房：<input class="ps-in" type="text" style="width:5em"></label>　<label>覆核者：<input class="ps-in" type="text" style="width:8em"></label></div>';
+    + '<div class="ps-meta"><div class="ps-top"><span>年齡：<b>'+o.ageLabel+'</b>　體重：<b>'+w.toFixed(1)+' kg</b>'+(o.usingEstimate?'（估算，請以實際體重確認）':'')+'　製表日期：'+d+'</span>'
+    + '<button class="calc-btn no-print" type="button" onclick="printPrep()">🖨 列印</button></div>'
+    + '<div class="ps-foot no-print" id="printHint" style="display:none;margin:6px 0;color:#8a5a52;">⚠ 目前是在預覽視窗中開啟，瀏覽器不允許預覽視窗呼叫列印。請先<b>下載檔案</b>，用 Chrome／Edge 直接開啟（或從 GitHub Pages 網址開啟）後再按列印；也可以按 Ctrl+P（Mac 為 ⌘+P）。</div>'
+    + '<label>術式：<input class="ps-in" type="text" style="width:16em" placeholder="可輸入或列印後手寫"></label>　<label>手術房：<input class="ps-in" type="text" style="width:5em"></label>　<label>覆核者：<input class="ps-in" type="text" style="width:8em"></label></div>';
 
   h += head('氣道與器材')
     + r2('氣管內管 Cuffed／Uncuffed（mm ID）', o.ett.cuffed+' ／ '+o.ett.uncuffed)
@@ -1528,8 +1532,7 @@ function buildPrepSheet(o){
     + '</table>';
 
   h += '<div class="ps-foot">本單由小兒麻醉快速參考計算機（版本 '+APP_VERSION+'）依輸入之年齡與體重產生，不含任何病人識別資料；所有數值給藥前須由臨床人員覆核，並依病童狀況與本院規範調整。</div>'
-    + '<div class="tool-row no-print"><button class="calc-btn" type="button" onclick="printPrep()">🖨 列印</button><button class="ghost-btn" type="button" onclick="document.getElementById(\'prepSheet\').classList.remove(\'show\')">關閉</button></div>'
-    + '<div class="ps-foot no-print" id="printHint" style="display:none;margin-top:10px;color:#8a5a52;">⚠ 目前是在預覽視窗中開啟，瀏覽器不允許預覽視窗呼叫列印。請先<b>下載檔案</b>，用 Chrome／Edge 直接開啟（或從 GitHub Pages 網址開啟）後再按列印；也可以按 Ctrl+P（Mac 為 ⌘+P）。</div>';
+    + '<div class="tool-row no-print"><button class="ghost-btn" type="button" onclick="document.getElementById(\'prepSheet\').classList.remove(\'show\')">關閉</button></div>';
   document.getElementById('prepSheet').innerHTML = h;
 }
 function printPrep(){
@@ -1537,6 +1540,12 @@ function printPrep(){
   try { framed = window.self !== window.top; } catch(e){ framed = true; }
   if(framed){ const h = document.getElementById('printHint'); if(h) h.style.display = 'block'; }
   try { window.focus(); window.print(); } catch(e){ const h = document.getElementById('printHint'); if(h) h.style.display = 'block'; }
+}
+function prepFromTop(){
+  // 依目前輸入的年齡／體重重新計算後，直接產生準備單
+  currentWeight = null;
+  calculate();
+  if(currentWeight!==null) showPrepSheet();
 }
 function showPrepSheet(){
   if(currentWeight===null){ alert('請先輸入年齡並按「計算」'); return; }
