@@ -430,6 +430,8 @@
   .ref-fold[open] summary{margin-bottom:6px;}
   /* 藥物分類選單不固定，隨頁面正常捲動 */
   .drug-tabs{position:static !important;top:auto !important;}
+  .not-rec{display:inline-block;color:#985952;font-weight:800;background:rgba(181,140,133,.18);border-left:3px solid rgba(152,89,82,.7);padding:2px 9px;border-radius:4px;}
+  .age-warn{color:#985952;font-weight:700;}
   .cap-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:10px;background:rgba(181,140,133,.2);color:#8a5a52;font-size:.68rem;font-weight:700;vertical-align:middle;white-space:nowrap;}
   .mini-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:14px;}
   .mini-form .field{min-width:150px;flex:1;}
@@ -449,6 +451,7 @@
   #prepSheet td:nth-child(2){font-family:var(--mono);font-weight:600;}
   #prepSheet td.ps-max{width:34%;font-size:.84rem;color:#7a4a42;}
   #prepSheet tr.ps-sub td{background:#f7f4ee;font-size:.74rem;color:#777;font-family:var(--sans);font-weight:600;padding:3px 9px;}
+  #prepSheet .not-rec{font-family:var(--sans);font-size:.82rem;margin-top:3px;}
   #prepSheet .ps-rule{font-size:.76rem;color:#777;}
   #prepSheet table.ps-self th{background:#e6dcec;color:#4d3d57;}
   #prepSheet table.ps-self{border:2px solid #b9a5c4;}
@@ -921,11 +924,11 @@ function calculate(){
     const f = v => (v<10 ? v.toFixed(1) : Math.round(v).toString());
     el.innerHTML = '<b>ℹ 依本次體重 '+f(weight)+' kg 換算：</b><br>'
       + '• Propofol（誘導 3 mg/kg 的 20% ≈ 0.6 mg/kg）：<b>'+f(weight*0.6)+' mg</b> IV<br>'
-      + '• Rocuronium 1.2 mg/kg：<b>'+f(weight*1.2)+' mg</b> IV<br>'
+      + '• Rocuronium 1.2 mg/kg：<b>'+f(weight*1.2)+' mg</b> IV<span style="font-size:.86em;">（UpToDate 建議之 SCC 禁忌時替代方案；本院仿單不建議兒科 RSI 使用 Rocuronium）</span><br>'
       + '• Succinylcholine 0.25–0.5 mg/kg：<b>'+f(weight*0.25)+'–'+f(weight*0.5)+' mg</b> IV<br>'
       + '• Atropine 0.02 mg/kg（上限 0.5 mg）：<b>'+Math.min(weight*0.02,0.5).toFixed(2)+' mg</b> IV/IM';
     const d = document.getElementById('dawCalc');
-    if(d) d.innerHTML = '<b>ℹ 依本次體重 '+f(weight)+' kg 換算：</b>Sugammadex 16 mg/kg（CICV 緊急完全逆轉 Rocuronium）＝ <b>'+f(weight*16)+' mg</b> IV';
+    if(d) d.innerHTML = '<b>ℹ 依本次體重 '+f(weight)+' kg 換算：</b>Sugammadex 16 mg/kg（CICV 緊急完全逆轉 Rocuronium）＝ <b>'+f(weight*16)+' mg</b> IV<br><span style="font-size:.86em;">此為 APA／DAS 流程之劑量；<b>本院仿單載明兒童及青少年之立即逆轉未經研究，'+(currentAgeMonths<24?'且未滿 2 歲不在適應症內':'適應症限 2 歲以上')+'</b>，使用須由醫師評估。</span>';
   })();
   resetDrugSelector();
 
@@ -1063,7 +1066,7 @@ function lmaFor(w){
 const PI_LINKS = {
   'Propofol':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC027593%E8%99%9F'}],
   'Ketamine (IV)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC003542%E8%99%9F'}],
-  'Midazolam':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC046285%E8%99%9F'}],
+  'Midazolam（鎮靜）':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC046285%E8%99%9F'}],
   'Dexmedetomidine':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC024002%E8%99%9F'}],
   'Lidocaine IV（減緩插管反應）':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC060394%E8%99%9F'}],
   'Rocuronium':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC026336%E8%99%9F'}],
@@ -1109,30 +1112,43 @@ function buildDrugTable(cat, weight, ageMonths){
   }
 
   if(cat==='induction'){
-    row('var(--bg-induction)','Propofol','2.5–3.5 mg/kg IV', w=>rangeCalc(w,2.5,3.5)+' mg',
-        '蛋/大豆過敏禁用・小兒避免長時間輸注(PRIS丙泊酚輸注症候群風險)', true);
-    row('var(--bg-induction)','Ketamine (IV)','1–2 mg/kg IV', w=>rangeCalc(w,1,2)+' mg',
-        '顱內壓升高慎用・分泌物增多易誘發喉痙攣(可併用抗涎劑)', false);
-    row('var(--bg-benzo)','Midazolam','0.05–0.1 mg/kg IV', w=>rangeCalc(w,0.05,0.1)+' mg',
-        (ageMonths<6 ? '<6個月慎用(呼吸抑制風險高)・' : '') + '嚴重呼吸功能不全慎用・小兒偶見矛盾反應(躁動不安)', ageMonths<6);
-    row('var(--bg-other)','Dexmedetomidine','0.5–1 mcg/kg', w=>rangeCalc(w,0.5,1)+' mcg',
-        '嚴重心搏過緩、房室傳導阻滯、血容不足時慎用', false);
-    row('var(--bg-local)','Lidocaine IV（減緩插管反應）','1–1.5 mg/kg IV', w=>rangeCalc(w,1,1.5)+' mg',
-        '注意單位體重最大劑量,避免局麻全身毒性(LAST)・amide類過敏禁用', false);
+    const SUBI = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> ';
+    const pretermI = document.getElementById('isPreterm').checked;
+    row('var(--bg-induction)','Propofol','誘導：<b>1 個月以上</b>；&lt;8 歲 2.5–4 mg/kg、&gt;8 歲約 2.5 mg/kg，緩慢滴定；維持 9–15 mg/kg/hr', w=>propofolInduction(w,ageMonths).single,
+        (ageMonths<1 ? '<b>未滿 1 個月：仿單禁用於全身麻醉（清除率低、個體差異大，易相對過量致重度心血管抑制）</b>・' : '')
+        + (ageMonths<36 ? '<b>3 歲以下：重複或超過 3 小時使用前應評估效益與風險（臨床前資料顯示神經毒性）</b>・' : '')
+        + '<b>禁忌：</b>對 Propofol、<b>大豆、花生</b>或賦形劑過敏（賦形劑含蛋黃卵磷脂）・<b>16 歲以下不可用於加護病房鎮靜</b>・兒童維持輸注一般不超過約 60 分鐘，避免長時間輸注（Propofol 輸注症候群）・曾有心搏過緩甚至心搏停止，必要時先給抗膽鹼劑・慎用：低血容、心臟／呼吸／肝腎功能不全、癲癇、粒線體疾病、脂肪代謝障礙、高顱內壓・風險較高者（ASA III–IV）減量・無防腐劑，抽藥後立即使用', true);
+    row('var(--bg-induction)','Ketamine (IV)','1–2 mg/kg IV，以 60 秒緩慢注射', w=>rangeCalc(w,1,2)+' mg',
+        '<b>仿單未另列兒童靜脈劑量（成人 1–4.5 mg/kg，平均 2 mg/kg）；仿單無年齡下限</b>・<b>禁忌：</b>血壓升高易導致危險者、對本藥過敏・注射過快會呼吸抑制並加強升壓反應・誘導前給抗膽鹼劑減少唾液分泌・<b>肺部或上呼吸道感染者慎用（易喉痙攣）</b>・慎用：顱內壓或眼壓升高、顱內腫塊／頭部外傷、癲癇、精神疾病、甲狀腺機能亢進、心臟病、肝功能障礙（需減量）・咽喉手術不宜單獨使用・甦醒期可能譫妄，減少刺激'
+        + (ageMonths<36 ? '・3 歲以下：動物資料顯示可能影響發育中腦部，人體意義未明' : ''), true);
+    row('var(--bg-benzo)','Midazolam<br><span style="font-weight:600;font-size:.72rem;">（鎮靜）</span>','靜脈鎮靜／術前給藥：6 個月–5 歲 起始 0.05–0.1 mg/kg；6–12 歲 起始 0.025–0.05 mg/kg；緩慢給藥（2–3 分鐘）並滴定', w=>{const p=midazolamIV(w,ageMonths);return p.single+(ageMonths>=6?SUBI+p.max+'</div>':'');},
+        (ageMonths<6 ? '<b>未滿 6 個月：除非在 ICU，仿單不建議靜脈注射</b>・' : '')
+        + '<b>仿單載明：不適用於兒童之麻醉誘導或合併麻醉之鎮靜成分（資料有限）；此處為鎮靜／術前給藥劑量</b>・'
+        + (weight<15 ? '<b>體重 &lt;15 kg：應稀釋成 1 mg/mL 後使用（本院品項為 5 mg/mL）</b>・' : '')
+        + (pretermI ? '<b>早產兒：窒息風險高，避免快速注射並監測呼吸與血氧</b>・' : '')
+        + '<b>禁忌：</b>對 Benzodiazepines 過敏・與 Opioid 併用可能重度鎮靜、呼吸抑制，需減量並嚴密監測・慎用：睡眠呼吸中止、重症肌無力、肝腎功能不全、血行動力學不穩・小兒偶見矛盾反應（躁動不安）', true);
+    row('var(--bg-other)','Dexmedetomidine','0.5–1 mcg/kg，輸注 10 分鐘以上（稀釋至 4 mcg/mL）', w=>rangeCalc(w,0.5,1)+' mcg'+(ageMonths<216?'<div style="margin-top:8px;font-size:.82rem;">'+DEX_PED_WARN+'</div>':''),
+        (ageMonths<216 ? '<b>仿單：兒童用於手術或加護病房鎮靜之安全性與療效尚未確立，仿單僅列成人劑量；使用前須由醫師評估</b>・' : '')
+        + '快速輸注或一次大量注射曾發生心搏徐緩與竇性心跳停止，<b>不可快速推注</b>・低血壓、心搏徐緩・慎用：嚴重心搏過緩、房室傳導阻滯、血容不足、肝腎功能不全（需減量）・持續輸注不得超過 24 小時', true);
+    row('var(--bg-local)','Lidocaine IV（減緩插管反應）','1–1.5 mg/kg IV，1–2 分鐘緩慢注射', w=>rangeCalc(w,1,1.5)+' mg',
+        '<b>仿單適應症僅為心室性心律不整之急性治療（成人 1–2 mg/kg）；用於減緩插管反應為仿單外用途，且仿單未列兒童劑量</b>・<b>禁忌：</b>嚴重傳導障礙（完全房室阻斷等）、對本藥或 Amide 類局麻藥過敏、低血容或休克或心臟衰竭、嚴重肝或腎功能障礙・慎用：竇性心搏過慢、輕度傳導障礙・須在血壓與心電圖監測下給藥・不可與碳酸氫鈉等鹼性注射液混合・與局麻藥總量合併計算，避免局麻全身毒性', true);
   }
   else if(cat==='relaxant'){
-    row('var(--bg-relaxant)','Rocuronium','插管 0.6–1.2 mg/kg ／ 維持 追加 0.1–0.2 mg/kg・點滴 5–15 mcg/kg/min',
-        w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">插管</span> '+rangeCalc(w,0.6,1.2)+' mg'
-          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">維持</span> 追加 '+rangeCalc(w,0.1,0.2)+' mg'
-          +'<br><span style="font-size:.92rem;">點滴 '+rangeCalc(w,0.005,0.015)+' mg/min</span></div>',
-        'NMBA過敏史禁用・重症肌無力(含幼年型)需大幅減量・依TOF監測追加,小兒作用時間較成人短', true);
-    row('var(--bg-relaxant)','Cisatracurium','插管 0.1–0.2 mg/kg ／ 維持 追加 0.02–0.03 mg/kg・點滴 1–3 mcg/kg/min',
-        w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">插管</span> '+rangeCalc(w,0.1,0.2)+' mg'
-          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">維持</span> 追加 '+rangeCalc(w,0.02,0.03)+' mg'
-          +'<br><span style="font-size:.92rem;">點滴 '+rangeCalc(w,0.001,0.003)+' mg/min</span></div>',
-        'NMBA過敏史禁用・Hofmann清除，小兒肝腎不全相對安全、長時間手術蓄積少・依TOF監測調整', false);
-    row('var(--bg-relaxant2)','Succinylcholine (SCC)','插管 1–2 mg/kg（不作術中維持）', w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">插管</span> '+rangeCalc(w,1,2)+' mg',
-        '惡性高熱、肌肉失養症/肌病變、燒燙傷、高血鉀禁用・幼童(尤其男童)未診斷肌病變恐致高血鉀心跳停止(黑框警示)', true);
+    const lab = t => '<span style="color:var(--muted);font-weight:600;font-size:.78rem;">'+t+'</span> ';
+    const sep = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">';
+    row('var(--bg-relaxant)','Rocuronium','<b>28 天以上</b>：插管 0.6 mg/kg ／ 追加 0.15 mg/kg（長時間吸入麻醉 0.075–0.1 mg/kg）・點滴 0.3–0.6 mg/kg/hr',
+        w=>{const r=rocDose(w,ageMonths); if(!r.ok) return NOT_REC;
+            return lab('插管')+r.intub+sep+lab('追加')+r.topup+'<br><span style="font-size:.86rem;">'+lab('吸入麻醉下追加')+r.topupVol+'</span><br><span style="font-size:.92rem;">'+lab('點滴')+r.inf+'</span></div>';},
+        (ageMonths<1 ? '<b>新生兒（0–1 個月）：仿單尚無足夠資料建議劑量，不建議使用</b>・' : '')
+        + '<b>仿單：兒科快速麻醉誘導（RSI）使用經驗有限，不建議兒科病人於 RSI 使用本藥</b>・<b>禁忌：</b>對 Rocuronium 或溴離子過敏・神經肌肉阻斷劑之間有交叉過敏・慎用：肝／膽道疾病、腎衰竭（作用延長）、神經肌肉疾病（重症肌無力需依反應減量）、體溫過低、電解質異常、燒燙傷・<b>肥胖者以理想體重計算</b>・兒童點滴速率可能需較高・給過 Succinylcholine 後須待其恢復才給・<b>管路配伍禁忌：</b>Dexamethasone、Hydrocortisone、Furosemide、Cefazolin、Diazepam、Insulin、Vancomycin、脂肪乳劑等，給藥前後需沖管・依 TOF 監測追加', true);
+    row('var(--bg-relaxant)','Cisatracurium','<b>1 個月以上</b>：插管 0.15 mg/kg（欲較短作用 0.1 mg/kg）／ 追加 1 個月–12 歲 0.02 mg/kg、12 歲以上 0.03 mg/kg・點滴 1–3 mcg/kg/min',
+        w=>{const r=cisDose(w,ageMonths); if(!r.ok) return NOT_REC;
+            return lab('插管')+r.intub+sep+lab('追加')+r.topup+'<br><span style="font-size:.92rem;">'+lab('點滴')+r.inf+'</span></div>';},
+        (ageMonths<1 ? '<b>未滿 1 個月：仿單未研究，不建議使用</b>・' : '')
+        + '<b>禁忌：</b>對 Cisatracurium、Atracurium 或 Benzenesulfonic acid 過敏・神經肌肉阻斷劑間交叉過敏比率高（&gt;50%）・<b>重症肌無力及其他神經肌肉疾病：起始劑量不超過 0.02 mg/kg</b>・無迷走神經阻斷作用，不會抵消麻醉引起的心搏過緩・點滴起始 3 mcg/kg/min，穩定後 1–2 mcg/kg/min；Isoflurane／Enflurane 麻醉下點滴速率減 40%・嚴重酸鹼或電解質異常會影響藥效・肝腎功能不全不需調整劑量・不含防腐劑，單一病人使用・依 TOF 監測調整', ageMonths<1);
+    row('var(--bg-relaxant2)','Succinylcholine (SCC)','嬰兒及兒童：靜脈 1 mg/kg；無法靜脈注射時肌肉注射 2–3 mg/kg（不作術中維持）',
+        w=>lab('靜脈')+(w*1).toFixed(1)+' mg'+sep+lab('肌肉')+rangeCalc(w,2,3)+' mg</div>',
+        '<b>仿單：原則上不投與</b>——新鮮燒傷、尿毒症、四肢麻痺、廣泛挫滅性外傷（有心跳停止之虞，宜改用其他肌鬆劑）・可能引起心跳停止、徐脈、心律不整、支氣管痙攣、遷延性無呼吸、<b>惡性高熱</b>、眼內壓上升・<b>文獻警示（非本仿單）：</b>惡性高熱體質、肌肉失養症／肌病變、高血鉀禁用；幼童（尤其男童）未診斷之肌病變可能致高血鉀心跳停止・抗膽鹼酯酶藥會延長其作用・不可與 Barbiturate 類同一針筒・<b>本院品項為 500 mg 小瓶粉劑，需溶解後使用並確認濃度；溶解後冷藏（10°C 以下）</b>', true);
   }
   else if(cat==='opioid'){
     const infant6 = ageMonths < 6;
@@ -1142,40 +1158,46 @@ function buildDrugTable(cat, weight, ageMonths){
 
     row('var(--bg-opioid)','Fentanyl','誘導 1–2 mcg/kg ／ 計畫拔管術中累積上限 3–5 mcg/kg',
         w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">誘導</span> '+rangeCalc(w,1,2)+' mcg'
-          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">計畫拔管累積上限</span><br>'+rangeCalc(w,3,5)+' mcg</div>',
-        '超過約5 mcg/kg 拔管延遲、術後呼吸抑制風險上升（術後續留插管者上限放寬）・快速大劑量注射可能致胸壁僵硬<br>'+hiRiskNote, infant6);
+          +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">計畫拔管累積上限</span><br>'+rangeCalc(w,3,5)+' mcg</div>'+(ageMonths<24?'<div style="margin-top:8px;font-size:.82rem;"><span class="not-rec">⚠ 仿單未列 2 歲以下劑量</span></div>':''),
+        '<b>仿單：2–12 歲麻醉誘導及維持之靜脈劑量為 2–3 mcg/kg；未滿 2 歲仿單未列劑量。此處誘導劑量與累積上限為臨床慣用／本院作法</b>・<b>禁忌：</b>對本品成分或其他 Morphine 類似品過敏・為避免心跳過慢，誘導前可先給少量抗膽鹼藥・併用 Benzodiazepine 或其他中樞抑制劑會加重呼吸抑制・與作用於血清素系統的藥物（含 5-HT3 拮抗劑如 Ondansetron）併用注意血清素症候群・超過約5 mcg/kg 拔管延遲、術後呼吸抑制風險上升（術後續留插管者上限放寬）・快速大劑量注射可能致胸壁僵硬<br>'+hiRiskNote, true);
     row('var(--bg-opioid)','Morphine','誘導 0.05–0.1 mg/kg ／ 計畫拔管術中累積上限 0.1–0.2 mg/kg',
         w=>'<span style="color:var(--muted);font-weight:600;font-size:.78rem;">誘導</span> '+rangeCalc(w,0.05,0.1)+' mg'
           +'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">計畫拔管累積上限</span><br>'+rangeCalc(w,0.1,0.2)+' mg</div>',
-        '超過約0.2 mg/kg 需準備術後延長監測・腎功能不全代謝物(M6G)蓄積<br>'+hiRiskNote, infant6);
+        '<b>仿單僅列成人劑量，未列兒童劑量；此處 mg/kg 劑量為臨床慣用，非仿單所載</b>・<b>禁忌：</b>嚴重呼吸抑制、<b>支氣管氣喘發作</b>、嚴重肝障礙、慢性肺疾併心不全、痙攣狀態、對阿片生物鹼過敏・<b>仿單列新生兒、乳幼兒為應謹慎使用族群</b>・慎用：心肝腎及呼吸機能障礙、腦部器質障礙、休克、甲狀腺機能低下・超過約0.2 mg/kg 需準備術後延長監測・腎功能不全代謝物(M6G)蓄積<br>'+hiRiskNote, true);
     row('var(--bg-opioid)','Demerol (Meperidine)','0.5–1 mg/kg IV/IM（單次上限約50–100mg）', w=>capRange(w,0.5,1,100,' mg'),
-        '腎功能不全/重複給藥時normeperidine蓄積→癲癇風險,小兒不建議常規使用', true);
+        '<b>仿單小兒劑量：止痛 1.1–1.76 mg/kg、術前給藥 1–2.2 mg/kg，皆為肌肉或皮下注射，不得超過成人劑量；仿單未列兒童靜脈劑量，此處 0.5–1 mg/kg 為臨床慣用</b>・<b>禁忌：</b>對本藥過敏、正在使用或 14 天內曾使用 MAO 抑制劑・會加重痙攣；心房撲動及上心室性心律過速者慎用・嚴重肝腎功能不全減量・不應連續使用超過 48 小時・腎功能不全/重複給藥時normeperidine蓄積→癲癇風險,小兒不建議常規使用', true);
   }
   else if(cat==='reversal'){
-    row(null,'Neostigmine','0.05–0.07 mg/kg（上限 5 mg，併用Glycopyrrolate）', w=>capRange(w,0.05,0.07,5,' mg'),
-        '務必併用抗膽鹼藥(嬰幼兒心搏徐緩風險更高)・腸阻塞/腹膜炎禁用', true, true);
-    row(null,'Sugammadex','2–4 mg/kg', w=>rangeCalc(w,2,4)+' mg',
-        '僅能逆轉roc/vec・監測心搏徐緩・重度腎功能不全避免・建議2歲以上使用', true, true);
-    row('var(--bg-anticholinergic)','Atropine<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.02 mg/kg（最低 0.1 mg，上限 1 mg）', w=>capOne(Math.max(w*0.02,0.1),1,' mg'),
-        '劑量低於0.1mg可能致反常性心搏徐緩(嬰幼兒)・心搏過速時慎用', false);
-    row('var(--bg-anticholinergic)','Glycopyrrolate<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.01 mg/kg', w=>(w*0.01).toFixed(2)+' mg',
-        '不易通過血腦障壁,小兒中樞副作用較少・心搏過速時慎用', false);
+    const lab = t => '<span style="color:var(--muted);font-weight:600;font-size:.78rem;">'+t+'</span> ';
+    const sep = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);">';
+    row(null,'Neostigmine','0.05–0.07 mg/kg（上限 5 mg，併用 Glycopyrrolate 或 Atropine）', w=>capRange(w,0.05,0.07,5,' mg'),
+        '<b>本院品項仿單適應症為腸管麻痺、肌無力症等，未列「逆轉神經肌肉阻斷」，也未列兒童劑量；此處劑量為臨床慣用，非仿單所載</b>・務必併用抗膽鹼藥(嬰幼兒心搏徐緩風險更高)・蕈毒素副作用較其他同類藥明顯・腸阻塞/腹膜炎禁用', true, true);
+    row(null,'Sugammadex','<b>2 歲以上</b>常規逆轉：T2 再現 2 mg/kg；深度阻斷（PTC 1–2）4 mg/kg；10 秒內單次靜脈注射',
+        w=>{const g=sugammadexDose(w,ageMonths); if(!g.ok) return NOT_REC;
+            return lab('T2 再現')+g.t2+sep+lab('PTC 1–2')+g.deep+'</div>';},
+        (ageMonths<24 ? '<b>未滿 2 歲：仿單適應症限 2 歲以上，不建議使用</b>・' : '')
+        + '<b>仿單：兒童及青少年之立即逆轉（16 mg/kg）未經研究</b>・僅能逆轉 Rocuronium／Vecuronium・<b>禁忌：</b>對本藥或賦形劑過敏・<b>重度腎功能不全（CrCl &lt;30，含洗腎）不建議使用</b>・小兒可用 0.9% NaCl 稀釋至 10 mg/mL 以提高給藥準確性・凝血疾病或使用抗凝血劑者謹慎，可能短暫延長 aPTT／PT・拔管後仍需監測神經肌肉阻斷復發與呼吸・<b>管路不相容：</b>Ondansetron、Verapamil、Ranitidine，給藥前後需沖管・監測心搏徐緩', true, true);
+    row('var(--bg-anticholinergic)','Atropine<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','0.02 mg/kg（最低 0.1 mg，上限 1 mg）；仿單兒童靜脈劑量 0.01–0.03 mg/kg', w=>capOne(Math.max(w*0.02,0.1),1,' mg'),
+        '<b>嬰幼兒對本藥毒性較敏感，須密切監視並調整劑量；發燒或高溫環境下體溫可能快速上升</b>・慎用：Down 氏症（瞳孔異常放大、心跳加速）、兒童腦損傷、兒童痙攣性麻痺、氣喘、心臟疾病、甲狀腺機能亢進、胃腸阻塞性疾病、青光眼・含 Benzyl alcohol 賦形劑・劑量低於0.1mg可能致反常性心搏徐緩(嬰幼兒)・心搏過速時慎用', true);
+    row('var(--bg-anticholinergic)','Glycopyrrolate<br><span style="font-weight:600;font-size:.72rem;">（併用）</span>','<b>1 個月以上</b>：每 1 mg Neostigmine 併用 0.2 mg（約 0.01 mg/kg）', w=>(glycoOK(ageMonths) ? (w*0.01).toFixed(2)+' mg' : NOT_REC),
+        (ageMonths<1 ? '<b>新生兒（未滿 1 個月）：本品含 Benzyl alcohol，仿單禁用</b>・' : '')
+        + '術中治療心搏徐緩：兒童每次約 0.004 mg/kg 靜脈注射，<b>單次不超過 0.1 mg</b>，必要時每 2–3 分鐘重複・<b>禁忌：</b>對本藥過敏、青光眼、阻塞性尿路病、胃腸道阻塞性疾病、麻痺性腸阻塞、急性出血之心血管不穩定、重症肌無力・慎用：心搏過速、冠狀動脈疾病、心衰竭、心律不整、高血壓、甲狀腺機能亢進、氣喘・不易通過血腦障壁,小兒中樞副作用較少', ageMonths<1);
   }
   else if(cat==='other'){
-    row('var(--bg-other)','Acetamol (Acetaminophen)','IV 依體重分級：≤10 kg 7.5 mg/kg；10–50 kg 15 mg/kg；&gt;50 kg 1 g（自費）', w=>{const p=paracetamolIV(w);return p.single+'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> '+p.max+'</div>';},
-        '嚴重肝功能不全禁用・每日總量(含各途徑)依體重年齡設上限,過量致肝衰竭・新生兒嬰兒清除率低需減量', true);
-    row('var(--bg-other)','Dynastat (Parecoxib)','≥2 歲依體重分級：10–15 kg 0.9、15–25 kg 0.8、25–40 kg 0.7、&gt;40 kg 0.6 mg/kg（自費）', w=>{const p=parecoxibDose(w,ageMonths);return p.single+'<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> '+p.max+'</div>';},
-        '<b>兒童為仿單外使用</b>（仿單未核准 &lt;18 歲）・&lt;2 歲不建議・磺胺過敏禁用・腎功能不全、脫水、出血風險高者避免・多為單次術中給予・超過 1 mg/kg 無額外止痛效果', true);
-    row('var(--bg-vasopressor)','Ephedrine','0.1–0.2 mg/kg IV bolus（單次上限 10 mg）', w=>capRange(w,0.1,0.2,10,' mg'),
-        '心律不整時慎用・重複給藥易產生耐受性(tachyphylaxis)', false);
-    row('var(--bg-skin)','Ondansetron','0.1–0.15 mg/kg（上限4mg）', w=>Math.min(rangeHigh(w,0.1,0.15),4).toFixed(2)+' mg',
-        'QT延長/電解質不平衡時慎用(TdP風險)・依體重給藥,單次上限4mg', true);
-    row('var(--bg-other)','Dexamethasone','0.15 mg/kg IV（上限5mg，PONV預防／抗發炎）', w=>Math.min(w*0.15,5).toFixed(2)+' mg',
-        '全身性黴菌感染禁用・免疫抑制/化療病童感染風險慎用', false);
-    row('var(--bg-other)','Hydrocortisone','1–2 mg/kg IV（壓力劑量/腎上腺功能不足覆蓋）', w=>rangeCalc(w,1,2)+' mg',
-        '感染時可能掩蓋徵象・長期使用注意腎上腺抑制', false);
-    row('var(--bg-other)','Ibuprofen (PO)','5–10 mg/kg PO（單次上限 400 mg）', w=>capRange(w,5,10,400,' mg'),
-        (ageMonths<6 ? '&lt;6 個月不建議使用・' : '') + '腎功能不全、脫水、出血風險高或活動性消化道出血時避免・氣喘病童慎用', ageMonths<6);
+    const SUB = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> ';
+    const preterm = document.getElementById('isPreterm').checked;
+    row('var(--bg-other)','Acetamol (Acetaminophen)','IV（自費）：<b>限 2 歲以上</b>；15 mg/kg 每 6 小時（單劑最多 750 mg）；≥13 歲且 ≥50 kg 每次 1,000 mg；輸注 15 分鐘', w=>{const p=paracetamolIV(w,ageMonths);return p.single+SUB+p.max+'</div>';},
+        (ageMonths<24 ? '<b>未滿 2 歲：仿單適應症未涵蓋，不建議使用</b>・' : '') + '<b>禁忌：</b>對本藥或賦形劑過敏、<b>重度肝功能不全或重度活動性肝病</b>・慎用：肝功能不全、慢性營養不良、重度低血容（脫水、失血）、重度腎功能不全（CrCl ≤30）・每日上限須<b>合計所有途徑與所有含 Acetaminophen 藥品</b>・最短給藥間隔 4 小時・勿混淆 mg 與 mL；&lt;50 kg 一律依體重給藥，不可整瓶 100 mL 輸注', true);
+    row('var(--bg-other)','Dynastat (Parecoxib)','成人 40 mg IV／IM（自費）；<b>仿單：未滿 18 歲尚未進行研究，不宜使用</b>', w=>{const p=parecoxibDose(w,ageMonths);return p.single+(ageMonths>=216?SUB+p.max+'</div>':'');},
+        (ageMonths<216 ? '<b>未滿 18 歲：仿單載明不宜使用</b>・' : '') + '<b>禁忌：</b>對磺醯胺（sulfonamide）類藥物過敏、曾有嚴重藥物過敏或皮膚反應、Aspirin／NSAIDs 引發支氣管痙攣或蕁麻疹者、活動性消化性潰瘍或胃腸出血、發炎性腸道疾病、重度肝功能不全、充血性心衰竭（NYHA II–IV）、缺血性心臟病／周邊動脈／腦血管疾病、CABG 術後・重度腎功能不全或易液體滯留者以最低劑量並監測腎功能・短期使用不宜超過 4 天', true);
+    row('var(--bg-vasopressor)','Ephedrine','0.1–0.2 mg/kg IV bolus（單次上限 10 mg）；緩慢注射', w=>capRange(w,0.1,0.2,10,' mg'),
+        '<b>仿單兒童劑量僅列肌肉／皮下注射 0.5 mg/kg（每 4–6 小時）；靜脈 0.1–0.2 mg/kg 為臨床慣用劑量，非仿單所載</b>・對擬交感神經作用藥過敏者可能交叉過敏・慎用：心血管疾病（心絞痛、心律不整、冠狀動脈功能不全）、高血壓、甲狀腺機能亢進、糖尿病、閉角性青光眼・與鹵化吸入麻醉藥併用可能誘發心律不整・使用 MAO 抑制劑期間或停藥 14 天內不應使用・重複給藥易產生耐受性', true);
+    row('var(--bg-skin)','Ondansetron','PONV（自費）：<b>1 個月–17 歲</b> 0.1 mg/kg 緩慢 IV（≥30 秒），最多 4 mg', w=>{const p=ondansetronDose(w,ageMonths);return p.single+(p.warn?'<div style="margin-top:8px;font-size:.82rem;">'+p.warn+'</div>':'');},
+        (ageMonths<1 ? '<b>未滿 1 個月：仿單未核准，不建議使用</b>・' : '') + (ageMonths>=1&&ageMonths<24 ? '<b>未滿 2 歲：仿單載明治療 PONV 尚無臨床試驗，安全性未確立，使用前須由醫師評估</b>・' : '') + '<b>禁忌：</b>對本藥成分過敏、併用 Apomorphine・<b>先天性 QT 延長症候群應避免</b>・QT 延長風險者（電解質異常、心衰竭、緩脈、併用延長 QT 藥物）慎用，給藥前先矯正低血鉀與低血鎂・中重度肝功能不全每日總量不超過 8 mg・併用血清素作用藥物（如 Fentanyl、Tramadol）注意血清素症候群・亞急性腸阻塞者需監測', true);
+    row('var(--bg-other)','Dexamethasone','0.15 mg/kg IV（上限 5 mg，PONV 預防／抗發炎）', w=>Math.min(w*0.15,5).toFixed(2)+' mg',
+        '<b>仿單僅列成人劑量（每次 2–10 mg），未列兒童劑量；0.15 mg/kg 為臨床慣用劑量，非仿單所載</b>・<b>本品含防腐劑 Benzyl alcohol，不可椎管內或硬脊膜外給藥</b>・慎用：急慢性感染（需併用適當抗感染治療）、胃腸潰瘍、腎臟疾病與高血壓（水腫、血壓上升）、糖尿病（血糖上升）、精神疾病史', true);
+    row('var(--bg-other)','Hydrocortisone','1–2 mg/kg IV（壓力劑量／腎上腺功能不足覆蓋）；靜脈注射 ≥30 秒', w=>rangeCalc(w,1,2)+' mg',
+        (preterm ? '<b>早產兒：曾有使用後出現肥厚性心肌症的通報，需評估並監測心臟功能與結構</b>・' : '') + '<b>仿單：嬰兒及兒童劑量應依病情嚴重度與反應決定，而非依年齡或體重，每日不低於 25 mg；1–2 mg/kg 為臨床慣用劑量</b>・<b>禁忌：</b>全身性黴菌感染、對本藥成分過敏、脊髓鞘內或硬脊膜外給藥・感染時可能掩蓋徵象・高劑量可能引發兒童胰臟炎・長期使用注意生長抑制、顱內壓升高與腎上腺抑制・肝疾病者藥效可能增加', preterm);
   }
   else if(cat==='resus'){
     const V='var(--bg-vasopressor)';
@@ -1424,22 +1446,74 @@ function updateInfusion(){
 
 /* ===== 病童麻醉準備單 ===== */
 /* 自費藥物：依體重與年齡給劑量（準備單與藥物表共用） */
-function paracetamolIV(w){
-  // 依 IV Paracetamol 仿單之體重分級
-  if(w<=10) return {single:(w*7.5).toFixed(0)+' mg', rule:'≤10 kg：7.5 mg/kg', max:'每日 30 mg/kg ＝ '+(w*30).toFixed(0)+' mg'};
-  if(w<=33) return {single:(w*15).toFixed(0)+' mg', rule:'10–33 kg：15 mg/kg', max:'每日 60 mg/kg ＝ '+Math.min(w*60,2000).toFixed(0)+' mg（不超過 2 g）'};
-  if(w<=50) return {single:(w*15).toFixed(0)+' mg', rule:'33–50 kg：15 mg/kg', max:'每日 60 mg/kg ＝ '+Math.min(w*60,3000).toFixed(0)+' mg（不超過 3 g）'};
-  return {single:'1000 mg', rule:'&gt;50 kg：每次 1 g', max:'每日 4 g'};
+const NOT_REC = '<span class="not-rec">不建議使用</span>';   // 年齡或條件不符時統一顯示（紅棕色）
+/* Propofol：依本院品項仿單（Fresofol 1% MCT/LCT，衛部藥輸字第027593號）
+   適用於 1 個月以上兒童之麻醉誘導與維持；<1 個月禁用。
+   誘導：>8 歲約 2.5 mg/kg；1 個月–3 歲可能需 2.5–4 mg/kg；維持 9–15 mg/kg/hr */
+function propofolInduction(w, ageMonths){
+  if(ageMonths<1) return {single:NOT_REC, rule:'<span class="age-warn">&lt;1 個月：仿單禁用於全身麻醉</span>', max:'—'};
+  if(ageMonths<96) return {single:(w*2.5).toFixed(1)+'–'+(w*4).toFixed(1)+' mg', rule:'2.5–4 mg/kg（&lt;8 歲；年齡越小需求越高）', max:'緩慢滴定至麻醉徵象出現'};
+  return {single:(w*2.5).toFixed(1)+' mg', rule:'約 2.5 mg/kg（&gt;8 歲）', max:'緩慢滴定至麻醉徵象出現'};
 }
+/* Midazolam：依本院品項仿單（南光 Midatin 5 mg/mL，衛署藥製字第046285號，版本 2022-07-18）
+   靜脈鎮靜：6 個月–5 歲 起始 0.05–0.1 mg/kg，總量至 0.6 mg/kg 但不超過 6 mg；
+   6–12 歲 起始 0.025–0.05 mg/kg，總量至 0.4 mg/kg，最大 10 mg；12–16 歲同成人。
+   <6 個月：除非在 ICU，不建議靜脈注射。仿單載明不適用於兒童之麻醉誘導。 */
+function midazolamIV(w, ageMonths){
+  if(ageMonths<6) return {single:NOT_REC, rule:'<span class="age-warn">&lt;6 個月：除非在 ICU，仿單不建議靜脈注射（易氣道阻塞與換氣不足）</span>', max:'—'};
+  if(ageMonths<72) return {single:(w*0.05).toFixed(2)+'–'+(w*0.1).toFixed(2)+' mg', rule:'起始 0.05–0.1 mg/kg（6 個月–5 歲）', max:'總量 '+Math.min(w*0.6,6).toFixed(1)+' mg（0.6 mg/kg，不超過 6 mg）'};
+  if(ageMonths<144) return {single:(w*0.025).toFixed(2)+'–'+(w*0.05).toFixed(2)+' mg', rule:'起始 0.025–0.05 mg/kg（6–12 歲）', max:'總量 '+Math.min(w*0.4,10).toFixed(1)+' mg（0.4 mg/kg，最大 10 mg）'};
+  return {single:'同成人劑量', rule:'12 歲以上：劑量同成人，緩慢滴定', max:'依仿單成人劑量'};
+}
+/* Rocuronium：依本院品項仿單（Rocuronium Kabi，衛部藥輸字第026336號，版本 2024-11-12）
+   嬰兒(28 天–23 月)、兒童、青少年：插管 0.6 mg/kg、維持 0.15 mg/kg（長時間吸入麻醉 0.075–0.1 mg/kg），與成人類似；
+   新生兒(0–1 個月)尚無足夠資料建議劑量；不建議兒科病人於快速麻醉誘導使用。 */
+function rocDose(w, ageMonths){
+  if(ageMonths<1) return {ok:false, why:'<span class="age-warn">新生兒（0–1 個月）：仿單尚無足夠資料建議劑量</span>'};
+  return {ok:true, intub:(w*0.6).toFixed(1)+' mg', topup:(w*0.15).toFixed(2)+' mg', topupVol:(w*0.075).toFixed(2)+'–'+(w*0.1).toFixed(2)+' mg', inf:(w*0.3).toFixed(1)+'–'+(w*0.6).toFixed(1)+' mg/hr'};
+}
+/* Cisatracurium：依本院品項仿單（Nimbex 2 mg/mL，衛署藥輸字第022770號，版本 2023-12-14）
+   1 個月–12 歲：插管 0.15 mg/kg（欲較短作用 0.1 mg/kg），維持 0.02 mg/kg；成人維持 0.03 mg/kg；
+   點滴起始 3 mcg/kg/min，穩定後 1–2 mcg/kg/min；<1 個月不建議使用。 */
+function cisDose(w, ageMonths){
+  if(ageMonths<1) return {ok:false, why:'<span class="age-warn">&lt;1 個月：仿單未研究，不建議使用</span>'};
+  const m = ageMonths<144 ? 0.02 : 0.03;
+  return {ok:true, intub:(w*0.1).toFixed(2)+'–'+(w*0.15).toFixed(2)+' mg', topup:(w*m).toFixed(2)+' mg', topupRule:m+' mg/kg', inf:(w*0.06).toFixed(2)+'–'+(w*0.18).toFixed(2)+' mg/hr'};
+}
+/* Sugammadex：依本院品項仿單（Bridion 100 mg/mL，衛署藥輸字第025300號）
+   兒童及青少年限 2 歲以上之常規逆轉：T2 再現 2 mg/kg；PTC 1–2 時 4 mg/kg；
+   兒童與青少年之立即逆轉（16 mg/kg）未經研究；小兒可稀釋至 10 mg/mL。 */
+function sugammadexDose(w, ageMonths){
+  if(ageMonths<24) return {ok:false, why:'<span class="age-warn">&lt;2 歲：仿單適應症限 2 歲以上</span>'};
+  return {ok:true, t2:(w*2).toFixed(0)+' mg', deep:(w*4).toFixed(0)+' mg'};
+}
+/* Glycopyrrolate：依本院品項仿單（格比平 0.2 mg/mL，衛署藥製字第046869號）
+   含 Benzyl alcohol，新生兒（<1 個月）禁用；逆轉時每 1 mg Neostigmine 併用 0.2 mg */
+function glycoOK(ageMonths){ return ageMonths>=1; }
+const DEX_PED_WARN = '<span class="not-rec">⚠ 仿單：兒童使用之安全性與療效尚未確立</span>';
+
+/* Paracetamol IV：依本院品項仿單（Paracetamol Kabi，衛部藥輸字第028631號，版本 2024-02-05）
+   適應症限 2 歲以上；2–12 歲與 <50 kg 者 15 mg/kg q6h（單劑最多 750 mg），每日最多 75 mg/kg（最多 3,750 mg）；
+   13 歲以上且 ≥50 kg：1,000 mg q6h，每日最多 4,000 mg；最短給藥間隔 4 小時 */
+function paracetamolIV(w, ageMonths){
+  if(ageMonths!==undefined && ageMonths<24) return {single:NOT_REC, rule:'<span class="age-warn">&lt;2 歲：仿單適應症限 2 歲以上，未滿 2 歲有效性尚未確立</span>', max:'—'};
+  if(ageMonths!==undefined && ageMonths>=156 && w>=50) return {single:'1000 mg', rule:'≥13 歲且 ≥50 kg：每 6 小時 1,000 mg', max:'單劑 1,000 mg；每日 4,000 mg'};
+  const single = Math.min(w*15,750), daily = Math.min(w*75,3750);
+  return {single:single.toFixed(0)+' mg'+(w*15>750?'（已達單劑上限）':''), rule:'每 6 小時 15 mg/kg（或每 4 小時 12.5 mg/kg）', max:'單劑 15 mg/kg（最多 750 mg）；每日 75 mg/kg ＝ '+daily.toFixed(0)+' mg（最多 3,750 mg）'};
+}
+/* Dynastat：依仿單（衛署藥輸字第024143號，版本 2025-10-30）
+   「尚未在 18 歲以下的病人進行研究，因此不宜用於這些病人」→ 未滿 18 歲一律顯示不建議使用 */
 function parecoxibDose(w, ageMonths){
-  if(ageMonths<24 || w<10) return {single:'不建議使用', rule:'&lt;2 歲或 &lt;10 kg', max:'—'};
-  const k = w<15 ? 0.9 : w<25 ? 0.8 : w<=40 ? 0.7 : 0.6;
-  return {single:Math.min(w*k,40).toFixed(0)+' mg', rule:k+' mg/kg（依體重分級）', max:'單次與每日皆 40 mg'};
+  if(ageMonths<216) return {single:NOT_REC, rule:'<span class="age-warn">&lt;18 歲：仿單載明尚未進行研究，不宜使用</span>', max:'—'};
+  return {single:'40 mg', rule:'成人 40 mg IV／IM，必要時每 12–24 小時 20 mg', max:'短期使用，不宜超過 4 天'};
 }
+/* Ondansetron：依本院仿單（信東 Supren，衛署藥製字第039944號）
+   PONV：1 個月大至 17 歲 0.1 mg/kg 緩慢 IV，最多 4 mg；2 歲以下治療 PONV 尚無臨床試驗 */
+const OND_U2_WARN = '<span class="not-rec">⚠ 未滿 2 歲：治療 PONV 尚無臨床試驗，安全性未確立</span>';
 function ondansetronDose(w, ageMonths){
-  if(ageMonths<1) return {single:'不建議使用', rule:'&lt;1 個月', max:'—'};
-  const lo=Math.min(w*0.1,4), hi=Math.min(w*0.15,4);
-  return {single:(lo===hi?lo.toFixed(1):lo.toFixed(1)+'–'+hi.toFixed(1))+' mg', rule:'0.1–0.15 mg/kg', max:'單次 4 mg'};
+  if(ageMonths<1) return {single:NOT_REC, rule:'<span class="age-warn">&lt;1 個月：仿單未核准</span>', max:'—', warn:''};
+  const u2 = ageMonths<24;
+  return {single:Math.min(w*0.1,4).toFixed(2)+' mg', rule:'0.1 mg/kg 緩慢 IV（≥30 秒）', max:'單次 4 mg', warn:(u2?OND_U2_WARN:'')};
 }
 
 function buildPrepSheet(o){
@@ -1474,15 +1548,16 @@ function buildPrepSheet(o){
 
   const r3c = (a,b,c,cls) => '<tr class="'+cls+'"><td>'+a+'</td><td>'+b+'</td><td class="ps-max">'+(c||'—')+'</td></tr>';
 
+  const roc = rocDose(w, am), cis = cisDose(w, am), sug = sugammadexDose(w, am);
   h += head('誘導藥物') + sub
-    + r3('Propofol 2.5–3.5 mg/kg', rg(2.5,3.5,'mg'), '依反應滴定')
+    + (p=>r3('Propofol<br><span class="ps-rule">'+p.rule+'</span>', p.single, p.max))(propofolInduction(w,am))
     + r3('Fentanyl 1–2 mcg/kg', rg(1,2,'mcg'), '計畫拔管術中累積 3–5 mcg/kg ＝ '+rg(3,5,'mcg'))
     + r3('Lidocaine IV 1–1.5 mg/kg', rg(1,1.5,'mg'), '與局麻合計 5 mg/kg ＝ '+n1(Math.min(w*5*k6,300))+' mg')
     + r3('Dexamethasone 0.15 mg/kg', cp(w*0.15,5,'mg'), '5 mg')
-    + r3('Rocuronium 插管 0.6–1.2 mg/kg', rg(0.6,1.2,'mg'), 'RSI 1.2 mg/kg ＝ '+n1(w*1.2)+' mg')
-    + r3('Cisatracurium 插管 0.1–0.2 mg/kg', rg(0.1,0.2,'mg'), '0.2 mg/kg ＝ '+n1(w*0.2)+' mg')
-    + r3('Ketamine IV 1–2 mg/kg', rg(1,2,'mg'), '依反應滴定')
-    + r3('Midazolam IV 0.05–0.1 mg/kg', rg(0.05,0.1,'mg'), am<72 ? '單次 6 mg（&lt;6 歲）' : '單次 10 mg')
+    + (roc.ok ? r3('Rocuronium 插管 0.6 mg/kg', roc.intub, '仿單不建議兒科 RSI 使用') : r3('Rocuronium<br><span class="ps-rule">'+roc.why+'</span>', NOT_REC, '—'))
+    + (cis.ok ? r3('Cisatracurium 插管 0.1–0.15 mg/kg', cis.intub, '0.15 mg/kg ＝ '+(w*0.15).toFixed(2)+' mg') : r3('Cisatracurium<br><span class="ps-rule">'+cis.why+'</span>', NOT_REC, '—'))
+    + r3('Ketamine IV 1–2 mg/kg<br><span class="ps-rule">60 秒緩慢注射</span>', rg(1,2,'mg'), '依反應滴定')
+    + (p=>r3('Midazolam IV<br><span class="ps-rule">（鎮靜）</span><br><span class="ps-rule">'+p.rule+(w<15&&am>=6?'；&lt;15 kg 稀釋成 1 mg/mL':'')+'</span>', p.single, p.max))(midazolamIV(w,am))
     + '</table>';
 
   h += head('常用藥物') + sub
@@ -1491,17 +1566,21 @@ function buildPrepSheet(o){
     + '</table>';
 
   h += head('肌肉鬆弛劑') + sub
-    + r3('Rocuronium 插管 0.6–1.2 mg/kg', rg(0.6,1.2,'mg'), 'RSI 1.2 mg/kg ＝ '+n1(w*1.2)+' mg')
-    + r3c('Rocuronium <b>術中追加</b> 0.1–0.2 mg/kg', rg(0.1,0.2,'mg'), '依 TOF 追加', 'ps-topup')
-    + r3('Cisatracurium 插管 0.1–0.2 mg/kg', rg(0.1,0.2,'mg'), '0.2 mg/kg ＝ '+n1(w*0.2)+' mg')
-    + r3c('Cisatracurium <b>術中追加</b> 0.02–0.03 mg/kg', (w*0.02).toFixed(2)+'–'+(w*0.03).toFixed(2)+' mg', '依 TOF 追加', 'ps-topup')
+    + (roc.ok
+        ? r3('Rocuronium 插管 0.6 mg/kg', roc.intub, '仿單不建議兒科 RSI 使用')
+          + r3c('Rocuronium <b>術中追加</b> 0.15 mg/kg<br><span class="ps-rule">長時間吸入麻醉 0.075–0.1 mg/kg ＝ '+roc.topupVol+'</span>', roc.topup, '依 TOF 追加', 'ps-topup')
+        : r3('Rocuronium<br><span class="ps-rule">'+roc.why+'</span>', NOT_REC, '—'))
+    + (cis.ok
+        ? r3('Cisatracurium 插管 0.1–0.15 mg/kg', cis.intub, '0.15 mg/kg ＝ '+(w*0.15).toFixed(2)+' mg')
+          + r3c('Cisatracurium <b>術中追加</b> '+cis.topupRule, cis.topup, '依 TOF 追加', 'ps-topup')
+        : r3('Cisatracurium<br><span class="ps-rule">'+cis.why+'</span>', NOT_REC, '—'))
     + '</table>';
 
   h += head('逆轉藥物') + sub
-    + r3('Sugammadex 2–4 mg/kg', rg(2,4,'mg'), '緊急逆轉 16 mg/kg ＝ '+n1(w*16)+' mg')
+    + (sug.ok ? r3('Sugammadex 2 mg/kg（T2 再現）', sug.t2, '深度阻斷 4 mg/kg ＝ '+sug.deep) : r3('Sugammadex<br><span class="ps-rule">'+sug.why+'</span>', NOT_REC, '—'))
     + r3('Neostigmine 0.05–0.07 mg/kg', cpr(0.05,0.07,5,'mg'), '5 mg')
     + r3('Atropine（併用）0.02 mg/kg', cp(Math.max(w*0.02,0.1),1,'mg'), '1 mg（最低 0.1 mg）')
-    + r3('Glycopyrrolate（併用）0.01 mg/kg', (w*0.01).toFixed(2)+' mg', '—')
+    + (glycoOK(am) ? r3('Glycopyrrolate（併用）0.01 mg/kg', (w*0.01).toFixed(2)+' mg', '每 1 mg Neostigmine 配 0.2 mg') : r3('Glycopyrrolate<br><span class="ps-rule"><span class="age-warn">&lt;1 個月：含 Benzyl alcohol，仿單禁用</span></span>', NOT_REC, '—'))
     + '</table>';
 
   h += head('止痛藥（含上限）') + sub
@@ -1510,17 +1589,17 @@ function buildPrepSheet(o){
     + '</table>'
     + (am<6 ? '<div class="ps-foot" style="margin:-6px 0 12px;">⚠ &lt;6 個月：鴉片類建議由上述劑量的一半起始並延長給藥間隔。</div>' : '');
 
-  const pa = paracetamolIV(w), px = parecoxibDose(w, am), od = ondansetronDose(w, am);
+  const pa = paracetamolIV(w, am), px = parecoxibDose(w, am), od = ondansetronDose(w, am);
   h += head('自費藥物（使用前請確認已完成自費同意）','ps-self') + sub
-    + r3('Paracetamol IV<br><span class="ps-rule">'+pa.rule+'；間隔至少 4–6 小時</span>', pa.single, pa.max)
-    + r3('Dynastat（Parecoxib）IV<br><span class="ps-rule">'+px.rule+'；兒童為仿單外使用</span>', px.single, px.max)
-    + r3('Ondansetron IV<br><span class="ps-rule">'+od.rule+'</span>', od.single, od.max)
+    + r3('Paracetamol IV<br><span class="ps-rule">'+pa.rule+'；最短間隔 4 小時，輸注 15 分鐘</span>', pa.single, pa.max)
+    + r3('Dynastat（Parecoxib）IV<br><span class="ps-rule">'+px.rule+'</span>', px.single, px.max)
+    + r3('Ondansetron IV<br><span class="ps-rule">'+od.rule+'</span>', od.single+(od.warn?'<br>'+od.warn:''), od.max)
     + '</table>';
 
   h += head('急救備用') + sub
     + r3('Epinephrine 0.01 mg/kg（0.1 mg/mL）', cp(w*0.01,1,'mg')+' ＝ '+Math.min(w*0.1,10).toFixed(1)+' mL', '單次 1 mg')
     + r3('喉痙攣：Propofol 0.6 mg/kg', n1(w*0.6)+' mg', '—')
-    + r3('喉痙攣：Succinylcholine 0.25–0.5 mg/kg', rg(0.25,0.5,'mg'), '插管 1–2 mg/kg ＝ '+rg(1,2,'mg'))
+    + r3('喉痙攣：Succinylcholine 0.25–0.5 mg/kg', rg(0.25,0.5,'mg'), '插管 靜脈 1 mg/kg ＝ '+n1(w)+' mg；肌肉 2–3 mg/kg ＝ '+rg(2,3,'mg'))
     + r3('去顫 2 J/kg → 4 J/kg', cp(w*2,200,'J')+' → '+cp(w*4,200,'J'), '10 J/kg 或成人劑量')
     + '</table>';
 
