@@ -246,6 +246,27 @@
     padding:6px 10px;text-align:center;font-weight:800;color:#2c2823;
   }
   .dose-cell{font-family:var(--mono);font-weight:700;color:var(--text);font-size:1.15rem;line-height:1.4;}
+  .drug-back{margin:12px auto 0;padding:9px 20px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--text);font-family:var(--sans);font-size:.85rem;font-weight:600;cursor:pointer;}
+  .drug-back:hover{border-color:var(--text);}
+  @media print{.drug-back{display:none!important;}}
+  .dil{margin-top:8px;font-family:var(--sans,inherit);font-weight:400;font-size:.8rem;line-height:1.5;}
+  .dil>summary{cursor:pointer;display:inline-block;list-style:none;padding:3px 10px;border:1px solid var(--line,#cfcabf);border-radius:999px;color:var(--muted);font-size:.74rem;font-weight:600;background:#fff;user-select:none;}
+  .dil>summary::-webkit-details-marker{display:none;}
+  .dil[open]>summary{color:var(--text);border-color:var(--text);}
+  .dil-box{margin-top:8px;padding:10px 12px;border:1px solid var(--line,#cfcabf);border-radius:10px;background:#faf8f3;max-width:340px;}
+  .dil-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap;}
+  .dil-row label{flex:0 0 5.6em;color:var(--muted);font-size:.74rem;}
+  .dil-row input{width:5.2em;padding:5px 6px;border:1px solid var(--line,#cfcabf);border-radius:6px;font-family:var(--mono);font-size:.9rem;background:#fff;color:var(--text);}
+  .dil-row select{padding:5px 4px;border:1px solid var(--line,#cfcabf);border-radius:6px;font-size:.8rem;background:#fff;color:var(--text);}
+  .dil-row .u{color:var(--muted);font-size:.74rem;}
+  .dil-q{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 6px 0;}
+  .dil-q button{padding:3px 9px;border:1px solid var(--line,#cfcabf);border-radius:999px;background:#fff;font-size:.72rem;cursor:pointer;color:var(--text);}
+  .dil-out{margin-top:6px;padding-top:8px;border-top:1px dashed var(--line,#cfcabf);font-size:.82rem;color:var(--text);}
+  .dil-out b{font-family:var(--mono);}
+  .dil-out .big{display:block;font-family:var(--mono);font-weight:700;font-size:1.05rem;margin-top:3px;}
+  .dil-out .dw{display:block;color:#a4442f;font-weight:700;margin-top:4px;}
+  .dil-src{color:var(--muted);font-size:.68rem;margin-top:6px;}
+  @media print{.dil{display:none;}}
   .warn-cell{font-size:1.02rem;color:var(--muted);line-height:1.6;}
   .warn-cell .flag{
     display:block;
@@ -432,6 +453,59 @@
   .drug-tabs{position:static !important;top:auto !important;}
   .not-rec{display:inline-block;color:#985952;font-weight:800;background:rgba(181,140,133,.18);border-left:3px solid rgba(152,89,82,.7);padding:2px 9px;border-radius:4px;}
   .age-warn{color:#985952;font-weight:700;}
+  /* ---- 藥物分類標籤底色（比照針筒標籤色系）；「其他」「惡性高熱」維持原樣 ---- */
+  .drug-tabs button[data-cat="induction"]{background:#f4e08a;border-color:#d9c25f;color:#4a3f12;}            /* 誘導：鵝黃 */
+  .drug-tabs button[data-cat="opioid"]{background:#b9d6ee;border-color:#8fb6d6;color:#1f3c55;}               /* 止痛：淺藍 */
+  .drug-tabs button[data-cat="relaxant"]{background:#ee8a66;border-color:#d46f4b;color:#3d1608;}             /* 肌肉鬆弛劑：橘紅 */
+  .drug-tabs button[data-cat="resus"]{background:#c8473d;border-color:#a8362d;color:#ffffff;}                /* 急救：紅 */
+  .drug-tabs button[data-cat="local"]{background:#dcdcd8;border-color:#bdbdb8;color:#3b3b38;}                /* 局麻：淺灰 */
+  .drug-tabs button[data-cat="reversal"]{                                                                   /* 逆轉藥：米白底＋紅白斜線粗框 */
+    border:6px solid transparent;color:#3d1608;
+    background:linear-gradient(#f7f1e3,#f7f1e3) padding-box, repeating-linear-gradient(135deg,#c8473d 0 7px,#ffffff 7px 14px) border-box;
+  }
+  .drug-tabs button[data-cat]:hover{filter:brightness(.96);}
+  .drug-tabs button[data-cat="induction"]:hover{border-color:#d9c25f;color:#4a3f12;}
+  .drug-tabs button[data-cat="opioid"]:hover{border-color:#8fb6d6;color:#1f3c55;}
+  .drug-tabs button[data-cat="relaxant"]:hover{border-color:#d46f4b;color:#3d1608;}
+  .drug-tabs button[data-cat="resus"]:hover{border-color:#a8362d;color:#ffffff;}
+  .drug-tabs button[data-cat="local"]:hover{border-color:#bdbdb8;color:#3b3b38;}
+  .drug-tabs button[data-cat="reversal"]:hover{border-color:transparent;color:#3d1608;}
+  /* 選取中的分類：保留底色，改用深色外框標示 */
+  .drug-tabs button[data-cat="induction"].active,.drug-tabs button[data-cat="opioid"].active,.drug-tabs button[data-cat="relaxant"].active,
+  .drug-tabs button[data-cat="resus"].active,.drug-tabs button[data-cat="local"].active,.drug-tabs button[data-cat="reversal"].active{
+    outline:3px solid #2c2823;outline-offset:2px;box-shadow:0 2px 8px rgba(44,40,35,.35);font-weight:800;
+  }
+  .drug-tabs button.active::after{content:' ▴';font-size:.78em;opacity:.8;}   /* 展開中：再點一次可收起 */
+  /* ---- 藥名格：與分類標籤同色 ---- */
+  .dname-cell.on-red{color:#ffffff;}
+  .dname-cell.on-red .pi-net{color:#fde8e4;}
+  /* 逆轉藥：白底，四周為紅白斜條紋粗邊框（條紋只在邊框，不鋪滿） */
+  .dname-cell.striped-cell{padding:10px !important;background:linear-gradient(#ffffff,#ffffff) content-box, repeating-linear-gradient(135deg,#c8473d 0 9px,#ffffff 9px 18px) border-box !important;}
+  .stripe-badge{background:transparent !important;border:none !important;border-radius:0 !important;padding:10px 12px !important;text-align:left !important;}   /* 藥名靠左，與其他藥物一致 */
+  .stripe-badge .pi-row{justify-content:flex-start !important;}
+  /* Succinylcholine：上黑底紅字、下紅底黑字（比照針筒標籤），紅色採肌肉鬆弛劑的橘紅 */
+  .dname-cell.scc-cell{padding:0 !important;background:#ee8a66;vertical-align:top;}
+  .scc-top{display:block;background:#1f1c19;color:#ee8a66;padding:12px 14px;}
+  .scc-bottom{display:block;color:#1f1c19;padding:8px 14px 12px;min-height:34px;}
+  .scc-bottom .pi-row{margin-top:0;}
+  /* ---- 手機版：藥名欄統一高度（有無仿單連結、名稱一行或兩行都一樣高），內容垂直置中 ---- */
+  @media(max-width:640px){
+    .drug-table .dname-cell{min-height:112px;box-sizing:border-box;display:flex !important;flex-direction:column;justify-content:center;}
+    .drug-table .dname-cell.striped-cell{justify-content:stretch;}
+    .drug-table .dname-cell.striped-cell .stripe-badge{flex:1;display:flex;flex-direction:column;justify-content:center;}
+    .drug-table .dname-cell.scc-cell{justify-content:flex-start;}
+    .drug-table .dname-cell.scc-cell .scc-bottom{flex:1;}
+  }
+  /* ---- 藥物搜尋 ---- */
+  .drug-search{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+  .drug-search input{flex:1 1 240px;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px 14px;color:var(--text);font-family:var(--sans);font-size:.95rem;outline:none;}
+  .drug-search input:focus{border-color:var(--hr);}
+  /* ---- 說明／提示收合（各區塊說明框） ---- */
+  .note-fold > summary{cursor:pointer;list-style:none;font-weight:700;color:var(--text);user-select:none;}
+  .note-fold > summary::-webkit-details-marker{display:none;}
+  .note-fold > summary::before{content:'▸ ';color:var(--muted);}
+  .note-fold[open] > summary::before{content:'▾ ';}
+  .note-fold[open] > summary{margin-bottom:8px;}
   .cap-tag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:10px;background:rgba(181,140,133,.2);color:#8a5a52;font-size:.68rem;font-weight:700;vertical-align:middle;white-space:nowrap;}
   .mini-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:14px;}
   .mini-form .field{min-width:150px;flex:1;}
@@ -517,7 +591,7 @@
     <div class="preterm-toggle">
       <label class="check-row">
         <input type="checkbox" id="isPreterm" onchange="togglePreterm()">
-        <span>早產兒（出生胎齡 &lt; 37 週）</span>
+        <span>早產兒（出生胎齡 &lt; 37 週）<span style="color:var(--muted);font-size:.86em;">　勾選後須填寫出生胎齡與實際體重</span></span>
       </label>
       <div class="field" id="gaField" style="display:none;max-width:220px;margin-top:10px;">
         <label>出生胎齡（週數，Gestational Age）</label>
@@ -525,7 +599,7 @@
       </div>
     </div>
 
-    <div class="weight-note">體重估算公式（無實際體重時使用，APLS）：0–12 個月 <b>(月齡×0.5)+4</b>　·　1–5 歲 <b>(歲×2)+8</b>　·　6–12 歲 <b>(歲×3)+7</b>　·　建議 &gt;12 歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b><br>公式為英國 APLS 第 5 版之年齡估算公式，源自英國兒童資料、<b>未經台灣兒童驗證</b>，僅供無法取得體重時暫時估計，請以實際體重為準。<details class="ref-fold"><summary>參考資料</summary>Luscombe M, Owens B. Weight estimation in resuscitation: is the current formula still valid? <i>Arch Dis Child</i>. 2007;92(5):412–415.<br>Advanced Life Support Group. <i>Advanced Paediatric Life Support</i>, 5th ed.（2011 年起採用三段式公式）</details></div>
+    <div class="weight-note"><details class="note-fold"><summary>體重估算公式與說明</summary>體重估算公式（無實際體重時使用，APLS）：0–12 個月 <b>(月齡×0.5)+4</b>　·　1–5 歲 <b>(歲×2)+8</b>　·　6–12 歲 <b>(歲×3)+7</b>　·　建議 &gt;12 歲一律使用實際體重　·　<b>早產兒不適用上述公式，請務必輸入實際體重</b><br>公式為英國 APLS 第 5 版之年齡估算公式，源自英國兒童資料、<b>未經台灣兒童驗證</b>，僅供無法取得體重時暫時估計，請以實際體重為準。<details class="ref-fold"><summary>參考資料</summary>Luscombe M, Owens B. Weight estimation in resuscitation: is the current formula still valid? <i>Arch Dis Child</i>. 2007;92(5):412–415.<br>Advanced Life Support Group. <i>Advanced Paediatric Life Support</i>, 5th ed.（2011 年起採用三段式公式）</details></details></div>
   </div>
 
   <div class="wave">
@@ -585,6 +659,9 @@
     <!-- ===== 第二畫面：藥物分類（浮動選單）→ 點選後顯示對應藥物 ===== -->
     <div class="section-title"><span class="dot" style="background:var(--rr)"></span>藥物劑量（依體重計算）</div>
     <div class="drug-section">
+    <div class="drug-search">
+      <input type="search" id="drugSearch" placeholder="搜尋藥物（中英文、商品名）" oninput="searchDrugs()" autocomplete="off" aria-label="搜尋藥物">
+    </div>
     <div class="drug-tabs" id="drugTabs">
       <button data-cat="induction" onclick="selectDrugCat('induction')">誘導</button>
       <button data-cat="relaxant" onclick="selectDrugCat('relaxant')">肌肉鬆弛劑</button>
@@ -595,7 +672,7 @@
       <button data-cat="local" onclick="selectDrugCat('local')">局麻／LAST</button>
       <button data-cat="mh" onclick="selectDrugCat('mh')">惡性高熱</button>
     </div>
-    <div class="drug-prompt" id="drugPrompt">↑ 點選上方分類以顯示對應藥物劑量</div>
+    <div class="drug-prompt" id="drugPrompt">↑ 點選上方分類，或在搜尋欄輸入藥名，以顯示對應藥物劑量</div>
     <div class="drug-table-wrap" id="drugTableWrap" style="display:none;">
       <table class="drug-table">
         <thead><tr><th style="width:20%">藥物</th><th style="width:28%">劑量（依體重計算）</th><th>警語／禁忌症</th></tr></thead>
@@ -603,6 +680,7 @@
       </table>
     </div>
     <div class="info-box" id="drugReminder" style="display:none;"><b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。</div>
+    <button type="button" id="drugBack" class="drug-back" style="display:none;" onclick="document.getElementById('drugSearch').scrollIntoView({behavior:'smooth',block:'start'})">↑ 回到藥物分類</button>
     </div><!-- /drug-section：分類選單只在藥物區塊內固定 -->
 
     <div class="section-title"><span class="dot" style="background:var(--rr)"></span>持續輸注速率換算</div>
@@ -805,6 +883,26 @@ function calculate(){
   const ageYears = ageMonths/12;
   const isNeonate = ageMonths <= 1;
 
+  // ---- 早產兒：必須有出生胎齡與實際體重，否則不計算（估算公式僅適用足月兒） ----
+  if(document.getElementById('isPreterm').checked){
+    const stop = (msg, id) => {
+      currentWeight = null;
+      document.getElementById('results').className = 'results';
+      document.getElementById('prepSheet').classList.remove('show');
+      alert(msg);
+      const el = document.getElementById(id); if(el && el.focus) el.focus();
+    };
+    const gaChk = parseFloat(document.getElementById('gaWeeks').value);
+    if(isNaN(gaChk) || gaChk < 20 || gaChk >= 37){
+      stop('已勾選「早產兒」：請輸入出生胎齡（20–36 週）後再計算。\n若出生胎齡滿 37 週，請取消勾選早產兒。', 'gaWeeks');
+      return;
+    }
+    if(isNaN(actualWtRaw) || actualWtRaw <= 0){
+      stop('已勾選「早產兒」：體重估算公式僅適用足月兒，請輸入實際體重後再計算。', 'actualWeight');
+      return;
+    }
+  }
+
   // ---- weight estimate ----
   let estWeight;
   if(ageMonths<12) estWeight = (ageMonths*0.5)+4;        // APLS：0–12 個月
@@ -939,6 +1037,7 @@ function calculate(){
   buildPrepSheet({ageLabel, weight, usingEstimate, ageMonths, ett, lma, blade, maint421});
   document.getElementById('prepSheet').classList.remove('show');
 
+  foldNotes();
   document.getElementById('results').className='results visible';
   document.getElementById('results').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -947,16 +1046,102 @@ function calculate(){
 let currentWeight = null;
 let currentAgeMonths = null;
 
-function resetDrugSelector(){
+/* ===== 說明框收合（藥物警語與藥物提醒不收合） ===== */
+const NOTE_TITLES = {
+  npoNote:'禁食規則說明', pretermNote:'早產兒麻醉重點提醒', ventNote:'呼吸器設定提醒', lmaNote:'LMA 適應症與禁忌',
+  equipNote:'器材尺寸說明與參考資料', bloodNote:'失血與輸血計算說明', infNote:'輸注速率換算說明'
+};
+const NOTE_OPEN = {};        // 記住使用者展開過哪些說明框，重新計算時不會被收回
+function foldNotes(){
+  Object.keys(NOTE_TITLES).forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el || !el.innerHTML.trim()) return;
+    if(el.children.length===1 && el.firstElementChild.classList.contains('note-fold')) return;   // 已收合
+    let title = NOTE_TITLES[id];
+    if(!title){ const b = el.querySelector('b'); title = b ? b.textContent.replace(/^[^一-鿿A-Za-z]+/,'').replace(/[：:]\s*$/,'').trim() : '說明'; }
+    const d = document.createElement('details'); d.className = 'note-fold'; d.open = !!NOTE_OPEN[id];
+    const sm = document.createElement('summary'); sm.textContent = title;
+    const body = document.createElement('div'); body.innerHTML = el.innerHTML;
+    d.appendChild(sm); d.appendChild(body);
+    el.innerHTML = ''; el.appendChild(d);
+    d.addEventListener('toggle', ()=>{ NOTE_OPEN[id] = d.open; });
+  });
+}
+
+/* ===== 藥物搜尋：跨所有分類，比對藥名、中文名、商品名與分類名稱 ===== */
+const DRUG_CATS = [['induction','誘導'],['relaxant','肌肉鬆弛劑'],['opioid','鴉片止痛藥'],['reversal','逆轉藥'],['other','其他'],['resus','急救'],['local','局麻／LAST'],['mh','惡性高熱']];
+/* 別名：左邊為藥物表上藥名的關鍵字，右邊為可搜尋的其他名稱（商品名取自本院仿單） */
+const DRUG_ALIASES = [
+  ['propofol','飛可復 fresofol 異丙酚 鎮靜 誘導'], ['ketamine','克太拉 ketalar'], ['midazolam','美得定 midatin dormicum 鎮靜'],
+  ['dexmedetomidine','precedex 普利斯德 鎮靜'], ['lidocaine','心可寧 xylocaine 利多卡因 局麻'],
+  ['rocuronium','羅庫諾林 esmeron 肌鬆'], ['cisatracurium','nimbex 肌弛適 肌鬆'], ['succinylcholine','能弛聖 relaxin suxamethonium scc 肌鬆'],
+  ['fentanyl','吩坦尼 止痛'], ['morphine','嗎啡 止痛'], ['demerol','配西汀 pethidine 止痛'],
+  ['neostigmine','安可健 vagostin 逆轉'], ['sugammadex','bridion 倍帝恩 逆轉'], ['atropine','阿托品 抗膽鹼 心搏過緩'], ['glycopyrrolate','格比平 glycopyrodyn 抗膽鹼'],
+  ['paracetamol','acetamol 緩熱痛 乙醯胺酚 止痛 退燒 自費'], ['dynastat','得術泰 nsaid cox-2 止痛 自費'], ['ephedrine','麻黃素 升壓'],
+  ['ondansetron','止吐 噁心 嘔吐 ponv 自費'], ['dexamethasone','的剎美剎松 類固醇 止吐'], ['hydrocortisone','solu-cortef 舒汝固體膚 類固醇'],
+  ['epinephrine','腎上腺素 adrenaline 過敏 心跳停止'], ['amiodarone','心律不整'], ['adenosine','svt 心律不整'],
+  ['calcium','鈣 高血鉀'], ['sodium bicarbonate','碳酸氫鈉 nahco3 酸中毒'], ['dextrose','葡萄糖 低血糖'], ['naloxone','鴉片拮抗 呼吸抑制'],
+  ['去顫','電擊 defibrillation vf'], ['同步電擊','cardioversion 電擊'],
+  ['bupivacaine','marcaine 局麻'], ['ropivacaine','naropin 局麻'], ['lipid','脂肪乳劑 intralipid 局麻中毒'], ['dantrolene','惡性高熱 mh'],
+  ['高血鉀','insulin 胰島素'], ['降溫','惡性高熱 冰']
+];
+function drugAliases(nameLower){
+  return DRUG_ALIASES.filter(a=>nameLower.indexOf(a[0])>=0).map(a=>a[1]).join(' ');
+}
+function searchDrugs(){
+  const q = document.getElementById('drugSearch').value.trim().toLowerCase();
+  if(currentWeight===null) return;
+  if(!q){ resetDrugSelector(true); return; }
+  document.querySelectorAll('#drugTabs button').forEach(b=>b.classList.remove('active'));
+  const out = document.getElementById('drugTableBody');
+  out.innerHTML = '';
+  const tmp = document.createElement('tbody');
+  let n = 0;
+  DRUG_CATS.forEach(([cat,label])=>{
+    tmp.innerHTML = buildDrugTable(cat, currentWeight, currentAgeMonths);
+    const hits = Array.from(tmp.children).filter(tr=>{
+      const c = tr.children[0].cloneNode(true);
+      c.querySelectorAll('.pi-row').forEach(x=>x.remove());
+      const name = c.textContent.replace(/\s+/g,' ').trim().toLowerCase();
+      return (name+' '+drugAliases(name)+' '+label.toLowerCase()).indexOf(q) >= 0;
+    });
+    if(!hits.length) return;
+    const head = document.createElement('tr'); head.className = 'cat-row';
+    const td = document.createElement('td'); td.colSpan = 3; td.textContent = label; head.appendChild(td);
+    out.appendChild(head);
+    hits.forEach(tr=>out.appendChild(tr));
+    n += hits.length;
+  });
+  if(!n){
+    const tr = document.createElement('tr'); tr.className = 'cat-row';
+    const td = document.createElement('td'); td.colSpan = 3;
+    td.textContent = '找不到符合「'+document.getElementById('drugSearch').value.trim()+'」的藥物，請改用其他名稱或點選上方分類';
+    tr.appendChild(td); out.appendChild(tr);
+  }
+  document.getElementById('drugPrompt').style.display = 'none';
+  document.getElementById('drugTableWrap').style.display = 'block';
+  const rem = document.getElementById('drugReminder');
+  rem.style.display = n ? 'block' : 'none';
+  document.getElementById('drugBack').style.display = n ? 'block' : 'none';
+  rem.innerHTML = '<b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。各分類的完整說明與參考資料，請點選上方分類查看。';
+  foldNotes();
+}
+
+function resetDrugSelector(keepSearch){
+  if(!keepSearch){ const q = document.getElementById('drugSearch'); if(q) q.value = ''; }
   document.querySelectorAll('#drugTabs button').forEach(b=>b.classList.remove('active'));
   document.getElementById('drugPrompt').style.display='block';
   document.getElementById('drugTableWrap').style.display='none';
   document.getElementById('drugReminder').style.display='none';
+  document.getElementById('drugBack').style.display='none';
   document.getElementById('drugTableBody').innerHTML='';
 }
 
 function selectDrugCat(cat){
   if(currentWeight===null){ return; }
+  // 再點一次已展開的分類 → 收起
+  const cur = document.querySelector('#drugTabs button.active');
+  if(cur && cur.getAttribute('data-cat')===cat){ resetDrugSelector(); return; }
   document.querySelectorAll('#drugTabs button').forEach(b=>{
     b.classList.toggle('active', b.getAttribute('data-cat')===cat);
   });
@@ -964,6 +1149,7 @@ function selectDrugCat(cat){
   document.getElementById('drugTableWrap').style.display='block';
   const rem = document.getElementById('drugReminder');
   rem.style.display='block';
+  document.getElementById('drugBack').style.display='block';
   if(cat==='opioid'){
     rem.innerHTML = '<b>⚕ 鴉片類「上限」說明：</b>鴉片類<b>無器官毒性劑量閾值</b>，真正的限制因子是<b>呼吸抑制</b>，因此安全上限取決於<b>是否計畫術後拔管</b>。<br>'
       + '• <b>計畫拔管</b>（多數小兒手術）：表中累積上限為實務天花板，超過易致甦醒/拔管延遲與術後呼吸抑制。<br>'
@@ -983,6 +1169,8 @@ function selectDrugCat(cat){
     rem.innerHTML = '<b>⚕ 提醒：</b>以上劑量為一般參考範圍，實際給藥仍須依臨床狀況、合併症、手術類型及機構內規調整；新生兒、早產兒與危急病患劑量需特別謹慎並個別化評估。';
   }
   document.getElementById('drugTableBody').innerHTML = buildDrugTable(cat, currentWeight, currentAgeMonths);
+  const q = document.getElementById('drugSearch'); if(q) q.value = '';
+  foldNotes();
 }
 
 function readout(label, value, unit, color){
@@ -1079,7 +1267,7 @@ const PI_LINKS = {
   'Sugammadex':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=ISUGA&P=DL'}],
   'Atropine（併用）':[{url:'https://mcp.fda.gov.tw/im_detail_pdf/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%A3%BD%E5%AD%97%E7%AC%AC014355%E8%99%9F'}],
   'Glycopyrrolate（併用）':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=IGLYCO&P=DL'}],
-  'Acetamol (Acetaminophen)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC028631%E8%99%9F'}],
+  'Paracetamol (Acetaminophen)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E9%83%A8%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC028631%E8%99%9F'}],
   'Dynastat (Parecoxib)':[{url:'https://mcp.fda.gov.tw/im_detail_1/%E8%A1%9B%E7%BD%B2%E8%97%A5%E8%BC%B8%E5%AD%97%E7%AC%AC024143%E8%99%9F'}],
   'Ephedrine':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=IEPHE&P=DL'}],
   'Ondansetron':[{url:'https://dlweb01.tzuchi.com.tw/tchw/IphqryChinese/DesktopModules/WesternMedicine/ViewAttachment.aspx?H=HL&D=IZOFR&P=DL'}],
@@ -1096,17 +1284,85 @@ function piLink(name){
 
 /* 依選取的分類渲染對應藥物。分類：induction 誘導 / relaxant 肌肉鬆弛劑 /
    opioid 鴉片止痛藥 / reversal 逆轉藥 / other 其他 */
+/* 分類標籤底色（與上方 CSS 的分類標籤一致）；「其他」「惡性高熱」不在此列，維持各藥原色 */
+const CAT_BG = {induction:'#f4e08a', opioid:'#b9d6ee', relaxant:'#ee8a66', resus:'#c8473d', local:'#dcdcd8'};
+/* 個別指定底色：高血鉀處置＝黃；Adenosine、Amiodarone、Calcium、Sodium bicarbonate＝白；Lidocaine＝與其他局麻藥相同的淺灰 */
+const FIXED_COLOR = [[/^高血鉀/, '#f4e08a'], [/^(Adenosine|Amiodarone|Calcium|Sodium bicarbonate)/, 'var(--bg-other)'], [/^Lidocaine/, '#dcdcd8']];
+const KEEP_OWN_COLOR = /^(Midazolam|Dexmedetomidine|Atropine|Glycopyrrolate|Epinephrine)|Lipid emulsion/;
+/* 稀釋計算：原液濃度僅預填已對照本院仿單者，其餘留白由使用者依安瓿標示輸入 */
+const DIL_STOCK = [
+  [/^Propofol/,10,'mg'],[/^Ketamine/,50,'mg'],[/^Midazolam/,5,'mg'],[/^Dexmedetomidine/,100,'mcg'],
+  [/^Lidocaine/,20,'mg'],[/^Rocuronium/,10,'mg'],[/^Cisatracurium/,2,'mg'],[/^Fentanyl/,50,'mcg'],
+  [/^Morphine/,10,'mg'],[/^Demerol/,50,'mg'],[/^Neostigmine/,0.5,'mg'],[/^Sugammadex/,100,'mg'],
+  [/^Atropine/,1,'mg'],[/^Glycopyrrolate/,0.2,'mg'],[/^Dynastat/,20,'mg'],[/^Ephedrine/,40,'mg']
+];
+const DIL_SKIP = /^(去顫|同步電擊|降溫|高血鉀|Dextrose|Paracetamol|Dantrolene|Calcium|Sodium bicarbonate)|Lipid emulsion/;
+function dilHTML(cat, plain){
+  if(cat==='local' || DIL_SKIP.test(plain)) return '';
+  const st = DIL_STOCK.find(d=>d[0].test(plain));
+  const conc = st ? st[1] : '', unit = st ? st[2] : 'mg';
+  return `<details class="dil"><summary>🧪 稀釋計算</summary><div class="dil-box">
+    <div class="dil-row"><label>原液濃度</label><input type="number" inputmode="decimal" min="0" step="any" class="dil-conc" value="${conc}" oninput="dilCalc(this)"><select class="dil-unit" onchange="dilCalc(this)"><option value="mg"${unit==='mg'?' selected':''}>mg/mL</option><option value="mcg"${unit==='mcg'?' selected':''}>mcg/mL</option></select></div>
+    <div class="dil-row"><label>抽取原液</label><input type="number" inputmode="decimal" min="0" step="any" class="dil-vol" value="1" oninput="dilCalc(this)"><span class="u">mL</span></div>
+    <div class="dil-row"><label>稀釋至總量</label><input type="number" inputmode="decimal" min="0" step="any" class="dil-total" value="" oninput="dilCalc(this)"><span class="u">mL</span></div>
+    <div class="dil-q"><button type="button" onclick="dilSet(this,5)">5 mL</button><button type="button" onclick="dilSet(this,10)">10 mL</button><button type="button" onclick="dilSet(this,20)">20 mL</button><button type="button" onclick="dilSet(this,0)">不稀釋</button></div>
+    <div class="dil-row"><label>要給的劑量</label><input type="number" inputmode="decimal" min="0" step="any" class="dil-dose" value="" oninput="dilCalc(this)"><span class="u dil-du">${unit}</span></div>
+    <div class="dil-out">請輸入稀釋總量與要給的劑量</div>
+    <div class="dil-src">${st?'原液濃度依本院仿單預填':'原液濃度請依安瓿標示輸入'}；抽藥前請核對安瓿標示並雙人覆核。稀釋液依仿單選用。</div>
+  </div></details>`;
+}
+function dilFmt(n){ return String(Math.round(n*1000)/1000); }
+function dilSet(btn, total){
+  const box = btn.closest('.dil');
+  const vol = parseFloat(box.querySelector('.dil-vol').value);
+  box.querySelector('.dil-total').value = total===0 ? (isFinite(vol)?vol:'') : total;
+  dilCalc(btn);
+}
+function dilCalc(el){
+  const box = el.closest('.dil');
+  const g = c => parseFloat(box.querySelector(c).value);
+  const conc = g('.dil-conc'), vol = g('.dil-vol'), total = g('.dil-total'), dose = g('.dil-dose');
+  const unit = box.querySelector('.dil-unit').value;
+  box.querySelector('.dil-du').textContent = unit;
+  const out = box.querySelector('.dil-out');
+  if(!(conc>0) || !(vol>0)){ out.innerHTML = '請輸入原液濃度與抽取量'; return; }
+  if(!(total>0)){ out.innerHTML = '請輸入稀釋後總量'; return; }
+  if(total < vol){ out.innerHTML = '<span class="dw">稀釋後總量不可小於抽取的原液量</span>'; return; }
+  const amt = conc*vol, newConc = amt/total, dil = total-vol;
+  let h = '抽原液 <b>'+dilFmt(vol)+' mL</b>（'+dilFmt(amt)+' '+unit+'）'
+        + (dil>0 ? '＋稀釋液 <b>'+dilFmt(dil)+' mL</b>＝共 <b>'+dilFmt(total)+' mL</b>' : '，不稀釋')
+        + '<br>濃度：<b>'+dilFmt(newConc)+' '+unit+'/mL</b>';
+  if(dose>0){
+    const v = dose/newConc;
+    h += '<span class="big">給 '+dilFmt(dose)+' '+unit+' ＝ '+(Math.round(v*100)/100)+' mL</span>';
+    if(dose > amt) h += '<span class="dw">⚠ 劑量超過針筒內總藥量（'+dilFmt(amt)+' '+unit+'）</span>';
+    else if(v < 0.1) h += '<span class="dw">⚠ 抽取量小於 0.1 mL，不易精準，建議再稀釋</span>';
+    else if(v < 1) h += '<span style="display:block;color:var(--muted);font-size:.74rem;margin-top:3px;">建議用 1 mL 空針抽取</span>';
+  }
+  out.innerHTML = h;
+}
 function buildDrugTable(cat, weight, ageMonths){
   const rows = [];
 
   function row(bg,name,dose,calcFn,flag,flagDanger,striped){
     const calc = calcFn(weight);
-    const nameCell = striped
-      ? `<td class="dname-cell striped-cell"><span class="stripe-badge">${name}${piLink(name)}</span></td>`
-      : `<td class="dname-cell" style="background:${bg}">${name}${piLink(name)}</td>`;
+    // 藥名格底色與分類標籤一致；例外：KEEP_OWN_COLOR 所列藥物維持原色、Succinylcholine 用上黑下紅的雙色標籤
+    const plain = name.replace(/<[^>]+>/g,'');
+    const fixed = FIXED_COLOR.find(f=>f[0].test(plain));   // 指定底色的藥物
+    if(fixed) bg = fixed[1];
+    const keepOwn = !!fixed || KEEP_OWN_COLOR.test(plain);   // 這些藥物維持自己的顏色，不跟分類標籤變色
+    let nameCell;
+    if(cat==='relaxant' && /^Succinylcholine/.test(plain)){
+      nameCell = `<td class="dname-cell scc-cell"><span class="scc-top">${name}</span><span class="scc-bottom">${piLink(name)}</span></td>`;
+    } else if(striped || (cat==='reversal' && !keepOwn)){
+      nameCell = `<td class="dname-cell striped-cell"><span class="stripe-badge">${name}${piLink(name)}</span></td>`;
+    } else {
+      const useCat = CAT_BG[cat] && !keepOwn;
+      nameCell = `<td class="dname-cell${(useCat && cat==='resus')?' on-red':''}" style="background:${useCat ? CAT_BG[cat] : bg}">${name}${piLink(name)}</td>`;
+    }
     rows.push(`<tr>
       ${nameCell}
-      <td class="dose-cell" data-label="劑量"><span style="color:var(--muted);font-weight:400;font-size:.72rem;display:block;margin-bottom:2px;">${dose}</span>${calc}</td>
+      <td class="dose-cell" data-label="劑量"><span style="color:var(--muted);font-weight:400;font-size:.72rem;display:block;margin-bottom:2px;">${dose}</span>${calc}${dilHTML(cat, plain)}</td>
       <td class="warn-cell" data-label="警語">${flag?`<span class="flag${flagDanger?' danger':''}">${flag}</span>`:'—'}</td>
     </tr>`);
   }
@@ -1186,7 +1442,7 @@ function buildDrugTable(cat, weight, ageMonths){
   else if(cat==='other'){
     const SUB = '<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:.92rem;"><span style="color:var(--muted);font-weight:600;font-size:.78rem;">上限</span> ';
     const preterm = document.getElementById('isPreterm').checked;
-    row('var(--bg-other)','Acetamol (Acetaminophen)','IV（自費）：<b>限 2 歲以上</b>；15 mg/kg 每 6 小時（單劑最多 750 mg）；≥13 歲且 ≥50 kg 每次 1,000 mg；輸注 15 分鐘', w=>{const p=paracetamolIV(w,ageMonths);return p.single+SUB+p.max+'</div>';},
+    row('var(--bg-other)','Paracetamol (Acetaminophen)','IV（自費）：<b>限 2 歲以上</b>；15 mg/kg 每 6 小時（單劑最多 750 mg）；≥13 歲且 ≥50 kg 每次 1,000 mg；輸注 15 分鐘', w=>{const p=paracetamolIV(w,ageMonths);return p.single+SUB+p.max+'</div>';},
         (ageMonths<24 ? '<b>未滿 2 歲：仿單適應症未涵蓋，不建議使用</b>・' : '') + '<b>禁忌：</b>對本藥或賦形劑過敏、<b>重度肝功能不全或重度活動性肝病</b>・慎用：肝功能不全、慢性營養不良、重度低血容（脫水、失血）、重度腎功能不全（CrCl ≤30）・每日上限須<b>合計所有途徑與所有含 Acetaminophen 藥品</b>・最短給藥間隔 4 小時・勿混淆 mg 與 mL；&lt;50 kg 一律依體重給藥，不可整瓶 100 mL 輸注', true);
     row('var(--bg-other)','Dynastat (Parecoxib)','成人 40 mg IV／IM（自費）；<b>仿單：未滿 18 歲尚未進行研究，不宜使用</b>', w=>{const p=parecoxibDose(w,ageMonths);return p.single+(ageMonths>=216?SUB+p.max+'</div>':'');},
         (ageMonths<216 ? '<b>未滿 18 歲：仿單載明不宜使用</b>・' : '') + '<b>禁忌：</b>對磺醯胺（sulfonamide）類藥物過敏、曾有嚴重藥物過敏或皮膚反應、Aspirin／NSAIDs 引發支氣管痙攣或蕁麻疹者、活動性消化性潰瘍或胃腸出血、發炎性腸道疾病、重度肝功能不全、充血性心衰竭（NYHA II–IV）、缺血性心臟病／周邊動脈／腦血管疾病、CABG 術後・重度腎功能不全或易液體滯留者以最低劑量並監測腎功能・短期使用不宜超過 4 天', true);
@@ -1310,8 +1566,8 @@ function buildFluidTable(weight, ageMonths){
 }
 
 /* ===== 版本與校閱資訊（更新內容時一併修改）===== */
-const APP_VERSION = '2026.10.07';
-const APP_UPDATED = '2026-10-07';
+const APP_VERSION = '2026.10.09';
+const APP_UPDATED = '2026-10-09';
 const REVIEWED_BY = '';     // 臨床校閱者，例如 '麻醉部 ○○○'；留空則不顯示
 const FEEDBACK_URL = '';    // 問題回報連結（表單網址或 mailto:）；留空則不顯示
 (function(){
@@ -1410,6 +1666,7 @@ function updateBlood(){
   document.getElementById('bloodNote').innerHTML = '<b>ℹ 說明：</b>EBV 採用 '+e.label+'。<b>MABL ＝ EBV ×（起始 Hct − 可接受最低 Hct）÷ 起始 Hct</b>，為估算值，實際輸血決策須綜合失血速度、血行動力學與檢驗值。'
     + '血品劑量為一般參考，請依本院輸血規範；大量輸血時注意低血鈣、高血鉀與低體溫。'
     + '<br><span style="font-size:.92em;">參考：Vutskits L, Davidson A, Soriano SG. Pediatric anesthesia. In <i>Miller\'s Anesthesia</i>, 10th ed., Chapter 72.</span>';
+  foldNotes();
 }
 
 /* ===== 持續輸注換算 ===== */
@@ -1442,6 +1699,7 @@ function updateInfusion(){
       readout(d.name+' 輸注速率', rate, unit, 'var(--rr)')
     + readout('計算體重', currentWeight.toFixed(1), 'kg', 'var(--hr)');
   document.getElementById('infNote').innerHTML = '<b>ℹ 說明：</b>速率 ＝ 劑量 × 體重 '+(d.perMin?'× 60 ':'')+'÷ 濃度。<b>濃度請依本院泡法輸入並由第二人覆核</b>；Propofol 預設為 1% 原液（10 mg/mL），其餘藥物泡法各院不同。常用劑量範圍僅供參考，須依臨床反應滴定。';
+  foldNotes();
 }
 
 /* ===== 病童麻醉準備單 ===== */
@@ -1640,7 +1898,12 @@ function rangeHigh(w, lo, hi){
   return w*hi;
 }
 
-document.addEventListener('keydown', e=>{ if(e.key==='Enter') calculate(); });
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Enter') return;
+  const t = e.target;
+  if(t && t.closest && t.closest('.input-panel') && (t.tagName==='INPUT' || t.tagName==='SELECT')) calculate();
+  else if(t && t.id==='drugSearch') e.preventDefault();
+});
 </script>
 </body>
 </html>
