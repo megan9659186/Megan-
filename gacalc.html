@@ -27,8 +27,8 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v3.5";
-var TOOL_UPDATED = "2026-09-15";
+var TOOL_VERSION = "v4.0";
+var TOOL_UPDATED = "2026-10-11";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
 var BUILD_KEY  = "gacalc_build";
@@ -130,6 +130,9 @@ h1{font-family:"Noto Serif TC","Source Han Serif TC","Songti TC","PingFang TC",
 .chip.drug{background:var(--clay-tint);border-color:#DCC7BF;color:#8a6a60}
 .chip.drug:hover{border-color:var(--clay)}
 .chip.drug[aria-pressed="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
+.chip.risk{background:var(--slate-tint);border-color:#C3CAD3;color:#4E5766}
+.chip.risk:hover{border-color:var(--slate)}
+.chip.risk[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
 
 /* ---------- 藥物泡法查詢 ---------- */
 .ds-search{display:flex;gap:10px;align-items:stretch}
@@ -294,11 +297,44 @@ b.dv{font-weight:700;color:#4C7A57}
   background:var(--ochre-tint);color:#6E6047;white-space:nowrap}
 .pill.s{background:var(--sage-tint);color:#4F5C4F}
 .pill.b{background:var(--slate-tint);color:#4E5766}
+.dg-pair{margin-top:14px;border:1px solid var(--line);border-radius:11px;padding:12px 13px;background:var(--surface-2)}
+.dg-pair-t{font-size:15.5px;font-weight:700;color:var(--ink);margin-bottom:9px}
+.dg-pair-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:10px}
+.dg-pair-row .calc-f,.dg-pair-row .calc-cell{min-width:0}
+.dg-pair-row .calc-cell .v{font-size:24px;line-height:1.2}
+.dg-pair-row .calc-cell .u{display:block;margin-left:0;margin-top:2px;white-space:nowrap}
+.dg-arrow{font-size:22px;font-weight:700;color:var(--ink-soft);padding-bottom:16px}
+.dg-how{font-size:13.5px;line-height:1.65;color:var(--ink-soft);margin-top:8px}
+.dg-how b{color:var(--ink)}
+/* ---------- 術前風險分數 ---------- */
+.rk-list{display:flex;flex-direction:column;gap:7px}
+.rk-item{display:flex;align-items:flex-start;gap:11px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:9px;background:var(--bg);cursor:pointer;font-size:16px;line-height:1.5;color:var(--ink)}
+.rk-item input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:var(--slate)}
+.rk-item.on{background:var(--slate-tint);border-color:#C3CAD3}
+.rk-item.auto{cursor:default;border-style:dashed}
+.rk-box{width:20px;height:20px;flex-shrink:0;margin-top:1px;border:1.5px solid #B9C0C9;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.rk-item.auto.on .rk-box{background:var(--slate);border-color:var(--slate)}
+.rk-t{font-weight:600}
+.rk-h{display:block;font-weight:400;font-size:13.5px;color:var(--ink-soft);margin-top:1px}
+.rk-out{margin-top:12px}
+.calc-cell.hi1 .v{color:#5E6E5E}
+.calc-cell.hi2{background:var(--ochre-tint);border-color:#D8CBAE}
+.calc-cell.hi3{background:var(--flag-tint);border-color:#DCC3BB}
+.calc-cell.hi3 .v{color:var(--warn)}
 /* 常用藥物該用哪個體重:整表加大 */
 .dw-tbl{font-size:16.5px;min-width:520px}
 .dw-tbl th{font-size:15px;padding:10px 12px}
 .dw-tbl td{padding:12px 12px;line-height:1.6}
 .dw-tbl .pill{font-size:16px;font-weight:700;padding:5px 13px;border-radius:7px}
+.dw-tbl{min-width:760px}
+.dw-dose{min-width:210px}
+.dw-dose .dd-w{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:3px}
+.dw-dose .dd-l{display:block;font-size:15.5px;line-height:1.6}
+.dw-dose .dd-l b{color:#3F7A5E;font-weight:700;white-space:nowrap}
+.dw-dose .dd-sub{font-size:13.5px;color:var(--ink-soft)}
+.dw-dose .dd-cap{display:block;font-style:normal;font-size:12.5px;color:var(--warn)}
 
 </style>
 </head>
@@ -512,20 +548,68 @@ function tivaWarnHtml(v){
 }
 
 const DOSE_WEIGHT = [
-  { d:"Propofol(誘導)",            w:"LBW",  cls:"s", n:"用實際體重會過量,容易低血壓" },
-  { d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  n:"清除率隨體重上升;仍需依反應滴定" },
-  { d:"Fentanyl",                    w:"LBW",  cls:"s", n:"依實際體重給會明顯過量" },
-  { d:"Remifentanil",                w:"LBW",  cls:"s", n:"TCI 亦以 LBW 或 IBW 設定" },
-  { d:"Morphine",                    w:"IBW",  cls:"b", n:"肥胖者呼吸抑制風險高,小量滴定" },
-  { d:"Rocuronium",                  w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長" },
-  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同 rocuronium,用實際體重會延長作用時間" },
-  { d:"Succinylcholine",             w:"TBW",  cls:"",  n:"血漿膽鹼酯酶活性隨體重增加" },
-  { d:"Sugammadex",                  w:"TBW",  cls:"",  n:"依仿單以實際體重計算" },
-  { d:"Neostigmine",                 w:"TBW",  cls:"",  n:"有單次最大劑量上限" },
-  { d:"Dexmedetomidine",             w:"AdjBW",cls:"",  n:"" },
-  { d:"Midazolam(單次)",           w:"TBW",  cls:"",  n:"重複給藥改用 IBW,脂溶性高易蓄積" },
-  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限" }
+  { d:"Propofol(誘導)",            w:"LBW",  cls:"s", n:"用實際體重會過量,容易低血壓",
+    dose:[{t:"誘導 1.5–2.5 mg/kg", lo:1.5, hi:2.5, u:"mg"}] },
+  { d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  n:"本院多用 TCI;手動輸注時幫浦以 mg/kg/hr 設定。清除率隨體重上升,仍需依反應滴定",
+    dose:[{prop:true}] },
+  { d:"Fentanyl",                    w:"LBW",  cls:"s", n:"依實際體重給會明顯過量",
+    dose:[{t:"誘導 1–2 µg/kg", lo:1, hi:2, u:"µg"}] },
+  { d:"Remifentanil",                w:"LBW",  cls:"s", n:"TCI 亦以 LBW 或 IBW 設定",
+    dose:[{t:"維持 0.05–0.5 µg/kg/min", lo:0.05, hi:0.5, u:"µg/min"}] },
+  { d:"Morphine",                    w:"IBW",  cls:"b", n:"肥胖者呼吸抑制風險高,小量滴定",
+    dose:[{t:"0.05–0.1 mg/kg", lo:0.05, hi:0.1, u:"mg"}] },
+  { d:"Rocuronium",                  w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長",
+    dose:[{t:"插管 0.6 mg/kg", lo:0.6, u:"mg"}, {t:"RSI 1.2 mg/kg", lo:1.2, u:"mg"}] },
+  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同 rocuronium,用實際體重會延長作用時間",
+    dose:[{t:"Cisatracurium 0.15–0.2 mg/kg", lo:0.15, hi:0.2, u:"mg"}, {t:"Atracurium 0.4–0.5 mg/kg", lo:0.4, hi:0.5, u:"mg"}] },
+  { d:"Succinylcholine",             w:"TBW",  cls:"",  n:"血漿膽鹼酯酶活性隨體重增加",
+    dose:[{t:"1–1.5 mg/kg", lo:1, hi:1.5, u:"mg"}] },
+  { d:"Sugammadex",                  w:"TBW",  cls:"",  n:"依仿單以實際體重計算",
+    dose:[{t:"T2 已出現 2 mg/kg", lo:2, u:"mg"}, {t:"PTC 1–2 4 mg/kg", lo:4, u:"mg"}, {t:"立即逆轉 16 mg/kg", lo:16, u:"mg"}] },
+  { d:"Neostigmine",                 w:"TBW",  cls:"",  n:"有單次最大劑量上限",
+    dose:[{t:"0.03–0.07 mg/kg", lo:0.03, hi:0.07, u:"mg", cap:5}] },
+  { d:"Dexmedetomidine",             w:"AdjBW",cls:"",  n:"",
+    dose:[{t:"負荷 0.5–1 µg/kg(10 分鐘)", lo:0.5, hi:1, u:"µg"}, {t:"維持 0.2–0.7 µg/kg/hr", lo:0.2, hi:0.7, u:"µg/hr"}] },
+  { d:"Midazolam(單次)",           w:"TBW",  cls:"",  n:"重複給藥改用 IBW,脂溶性高易蓄積",
+    dose:[{t:"鎮靜 0.02–0.04 mg/kg", lo:0.02, hi:0.04, u:"mg"}] },
+  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限",
+    dose:[{t:"IV q6h", para:true}] }
 ];
+
+/* 依輸入的身高體重,換算各藥建議劑量;依據體重大於實際體重時改用實際體重 */
+function doseFmt(v){
+  if(!isFinite(v)) return "—";
+  if(v >= 10) return String(Math.round(v));
+  return String(Math.round(v*10)/10);
+}
+function doseHtml(x, r, tbw){
+  if(!r || !(tbw>0)) return "請先輸入身高體重";
+  const map = { TBW:tbw, LBW:r.lbw, IBW:r.ibw, AdjBW:r.adj };
+  let w = map[x.w];
+  let swap = false;
+  if(x.w !== "TBW" && w > tbw){ w = tbw; swap = true; }
+  const head = `<span class='dd-w'>${swap ? "改用 TBW" : x.w} ${w.toFixed(1)} kg</span>`;
+  const lines = (x.dose||[]).map(d=>{
+    if(d.prop){
+      return `<span class='dd-l'>TCI:設 Ce 或 Cp 目標濃度(見上方 TIVA 模型)</span>`
+        + `<span class='dd-l'>手動:幫浦設 <b>6–12 mg/kg/hr</b>,體重輸入 <b>${doseFmt(w)} kg</b></span>`
+        + `<span class='dd-l dd-sub'>= ${doseFmt(6*w)}–${doseFmt(12*w)} mg/hr,1% 原液約 ${doseFmt(0.6*w)}–${doseFmt(1.2*w)} mL/hr</span>`;
+    }
+    if(d.para){
+      const v = w >= 50 ? "<b>1000 mg</b>,每日 ≤ 4 g"
+        : `15 mg/kg → <b>${doseFmt(15*w)} mg</b>,每日 ≤ ${doseFmt(75*w)} mg`;
+      return `<span class='dd-l'>${d.t}:${v}</span>`;
+    }
+    let lo = d.lo*w, hi = d.hi!=null ? d.hi*w : null, capped = false;
+    if(d.cap!=null){
+      if(lo > d.cap){ lo = d.cap; capped = true; }
+      if(hi!=null && hi > d.cap){ hi = d.cap; capped = true; }
+    }
+    const val = hi!=null && doseFmt(hi)!==doseFmt(lo) ? `${doseFmt(lo)}–${doseFmt(hi)}` : doseFmt(lo);
+    return `<span class='dd-l'>${d.t} → <b>${val} ${d.u}</b>${capped ? `<i class='dd-cap'>已達上限 ${d.cap} ${d.u}</i>` : ""}</span>`;
+  }).join("");
+  return head + lines;
+}
 
 function calcHtml(){
   const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
@@ -771,14 +855,14 @@ function calcHtml(){
     </div>
 
     <div class="tool-box">
-      <h3>常用藥物該用哪個體重</h3>
+      <h3 class="th-new">常用藥物該用哪個體重${isNewItem({ updated:"2026-10-11" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
       <div class="tool-scroll">
         <table class="tool-tbl dw-tbl">
-          <tr><th>藥物</th><th>依據體重</th><th>備註</th></tr>
-          ${DOSE_WEIGHT.map(x=>`<tr><td>${x.d}</td><td><span class="pill ${x.cls}">${x.w}</span></td><td>${x.n||"—"}</td></tr>`).join("")}
+          <tr><th>藥物</th><th>依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr>
+          ${DOSE_WEIGHT.map(x=>`<tr><td>${x.d}</td><td><span class="pill ${x.cls}">${x.w}</span></td><td class="dw-dose">${doseHtml(x, r, CALC_STATE.wt)}</td><td>${x.n||"—"}</td></tr>`).join("")}
         </table>
       </div>
-      <div class="calc-note">本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
+      <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,老年、血行動力不穩、合併其他鎮靜藥時要往下修;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
     </div>
 
     <div class="tool-box">
@@ -874,6 +958,7 @@ function wireCalc(){
       if(u) v.appendChild(u);
       if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
     });
+    document.querySelectorAll(".dw-dose").forEach((td,i)=>{ td.innerHTML = doseHtml(DOSE_WEIGHT[i], r, wt); });
     updTiva();
     syncPatient();
   };
@@ -1001,18 +1086,18 @@ function wireCalc(){
    內容依本單位藥物泡製規範整理,實際請以本院藥局最新規範為準。
    ============================================================ */
 const DRUG_PREP = [
-  { g:"單次推注(bolus)稀釋", up:"2026-09-10", rows:[
+  { g:"單次推注(bolus)稀釋", up:"2026-10-10", rows:[
     ["Ephedrine","40 mg/1 mL/amp","40 mg(1 vial)加 NS 4 mL 稀釋成 5 mL,限 IV 使用","8 mg/mL","Bolus","單次 5–10 mg;<b>IM 使用不稀釋,by order 給予</b>"],
-    ["Epinephrine<br><b class='dv'>低濃度</b>","1 mg/1 mL/amp<br>(Bosmine)","0.1 mg(0.1 mL)加 NS 9.9 mL","10 µg/mL","Bolus 或<br>syringe pump","過敏或低血壓時小量滴定 10–50 µg"],
-    ["Epinephrine<br>高濃度","1 mg/1 mL/amp<br>(Bosmine)","1 mg(1 amp)加 NS 9 mL","100 µg/mL","Bolus 或<br>syringe pump","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
-    ["Norepinephrine<br>推注","4 mg/4 mL/amp<br>(Levophed)","冰箱稀釋液:5 mg 加 <b class='w'>D5W</b> 500 mL","10 µg/mL<br>1 mL = 10 µg","Bolus","單次 5–10 µg;<b class='w'>以 D5W 泡製</b>;建議走中心靜脈,週邊給予要嚴密觀察外滲"],
+    ["Epinephrine<br><b class='dv'>低濃度</b>","1 mg/1 mL/amp<br>(Bosmine)","0.1 mg(0.1 mL)加 NS 9.9 mL","10 µg/mL<br><span style='white-space:nowrap'>= 0.01 mg/mL</span>","Bolus 或<br>syringe pump","過敏或低血壓時小量滴定 10–50 µg(0.01–0.05 mg)"],
+    ["Epinephrine<br>高濃度","1 mg/1 mL/amp<br>(Bosmine)","1 mg(1 amp)加 NS 9 mL","100 µg/mL<br><span style='white-space:nowrap'>= 0.1 mg/mL</span>","Bolus 或<br>syringe pump","<b class='w'>兩種濃度務必分開放置並標示清楚</b>"],
+    ["Norepinephrine<br>推注","4 mg/4 mL/amp<br>(Levophed)","冰箱稀釋液:5 mg 加 <b class='w'>D5W</b> 500 mL","10 µg/mL","Bolus","單次 5–10 µg;<b class='w'>以 D5W 泡製</b>;建議走中心靜脈,週邊給予要嚴密觀察外滲"],
     ["Succinylcholine","500 mg/vial","冰箱稀釋液:500 mg(1 vial)加 NS 25 mL","20 mg/mL","Bolus","1–1.5 mg/kg,依實際體重;本院兒童不使用"],
     ["Herbesser","50 mg/vial<br>(diltiazem)","50 mg(1 vial)加 NS 10 mL","5 mg/mL","Bolus","依醫囑給予"],
     ["Verapamil","5 mg/2 mL/amp","不稀釋,直接緩慢靜脈推注","原液 2.5 mg/mL","Slow IV<br>(over 2 min)","SVT:初始 2.5–5 mg,推注 >2 分鐘;給完 15–30 分鐘無效可再給 5–10 mg(約 0.15 mg/kg);<b class='w'>總量上限 20 mg</b>"]
   ]},
   { g:"持續輸注(幫浦)", up:"2026-09-10", subs:[
     { s:"強心與升壓藥", rows:[
-      ["Norepinephrine","4 mg/4 mL/amp<br>(Levophed)","單一病人泡製常規:8 mg(2 amp)加 <b class='w'>D5W</b> 92 mL","80 µg/mL<br>1 mL = 80 µg","亞培 set","0.01–0.5 µg/kg/min;<b class='w'>本單位以 D5W 泡製</b>"],
+      ["Norepinephrine","4 mg/4 mL/amp<br>(Levophed)","單一病人泡製常規:8 mg(2 amp)加 <b class='w'>D5W</b> 92 mL","80 µg/mL","亞培 set","0.01–0.5 µg/kg/min;<b class='w'>本單位以 D5W 泡製</b>"],
       ["Dopamine","200 mg/5 mL/amp","200 mg(1 amp)加 NS 95 mL","2 mg/mL","亞培精密 set","2–20 µg/kg/min"],
       ["Dopamine<br><b class='dv'>EasyDopa</b>","200 mg/5 mL/amp","800 mg(4 amp)加 NS 500 mL","1.6 mg/mL","亞培 set","2–20 µg/kg/min"],
       ["Dobutamine","250 mg/20 mL/vial","250 mg(1 vial)加 NS 80 mL","2.5 mg/mL","亞培精密 set","2–20 µg/kg/min"],
@@ -1030,8 +1115,8 @@ const DRUG_PREP = [
       ["Cordarone<br><b class='dv'>CVS (SICU) 洗腎</b>","150 mg/3 mL/amp<br><b>by order</b>","洗腎:600 mg(4 amp)加 <b class='w'>D5W</b> 250 mL","2.4 mg/mL","亞培 set","依醫囑速率"]
     ]},
     { s:"止痛藥", rows:[
-      ["Remifentanil","2 mg/vial","主要拿 vial 者:2 mg(1 vial)加 NS 40 mL,再分裝成 2 支 20 mL","50 µg/mL<br>1 mL = 50 µg","Syringe pump","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>領藥人員為空瓶保管人,不可直接將空瓶交給他人</b>"],
-      ["Remifentanil<br><b class='dv'>稀釋版</b>","2 mg/vial","2 mg(1 vial)加 NS 稀釋成 200 mL","10 µg/mL<br>1 mL = 10 µg","Syringe pump","同上;濃度較低、速率較好調,適合體重輕或需微調的病人;<b class='w'>兩種濃度務必標示清楚</b>"]
+      ["Remifentanil","2 mg/vial","主要拿 vial 者:2 mg(1 vial)加 NS 40 mL,再分裝成 2 支 20 mL","50 µg/mL","Syringe pump","0.05–0.5 µg/kg/min,體重以 LBW 設定;<b>領藥人員為空瓶保管人,不可直接將空瓶交給他人</b>"],
+      ["Remifentanil<br><b class='dv'>稀釋版</b>","2 mg/vial","2 mg(1 vial)加 NS 稀釋成 200 mL","10 µg/mL","Syringe pump","同上;濃度較低、速率較好調,適合體重輕或需微調的病人;<b class='w'>兩種濃度務必標示清楚</b>"]
     ]},
     { s:"麻醉與鎮靜藥", rows:[
       ["Precedex","200 µg/2 mL/vial<br>(dexmedetomidine)","200 µg(1 vial)加 NS 稀釋成 50 mL","4 µg/mL","Syringe pump","手術鎮靜建議 0.5–1.0 µg/kg;此濃度下速率 = 體重 ÷ 5 mL/hr 約等於 0.8 µg/kg/hr(by order);起始快速輸注易低血壓與心搏過緩;<b class='w'>稀釋前務必與麻醫確認稀釋劑量與濃度</b>"]
@@ -1042,7 +1127,7 @@ const DRUG_PREP = [
   ]},
   { g:"其他需稀釋藥品", up:"2026-09-10", rows:[
     ["Oxytocin","10 U/mL","10–20 U 加入 500–1000 mL <b class='w'>晶體液</b>","—","—","<b class='w'>不可快速推注</b>,會低血壓與心搏過速"],
-    ["Duratocin","100 µg/mL(1 mL/amp)<br>(carbetocin)","1 amp(1 mL)稀釋成 10 mL","10 µg/mL<br>1 mL = 10 µg","—","剖腹產胎兒娩出後單次給予;<b class='w'>緩慢推注 10 分鐘</b>;需冷藏 2–8 °C 保存"],
+    ["Duratocin","100 µg/mL(1 mL/amp)<br>(carbetocin)","1 amp(1 mL)稀釋成 10 mL","10 µg/mL","—","剖腹產胎兒娩出後單次給予;<b class='w'>緩慢推注 10 分鐘</b>;需冷藏 2–8 °C 保存"],
     ["Magnesium sulfate","500 mg/mL(50%)","1–2 g 加 NS 或 <b class='w'>D5W</b> 至 100 mL","—","—","慢速輸注;過量會肌肉無力與呼吸抑制"],
     ["Nicardipine","1 mg/mL","10 mg 加 NS 至 100 mL","100 µg/mL","—","3–15 mg/hr;反射性心跳上升"]
   ]}
@@ -1053,6 +1138,8 @@ const DRUG_PREP = [
 const DRUG_PRESETS = [
   { t:"自行輸入", mg:null, mL:null },
   { t:"Norepinephrine 8 mg / 100 mL", mg:8, mL:100 },
+  { t:"Epinephrine 低濃度 0.1 mg / 10 mL(10 µg/mL)", mg:0.1, mL:10 },
+  { t:"Epinephrine 高濃度 1 mg / 10 mL(100 µg/mL)", mg:1, mL:10 },
   { t:"Dopamine 200 mg / 100 mL", mg:200, mL:100 },
   { t:"Dopamine EasyDopa 800 mg / 500 mL", mg:800, mL:500 },
   { t:"Dobutamine 250 mg / 100 mL", mg:250, mL:100 },
@@ -1236,7 +1323,7 @@ function drugPrepHtml(){
   const dgRate = drugRateFromDose(S.mg, S.mL, S.wt, S.dose);
   const dgDose = drugDoseFromRate(S.mg, S.mL, S.wt, S.rate);
   const dgHr = drugIsHrUnit(S.pi);
-  const dgNew = isNewItem({ updated:"2026-08-04" })
+  const dgNew = isNewItem({ updated:"2026-10-10" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   return `
   <div class="tool-wrap">
@@ -1294,27 +1381,36 @@ function drugPrepHtml(){
         </div>
       </div>
 
-      <div class="calc-form" style="margin-top:14px">
-        <div class="calc-f">
-          <label for="dgDose">目標劑量(µg/kg/min)</label>
-          <input id="dgDose" type="number" inputmode="decimal" min="0" step="0.01" value="${DRUG_CALC_STATE.dose}">
+      <div class="dg-pair">
+        <div class="dg-pair-t">① 幫浦目前速率 → 病人實際拿到多少</div>
+        <div class="dg-pair-row">
+          <div class="calc-f">
+            <label for="dgRate">目前速率(mL/hr)</label>
+            <input id="dgRate" type="number" inputmode="decimal" min="0" step="0.1" value="${DRUG_CALC_STATE.rate}">
+          </div>
+          <div class="dg-arrow">→</div>
+          <div class="calc-cell hi" id="dgOutA">
+            <div class="k">實際劑量</div>
+            <div class="v">${dgF(dgDose&&dgDose.min)}<span class="u">µg/kg/min</span></div>
+          </div>
         </div>
-        <div class="calc-f">
-          <label for="dgRate">目前速率(mL/hr)</label>
-          <input id="dgRate" type="number" inputmode="decimal" min="0" step="0.1" value="${DRUG_CALC_STATE.rate}">
-        </div>
+        <div class="dg-how" id="dgHowA"></div>
       </div>
-      <div class="calc-out" id="dgOut2">
-        <div class="calc-cell hi">
-          <div class="k">幫浦應設速率</div>
-          <div class="v">${dgF(dgRate)}<span class="u">mL/hr</span></div>
-          <div class="h">達到上方目標劑量所需</div>
+
+      <div class="dg-pair">
+        <div class="dg-pair-t">② 醫囑目標劑量 → 幫浦要設多少</div>
+        <div class="dg-pair-row">
+          <div class="calc-f">
+            <label for="dgDose">目標劑量(µg/kg/min)</label>
+            <input id="dgDose" type="number" inputmode="decimal" min="0" step="0.01" value="${DRUG_CALC_STATE.dose}">
+          </div>
+          <div class="dg-arrow">→</div>
+          <div class="calc-cell hi" id="dgOutB">
+            <div class="k">幫浦應設速率</div>
+            <div class="v">${dgF(dgRate)}<span class="u">mL/hr</span></div>
+          </div>
         </div>
-        <div class="calc-cell">
-          <div class="k">目前速率的實際劑量</div>
-          <div class="v">${dgF(dgDose&&dgDose.min)}<span class="u">µg/kg/min</span></div>
-          <div class="h">${dgDose?(dgHr?`= ${dgF(dgDose.hr)} µg/kg/hr`:"依上方濃度與體重換算"):"—"}</div>
-        </div>
+        <div class="dg-how" id="dgHowB"></div>
       </div>
       <div class="calc-note"><b>公式</b>:藥量(mg)÷ 溶液總量(mL)× 1000 ÷ 體重(kg)÷ 60 = 每 1 mL/hr 相當於幾 µg/kg/min。<b>心算版</b>:藥量(mg)÷〔體重(kg)× 容量常數〕,容量常數 100 mL → 6、200 mL → 12、250 mL → 15、300 mL → 18、400 mL → 24、500 mL → 30。計算結果僅供核對,<b>實際速率仍依醫囑與病人反應調整</b>。</div>
     </div>
@@ -1482,10 +1578,19 @@ function wireDrugCalc(){
     }
     const r = drugRateFromDose(mg, mL, wt, dose);
     const d = drugDoseFromRate(mg, mL, wt, rate);
-    setCells("dgOut2", [
-      [fmt(r), null],
-      [fmt(d && d.min), d ? (isHr ? `= ${fmt(d.hr)} µg/kg/hr` : "依上方濃度與體重換算") : "—"]
-    ]);
+    const setV = (id, txt) => {
+      const v = el(id) && el(id).querySelector(".v"); if(!v) return;
+      const u = v.querySelector(".u"); v.textContent = txt; if(u) v.appendChild(u);
+    };
+    setV("dgOutA", fmt(d && d.min));
+    setV("dgOutB", fmt(r));
+    const howA = el("dgHowA"), howB = el("dgHowB");
+    if(howA) howA.innerHTML = (c && rate>0)
+      ? `${rate} mL/hr × ${fmt(c.cug)} µg/mL = 每小時 ${fmt(rate*c.cug)} µg → ÷ 60 = 每分鐘 ${fmt(rate*c.cug/60)} µg → ÷ ${wt} kg = <b>${fmt(d && d.min)} µg/kg/min</b>${isHr && d ? `(= ${fmt(d.hr)} µg/kg/hr)` : ""}`
+      : "請輸入藥量、溶液總量、體重與速率";
+    if(howB) howB.innerHTML = (c && dose>0)
+      ? `${dose} µg/kg/min × ${wt} kg × 60 = 每小時 ${fmt(dose*wt*60)} µg → ÷ ${fmt(c.cug)} µg/mL = <b>${fmt(r)} mL/hr</b>`
+      : "請輸入藥量、溶液總量、體重與目標劑量";
   };
   const pre = el("dgPreset");
   if(pre){
@@ -1517,7 +1622,284 @@ function wireDrugCalc(){
       if(p){ p.value = "0"; S.pi = "0"; }
     });
   });
+  upd();
   initScrollRails();
+}
+
+/* ============================================================
+   術前風險分數:Apfel / STOP-Bang / RCRI / MELD
+   ------------------------------------------------------------
+   性別、年齡、BMI 與麻醉計算機共用 CALC_STATE;其餘勾選與檢驗值
+   存在 RISK_STATE,切換分頁時保留。
+   ============================================================ */
+const RISK_STATE = {
+  ap:{ ns:false, hx:false, op:false },
+  sb:{ s:false, t:false, o:false, p:false, n:false },
+  rc:{ hr:false, ihd:false, hf:false, cvd:false, dm:false, cr:false },
+  md:{ bil:"", inr:"", cr:"", na:"", alb:"", dia:false }
+};
+
+const APFEL_ITEMS = [
+  ["ns","不抽菸","非吸菸者"],
+  ["hx","曾有 PONV 或暈車","任一即算一項"],
+  ["op","術後預期使用鴉片類",""]
+];
+const APFEL_RISK = [10, 21, 39, 61, 79];
+const SB_ITEMS = [
+  ["s","S 打鼾","大聲到隔著門都聽得到"],
+  ["t","T 白天疲倦","常覺得累、白天想睡"],
+  ["o","O 被觀察到睡眠中停止呼吸",""],
+  ["p","P 高血壓","有高血壓或正在治療"],
+  ["n","N 頸圍 > 40 cm",""]
+];
+const RCRI_ITEMS = [
+  ["hr","高風險手術","腹腔內、胸腔內或鼠蹊韌帶以上血管手術"],
+  ["ihd","缺血性心臟病","MI 病史、運動測試陽性、心絞痛、使用 nitrate、心電圖有病理性 Q 波"],
+  ["hf","心衰竭病史","肺水腫、陣發性夜間呼吸困難、S3 或胸片肺血管重分布"],
+  ["cvd","腦血管疾病","中風或 TIA 病史"],
+  ["dm","使用胰島素治療的糖尿病",""],
+  ["cr","術前 Creatinine > 2 mg/dL",""]
+];
+const RCRI_LEE = ["0.4%","0.9%","6.6%","11%"];
+const RCRI_CCS = ["3.9%","6.0%","10.1%","15%"];
+
+function riskBmi(){
+  const ht = CALC_STATE.ht, wt = CALC_STATE.wt;
+  return (ht>0 && wt>0) ? wt/((ht/100)*(ht/100)) : null;
+}
+
+function apfelCalc(){
+  const a = RISK_STATE.ap;
+  const fem = CALC_STATE.sex === "F";
+  const n = (fem?1:0) + (a.ns?1:0) + (a.hx?1:0) + (a.op?1:0);
+  let adv;
+  if(n === 0) adv = "風險低,可不常規預防,依手術類型與麻醉方式判斷";
+  else if(n <= 2) adv = "建議併用 <b>兩種</b>不同機轉的止吐藥預防";
+  else adv = "高風險:建議 <b>三到四種</b>預防措施併用,並盡量減少誘發因子(如以 TIVA 取代吸入麻醉、減少鴉片類)";
+  return { n, pct:APFEL_RISK[n], adv };
+}
+
+function stopBangCalc(){
+  const s = RISK_STATE.sb;
+  const bmi = riskBmi();
+  const bmiHi = bmi!=null && bmi > 35;
+  const ageHi = CALC_STATE.age > 50;
+  const male = CALC_STATE.sex === "M";
+  const stop = (s.s?1:0) + (s.t?1:0) + (s.o?1:0) + (s.p?1:0);
+  const n = stop + (bmiHi?1:0) + (ageHi?1:0) + (s.n?1:0) + (male?1:0);
+  let lv, cls;
+  if(n >= 5){ lv = "高風險"; cls = "hi3"; }
+  else if(n >= 3){
+    if(stop >= 2 && (male || bmiHi || s.n)){ lv = "高風險"; cls = "hi3"; }
+    else { lv = "中風險"; cls = "hi2"; }
+  } else { lv = "低風險"; cls = "hi1"; }
+  return { n, stop, lv, cls, bmi, bmiHi, ageHi, male };
+}
+
+function rcriCalc(){
+  const r = RISK_STATE.rc;
+  const n = RCRI_ITEMS.reduce((a,[k])=>a + (r[k]?1:0), 0);
+  const i = Math.min(n, 3);
+  return { n, cls:["I","II","III","IV"][i], lee:RCRI_LEE[i], ccs:RCRI_CCS[i] };
+}
+
+function meldCalc(){
+  const m = RISK_STATE.md;
+  const bil = parseFloat(m.bil), inr = parseFloat(m.inr), cr0 = parseFloat(m.cr);
+  if(!(bil>0) || !(inr>0) || !(cr0>0)) return null;
+  const lo1 = x => Math.max(1, x);
+  const clamp = (x,a,b) => Math.min(b, Math.max(a, x));
+  const B = lo1(bil), I = lo1(inr);
+  /* MELD / MELD-Na:Cr 上限 4.0;透析者 Cr 以 4.0 計 */
+  const C4 = m.dia ? 4 : clamp(lo1(cr0), 1, 4);
+  const mi = 3.78*Math.log(B) + 11.2*Math.log(I) + 9.57*Math.log(C4) + 6.43;
+  const meld = clamp(Math.round(mi), 6, 40);
+  const naV = parseFloat(m.na), albV = parseFloat(m.alb);
+  let meldNa = null, meld3 = null, raw3 = null;
+  if(naV > 0){
+    const Na = clamp(naV, 125, 137);
+    const v = mi > 11 ? mi + 1.32*(137-Na) - 0.033*mi*(137-Na) : mi;
+    meldNa = clamp(Math.round(v), 6, 40);
+    if(albV > 0){
+      /* MELD 3.0:Cr 上限 3.0;透析者 Cr 以 3.0 計;Alb 限 1.5–3.5 */
+      const C3 = m.dia ? 3 : clamp(lo1(cr0), 1, 3);
+      const Al = clamp(albV, 1.5, 3.5);
+      raw3 = (CALC_STATE.sex==="F" ? 1.33 : 0) + 4.56*Math.log(B) + 0.82*(137-Na)
+        - 0.24*(137-Na)*Math.log(B) + 9.09*Math.log(I) + 11.14*Math.log(C3)
+        + 1.85*(3.5-Al) - 1.83*(3.5-Al)*Math.log(C3) + 6;
+      meld3 = clamp(Math.round(raw3), 6, 40);
+    }
+  }
+  return { meld, meldNa, meld3 };
+}
+
+function riskChk(group, k, label, hint){
+  const on = RISK_STATE[group][k];
+  return `<label class="rk-item${on?" on":""}"><input type="checkbox" data-g="${group}" data-k="${k}"${on?" checked":""}>`
+    + `<span class="rk-t">${label}${hint?`<span class="rk-h">${hint}</span>`:""}</span></label>`;
+}
+function riskAuto(on, label, why){
+  return `<div class="rk-item auto${on?" on":""}"><span class="rk-box">${on?"✓":""}</span>`
+    + `<span class="rk-t">${label}<span class="rk-h">${why}</span></span></div>`;
+}
+
+function riskApfelBody(){
+  const x = apfelCalc();
+  return `<div class="rk-list">
+      ${riskAuto(CALC_STATE.sex==="F", "女性", "依上方基本資料自動判斷")}
+      ${APFEL_ITEMS.map(([k,l,h])=>riskChk("ap",k,l,h)).join("")}
+    </div>
+    <div class="calc-out rk-out">
+      <div class="calc-cell hi"><div class="k">風險因子</div><div class="v">${x.n}<span class="u">/ 4 項</span></div></div>
+      <div class="calc-cell"><div class="k">預估 PONV 發生率</div><div class="v">${x.pct}<span class="u">%</span></div></div>
+    </div>
+    <div class="calc-note">${x.adv}。</div>`;
+}
+
+function riskSbBody(){
+  const x = stopBangCalc();
+  const bmiTxt = x.bmi==null ? "請先輸入身高體重" : `目前 BMI ${x.bmi.toFixed(1)}`;
+  return `<div class="rk-list">
+      ${SB_ITEMS.map(([k,l,h])=>riskChk("sb",k,l,h)).join("")}
+      ${riskAuto(x.bmiHi, "B BMI > 35", bmiTxt)}
+      ${riskAuto(x.ageHi, "A 年齡 > 50 歲", `目前 ${CALC_STATE.age} 歲`)}
+      ${riskAuto(x.male, "G 男性", "依上方基本資料自動判斷")}
+    </div>
+    <div class="calc-out rk-out">
+      <div class="calc-cell hi"><div class="k">STOP-Bang</div><div class="v">${x.n}<span class="u">/ 8 分</span></div></div>
+      <div class="calc-cell ${x.cls}"><div class="k">中重度 OSA 風險</div><div class="v">${x.lv}</div>
+        <div class="h">0–2 低、3–4 中、5–8 高;3–4 分且 STOP 前四項 ≥ 2 項,合併男性、BMI > 35 或頸圍 > 40 cm 者也算高風險</div></div>
+    </div>
+    <div class="calc-note">${x.cls==="hi3"
+      ? "<b class='w'>高風險</b>:預期面罩通氣與插管可能困難,備好困難呼吸道器材;術後鴉片類盡量減量、以多模式止痛為主,恢復室延長觀察血氧。"
+      : x.cls==="hi2" ? "中風險:留意困難呼吸道與術後呼吸抑制,鴉片類小量滴定。" : "低風險:依常規照護。"}</div>`;
+}
+
+function riskRcriBody(){
+  const x = rcriCalc();
+  return `<div class="rk-list">
+      ${RCRI_ITEMS.map(([k,l,h])=>riskChk("rc",k,l,h)).join("")}
+    </div>
+    <div class="calc-out rk-out">
+      <div class="calc-cell hi"><div class="k">RCRI</div><div class="v">${x.n}<span class="u">項 · Class ${x.cls}</span></div></div>
+      <div class="calc-cell"><div class="k">重大心臟事件(Lee 原始研究)</div><div class="v">${x.lee}</div></div>
+      <div class="calc-cell"><div class="k">30 天死亡、MI、心跳停止(CCS 2017)</div><div class="v">${x.ccs}</div></div>
+    </div>
+    <div class="calc-note">原始研究的事件率偏低,較新的外部驗證數字較高,兩欄並列供對照。CCS 指引建議 <b>RCRI ≥ 1 或年齡 ≥ 65 歲</b>者術前測 BNP 或 NT-proBNP 協助評估;是否進一步檢查依麻醉醫師與本院流程決定。</div>`;
+}
+
+function riskMeldBody(){
+  const m = RISK_STATE.md;
+  const x = meldCalc();
+  const v = n => n==null ? "—" : String(n);
+  const fld = (id, k, lab, step) => `<div class="calc-f"><label for="${id}">${lab}</label>`
+    + `<input id="${id}" data-mk="${k}" type="number" inputmode="decimal" min="0" step="${step}" value="${m[k]}"></div>`;
+  return `<div class="calc-form">
+      ${fld("mBil","bil","Bilirubin(mg/dL)","0.1")}
+      ${fld("mInr","inr","INR","0.1")}
+      ${fld("mCr","cr","Creatinine(mg/dL)","0.1")}
+      ${fld("mNa","na","Na(mEq/L)","1")}
+      ${fld("mAlb","alb","Albumin(g/dL)","0.1")}
+    </div>
+    <div class="rk-list" style="margin-top:10px">
+      ${riskChk("md","dia","過去一週透析 ≥ 2 次,或 CVVHD ≥ 24 小時","勾選後 Creatinine 直接以公式上限計")}
+    </div>
+    <div class="calc-out rk-out" id="mOut">
+      <div class="calc-cell hi"><div class="k">MELD</div><div class="v">${v(x&&x.meld)}</div><div class="h">Bilirubin、INR、Creatinine</div></div>
+      <div class="calc-cell"><div class="k">MELD-Na</div><div class="v">${v(x&&x.meldNa)}</div><div class="h">再加 Na</div></div>
+      <div class="calc-cell"><div class="k">MELD 3.0</div><div class="v">${v(x&&x.meld3)}</div><div class="h">再加 Albumin 與性別</div></div>
+    </div>
+    <div class="calc-note">分數範圍 6–40,越高代表 90 天死亡風險越高;非移植手術 MELD 偏高時,術前宜與外科及肝膽科討論手術時機。數值小於 1 以 1 計;Na 限 125–137、Albumin 限 1.5–3.5;Creatinine 上限 MELD 與 MELD-Na 為 4.0、MELD 3.0 為 3.0。適用 12 歲以上。肝臟移植分配採用哪個版本,以本院移植小組為準。</div>`;
+}
+
+function riskHtml(){
+  const rNew = isNewItem({ updated:"2026-10-10" })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  const box = (id, title, body) => `<div class="tool-box">
+      <h3 class="th-new">${title}${rNew}</h3>
+      <div id="${id}">${body}</div>
+    </div>`;
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">術前風險分數</div>
+      <div class="tool-sub">勾選即時出分數。性別、年齡與 BMI 和麻醉計算機共用,改一邊另一邊同步。分數只是風險分層的起點,處置仍依麻醉醫師判斷與本院流程。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>基本資料</h3>
+      <div class="calc-form">
+        <div class="calc-f"><label for="rSex">生理性別</label>
+          <select id="rSex"><option value="M"${CALC_STATE.sex==="M"?" selected":""}>男</option><option value="F"${CALC_STATE.sex==="F"?" selected":""}>女</option></select></div>
+        <div class="calc-f"><label for="rAge">年齡(歲)</label>
+          <input id="rAge" type="number" inputmode="numeric" min="0" max="120" step="1" value="${CALC_STATE.age}"></div>
+        <div class="calc-f"><label for="rHt">身高(cm)</label>
+          <input id="rHt" type="number" inputmode="decimal" min="100" max="230" step="0.5" value="${CALC_STATE.ht}"></div>
+        <div class="calc-f"><label for="rWt">體重(kg)</label>
+          <input id="rWt" type="number" inputmode="decimal" min="20" max="300" step="0.5" value="${CALC_STATE.wt}"></div>
+      </div>
+    </div>
+
+    ${box("rkAp", "Apfel 分數(PONV 風險)", riskApfelBody())}
+    ${box("rkSb", "STOP-Bang(OSA 篩檢)", riskSbBody())}
+    ${box("rkRc", "RCRI(非心臟手術心臟風險)", riskRcriBody())}
+    ${box("rkMd", "MELD(肝病嚴重度)", riskMeldBody())}
+
+    <div class="tool-box">
+      <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">10</span></summary>
+          <ol>
+            <li>Apfel, C. C., Läärä, E., Koivuranta, M., Greim, C. A., &amp; Roewer, N. (1999). A simplified risk score for predicting postoperative nausea and vomiting: Conclusions from cross-validations between two centers. Anesthesiology, 91(3), 693–700.</li>
+            <li>Gan, T. J., Belani, K. G., Bergese, S., et al. (2020). Fourth consensus guidelines for the management of postoperative nausea and vomiting. Anesthesia &amp; Analgesia, 131(2), 411–448.</li>
+            <li>Chung, F., Yegneswaran, B., Liao, P., et al. (2008). STOP questionnaire: A tool to screen patients for obstructive sleep apnea. Anesthesiology, 108(5), 812–821.</li>
+            <li>Chung, F., Abdullah, H. R., &amp; Liao, P. (2016). STOP-Bang questionnaire: A practical approach to screen for obstructive sleep apnea. Chest, 149(3), 631–638.</li>
+            <li>Lee, T. H., Marcantonio, E. R., Mangione, C. M., et al. (1999). Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery. Circulation, 100(10), 1043–1049.</li>
+            <li>Duceppe, E., Parlow, J., MacDonald, P., et al. (2017). Canadian Cardiovascular Society guidelines on perioperative cardiac risk assessment and management for patients who undergo noncardiac surgery. Canadian Journal of Cardiology, 33(1), 17–32.</li>
+            <li>Halvorsen, S., Mehilli, J., Cassese, S., et al. (2022). 2022 ESC guidelines on cardiovascular assessment and management of patients undergoing non-cardiac surgery. European Heart Journal, 43(39), 3826–3924.</li>
+            <li>Thompson, A., Fleischmann, K. E., Smilowitz, N. R., et al. (2024). 2024 AHA/ACC/ACS/ASNC/HRS/SCA/SCCT/SCMR/SVM guideline for perioperative cardiovascular management for noncardiac surgery. Circulation, 150(19), e351–e442.</li>
+            <li>Kim, W. R., Biggins, S. W., Kremers, W. K., et al. (2008). Hyponatremia and mortality among patients on the liver-transplant waiting list. New England Journal of Medicine, 359(10), 1018–1026.</li>
+            <li>Kim, W. R., Mannalithara, A., Heimbach, J. K., et al. (2021). MELD 3.0: The Model for End-Stage Liver Disease updated for the modern era. Gastroenterology, 161(6), 1887–1895.e4.</li>
+          </ol>
+        </details>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wireRisk(){
+  const pane = el("pane").querySelector(".tool-wrap");
+  if(!pane) return;
+  const paint = () => {
+    const set = (id, fn) => { const n = el(id); if(n) n.innerHTML = fn(); };
+    set("rkAp", riskApfelBody);
+    set("rkSb", riskSbBody);
+    set("rkRc", riskRcriBody);
+    const o = el("mOut");
+    if(o){
+      const x = meldCalc();
+      const vals = x ? [x.meld, x.meldNa, x.meld3] : [null,null,null];
+      o.querySelectorAll(".calc-cell .v").forEach((v,i)=>{ v.textContent = vals[i]==null ? "—" : String(vals[i]); });
+    }
+  };
+  pane.addEventListener("change", e => {
+    const t = e.target;
+    if(t.matches("input[type=checkbox][data-g]")){
+      RISK_STATE[t.dataset.g][t.dataset.k] = t.checked;
+      const lab = t.closest(".rk-item"); if(lab) lab.classList.toggle("on", t.checked);
+      paint();
+    }
+  });
+  pane.addEventListener("input", e => {
+    const t = e.target;
+    if(t.dataset && t.dataset.mk){ RISK_STATE.md[t.dataset.mk] = t.value; paint(); return; }
+    const map = { rSex:"sex", rAge:"age", rHt:"ht", rWt:"wt" };
+    const k = map[t.id]; if(!k) return;
+    if(k === "sex") CALC_STATE.sex = t.value;
+    else { const v = parseFloat(t.value); if(k==="age" ? (v>=0 && isFinite(v)) : v>0) CALC_STATE[k] = v; }
+    paint();
+  });
+  const sx = el("rSex"); if(sx) sx.addEventListener("change", ()=>{ CALC_STATE.sex = sx.value; paint(); });
 }
 
 /* ============================================================
@@ -1530,12 +1912,13 @@ function wireDrugCalc(){
 const CALC_CHIP = "麻醉計算機";
 const DRUG_CHIP = "藥物泡法";
 const FIND_CHIP = "藥物查詢";
-const TABS = [CALC_CHIP, DRUG_CHIP, FIND_CHIP];
+const RISK_CHIP = "術前風險";
+const TABS = [CALC_CHIP, RISK_CHIP, DRUG_CHIP, FIND_CHIP];
 let activeTab = CALC_CHIP;
 
 function renderChips(){
   el("chips").innerHTML = TABS.map(t=>
-    `<button class="chip${(t===DRUG_CHIP||t===FIND_CHIP)?" drug":""}" aria-pressed="${t===activeTab}" data-t="${t}">${t===FIND_CHIP?"🔍 "+t:t}</button>`
+    `<button class="chip${(t===DRUG_CHIP||t===FIND_CHIP)?" drug":(t===RISK_CHIP?" risk":"")}" aria-pressed="${t===activeTab}" data-t="${t}">${t===FIND_CHIP?"🔍 "+t:t}</button>`
   ).join("");
   el("chips").querySelectorAll(".chip").forEach(b=>{
     b.addEventListener("click", ()=>{ activeTab = b.dataset.t; renderChips(); renderPane(); });
@@ -1551,6 +1934,9 @@ function renderPane(){
     wireDrugSearch();
     const q = el("dsQ");
     if(q && !("ontouchstart" in window)) q.focus();
+  } else if(activeTab === RISK_CHIP){
+    p.innerHTML = riskHtml() + DISCLAIMER;
+    wireRisk();
   } else if(activeTab === DRUG_CHIP){
     p.innerHTML = drugPrepHtml() + DISCLAIMER;
     wireDrugCalc();
