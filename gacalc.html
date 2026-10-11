@@ -306,6 +306,17 @@ b.dv{font-weight:700;color:#4C7A57}
 .dg-arrow{font-size:22px;font-weight:700;color:var(--ink-soft);padding-bottom:16px}
 .dg-how{font-size:13.5px;line-height:1.65;color:var(--ink-soft);margin-top:8px}
 .dg-how b{color:var(--ink)}
+.rk-det>summary{flex-wrap:wrap;row-gap:4px}
+.rk-det>summary::after{margin-left:6px}
+.rk-sum{margin-left:auto;font-size:13.5px;font-weight:700;color:#4E5766;background:var(--slate-tint);
+  border-radius:12px;padding:2px 10px;white-space:nowrap}
+/* ---------- 回到上方分頁 ---------- */
+.to-top{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:50;
+  font:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--sage);
+  border:none;border-radius:22px;padding:10px 16px;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .2s}
+.to-top.show{opacity:.94;pointer-events:auto}
+.to-top:active{opacity:.75}
 /* ---------- 術前風險分數 ---------- */
 .rk-list{display:flex;flex-direction:column;gap:7px}
 .rk-item{display:flex;align-items:flex-start;gap:11px;padding:10px 12px;border:1px solid var(--line);
@@ -328,7 +339,9 @@ b.dv{font-weight:700;color:#4C7A57}
 .dw-tbl th{font-size:15px;padding:10px 12px}
 .dw-tbl td{padding:12px 12px;line-height:1.6}
 .dw-tbl .pill{font-size:16px;font-weight:700;padding:5px 13px;border-radius:7px}
-.dw-tbl{min-width:760px}
+.dw-tbl{min-width:620px}
+.dw-name{width:150px}
+.dw-tbl .dw-name .pill{display:table;margin-top:7px}
 .dw-dose{min-width:210px}
 .dw-dose .dd-w{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:3px}
 .dw-dose .dd-l{display:block;font-size:15.5px;line-height:1.6}
@@ -352,6 +365,8 @@ b.dv{font-weight:700;color:#4C7A57}
   <div class="body">
     <div class="pane" id="pane"></div>
   </div>
+
+  <button type="button" id="toTop" class="to-top" aria-label="回到上方分頁">▲ 回到分頁</button>
 
   <footer>
     <span id="foot">臨床輔助工具 · 使用前請對照所屬機構 protocol 與最新指引</span>
@@ -858,8 +873,8 @@ function calcHtml(){
       <h3 class="th-new">常用藥物該用哪個體重${isNewItem({ updated:"2026-10-11" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
       <div class="tool-scroll">
         <table class="tool-tbl dw-tbl">
-          <tr><th>藥物</th><th>依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr>
-          ${DOSE_WEIGHT.map(x=>`<tr><td>${x.d}</td><td><span class="pill ${x.cls}">${x.w}</span></td><td class="dw-dose">${doseHtml(x, r, CALC_STATE.wt)}</td><td>${x.n||"—"}</td></tr>`).join("")}
+          <tr><th>藥物／依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr>
+          ${DOSE_WEIGHT.map(x=>`<tr><td class="dw-name">${x.d}<span class="pill ${x.cls}">${x.w}</span></td><td class="dw-dose">${doseHtml(x, r, CALC_STATE.wt)}</td><td>${x.n||"—"}</td></tr>`).join("")}
         </table>
       </div>
       <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,老年、血行動力不穩、合併其他鎮靜藥時要往下修;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
@@ -1812,12 +1827,23 @@ function riskMeldBody(){
     <div class="calc-note">分數範圍 6–40,越高代表 90 天死亡風險越高;非移植手術 MELD 偏高時,術前宜與外科及肝膽科討論手術時機。數值小於 1 以 1 計;Na 限 125–137、Albumin 限 1.5–3.5;Creatinine 上限 MELD 與 MELD-Na 為 4.0、MELD 3.0 為 3.0。適用 12 歲以上。肝臟移植分配採用哪個版本,以本院移植小組為準。</div>`;
 }
 
+/* 收合時標題列顯示的目前分數 */
+function riskSummary(id){
+  if(id === "rkAp"){ const x = apfelCalc(); return `${x.n}/4 · ${x.pct}%`; }
+  if(id === "rkSb"){ const x = stopBangCalc(); return `${x.n}/8 · ${x.lv}`; }
+  if(id === "rkRc"){ const x = rcriCalc(); return `${x.n} 項 · Class ${x.cls}`; }
+  if(id === "rkMd"){ const x = meldCalc(); return x ? `MELD ${x.meld}` + (x.meld3!=null ? ` · 3.0 ${x.meld3}` : "") : "未輸入"; }
+  return "";
+}
+
 function riskHtml(){
   const rNew = isNewItem({ updated:"2026-10-10" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   const box = (id, title, body) => `<div class="tool-box">
-      <h3 class="th-new">${title}${rNew}</h3>
-      <div id="${id}">${body}</div>
+      <details class="tool-det rk-det">
+        <summary><span class="rk-ttl">${title}</span><span class="rk-sum" id="${id}S">${riskSummary(id)}</span>${rNew}</summary>
+        <div id="${id}">${body}</div>
+      </details>
     </div>`;
   return `
   <div class="tool-wrap">
@@ -1875,6 +1901,7 @@ function wireRisk(){
     set("rkAp", riskApfelBody);
     set("rkSb", riskSbBody);
     set("rkRc", riskRcriBody);
+    ["rkAp","rkSb","rkRc","rkMd"].forEach(id=>{ const n = el(id+"S"); if(n) n.textContent = riskSummary(id); });
     const o = el("mOut");
     if(o){
       const x = meldCalc();
@@ -1952,6 +1979,17 @@ el("foot").innerHTML = `臨床輔助工具 · 使用前請對照所屬機構 pro
   + (IS_CACHED_BUILD ? `　·　線上更新版 <button type="button" class="foot-btn" onclick="revertBuild()">還原內建版本</button>` : "");
 renderChips();
 renderPane();
+
+/* 往下捲超過一個畫面就顯示「回到分頁」,點了捲回最上方的分頁標籤 */
+(function(){
+  const b = el("toTop"); if(!b) return;
+  const sync = () => b.classList.toggle("show", window.scrollY > window.innerHeight * 0.8);
+  window.addEventListener("scroll", sync, { passive:true });
+  b.addEventListener("click", () => {
+    try{ window.scrollTo({ top:0, behavior:"smooth" }); }catch(e){ window.scrollTo(0,0); }
+  });
+  sync();
+})();
 
 /* ============================================================
    版本偵測與更新
