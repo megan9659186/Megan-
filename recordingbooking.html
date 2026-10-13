@@ -662,7 +662,7 @@ function openDelete(b){
     if(ok){ closeDelete(); }
     else { go.textContent="確定刪除"; check(); }
   });
-  $("delBody").replaceChildren(
+  $("delBody").replaceChildren(...[
     el("dl",{},
       el("dt",{},"錄製時段"),el("dd",{class:"mono"},b.slotLabel),
       el("dt",{},"講師"),el("dd",{},b.teacher, mine?"（這台電腦預約的）":""),
@@ -673,7 +673,8 @@ function openDelete(b){
     el("div",{style:"font-size:.84rem;color:var(--muted)"},"刪除後會通知負責學姐，並留下刪除紀錄。"),
     err,
     el("div",{class:"row",style:"justify-content:flex-end"},
-      el("button",{class:"btn",type:"button",onclick:closeDelete},"返回，不刪除"), go));
+      el("button",{class:"btn",type:"button",onclick:closeDelete},"返回，不刪除"), go)
+  ].filter(Boolean));
   check();
   $("delModal").hidden=false;
   (mine?who:nameIn).focus();
