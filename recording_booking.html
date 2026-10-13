@@ -123,6 +123,9 @@ th{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.05em}
 .empty{color:var(--muted);font-size:.9rem}
 .confirm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 footer{font-size:.82rem;color:var(--muted)}
+.pending{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;border-radius:var(--r);padding:12px 16px;background:var(--warn-soft);border:1px solid var(--warn);display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:.9rem}
+.pending strong{color:var(--warn)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:10;background:var(--accent);color:var(--accent-fg);padding:12px 18px;border-radius:10px;font-weight:500;box-shadow:0 6px 24px rgb(0 0 0 / .2);max-width:calc(100% - 32px)}
 @media (prefers-reduced-motion:no-preference){.slot,.date,.btn{transition:border-color .15s,background .15s}}
 </style>
 </head>
@@ -141,13 +144,14 @@ footer{font-size:.82rem;color:var(--muted)}
     <h2 id="h-steps" class="steps-title">預約流程</h2>
     <ol>
       <li><strong>在本頁預約</strong><span>選時段、填講師、選課程，按「確認預約」。時段與課程會立即鎖定。</span></li>
-      <li><strong>到 BeClass 登記</strong><span>打開教學部 BeClass，<b>每個時段各登記一次</b>。2 小時的課要登記 2 次。</span></li>
+      <li><strong>到 BeClass 登記</strong><span>打開教學部 BeClass，<b>1 小時的課登記 1 個時段，2 小時的課要登記 2 次</b>。</span></li>
       <li><strong>回本頁按「已完成 BeClass 登記」</strong><span>在預約總覽找到自己的預約按下去。還沒登記的預約，每天早上會寄提醒給負責學姐。</span></li>
     </ol>
   </section>
 
   <div class="notice" id="demoNotice" hidden>示範模式：尚未設定預約資料庫網址，目前的預約只存在這台電腦的瀏覽器裡，其他人看不到。請在程式碼最上方的 SCRIPT_URL 填入 Google Apps Script 網址。</div>
   <div class="notice" id="netNotice" hidden></div>
+  <div class="pending" id="pendingBanner" role="status" hidden></div>
 
   <div class="panes">
     <section class="pane" aria-labelledby="h-form">
@@ -203,6 +207,7 @@ footer{font-size:.82rem;color:var(--muted)}
 
   <footer>只有預約的人能在自己的電腦上取消預約。需要更改其他人的預約，請聯絡麻醉部教學負責人。</footer>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <script>
 /* ============ 設定區：日後要改的都在這裡 ============ */
@@ -358,7 +363,7 @@ function el(tag, attrs={}, ...kids){
 function levelChip(lv){ return lv in LEVEL_LABEL ? el("span",{class:"chip "+(lv==="basic"?"basic":"adv")},LEVEL_LABEL[lv]) : null; }
 /* 這筆預約在 BeClass 的登記狀態 */
 function bcStatus(b){
-  if(b.beclassDone==="yes") return {cls:"ok", text:"已完成 BeClass 登記"};
+  if(b.beclassDone==="yes") return {cls:"ok", text:"✓ 已完成 BeClass 登記"};
   const known=b.keys.filter(k=>k in BC_LEFT);
   if(!known.length) return {cls:"muted", text:"待 BeClass 登記"};
   const open=known.filter(k=>BC_LEFT[k]>0).length;
@@ -533,7 +538,7 @@ function renderTable(){
     const st=bcStatus(b);
     let action="";
     const confirmBtn = mine && b.beclassDone!=="yes"
-      ? el("button",{class:"btn small",type:"button",onclick:()=>confirmDone(b)},"已完成 BeClass 登記") : null;
+      ? el("button",{class:"btn small primary",type:"button",onclick:e=>confirmDone(b,e.currentTarget)},"按此確認：已完成 BeClass 登記") : null;
     if(mine){
       action = state.cancelAsk===k
         ? el("div",{class:"confirm"},el("span",{style:"font-size:.82rem"},"確定取消？"),
@@ -562,7 +567,22 @@ function renderSync(){
   $("sync").textContent = txt;
 }
 
-function renderAll(){ renderDates(); renderSlots(); renderForm(); renderProgress(); renderTable(); renderSync(); }
+/* 這台電腦預約、但還沒按「已完成 BeClass 登記」的預約 */
+function pendingMine(){
+  return state.bookings.filter(b=>isMine(b) && b.beclassDone!=="yes" && KEY_INFO[b.keys[0]] && !isPast(KEY_INFO[b.keys[0]].d, KEY_INFO[b.keys[0]].t));
+}
+function renderPending(){
+  const box=$("pendingBanner"), list=pendingMine();
+  if(!list.length){ box.hidden=true; return; }
+  box.replaceChildren(
+    el("strong",{},`您有 ${list.length} 筆預約還沒按「已完成 BeClass 登記」`),
+    el("span",{},"請先到 BeClass 登記，登記好再按確認："),
+    ...list.map(b=>el("button",{class:"btn small primary",type:"button",onclick:e=>confirmDone(b,e.currentTarget)},`${b.slotLabel} 已完成 BeClass 登記`)),
+    el("a",{class:"btn small",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"));
+  box.hidden=false;
+}
+
+function renderAll(){ renderDates(); renderSlots(); renderForm(); renderProgress(); renderTable(); renderSync(); renderPending(); }
 
 function beclassText(b){
   const c=courseById[b.courseId], list=slotList(b.keys);
@@ -588,7 +608,7 @@ function showDone(b){
       el("a",{class:"btn primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass 正式登記 ↗"), copyBtn),
     el("div",{class:"row",style:"border-top:1px solid var(--line);padding-top:12px"},
       el("span",{style:"font-size:.88rem"},"BeClass 都登記好之後："),
-      el("button",{class:"btn small",type:"button",onclick:()=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb); }},"我已完成 BeClass 登記"),
+      el("button",{class:"btn small primary",type:"button",onclick:e=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb,e.currentTarget); }},"我已完成 BeClass 登記"),
       el("button",{class:"btn small",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂")));
   $("bookForm").hidden=true; $("done").hidden=false;
 }
@@ -635,14 +655,26 @@ async function claim(){
   }finally{ state.busy=false; renderAll(); }
 }
 
-async function confirmDone(b){
+let toastTimer=null;
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.hidden=false;
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ t.hidden=true; },4000);
+}
+async function confirmDone(b,btn){
   const k=b.keys[0];
+  if(btn){ btn.disabled=true; btn.textContent="記錄中…"; }
   try{
     const res=await api.confirm({slotKey:k, token:myTokens[k]});
     if(res.bookings) applyBookings(res.bookings);
-    if(!res.ok) showErr(ERR[res.error]||"沒有成功，請重新整理後再試一次。");
-    else { $("done").hidden=true; $("bookForm").hidden=false; }
-  }catch{ showErr("連線失敗，請確認網路後再試一次。"); }
+    if(!res.ok){ showErr(ERR[res.error]||"沒有成功，請重新整理後再試一次。"); toast("沒有記錄成功，請再按一次"); }
+    else {
+      toast(`✓ 已記錄：${b.slotLabel} 完成 BeClass 登記`);
+      if(!$("done").hidden) $("done").replaceChildren(
+        el("strong",{},"✓ 已記錄完成 BeClass 登記，謝謝！"),
+        el("div",{style:"font-size:.9rem"},`${b.slotLabel}　${b.courseName}`),
+        el("div",{class:"row"},el("button",{class:"btn small",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂")));
+    }
+  }catch{ showErr("連線失敗，請確認網路後再試一次。"); toast("連線失敗，請再按一次"); }
   renderAll();
 }
 
@@ -667,6 +699,23 @@ $("course").addEventListener("change",onCourseChange);
 $("bookForm").addEventListener("submit",e=>{e.preventDefault(); claim();});
 $("teacher").value = lsGet("recTeacherName","");
 $("teacher").addEventListener("change",()=>lsSet("recTeacherName",$("teacher").value.trim()));
+
+/* 離開網頁前：還有預約沒確認 BeClass 登記，就跳出瀏覽器的離開提醒 */
+window.addEventListener("beforeunload", e=>{
+  if(pendingMine().length){ e.preventDefault(); e.returnValue=""; }
+});
+/* 真的離開了：通知負責學姐（每筆預約只寄一次） */
+window.addEventListener("pagehide", ()=>{
+  if(DEMO) return;
+  for(const b of pendingMine()){
+    const k=b.keys[0];
+    const body=JSON.stringify({action:"left", slotKey:k, token:myTokens[k]});
+    try{
+      const sent = navigator.sendBeacon && navigator.sendBeacon(SCRIPT_URL, new Blob([body],{type:"text/plain;charset=utf-8"}));
+      if(!sent) fetch(SCRIPT_URL,{method:"POST",body,keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"}}).catch(()=>{});
+    }catch{}
+  }
+});
 
 renderAll();
 refresh();
