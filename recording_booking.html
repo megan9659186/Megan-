@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>麻醉專師課程錄製預約</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: header band → two panes (slot board left, booking form right) → progress → overview table */
+:root{
+  --bg:#f5f7f6; --surface:#ffffff; --sunken:#eaefed; --line:#d5dedb;
+  --fg:#16231f; --muted:#5b6b66;
+  --accent:#17695f; --accent-fg:#ffffff; --accent-soft:#dcefeb;
+  --basic:#2f6db3; --basic-soft:#e3edf8;
+  --adv:#9a4a1c; --adv-soft:#f7e8dd;
+  --warn:#a3341f; --warn-soft:#fbe4df;
+  --font-display:"Noto Serif TC","Songti TC",serif;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:10px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1715; --surface:#16211e; --sunken:#1d2a27; --line:#2c3c38;
+  --fg:#e3ece9; --muted:#97a8a3;
+  --accent:#4fb3a5; --accent-fg:#06201c; --accent-soft:#1b3a35;
+  --basic:#7fb0ea; --basic-soft:#1c2b3d; --adv:#e3a173; --adv-soft:#3a2619;
+  --warn:#f08b76; --warn-soft:#3b1f19; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#0f1715; --surface:#16211e; --sunken:#1d2a27; --line:#2c3c38;
+  --fg:#e3ece9; --muted:#97a8a3;
+  --accent:#4fb3a5; --accent-fg:#06201c; --accent-soft:#1b3a35;
+  --basic:#7fb0ea; --basic-soft:#1c2b3d; --adv:#e3a173; --adv-soft:#3a2619;
+  --warn:#f08b76; --warn-soft:#3b1f19; color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:24px 56px;display:grid;gap:24px}
+h1,h2{font-family:var(--font-display);text-wrap:balance;margin:0}
+h1{font-size:clamp(1.5rem,3.2vw,2.1rem);line-height:1.3}
+h2{font-size:1.15rem}
+.eyebrow{font-size:.78rem;letter-spacing:.08em;color:var(--muted);font-weight:500}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+header{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:20px}
+header .lead{max-width:62ch;color:var(--muted);margin:.4rem 0 0}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:10px 16px;font:inherit;font-weight:500;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{padding:6px 12px;font-size:.85rem}
+.btn.danger{color:var(--warn);border-color:var(--warn)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.notice{border-radius:var(--r);padding:12px 16px;background:var(--warn-soft);color:var(--fg);border:1px solid var(--warn)}
+.panes{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.panes{grid-template-columns:minmax(0,1fr)}}
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:16px;min-width:0}
+.pane-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.step{font-family:var(--font-mono);font-size:.8rem;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:1px 9px}
+.sync{margin-left:auto;font-size:.78rem;color:var(--muted)}
+.dates{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.date{flex:0 0 auto;min-width:72px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);padding:8px 10px;cursor:pointer;font:inherit;text-align:center;display:grid;gap:2px}
+.date .d{font-family:var(--font-mono);font-size:1rem}
+.date .w{font-size:.75rem;color:var(--muted)}
+.date .n{font-size:.72rem;color:var(--accent)}
+.date[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.date.past{opacity:.5}
+.half{display:grid;gap:8px}
+.half h3{margin:0;font-size:.8rem;color:var(--muted);font-weight:500;letter-spacing:.06em}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.slot{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface);color:var(--fg);font:inherit;text-align:left;cursor:pointer;display:grid;gap:4px;min-height:76px;align-content:start}
+.slot .t{font-family:var(--font-mono);font-size:.95rem}
+.slot .s{font-size:.8rem;color:var(--muted)}
+.slot.open:hover{border-color:var(--accent)}
+.slot.sel{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.slot.taken{background:var(--sunken);cursor:default}
+.slot.taken .s{color:var(--fg)}
+.slot.past,.slot.full{background:var(--sunken);cursor:default;opacity:.6}
+.chip{display:inline-block;font-size:.72rem;border-radius:99px;padding:1px 8px;font-weight:500;width:max-content}
+.chip.basic{background:var(--basic-soft);color:var(--basic)}
+.chip.adv{background:var(--adv-soft);color:var(--adv)}
+.chip.mine{background:var(--accent-soft);color:var(--accent)}
+form{display:grid;gap:14px}
+label{display:grid;gap:6px;font-size:.88rem;font-weight:500}
+input,select{font:inherit;font-weight:400;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%}
+.chosen{border-radius:8px;background:var(--sunken);padding:10px 12px;font-size:.9rem}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;padding:9px;border:0;background:var(--surface);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"].b{background:var(--basic-soft);color:var(--basic);font-weight:700}
+.seg button[aria-pressed="true"].a{background:var(--adv-soft);color:var(--adv);font-weight:700}
+.fieldlabel{font-size:.88rem;font-weight:500}
+.msg{font-size:.88rem;border-radius:8px;padding:10px 12px}
+.msg.err{background:var(--warn-soft);color:var(--warn)}
+.done{border:1px solid var(--accent);background:var(--accent-soft);border-radius:var(--r);padding:16px;display:grid;gap:12px}
+.done pre{margin:0;white-space:pre-wrap;font-family:var(--font-body);font-size:.88rem;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.progress{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.plist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.plist li{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.plist li .who{color:var(--muted);text-align:right}
+.plist li.booked .name{font-weight:500}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.05em}
+.empty{color:var(--muted);font-size:.9rem}
+.confirm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+footer{font-size:.82rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.slot,.date,.btn{transition:border-color .15s,background .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">花蓮慈濟醫院 麻醉部 · 115 年數位課程錄製</div>
+      <h1>麻醉專科護理師訓練課程　錄製時段預約</h1>
+      <p class="lead">臨床老師或麻醉科醫師先在這裡選錄製時段與課程，送出後時段和課程都會被鎖定，其他人無法重複選擇。最後再到教學部 BeClass 完成正式登記。</p>
+    </div>
+    <a class="btn primary" id="beclassTop" target="_blank" rel="noopener">前往教學部 BeClass 登記 ↗</a>
+  </header>
+
+  <div class="notice" id="demoNotice" hidden>示範模式：尚未設定預約資料庫網址，目前的預約只存在這台電腦的瀏覽器裡，其他人看不到。請在程式碼最上方的 SCRIPT_URL 填入 Google Apps Script 網址。</div>
+  <div class="notice" id="netNotice" hidden></div>
+
+  <div class="panes">
+    <section class="pane" aria-labelledby="h-slot">
+      <div class="pane-head"><span class="step">1</span><h2 id="h-slot">選擇錄製日期與時段</h2><span class="sync" id="sync"></span></div>
+      <div class="dates" id="dates" role="group" aria-label="錄製日期"></div>
+      <div id="slotArea" class="half"></div>
+    </section>
+
+    <section class="pane" aria-labelledby="h-form">
+      <div class="pane-head"><span class="step">2</span><h2 id="h-form">填寫講師與課程</h2></div>
+      <div>
+        <form id="bookForm" novalidate>
+          <div class="chosen" id="chosen">尚未選擇時段，請先在左側點選。</div>
+          <label for="teacher">講師姓名
+            <input id="teacher" autocomplete="name" maxlength="30" placeholder="例：王小明">
+          </label>
+          <label for="role">講師身分
+            <select id="role">
+              <option value="麻醉科醫師">麻醉科醫師</option>
+              <option value="臨床教師（麻醉專師）">臨床教師（麻醉專師）</option>
+              <option value="其他">其他</option>
+            </select>
+          </label>
+          <div style="display:grid;gap:6px">
+            <span class="fieldlabel">課程類別</span>
+            <div class="seg" role="group" aria-label="課程類別">
+              <button type="button" class="b" id="lvBasic" aria-pressed="true">基礎課程</button>
+              <button type="button" class="a" id="lvAdv" aria-pressed="false">進階課程</button>
+            </div>
+          </div>
+          <label for="course">課程名稱
+            <select id="course"></select>
+          </label>
+          <div class="msg err" id="formErr" hidden></div>
+          <button class="btn primary" id="submitBtn" type="submit" disabled>確認預約</button>
+        </form>
+        <div class="done" id="done" hidden></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="pane" aria-labelledby="h-prog">
+    <div class="pane-head"><h2 id="h-prog">課程認領狀況</h2><span class="eyebrow">每門課只能由一位講師錄製</span></div>
+    <div class="progress" id="progress"></div>
+  </section>
+
+  <section class="pane" aria-labelledby="h-all">
+    <div class="pane-head"><h2 id="h-all">預約總覽</h2></div>
+    <div class="tablewrap" id="tableArea"></div>
+  </section>
+
+  <footer>只有預約的人能在自己的電腦上取消預約。需要更改其他人的預約，請聯絡麻醉部教學負責人。</footer>
+</div>
+
+<script>
+/* ============ 設定區：日後要改的都在這裡 ============ */
+/* 1. Google Apps Script 部署後的網址（以 /exec 結尾）。留空 = 示範模式 */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3eRDck_dhuvGBLYHrtNRgVJGTJ5VK8eTVkwj85sKHJUPadpN_pddxVcio01Feoq2r/exec";
+/* 2. 教學部 BeClass 登記網址 */
+const BECLASS_URL = "https://www.beclass.com/rid=3050258694b2e9980297";
+/* 3. 年度與可預約的日期、時段（與 BeClass 表單相同） */
+const YEAR = 2026;
+const DATES = ["10/1","10/2","10/5","10/6","10/7","10/8","10/9","10/12","10/13","10/14","10/15","10/16","10/19","10/20"];
+const TIMES = ["0800-0900","0900-1000","1000-1100","1100-1200","1400-1500","1500-1600","1600-1700"];
+/* 4. BeClass 上已被其他單位額滿的時段（手動更新） */
+const BECLASS_FULL = ["10/12 1400-1500","10/12 1500-1600"];
+/* 5. 課程清單（代碼不可重複；基礎用 B 開頭、進階用 A 開頭，後面兩位數字） */
+const COURSES = {
+  basic: [
+    ["B01","麻醉機檢查與操作"],["B02","麻醉生理監測與判讀"],["B03","呼吸道評估與處置"],["B04","常用麻醉藥物學"],
+    ["B05","全身麻醉誘導與維持護理"],["B06","區域麻醉護理"],["B07","麻醉後恢復室照護"],["B08","輸液與輸血管理"]
+  ],
+  advanced: [
+    ["A01","小兒麻醉照護"],["A02","心臟手術麻醉照護"],["A03","肝臟移植麻醉照護"],["A04","困難氣道處理"],
+    ["A05","產科麻醉照護"],["A06","神經外科麻醉照護"],["A07","胸腔手術與單肺通氣"],["A08","麻醉危機處理"]
+  ]
+};
+/* =================================================== */
+
+const LEVEL_LABEL = {basic:"基礎", advanced:"進階"};
+const WD = ["日","一","二","三","四","五","六"];
+const REFRESH_MS = 20000;
+
+const courseById = {};
+for (const lv of ["basic","advanced"]) for (const [id,name] of COURSES[lv]) courseById[id] = {id,name,level:lv};
+
+function slotKey(d,t){ const [m,dd]=d.split("/"); return m.padStart(2,"0")+dd.padStart(2,"0")+"-"+t.slice(0,4); }
+function slotStart(d,t){ const [m,dd]=d.split("/"); return new Date(`${YEAR}-${m.padStart(2,"0")}-${dd.padStart(2,"0")}T${t.slice(0,2)}:${t.slice(2,4)}:00+08:00`); }
+function weekday(d){ const [m,dd]=d.split("/"); return WD[new Date(Date.UTC(YEAR,+m-1,+dd)).getUTCDay()]; }
+function isPast(d,t){ return slotStart(d,t).getTime() <= Date.now(); }
+
+/* ---------- 本機儲存（自己的取消密碼、姓名） ---------- */
+function lsGet(k,def){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):def; }catch{ return def; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
+let myTokens = lsGet("recBookingTokens",{});   // { slotKey: token }
+
+/* ---------- 資料存取：Apps Script 或示範模式 ---------- */
+const DEMO = !SCRIPT_URL;
+const api = DEMO ? {
+  async list(){ return {ok:true, bookings: lsGet("recBookingDemo",[])}; },
+  async book(p){
+    const all=lsGet("recBookingDemo",[]);
+    if(all.some(b=>b.slotKey===p.slotKey)) return {ok:false,error:"slot_taken",bookings:all};
+    if(all.some(b=>b.courseId===p.courseId)) return {ok:false,error:"course_taken",bookings:all};
+    const token=Math.random().toString(36).slice(2);
+    const {action,...rec}=p; all.push({...rec,createdAt:new Date().toISOString(),_t:token});
+    lsSet("recBookingDemo",all); return {ok:true,token,bookings:all};
+  },
+  async cancel(p){
+    const all=lsGet("recBookingDemo",[]); const i=all.findIndex(b=>b.slotKey===p.slotKey&&b._t===p.token);
+    if(i<0) return {ok:false,error:"not_allowed"}; all.splice(i,1); lsSet("recBookingDemo",all); return {ok:true,bookings:all};
+  }
+} : {
+  async list(){ const r=await fetch(SCRIPT_URL,{cache:"no-store"}); return r.json(); },
+  async book(p){ return post({action:"book",...p}); },
+  async cancel(p){ return post({action:"cancel",...p}); }
+};
+async function post(obj){
+  // 用 text/plain 送出，避免瀏覽器的跨網域預檢
+  const r=await fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify(obj),headers:{"Content-Type":"text/plain;charset=utf-8"}});
+  return r.json();
+}
+
+const state = { slots:{}, courses:{}, date:null, sel:null, level:"basic", busy:false, cancelAsk:null, loaded:false, lastSync:null };
+
+const $ = id => document.getElementById(id);
+function el(tag, attrs={}, ...kids){
+  const e=document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs)){
+    if(k==="class") e.className=v; else if(k.startsWith("on")) e.addEventListener(k.slice(2),v);
+    else if(v!==false && v!=null) e.setAttribute(k, v===true?"":v);
+  }
+  for(const k of kids.flat()){ if(k==null||k===false) continue; e.append(k.nodeType?k:document.createTextNode(String(k))); }
+  return e;
+}
+function levelChip(lv){ return lv in LEVEL_LABEL ? el("span",{class:"chip "+(lv==="basic"?"basic":"adv")},LEVEL_LABEL[lv]) : null; }
+function isMine(k){ return !!myTokens[k]; }
+
+function applyBookings(list){
+  const s={}, c={};
+  for(const b of list||[]){ if(!b||!b.slotKey) continue; s[b.slotKey]=b; if(b.courseId) c[b.courseId]=b; }
+  state.slots=s; state.courses=c; state.loaded=true; state.lastSync=new Date();
+  // 自己的預約若已被管理者刪除，就把本機密碼清掉
+  let changed=false; for(const k of Object.keys(myTokens)) if(!s[k]){ delete myTokens[k]; changed=true; }
+  if(changed) lsSet("recBookingTokens",myTokens);
+}
+
+state.date = DATES.find(d => TIMES.some(t=>!isPast(d,t))) || DATES[DATES.length-1];
+
+function renderDates(){
+  const box=$("dates"); box.replaceChildren();
+  for(const d of DATES){
+    const open = TIMES.filter(t=>!isPast(d,t) && !state.slots[slotKey(d,t)] && !BECLASS_FULL.includes(d+" "+t)).length;
+    const allPast = TIMES.every(t=>isPast(d,t));
+    box.append(el("button",{type:"button",class:"date"+(allPast?" past":""),"aria-pressed":String(d===state.date),
+      onclick:()=>{state.date=d; renderAll();}},
+      el("span",{class:"d"},d), el("span",{class:"w"},"週"+weekday(d)),
+      el("span",{class:"n"}, allPast ? "已過" : `可約 ${open}`)));
+  }
+}
+
+function renderSlots(){
+  const area=$("slotArea"); area.replaceChildren();
+  const groups=[["上午",TIMES.filter(t=>+t.slice(0,2)<12)],["下午",TIMES.filter(t=>+t.slice(0,2)>=12)]];
+  for(const [label,ts] of groups){
+    if(!ts.length) continue;
+    const grid=el("div",{class:"slots"});
+    for(const t of ts){
+      const k=slotKey(state.date,t), b=state.slots[k];
+      const full=BECLASS_FULL.includes(state.date+" "+t);
+      const past=isPast(state.date,t);
+      const time=el("span",{class:"t"},t.slice(0,2)+":"+t.slice(2,4)+"–"+t.slice(5,7)+":"+t.slice(7));
+      if(b){
+        const c=courseById[b.courseId];
+        grid.append(el("div",{class:"slot taken"},time,
+          el("span",{class:"s"},b.teacher+(isMine(k)?"（我）":"")),
+          el("span",{class:"s"},c?c.name:b.courseName), levelChip(c?c.level:b.level)));
+      } else if(past){
+        grid.append(el("div",{class:"slot past"},time,el("span",{class:"s"},"已過")));
+      } else if(full){
+        grid.append(el("div",{class:"slot full"},time,el("span",{class:"s"},"BeClass 已額滿")));
+      } else {
+        const sel = state.sel===k;
+        grid.append(el("button",{type:"button",class:"slot open"+(sel?" sel":""),"aria-pressed":String(sel),
+          onclick:()=>{ state.sel = sel?null:k; $("done").hidden=true; $("bookForm").hidden=false; showErr(""); renderAll(); }},
+          time, el("span",{class:"s"}, sel?"已選擇":"可預約")));
+      }
+    }
+    area.append(el("div",{class:"half"},el("h3",{},label),grid));
+  }
+}
+
+function selInfo(){
+  if(!state.sel) return null;
+  for(const d of DATES) for(const t of TIMES) if(slotKey(d,t)===state.sel) return {d,t};
+  return null;
+}
+
+function renderForm(){
+  if(state.sel && state.slots[state.sel]) state.sel=null;
+  const info=selInfo();
+  $("chosen").replaceChildren(info
+    ? el("span",{},"錄製時段：",el("strong",{class:"mono"},`${info.d}（${weekday(info.d)}） ${info.t}`))
+    : "尚未選擇時段，請先在左側點選。");
+  $("lvBasic").setAttribute("aria-pressed",String(state.level==="basic"));
+  $("lvAdv").setAttribute("aria-pressed",String(state.level==="advanced"));
+  const sel=$("course"), prev=sel.value; sel.replaceChildren(el("option",{value:""},"請選擇課程"));
+  for(const [id,name] of COURSES[state.level]){
+    const taken=state.courses[id];
+    sel.append(el("option",{value:id,disabled:!!taken}, taken?`${name}（已由 ${taken.teacher} 認領）`:name));
+  }
+  if(prev && courseById[prev]?.level===state.level && !state.courses[prev]) sel.value=prev;
+  updateSubmit();
+}
+function updateSubmit(){
+  $("submitBtn").disabled = !(state.loaded && state.sel && $("teacher").value.trim() && $("course").value) || state.busy;
+  $("submitBtn").textContent = state.busy ? "預約中…" : "確認預約";
+}
+
+function renderProgress(){
+  const box=$("progress"); box.replaceChildren();
+  for(const lv of ["basic","advanced"]){
+    const list=el("ul",{class:"plist"});
+    let n=0;
+    for(const [id,name] of COURSES[lv]){
+      const c=state.courses[id]; if(c) n++;
+      list.append(el("li",{class:c?"booked":""},el("span",{class:"name"},name),
+        el("span",{class:"who"}, c ? `${c.teacher}・${c.slotLabel||""}` : "尚未認領")));
+    }
+    box.append(el("div",{style:"display:grid;gap:10px;min-width:0"},
+      el("div",{class:"row"},levelChip(lv),el("strong",{},LEVEL_LABEL[lv]+"課程"),
+        el("span",{class:"mono",style:"color:var(--muted);font-size:.85rem"},`${n} / ${COURSES[lv].length}`)), list));
+  }
+}
+
+function renderTable(){
+  const area=$("tableArea");
+  const rows=Object.entries(state.slots).sort(([a],[b])=>a.localeCompare(b));
+  if(!rows.length){ area.replaceChildren(el("p",{class:"empty"}, state.loaded?"還沒有任何預約。選好時段和課程後，預約會出現在這裡。":"讀取預約資料中…")); return; }
+  const tb=el("tbody");
+  for(const [k,b] of rows){
+    const c=courseById[b.courseId], mine=isMine(k);
+    let action="";
+    if(mine){
+      action = state.cancelAsk===k
+        ? el("div",{class:"confirm"},el("span",{style:"font-size:.82rem"},"確定取消？"),
+            el("button",{class:"btn small danger",type:"button",onclick:()=>cancel(k)},"取消預約"),
+            el("button",{class:"btn small",type:"button",onclick:()=>{state.cancelAsk=null;renderTable();}},"保留"))
+        : el("button",{class:"btn small",type:"button",onclick:()=>{state.cancelAsk=k;renderTable();}},"取消");
+    }
+    tb.append(el("tr",{},
+      el("td",{class:"mono"},b.slotLabel),
+      el("td",{},b.teacher, mine?el("span",{class:"chip mine",style:"margin-left:6px"},"我"):null),
+      el("td",{},b.role||""),
+      el("td",{},levelChip(c?c.level:b.level)||""),
+      el("td",{},c?c.name:b.courseName),
+      el("td",{},action)));
+  }
+  area.replaceChildren(el("table",{},el("thead",{},el("tr",{},
+    ["錄製時段","講師","身分","類別","課程名稱",""].map(h=>el("th",{},h)))),tb));
+}
+
+function renderSync(){
+  $("sync").textContent = state.lastSync
+    ? `更新於 ${state.lastSync.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false})}`
+    : "讀取中…";
+}
+
+function renderAll(){ renderDates(); renderSlots(); renderForm(); renderProgress(); renderTable(); renderSync(); }
+
+function beclassText(b){
+  const c=courseById[b.courseId];
+  return `講師名稱：${b.teacher}\n服務項目：數位課程錄製\n錄製日期與時段：${b.slotLabel}\n課程類型：院內教學\n授課主題：【麻醉專師${LEVEL_LABEL[c.level]}】${c.name}`;
+}
+function showDone(b){
+  const text=beclassText(b);
+  const pre=el("pre",{},text);
+  const copyBtn=el("button",{class:"btn small",type:"button",onclick:async()=>{
+    try{ await navigator.clipboard.writeText(text); copyBtn.textContent="已複製"; }
+    catch{ const r=document.createRange(); r.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent="已選取，請按複製"; }
+  }},"複製登記資料");
+  $("done").replaceChildren(
+    el("strong",{},"預約完成，時段與課程已鎖定。"),
+    el("div",{style:"font-size:.9rem"},"還差一步：請到教學部 BeClass 填寫正式登記，選擇同一個時段，並照下列內容填寫。"),
+    pre,
+    el("div",{class:"row"},
+      el("a",{class:"btn primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass 正式登記 ↗"), copyBtn,
+      el("button",{class:"btn small",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂")));
+  $("bookForm").hidden=true; $("done").hidden=false;
+}
+
+function showErr(m){ const e=$("formErr"); e.textContent=m; e.hidden=!m; }
+const ERR = {
+  slot_taken:"這個時段剛剛被別人預約走了，請改選其他時段。",
+  course_taken:"這門課剛剛被其他講師認領了，請改選其他課程。",
+  busy:"目前同時預約的人較多，請等幾秒再按一次。",
+  bad_request:"資料不完整，請確認講師姓名、時段和課程都已填好。",
+  not_allowed:"只有預約的人能在自己的電腦上取消這筆預約。"
+};
+
+async function refresh(){
+  try{
+    const res=await api.list();
+    if(!res||!res.ok) throw new Error();
+    applyBookings(res.bookings); $("netNotice").hidden=true;
+  }catch{
+    $("netNotice").textContent="無法讀取預約資料，請確認網路連線後重新整理頁面。";
+    $("netNotice").hidden=false;
+  }
+  renderAll();
+}
+
+async function claim(){
+  const info=selInfo(), courseId=$("course").value, teacher=$("teacher").value.trim();
+  if(!info||!courseId||!teacher) return;
+  const course=courseById[courseId];
+  const payload={slotKey:state.sel, slotLabel:`${info.d} ${info.t}`, teacher, role:$("role").value,
+    level:course.level, courseId, courseName:course.name};
+  state.busy=true; showErr(""); updateSubmit();
+  try{
+    const res=await api.book(payload);
+    if(res.bookings) applyBookings(res.bookings);
+    if(!res.ok){ showErr(ERR[res.error]||"預約沒有成功，請重新整理後再試一次。"); return; }
+    myTokens[payload.slotKey]=res.token; lsSet("recBookingTokens",myTokens);
+    state.sel=null;
+    showDone(payload);
+  }catch{
+    showErr("連線失敗，預約沒有送出。請確認網路後再試一次。");
+  }finally{ state.busy=false; renderAll(); }
+}
+
+async function cancel(k){
+  state.cancelAsk=null;
+  try{
+    const res=await api.cancel({slotKey:k, token:myTokens[k]});
+    if(res.bookings) applyBookings(res.bookings);
+    if(!res.ok) showErr(ERR[res.error]||"取消沒有成功，請重新整理後再試一次。");
+    else { delete myTokens[k]; lsSet("recBookingTokens",myTokens); }
+  }catch{ showErr("連線失敗，取消沒有送出。請確認網路後再試一次。"); }
+  renderAll();
+}
+
+$("beclassTop").href=BECLASS_URL;
+$("demoNotice").hidden=!DEMO;
+$("lvBasic").onclick=()=>{state.level="basic"; renderForm();};
+$("lvAdv").onclick=()=>{state.level="advanced"; renderForm();};
+$("teacher").addEventListener("input",updateSubmit);
+$("course").addEventListener("change",updateSubmit);
+$("bookForm").addEventListener("submit",e=>{e.preventDefault(); claim();});
+$("teacher").value = lsGet("recTeacherName","");
+$("teacher").addEventListener("change",()=>lsSet("recTeacherName",$("teacher").value.trim()));
+
+renderAll();
+refresh();
+setInterval(()=>{ if(document.visibilityState==="visible" && !state.busy) refresh(); }, REFRESH_MS);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") refresh(); });
+</script>
+</body>
+</html>
