@@ -109,9 +109,16 @@ input,select{font:inherit;font-weight:400;padding:9px 11px;border-radius:8px;bor
 .plist li .hrs{color:var(--muted);font-size:.8rem;margin-left:4px;white-space:nowrap}
 .msg.err{background:var(--warn-soft);color:var(--warn)}
 .done{border:1px solid var(--accent);background:var(--accent-soft);border-radius:var(--r);padding:16px;display:grid;gap:12px}
+.done-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
+.done-head strong{color:var(--accent);font-size:1.05rem}
+.done-steps{margin:0;padding-left:1.3em;display:grid;gap:14px;font-size:.9rem}
+.done-steps li{display:grid;gap:8px}
+.done-steps li::marker{color:var(--accent);font-weight:700}
+.linkbtn{border:0;background:none;color:var(--muted);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;justify-self:start;padding:0}
 .done pre{margin:0;white-space:pre-wrap;font-family:var(--font-body);font-size:.88rem;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.progress{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.progress{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start}
+.progress .plist{align-content:start}
 .plist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .plist li{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;border-bottom:1px dashed var(--line);padding-bottom:6px}
 .plist li .who{color:var(--muted);text-align:right}
@@ -123,8 +130,9 @@ th{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.05em}
 .empty{color:var(--muted);font-size:.9rem}
 .confirm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 footer{font-size:.82rem;color:var(--muted)}
-.pending{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;border-radius:var(--r);padding:12px 16px;background:var(--warn-soft);border:1px solid var(--warn);display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:.9rem}
+.pending{border-radius:var(--r);padding:10px 16px;background:var(--warn-soft);border-left:4px solid var(--warn);display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-size:.9rem}
 .pending strong{color:var(--warn)}
+.pending a{color:var(--warn);font-weight:500}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:10;background:var(--accent);color:var(--accent-fg);padding:12px 18px;border-radius:10px;font-weight:500;box-shadow:0 6px 24px rgb(0 0 0 / .2);max-width:calc(100% - 32px)}
 @media (prefers-reduced-motion:no-preference){.slot,.date,.btn{transition:border-color .15s,background .15s}}
 </style>
@@ -299,7 +307,11 @@ function applyBeClass(bc){
   buildKeyInfo();
   if(!DATES.includes(state.date) || DATES.indexOf(state.date) < DATES.indexOf(firstOpenDate())) state.date = firstOpenDate();
 }
-function firstOpenDate(){ return DATES.find(d => TIMES.some(t=>slotExists(d,t) && !isPast(d,t))) || DATES[DATES.length-1]; }
+/* 今天（含）以後的日期才顯示 */
+function isPastDay(d){ const [m,dd]=d.split("/"); return new Date(`${yearFor(m)}-${m.padStart(2,"0")}-${dd.padStart(2,"0")}T23:59:59+08:00`).getTime() < Date.now(); }
+function visibleDates(){ return DATES.filter(d=>!isPastDay(d)); }
+/* 預設選今天；今天時段都過了就選下一個還能預約的日子 */
+function firstOpenDate(){ const v=visibleDates(); return v.find(d => TIMES.some(t=>slotExists(d,t) && !isPast(d,t))) || v[0] || null; }
 function isPast(d,t){ return slotStart(d,t).getTime() <= Date.now(); }
 function keysOf(b){ return String(b.slotKey||"").split(",").filter(Boolean); }
 /* 幾個連續時段合併成一個標籤，例如 10/14 0900-1100 */
@@ -415,18 +427,22 @@ function currentPlan(){
 
 function renderDates(){
   const box=$("dates"); box.replaceChildren();
-  for(const d of DATES){
+  const days=visibleDates();
+  if(!days.length){ box.append(el("p",{class:"empty"},"目前沒有開放預約的日期，請稍後再查看。")); return; }
+  if(!days.includes(state.date)) state.date=firstOpenDate();
+  for(const d of days){
     const open = TIMES.filter(t=>!slotProblem(d,t)).length;
-    const allPast = TIMES.filter(t=>slotExists(d,t)).every(t=>isPast(d,t));
+    const allPast = TIMES.filter(t=>slotExists(d,t)).every(t=>isPast(d,t));   // 今天的時段都過了
     box.append(el("button",{type:"button",class:"date"+(allPast?" past":""),"aria-pressed":String(d===state.date),
       onclick:()=>{state.date=d; renderAll();}},
       el("span",{class:"d"},d), el("span",{class:"w"},"週"+weekday(d)),
-      el("span",{class:"n"}, allPast ? "已過" : `可約 ${open}`)));
+      el("span",{class:"n"}, allPast ? "今日已截止" : `可約 ${open}`)));
   }
 }
 
 function renderSlots(){
   const area=$("slotArea"); area.replaceChildren();
+  if(!state.date) return;
   const plan=currentPlan();
   const pending=new Set(plan&&plan.ok?plan.keys.slice(1):[]);
   const groups=[["上午",TIMES.filter(t=>+t.slice(0,2)<12)],["下午",TIMES.filter(t=>+t.slice(0,2)>=12)]];
@@ -575,10 +591,9 @@ function renderPending(){
   const box=$("pendingBanner"), list=pendingMine();
   if(!list.length){ box.hidden=true; return; }
   box.replaceChildren(
-    el("strong",{},`您有 ${list.length} 筆預約還沒按「已完成 BeClass 登記」`),
-    el("span",{},"請先到 BeClass 登記，登記好再按確認："),
-    ...list.map(b=>el("button",{class:"btn small primary",type:"button",onclick:e=>confirmDone(b,e.currentTarget)},`${b.slotLabel} 已完成 BeClass 登記`)),
-    el("a",{class:"btn small",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"));
+    el("strong",{},`您有 ${list.length} 筆預約還沒確認 BeClass 登記`),
+    el("span",{},"BeClass 登記好後，請到下方預約總覽按確認。"),
+    el("a",{href:"#h-all"},"前往預約總覽 ↓"));
   box.hidden=false;
 }
 
@@ -598,18 +613,16 @@ function showDone(b){
     try{ await navigator.clipboard.writeText(text); copyBtn.textContent="已複製"; }
     catch{ const r=document.createRange(); r.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent="已選取，請按複製"; }
   }},"複製登記資料");
+  const confirmBtn=el("button",{class:"btn primary",type:"button",style:"width:100%;justify-content:center",
+    onclick:e=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb,e.currentTarget); }},"我已完成 BeClass 登記");
   $("done").replaceChildren(
-    el("strong",{},`預約完成，${n>1?`${n} 個時段`:"時段"}與課程已鎖定。`),
-    el("div",{style:"font-size:.9rem"},"還差一步：請到教學部 BeClass 填寫正式登記，選擇相同的時段，並照下列內容填寫。"),
-    n>1 ? el("div",{class:"hint"},el("strong",{},`這門課要在 BeClass 登記 ${n} 次`),
-      el("div",{},"BeClass 一次只能登記 1 小時。送出第一個時段後，請回到 BeClass 報名頁重新填一次表單、選下一個時段，直到每個時段都登記完。")) : null,
-    pre,
-    el("div",{class:"row"},
-      el("a",{class:"btn primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass 正式登記 ↗"), copyBtn),
-    el("div",{class:"row",style:"border-top:1px solid var(--line);padding-top:12px"},
-      el("span",{style:"font-size:.88rem"},"BeClass 都登記好之後："),
-      el("button",{class:"btn small primary",type:"button",onclick:e=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb,e.currentTarget); }},"我已完成 BeClass 登記"),
-      el("button",{class:"btn small",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂")));
+    el("div",{class:"done-head"},el("strong",{},"✓ 預約完成"),el("span",{class:"mono"},b.slotLabel)),
+    el("ol",{class:"done-steps"},
+      el("li",{},el("div",{},"複製登記資料，前往 BeClass", n>1?el("b",{},`（共要登記 ${n} 次）`):null),
+        pre,
+        el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"), copyBtn)),
+      el("li",{},el("div",{},"BeClass 都登記好後，按這裡確認"), confirmBtn)),
+    el("button",{class:"linkbtn",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂"));
   $("bookForm").hidden=true; $("done").hidden=false;
 }
 
@@ -666,7 +679,11 @@ async function confirmDone(b,btn){
   try{
     const res=await api.confirm({slotKey:k, token:myTokens[k]});
     if(res.bookings) applyBookings(res.bookings);
-    if(!res.ok){ showErr(ERR[res.error]||"沒有成功，請重新整理後再試一次。"); toast("沒有記錄成功，請再按一次"); }
+    if(!res.ok){
+      const why = res.error==="bad_request" ? "後台 Apps Script 不是最新版，請管理者更新並部署新版本"
+        : (ERR[res.error]||"請重新整理後再試一次");
+      showErr("沒有記錄成功："+why); toast("沒有記錄成功："+why);
+    }
     else {
       toast(`✓ 已記錄：${b.slotLabel} 完成 BeClass 登記`);
       if(!$("done").hidden) $("done").replaceChildren(
