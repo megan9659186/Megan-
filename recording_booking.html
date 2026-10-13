@@ -84,6 +84,23 @@ header .lead{max-width:62ch;color:var(--muted);margin:.4rem 0 0}
 form{display:grid;gap:14px}
 label{display:grid;gap:6px;font-size:.88rem;font-weight:500}
 input,select{font:inherit;font-weight:400;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%}
+.formnote{margin:0;font-size:.84rem;color:var(--muted)}
+.grp{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px 14px;margin:0;display:grid;gap:12px;min-width:0}
+.grp legend{padding:0 6px;font-weight:700;font-size:.9rem}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.tiny{font-size:.78rem;color:var(--muted)}
+.radios{display:grid;gap:6px}
+.radios label.r{display:flex;align-items:center;gap:8px;font-weight:400;font-size:.9rem}
+.radios input[type=radio]{width:auto;margin:0}
+.radios #tUnitOther{flex:1;min-width:0;padding:6px 9px}
+.fixed{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;background:var(--sunken);border-radius:8px;padding:8px 12px}
+.fixed span{color:var(--muted)}
+.ftable{width:100%;border-collapse:collapse;font-size:.86rem;min-width:0}
+.ftable td{padding:6px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.ftable td.k{color:var(--muted);white-space:nowrap;width:1%}
+.ftable td.c{width:1%;text-align:right}
+.ftable button{border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:6px;font:inherit;font-size:.78rem;padding:3px 8px;cursor:pointer;white-space:nowrap}
+.ftable button.okc{border-color:var(--accent);color:var(--accent)}
 .chosen{border-radius:8px;background:var(--sunken);padding:10px 12px;font-size:.9rem}
 .seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{font:inherit;padding:9px;border:0;background:var(--surface);color:var(--muted);cursor:pointer}
@@ -121,12 +138,12 @@ input,select{font:inherit;font-weight:400;padding:9px 11px;border-radius:8px;bor
 .progress .plist{align-content:start}
 .plist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .plist li{display:flex;justify-content:space-between;gap:10px;font-size:.88rem;border-bottom:1px dashed var(--line);padding-bottom:6px}
-.plist li .who{color:var(--muted);text-align:right}
+.plist li .who{color:var(--muted);text-align:right;white-space:nowrap}
 .plist li.booked .name{font-weight:500}
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:760px}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.05em}
+th{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.05em;white-space:nowrap}
 .empty{color:var(--muted);font-size:.9rem}
 .confirm{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 footer{font-size:.82rem;color:var(--muted)}
@@ -167,27 +184,56 @@ footer{font-size:.82rem;color:var(--muted)}
       <div>
         <form id="bookForm" novalidate>
           <div class="chosen" id="chosen">尚未選擇時段，請在右側點選。</div>
-          <label for="teacher">講師姓名
-            <input id="teacher" autocomplete="name" maxlength="30" placeholder="例：王小明">
-          </label>
-          <label for="role">講師身分
-            <select id="role">
-              <option value="麻醉科醫師">麻醉科醫師</option>
-              <option value="臨床教師（麻醉專師）">臨床教師（麻醉專師）</option>
-              <option value="其他">其他</option>
-            </select>
-          </label>
-          <div style="display:grid;gap:6px">
-            <span class="fieldlabel">課程類別</span>
-            <div class="seg" role="group" aria-label="課程類別">
-              <button type="button" class="b" id="lvBasic" aria-pressed="true">基礎課程</button>
-              <button type="button" class="a" id="lvAdv" aria-pressed="false">進階課程</button>
+          <p class="formnote">以下欄位和教學部 BeClass 表單一樣，填一次就好，預約後可以逐欄複製到 BeClass。</p>
+
+          <fieldset class="grp">
+            <legend>填表人（您本人）</legend>
+            <div class="two">
+              <label for="fName">填表人姓名<input id="fName" autocomplete="name" maxlength="30"></label>
+              <label for="fEmail">填表人 EMAIL<input id="fEmail" type="email" autocomplete="email" maxlength="80"></label>
             </div>
-          </div>
-          <label for="course">課程名稱
-            <select id="course"></select>
-          </label>
-          <div class="hint" id="hoursHint" hidden></div>
+            <div class="two">
+              <label for="fUnit">填表人所屬單位<input id="fUnit" maxlength="40" placeholder="例：麻醉部"></label>
+              <label for="fPhone">填表人聯絡方式<input id="fPhone" maxlength="30" placeholder="簡碼、分機或手機號碼"></label>
+            </div>
+            <label for="fJob">填表人所屬職類<select id="fJob"></select></label>
+            <span class="tiny">這台電腦會記住填表人資料，下次不用重填。</span>
+          </fieldset>
+
+          <fieldset class="grp">
+            <legend>講師</legend>
+            <button type="button" class="linkbtn" id="sameAsMe">講師就是填表人本人，帶入姓名與職類</button>
+            <label for="teacher">講師名稱<input id="teacher" maxlength="30"></label>
+            <div class="radios" role="radiogroup" aria-label="講師所屬單位">
+              <span class="fieldlabel">講師所屬單位</span>
+              <label class="r"><input type="radio" name="tUnit" id="tUnit1" value="花蓮慈濟醫院" checked>花蓮慈濟醫院</label>
+              <label class="r"><input type="radio" name="tUnit" id="tUnit2" value="慈濟大學">慈濟大學</label>
+              <label class="r"><input type="radio" name="tUnit" id="tUnit3" value="其它">其它：<input id="tUnitOther" maxlength="30" aria-label="其它單位名稱"></label>
+            </div>
+            <label for="role">講師所屬職類<select id="role"></select></label>
+          </fieldset>
+
+          <fieldset class="grp">
+            <legend>課程</legend>
+            <div class="fixed"><span>服務項目</span><b>數位課程錄製</b></div>
+            <label for="cType">課程類型
+              <select id="cType">
+                <option value="院內教學">院內教學</option>
+                <option value="慈大課程">慈大課程</option>
+                <option value="其他院外教學">其他院外教學</option>
+              </select>
+            </label>
+            <div style="display:grid;gap:6px">
+              <span class="fieldlabel">課程類別（授課主題）</span>
+              <div class="seg" role="group" aria-label="課程類別">
+                <button type="button" class="b" id="lvBasic" aria-pressed="true">基礎課程</button>
+                <button type="button" class="a" id="lvAdv" aria-pressed="false">進階課程</button>
+              </div>
+            </div>
+            <label for="course">課程名稱<select id="course"></select></label>
+            <div class="hint" id="hoursHint" hidden></div>
+          </fieldset>
+
           <div class="msg err" id="formErr" hidden></div>
           <button class="btn primary" id="submitBtn" type="submit" disabled>確認預約</button>
           <div id="submitWhy" style="font-size:.84rem;color:var(--muted)" hidden></div>
@@ -263,6 +309,8 @@ const COURSES = {
 /* =================================================== */
 
 const LEVEL_LABEL = {basic:"基礎", advanced:"進階"};
+/* BeClass 的職類選項（填表人沒有「其他」，講師有） */
+const JOBS = ["西醫","中醫","牙醫","藥事","醫事放射","醫事檢驗","護理","營養","呼吸治療","聽力","物理治療","職能治療","臨床心理","語言治療","行政"];
 const WD = ["日","一","二","三","四","五","六"];
 const REFRESH_MS = 20000;
 
@@ -515,13 +563,35 @@ function renderHint(){
   kids.push(el("div",{},`BeClass 一次只能登記 1 小時，預約完成後請在 BeClass 分別登記這 ${n} 個時段。`));
   box.replaceChildren(...kids); box.hidden=false;
 }
+function formData(){
+  const v=id=>$(id).value.trim();
+  const unitR=document.querySelector('input[name="tUnit"]:checked');
+  const tUnit = !unitR ? "" : unitR.value==="其它" ? (v("tUnitOther") ? "其它："+v("tUnitOther") : "") : unitR.value;
+  return { fName:v("fName"), fEmail:v("fEmail"), fUnit:v("fUnit"), fPhone:v("fPhone"), fJob:$("fJob").value,
+    teacher:v("teacher"), tUnit, tJob:$("role").value, cType:$("cType").value };
+}
+function fillJobSelect(sel, withOther){
+  sel.replaceChildren(el("option",{value:""},"請選擇"), ...JOBS.map(j=>el("option",{value:j},j)), withOther?el("option",{value:"其他"},"其他"):null);
+}
+const FILLER_KEYS=["fName","fEmail","fUnit","fPhone","fJob"];
+function saveFiller(){ const o={}; FILLER_KEYS.forEach(k=>o[k]=$(k).value.trim()); lsSet("recFiller",o); }
+function loadFiller(){ const o=lsGet("recFiller",{}); FILLER_KEYS.forEach(k=>{ if(o[k]) $(k).value=o[k]; }); }
+
 function updateSubmit(){
   const plan=currentPlan();
   let why="";
+  const f=formData();
   if(!state.loaded) why="預約資料還沒讀取成功，請確認網路後重新整理頁面。";
-  else if(!state.sel) why="請在右側選擇時段。";
-  else if(!$("teacher").value.trim()) why="請填寫講師姓名。";
+  else if(!f.fName) why="請填寫填表人姓名。";
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.fEmail)) why="請填寫正確的填表人 EMAIL。";
+  else if(!f.fUnit) why="請填寫填表人所屬單位。";
+  else if(!f.fPhone) why="請填寫填表人聯絡方式。";
+  else if(!f.fJob) why="請選擇填表人所屬職類。";
+  else if(!f.teacher) why="請填寫講師名稱。";
+  else if(!f.tUnit) why="請填寫講師所屬單位（選「其它」要寫單位名稱）。";
+  else if(!f.tJob) why="請選擇講師所屬職類。";
   else if(!$("course").value) why="請選擇課程。";
+  else if(!state.sel) why="請在右側選擇時段。";
   else if(plan && !plan.ok) why="這門課需要的連續時段不夠，請改選起始時段。";
   $("submitBtn").disabled = !!why || state.busy;
   $("submitBtn").textContent = state.busy ? "預約中…" : "確認預約";
@@ -557,7 +627,7 @@ function renderTable(){
       ? el("button",{class:"btn small primary",type:"button",onclick:e=>confirmDone(b,e.currentTarget)},"按此確認：已完成 BeClass 登記") : null;
     if(mine){
       action = state.cancelAsk===k
-        ? el("div",{class:"confirm"},el("span",{style:"font-size:.82rem"},"確定取消？"),
+        ? el("div",{class:"confirm"},el("span",{style:"font-size:.82rem"},"確定取消？已在 BeClass 登記的請另外聯絡教學部。"),
             el("button",{class:"btn small danger",type:"button",onclick:()=>cancel(b)},"取消預約"),
             el("button",{class:"btn small",type:"button",onclick:()=>{state.cancelAsk=null;renderTable();}},"保留"))
         : el("button",{class:"btn small",type:"button",onclick:()=>{state.cancelAsk=k;renderTable();}},"取消");
@@ -572,13 +642,17 @@ function renderTable(){
       el("td",{},el("div",{class:"stack"},confirmBtn,action))));
   }
   area.replaceChildren(el("table",{},el("thead",{},el("tr",{},
-    ["錄製時段","講師","身分","類別","課程名稱","BeClass","" ].map(h=>el("th",{},h)))),tb));
+    ["錄製時段","講師","職類","類別","課程名稱","BeClass","" ].map(h=>el("th",{},h)))),tb));
 }
 
 function renderSync(){
   const fmt=d=>d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
   let txt = state.lastSync ? `更新於 ${fmt(state.lastSync)}` : "讀取中…";
-  if(state.bc && state.bc.fetchedAt) txt += `｜BeClass 同步 ${fmt(new Date(state.bc.fetchedAt))}${state.bc.stale?"（暫時讀不到，用上次資料）":""}`;
+  const fmtDay=d=>`${d.getMonth()+1}/${d.getDate()} ${fmt(d)}`;
+  if(state.bc && state.bc.fetchedAt){
+    const at=new Date(state.bc.fetchedAt);
+    txt += state.bc.source==="paste" ? `｜BeClass 時段更新於 ${fmtDay(at)}` : `｜BeClass 同步 ${fmt(at)}${state.bc.stale?"（暫時讀不到，用上次資料）":""}`;
+  }
   else if(state.loaded && !DEMO) txt += "｜BeClass 未同步，使用備用時段";
   $("sync").textContent = txt;
 }
@@ -599,30 +673,49 @@ function renderPending(){
 
 function renderAll(){ renderDates(); renderSlots(); renderForm(); renderProgress(); renderTable(); renderSync(); renderPending(); }
 
-function beclassText(b){
+/* 依 BeClass 表單順序排好的欄位 */
+function beclassFields(b, f){
   const c=courseById[b.courseId], list=slotList(b.keys);
-  const slotLine = list.length>1
-    ? `錄製日期與時段（共 ${list.length} 個，BeClass 每個時段分別登記一次）：\n  ${list.join("\n  ")}`
-    : `錄製日期與時段：${list[0]}`;
-  return `講師名稱：${b.teacher}\n服務項目：數位課程錄製\n${slotLine}\n課程類型：院內教學\n授課主題：【麻醉專師${LEVEL_LABEL[c.level]}】${c.name}`;
+  return [
+    ["填表人姓名", f.fName], ["填表人EMAIL", f.fEmail], ["填表人所屬單位", f.fUnit],
+    ["填表人聯絡方式", f.fPhone], ["填表人所屬職類", f.fJob],
+    ["講師名稱", f.teacher], ["講師所屬單位", f.tUnit], ["講師所屬職類", f.tJob],
+    ["服務項目", "數位課程錄製"],
+    ...list.map((x,i)=>[list.length>1?`錄製日期與時段（第 ${i+1} 次登記）`:"錄製日期與時段", x]),
+    ["課程類型", f.cType],
+    ["授課主題", `【麻醉專師${LEVEL_LABEL[c.level]}】${c.name}`]
+  ];
 }
-function showDone(b){
-  const text=beclassText(b), n=b.keys.length;
-  const pre=el("pre",{},text);
-  const copyBtn=el("button",{class:"btn small",type:"button",onclick:async()=>{
-    try{ await navigator.clipboard.writeText(text); copyBtn.textContent="已複製"; }
-    catch{ const r=document.createRange(); r.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent="已選取，請按複製"; }
-  }},"複製登記資料");
+async function copyText(text, btn, done){
+  try{ await navigator.clipboard.writeText(text); btn.textContent=done||"已複製"; btn.classList.add("okc"); }
+  catch{ btn.textContent="請手動選取"; }
+}
+function showDone(b, f){
+  const n=b.keys.length, fields=beclassFields(b,f);
+  const all=fields.map(([k,v])=>`${k}：${v}`).join("\n");
+  const table=el("table",{class:"ftable"},el("tbody",{},fields.map(([k,v])=>{
+    const btn=el("button",{type:"button",onclick:e=>copyText(v,e.currentTarget)},"複製");
+    return el("tr",{},el("td",{class:"k"},k),el("td",{},v),el("td",{class:"c"},btn));
+  })));
+  const allBtn=el("button",{class:"btn small",type:"button",onclick:e=>copyText(all,e.currentTarget,"已全部複製")},"全部複製");
   const confirmBtn=el("button",{class:"btn primary",type:"button",style:"width:100%;justify-content:center",
     onclick:e=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb,e.currentTarget); }},"我已完成 BeClass 登記");
+  const cancelBox=el("div",{class:"row"});
+  const showCancelAsk=()=>cancelBox.replaceChildren(
+    el("span",{style:"font-size:.84rem;color:var(--warn)"},"確定取消這筆預約？如果已在 BeClass 登記，請另外聯絡教學部取消。"),
+    el("button",{class:"btn small danger",type:"button",onclick:async()=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb){ await cancel(bb); if(!state.bookings.find(x=>x.keys[0]===b.keys[0])){ $("done").hidden=true; $("bookForm").hidden=false; toast("已取消預約"); } } }},"確定取消"),
+    el("button",{class:"btn small",type:"button",onclick:()=>cancelBox.replaceChildren(cancelLink)},"保留"));
+  const cancelLink=el("button",{class:"linkbtn",type:"button",onclick:showCancelAsk},"填錯了？取消這筆預約");
+  cancelBox.append(cancelLink);
   $("done").replaceChildren(
     el("div",{class:"done-head"},el("strong",{},"✓ 預約完成"),el("span",{class:"mono"},b.slotLabel)),
     el("ol",{class:"done-steps"},
-      el("li",{},el("div",{},"複製登記資料，前往 BeClass", n>1?el("b",{},`（共要登記 ${n} 次）`):null),
-        pre,
-        el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"), copyBtn)),
+      el("li",{},el("div",{},"到 BeClass 照下表逐欄填寫", n>1?el("b",{},`（共要登記 ${n} 次，每次選一個時段）`):null),
+        el("div",{style:"overflow-x:auto"},table),
+        el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"), allBtn)),
       el("li",{},el("div",{},"BeClass 都登記好後，按這裡確認"), confirmBtn)),
-    el("button",{class:"linkbtn",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂"));
+    el("div",{class:"row",style:"justify-content:space-between"},
+      el("button",{class:"linkbtn",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂"), cancelBox));
   $("bookForm").hidden=true; $("done").hidden=false;
 }
 
@@ -649,10 +742,12 @@ async function refresh(){
 }
 
 async function claim(){
-  const plan=currentPlan(), courseId=$("course").value, teacher=$("teacher").value.trim();
+  const plan=currentPlan(), courseId=$("course").value, form=formData(), teacher=form.teacher;
   if(!plan||!plan.ok||!courseId||!teacher) return;
+  saveFiller();
   const course=courseById[courseId];
-  const payload={slotKeys:plan.keys, slotKey:plan.keys.join(","), slotLabel:rangeLabel(plan.keys), teacher, role:$("role").value,
+  const payload={slotKeys:plan.keys, slotKey:plan.keys.join(","), slotLabel:rangeLabel(plan.keys), teacher, role:form.tJob,
+    contact:`${form.fName}｜${form.fPhone}｜${form.fEmail}`,
     level:course.level, courseId, courseName:course.name};
   state.busy=true; showErr(""); updateSubmit();
   try{
@@ -662,7 +757,7 @@ async function claim(){
     if(!res.ok){ showErr(ERR[res.error]||"預約沒有成功，請重新整理後再試一次。"); return; }
     myTokens[plan.keys[0]]=res.token; lsSet("recBookingTokens",myTokens);
     state.sel=null;
-    showDone({...payload, keys:plan.keys});
+    showDone({...payload, keys:plan.keys}, form);
   }catch{
     showErr("連線失敗，預約沒有送出。請確認網路後再試一次。");
   }finally{ state.busy=false; renderAll(); }
@@ -714,8 +809,20 @@ $("lvAdv").onclick=()=>{state.level="advanced"; renderAll();};
 $("teacher").addEventListener("input",updateSubmit);
 $("course").addEventListener("change",onCourseChange);
 $("bookForm").addEventListener("submit",e=>{e.preventDefault(); claim();});
-$("teacher").value = lsGet("recTeacherName","");
-$("teacher").addEventListener("change",()=>lsSet("recTeacherName",$("teacher").value.trim()));
+fillJobSelect($("fJob"), false);
+fillJobSelect($("role"), true);
+loadFiller();
+["fName","fEmail","fUnit","fPhone","fJob","teacher","tUnitOther","role","cType"].forEach(id=>{
+  $(id).addEventListener("input",updateSubmit); $(id).addEventListener("change",updateSubmit);
+});
+FILLER_KEYS.forEach(id=>$(id).addEventListener("change",saveFiller));
+document.querySelectorAll('input[name="tUnit"]').forEach(r=>r.addEventListener("change",updateSubmit));
+$("tUnitOther").addEventListener("focus",()=>{ $("tUnit3").checked=true; updateSubmit(); });
+$("sameAsMe").addEventListener("click",()=>{
+  $("teacher").value=$("fName").value.trim();
+  if($("fJob").value) $("role").value=$("fJob").value;
+  updateSubmit();
+});
 
 /* 離開網頁前：還有預約沒確認 BeClass 登記，就跳出瀏覽器的離開提醒 */
 window.addEventListener("beforeunload", e=>{
