@@ -671,7 +671,6 @@ function openDelete(b){
       el("dt",{},"錄製時段"),el("dd",{class:"mono"},b.slotLabel),
       el("dt",{},"講師"),el("dd",{},b.teacher),
       el("dt",{},"課程"),el("dd",{},c?c.name:b.courseName)),
-    b.beclassDone==="yes" ? el("div",{class:"warnbox"},"這筆預約已在 BeClass 登記。刪除後，請另外聯絡教學部取消 BeClass 上的時段。") : null,
     mine
       ? el("div",{style:"font-size:.9rem"},"這筆是在這台電腦預約的，確定要刪除嗎？刪除後會通知負責學姐。")
       : el("div",{style:"font-size:.9rem"},"這筆不是在這台電腦預約的，需要由負責學姐確認後才會刪除。送出申請後，學姐會收到一封有「確認刪除」按鈕的信。"),
@@ -752,19 +751,15 @@ function beclassText(b){
 function showDone(b){
   const text=beclassText(b), n=b.keys.length;
   const pre=el("pre",{},text);
-  const copyBtn=el("button",{class:"btn small",type:"button",onclick:async()=>{
-    try{ await navigator.clipboard.writeText(text); copyBtn.textContent="已複製"; }
-    catch{ const r=document.createRange(); r.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(r); copyBtn.textContent="已選取，請按複製"; }
-  }},"複製登記資料");
   const confirmBtn=el("button",{class:"btn primary",type:"button",style:"width:100%;justify-content:center",
     onclick:e=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb,e.currentTarget); }},"我已完成 BeClass 登記");
   const cancelLink=el("button",{class:"linkbtn",type:"button",onclick:()=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) openDelete(bb); }},"填錯了？刪除這筆預約");
   $("done").replaceChildren(
     el("div",{class:"done-head"},el("strong",{},"✓ 時段已鎖定"),el("span",{class:"mono"},b.slotLabel)),
     el("ol",{class:"done-steps"},
-      el("li",{},el("div",{},"複製登記資料，前往 BeClass 登記", n>1?el("b",{},`（共要登記 ${n} 次）`):null),
+      el("li",{},el("div",{},"前往 BeClass 登記以下時段", n>1?el("b",{},`（共要登記 ${n} 次）`):null),
         pre,
-        el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"), copyBtn)),
+        el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"))),
       el("li",{},el("div",{},"BeClass 都登記好後，按這裡完成預約（會通知負責學姐）"), confirmBtn)),
     el("div",{class:"row",style:"justify-content:space-between"},
       el("button",{class:"linkbtn",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂"), cancelLink));
