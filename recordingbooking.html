@@ -650,6 +650,15 @@ function renderDeleted(){
 }
 
 /* ---------- 刪除前再次確認 ---------- */
+function scrollToPanes(){
+  const top=document.querySelector(".panes");
+  if(!top) return;
+  requestAnimationFrame(()=>{ window.scrollTo({top: top.getBoundingClientRect().top + window.scrollY - 16, behavior:"smooth"}); });
+}
+function backToForm(){
+  $("done").hidden=true; $("bookForm").hidden=false;
+  scrollToPanes();
+}
 function closeDelete(){ $("delModal").hidden=true; }
 function openDelete(b){
   const mine=isMine(b), c=courseById[b.courseId];
@@ -674,7 +683,7 @@ function openDelete(b){
       el("dt",{},"講師"),el("dd",{},b.teacher),
       el("dt",{},"課程"),el("dd",{},c?c.name:b.courseName)),
     mine
-      ? el("div",{style:"font-size:.9rem"},"這筆是在這台電腦預約的，確定要刪除嗎？刪除後會通知負責學姐。")
+      ? el("div",{style:"font-size:.9rem"}, b.beclassDone==="yes" ? "確定刪除嗎？刪除後會通知學術負責人。" : "確定刪除嗎？")
       : el("div",{style:"font-size:.9rem"},"這筆不是在這台電腦預約的，需要由負責學姐確認後才會刪除。送出申請後，學姐會收到一封有「確認刪除」按鈕的信。"),
     mine ? null : el("label",{for:"reqName"},"申請人姓名",nameIn),
     mine ? null : el("label",{for:"reqReason"},"刪除原因（可不填）",reasonIn),
@@ -701,9 +710,12 @@ async function deleteBooking(b, errBox){
     if(res.bookings) applyBookings(res.bookings);
     if(!res.ok){ errBox.textContent=delErrText(res); errBox.hidden=false; renderAll(); return res.error==="not_found"; }
     delete myTokens[k]; lsSet("recBookingTokens",myTokens);
-    if(!$("done").hidden){ $("done").hidden=true; $("bookForm").hidden=false; }
+    const wasDone=!$("done").hidden;
+    if(wasDone){ $("done").hidden=true; $("bookForm").hidden=false; }
     toast(`已刪除：${b.slotLabel} ${b.teacher}`);
-    renderAll(); return true;
+    renderAll();
+    if(wasDone) scrollToPanes();
+    return true;
   }catch{ errBox.textContent="連線失敗，請確認網路後再試一次。"; errBox.hidden=false; return false; }
 }
 async function requestDelete(b, name, reason, errBox){
@@ -764,7 +776,7 @@ function showDone(b){
         el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"))),
       el("li",{},el("div",{},"BeClass 都登記好後，按這裡完成預約"), el("div",{class:"downarrow","aria-hidden":"true"},"↓"), confirmBtn)),
     el("div",{class:"row",style:"justify-content:space-between"},
-      el("button",{class:"linkbtn",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂"), cancelLink));
+      el("button",{class:"linkbtn",type:"button",onclick:backToForm},"再預約一堂"), cancelLink));
   $("bookForm").hidden=true; $("done").hidden=false;
 }
 
@@ -832,7 +844,7 @@ async function confirmDone(b,btn){
       if(!$("done").hidden) $("done").replaceChildren(
         el("strong",{},"✓ 預約完成，已通知負責學姐。謝謝！"),
         el("div",{style:"font-size:.9rem"},`${b.slotLabel}　${b.courseName}`),
-        el("div",{class:"row"},el("button",{class:"btn small",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂")));
+        el("div",{class:"row"},el("button",{class:"btn small",type:"button",onclick:backToForm},"再預約一堂")));
     }
   }catch{ showErr("連線失敗，請確認網路後再試一次。"); toast("連線失敗，請再按一次"); }
   renderAll();
