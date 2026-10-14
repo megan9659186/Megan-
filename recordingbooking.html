@@ -131,6 +131,8 @@ input,select{font:inherit;font-weight:400;padding:9px 11px;border-radius:8px;bor
 .done-head strong{color:var(--accent);font-size:1.05rem}
 .done-steps{margin:0;padding-left:1.3em;display:grid;gap:14px;font-size:.9rem}
 .done-steps li{display:grid;gap:8px}
+.downarrow{justify-self:center;font-size:1.8rem;line-height:1;color:var(--accent);font-weight:700}
+@media (prefers-reduced-motion:no-preference){.downarrow{animation:nudge 1.4s ease-in-out infinite}@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}}
 .done-steps li::marker{color:var(--accent);font-weight:700}
 .linkbtn{border:0;background:none;color:var(--muted);font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer;justify-self:start;padding:0}
 .done pre{margin:0;white-space:pre-wrap;font-family:var(--font-body);font-size:.88rem;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
@@ -760,7 +762,7 @@ function showDone(b){
       el("li",{},el("div",{},"前往 BeClass 登記以下時段", n>1?el("b",{},`（共要登記 ${n} 次）`):null),
         pre,
         el("div",{class:"row"},el("a",{class:"btn small primary",href:BECLASS_URL,target:"_blank",rel:"noopener"},"前往 BeClass ↗"))),
-      el("li",{},el("div",{},"BeClass 都登記好後，按這裡完成預約（會通知負責學姐）"), confirmBtn)),
+      el("li",{},el("div",{},"BeClass 都登記好後，按這裡完成預約"), el("div",{class:"downarrow","aria-hidden":"true"},"↓"), confirmBtn)),
     el("div",{class:"row",style:"justify-content:space-between"},
       el("button",{class:"linkbtn",type:"button",onclick:()=>{$("done").hidden=true;$("bookForm").hidden=false;}},"再預約一堂"), cancelLink));
   $("bookForm").hidden=true; $("done").hidden=false;
@@ -851,18 +853,6 @@ $("delModal").addEventListener("click",e=>{ if(e.target===$("delModal")) closeDe
 /* 離開網頁前：還有預約沒確認 BeClass 登記，就跳出瀏覽器的離開提醒 */
 window.addEventListener("beforeunload", e=>{
   if(pendingMine().length){ e.preventDefault(); e.returnValue=""; }
-});
-/* 真的離開了：通知負責學姐（每筆預約只寄一次） */
-window.addEventListener("pagehide", ()=>{
-  if(DEMO) return;
-  for(const b of pendingMine()){
-    const k=b.keys[0];
-    const body=JSON.stringify({action:"left", slotKey:k, token:myTokens[k]});
-    try{
-      const sent = navigator.sendBeacon && navigator.sendBeacon(SCRIPT_URL, new Blob([body],{type:"text/plain;charset=utf-8"}));
-      if(!sent) fetch(SCRIPT_URL,{method:"POST",body,keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"}}).catch(()=>{});
-    }catch{}
-  }
 });
 
 renderAll();
