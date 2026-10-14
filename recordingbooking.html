@@ -84,6 +84,7 @@ header .lead{max-width:62ch;color:var(--muted);margin:.4rem 0 0}
 form{display:grid;gap:14px}
 label{display:grid;gap:6px;font-size:.88rem;font-weight:500}
 input,select{font:inherit;font-weight:400;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%}
+.tiny{font-size:.78rem;color:var(--muted);font-weight:400}
 .formnote{margin:0;font-size:.84rem;color:var(--muted)}
 .grp{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px 14px;margin:0;display:grid;gap:12px;min-width:0}
 .grp legend{padding:0 6px;font-weight:700;font-size:.9rem}
@@ -243,7 +244,7 @@ tr.past td{color:var(--muted)}
     <div class="tablewrap" id="delArea"></div>
   </section>
 
-  <footer>預約可以在預約總覽刪除；刪除別人的預約要輸入該預約的講師姓名確認。刪除後會通知負責學姐。預約與刪除紀錄保留一個月。</footer>
+  <footer>在當初預約的電腦上可以直接刪除；其他情況請送出刪除申請，由負責學姐在通知信中確認刪除。預約與刪除紀錄保留一個月。</footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <div class="modal" id="delModal" hidden>
@@ -395,13 +396,15 @@ const api = DEMO ? {
   async del(p){
     const all=lsGet("recBookingDemo",[]); const b=all.find(b=>!b.deletedAt&&keysOf(b).includes(p.slotKey));
     if(!b) return {ok:false,error:"not_found",bookings:all};
-    if(b._t!==p.token && (p.confirmName||"").trim()!==b.teacher.trim()) return {ok:false,error:"name_mismatch"};
-    b.deletedAt=new Date().toISOString(); b.deletedBy=p.deletedBy||b.teacher; lsSet("recBookingDemo",all); return {ok:true,bookings:all};
+    if(b._t!==p.token) return {ok:false,error:"not_owner"};
+    b.deletedAt=new Date().toISOString(); b.deletedBy=b.teacher+"（講師本人）"; lsSet("recBookingDemo",all); return {ok:true,bookings:all};
   }
+  ,async request(p){ return {ok:true}; }
 } : {
   async list(){ const r=await fetch(SCRIPT_URL,{cache:"no-store"}); return r.json(); },
   async book(p){ return post({action:"book",...p}); },
   async del(p){ return post({action:"delete",...p}); },
+  async request(p){ return post({action:"request",...p}); },
   async confirm(p){ return post({action:"confirm",...p}); }
 };
 async function post(obj){
@@ -648,59 +651,67 @@ function renderDeleted(){
 function closeDelete(){ $("delModal").hidden=true; }
 function openDelete(b){
   const mine=isMine(b), c=courseById[b.courseId];
-  const who=el("input",{id:"delWho",maxlength:"30",autocomplete:"name"});
-  who.value = lsGet("recDeleter","") || (mine ? b.teacher : "");
-  const nameIn=el("input",{id:"delName",maxlength:"30",autocomplete:"off"});
+  const nameIn=el("input",{id:"reqName",maxlength:"30",autocomplete:"name"});
+  nameIn.value=lsGet("recRequester","");
+  const reasonIn=el("input",{id:"reqReason",maxlength:"100",placeholder:"例：時段填錯、講師臨時無法錄製"});
   const err=el("div",{class:"msg err",hidden:true});
-  const go=el("button",{class:"btn danger",type:"button"},"確定刪除");
-  const check=()=>{ go.disabled = !who.value.trim() || (!mine && nameIn.value.trim()!==b.teacher.trim()); };
-  who.addEventListener("input",check); nameIn.addEventListener("input",check);
+  const go=el("button",{class:"btn danger",type:"button"}, mine?"確定刪除":"送出刪除申請");
+  const check=()=>{ go.disabled = !mine && !nameIn.value.trim(); };
+  nameIn.addEventListener("input",()=>{ err.hidden=true; check(); });
   go.addEventListener("click",async()=>{
-    go.disabled=true; go.textContent="刪除中…";
-    lsSet("recDeleter", who.value.trim());
-    const ok=await deleteBooking(b, who.value.trim(), nameIn.value.trim(), err);
+    go.disabled=true; go.textContent= mine?"刪除中…":"送出中…";
+    let ok;
+    if(mine) ok=await deleteBooking(b, err);
+    else { lsSet("recRequester", nameIn.value.trim()); ok=await requestDelete(b, nameIn.value.trim(), reasonIn.value.trim(), err); }
     if(ok){ closeDelete(); }
-    else { go.textContent="確定刪除"; check(); }
+    else { go.textContent= mine?"確定刪除":"送出刪除申請"; check(); }
   });
   $("delBody").replaceChildren(...[
     el("dl",{},
       el("dt",{},"錄製時段"),el("dd",{class:"mono"},b.slotLabel),
-      el("dt",{},"講師"),el("dd",{},b.teacher, mine?"（這台電腦預約的）":""),
+      el("dt",{},"講師"),el("dd",{},b.teacher),
       el("dt",{},"課程"),el("dd",{},c?c.name:b.courseName)),
     b.beclassDone==="yes" ? el("div",{class:"warnbox"},"這筆預約已在 BeClass 登記。刪除後，請另外聯絡教學部取消 BeClass 上的時段。") : null,
-    el("label",{for:"delWho"},"您的姓名（刪除人）",who),
-    mine ? null : el("label",{for:"delName"},`請輸入這筆預約的講師姓名「${b.teacher}」以確認`,nameIn),
-    el("div",{style:"font-size:.84rem;color:var(--muted)"},"刪除後會通知負責學姐，並留下刪除紀錄。"),
+    mine
+      ? el("div",{style:"font-size:.9rem"},"這筆是在這台電腦預約的，確定要刪除嗎？刪除後會通知負責學姐。")
+      : el("div",{style:"font-size:.9rem"},"這筆不是在這台電腦預約的，需要由負責學姐確認後才會刪除。送出申請後，學姐會收到一封有「確認刪除」按鈕的信。"),
+    mine ? null : el("label",{for:"reqName"},"申請人姓名",nameIn),
+    mine ? null : el("label",{for:"reqReason"},"刪除原因（可不填）",reasonIn),
     err,
     el("div",{class:"row",style:"justify-content:flex-end"},
-      el("button",{class:"btn",type:"button",onclick:closeDelete},"返回，不刪除"), go)
+      el("button",{class:"btn",type:"button",onclick:closeDelete},"返回"), go)
   ].filter(Boolean));
   check();
   $("delModal").hidden=false;
-  (mine?who:nameIn).focus();
+  (mine?go:nameIn).focus();
 }
-async function deleteBooking(b, deletedBy, confirmName, errBox){
+function delErrText(res){
+  return res.error==="not_found" ? "這筆預約已經不存在（可能已被刪除）。"
+    : res.error==="not_owner" ? "這筆不是在這台電腦預約的，請改用刪除申請。"
+    : res.error==="need_name" ? "請填寫申請人姓名。"
+    : res.error==="too_many" ? "這筆預約已經送出多次申請，請等學姐處理，或 1 小時後再試。"
+    : res.error==="bad_request" ? "後台 Apps Script 不是最新版，請管理者更新並部署新版本。"
+    : (ERR[res.error]||"沒有成功，請重新整理後再試一次。");
+}
+async function deleteBooking(b, errBox){
   const k=b.keys[0];
   try{
-    const res=await api.del({slotKey:k, token:myTokens[k]||"", confirmName, deletedBy});
+    const res=await api.del({slotKey:k, token:myTokens[k]||""});
     if(res.bookings) applyBookings(res.bookings);
-    if(!res.ok){
-      const m = res.error==="name_mismatch" ? "講師姓名不符，請確認後再輸入。"
-        : res.error==="need_deleter" ? "請填寫您的姓名。"
-        : res.error==="not_found" ? "這筆預約已經不存在（可能已被刪除）。"
-        : res.error==="bad_request" ? "後台 Apps Script 不是最新版，請管理者更新並部署新版本。"
-        : (ERR[res.error]||"刪除沒有成功，請重新整理後再試一次。");
-      if(errBox){ errBox.textContent=m; errBox.hidden=false; }
-      renderAll(); return res.error==="not_found";
-    }
+    if(!res.ok){ errBox.textContent=delErrText(res); errBox.hidden=false; renderAll(); return res.error==="not_found"; }
     delete myTokens[k]; lsSet("recBookingTokens",myTokens);
     if(!$("done").hidden){ $("done").hidden=true; $("bookForm").hidden=false; }
     toast(`已刪除：${b.slotLabel} ${b.teacher}`);
     renderAll(); return true;
-  }catch{
-    if(errBox){ errBox.textContent="連線失敗，刪除沒有送出。請確認網路後再試一次。"; errBox.hidden=false; }
-    return false;
-  }
+  }catch{ errBox.textContent="連線失敗，請確認網路後再試一次。"; errBox.hidden=false; return false; }
+}
+async function requestDelete(b, name, reason, errBox){
+  try{
+    const res=await api.request({slotKey:b.keys[0], requestBy:name, reason});
+    if(!res.ok){ errBox.textContent=delErrText(res); errBox.hidden=false; return false; }
+    toast("已送出刪除申請，學姐確認後就會刪除");
+    return true;
+  }catch{ errBox.textContent="連線失敗，請確認網路後再試一次。"; errBox.hidden=false; return false; }
 }
 
 function renderSync(){
