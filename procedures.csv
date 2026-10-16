@@ -1,15 +1,17 @@
-﻿科別,英文名稱,別名縮寫（用 | 分隔）,中文名稱,說明,常見麻醉方式,自費代碼（用 | 分隔）
-一般外科,Laparoscopic cholecystectomy,LC|Lap chole|Lap. chole|Laparoscopic cholecystectomy|腹腔鏡膽囊切除,腹腔鏡膽囊切除術,用腹腔鏡把膽囊切除，右上腹,全身麻醉（氣管插管）,B|NB|ONDAN
+科別,英文名稱,別名縮寫（用 | 分隔）,中文名稱,說明,常見麻醉方式,自費代碼（用 | 分隔）
+一般外科,Laparoscopic cholecystectomy,LC|Lap chole|Lap. chole|Laparoscopic cholecystectomy|LC with ICG|75215B|腹腔鏡膽囊切除,腹腔鏡膽囊切除術,用腹腔鏡把膽囊切除，右上腹,全身麻醉（氣管插管）,B|NB|ONDAN
 一般外科,Open cholecystectomy,Open chole|Cholecystectomy|膽囊切除,膽囊切除術,開腹切除膽囊，右上腹,全身麻醉（氣管插管）,B|IVPCA|NB
 一般外科,Cholecystostomy,Cholecystostomy|膽囊造口,膽囊造口術,在膽囊放引流管（急性膽囊炎無法切除時）,全身麻醉（氣管插管）、局部麻醉,B
 一般外科,Choledocholithotomy,Choledocholithotomy|CBD exploration|總膽管石切除|總膽管取石,總膽管石切除術（總膽管取石）,打開總膽管取出結石,全身麻醉（氣管插管）,B|IVPCA
+一般外科,Laparoscopic common bile duct exploration,LCBDE|Laparoscopic common bile duct exploration|Lap CBDE|Lap CBD exploration|75218B|腹腔鏡總膽管探查,腹腔鏡總膽管探查術,用腹腔鏡打開總膽管取出結石，常合併膽囊切除，右上腹,全身麻醉（氣管插管）,B|NB|IVPCA|ONDAN
 一般外科,Choledochoscopy,Choledochoscopy|膽道鏡,膽道鏡檢查,用膽道鏡檢查膽管內部,全身麻醉（氣管插管）,B
 一般外科,Laparoscopic appendectomy,Lap appendectomy|Lap. appendectomy|LA appendectomy,腹腔鏡闌尾切除術,切除發炎的闌尾，右下腹,全身麻醉（氣管插管）,B|NB|ONDAN
 一般外科,Appendectomy,Appendectomy|Appy|Open appendectomy|闌尾切除,闌尾切除術,切除發炎的闌尾，右下腹,全身麻醉（氣管插管）,B|NB|ONDAN
 一般外科,Open inguinal hernia repair,Herniorrhaphy|Hernioplasty|Hernia repair|Inguinal hernia|Lichtenstein|Mesh repair|疝氣,疝氣縫合術（腹股溝疝氣修補）,把鼠蹊部突出的腸子推回並用網膜補強腹壁，平躺,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|SEDSPINAL
-一般外科,Laparoscopic inguinal hernia repair,TEP|TAPP|Laparoscopic hernia|Lap hernia|Lap. hernia|腹腔鏡疝氣,腹腔鏡腹股溝疝氣修補術（TEP/TAPP）,用腹腔鏡從腹壁內側補強疝氣，需打氣所以插管,全身麻醉（氣管插管）,B|NB
-一般外科,Hemorrhoidectomy,Hemorrhoidectomy|Haemorrhoidectomy|PPH|Hemorrhoid|痔瘡,痔瘡切除術,切除肛門痔瘡,脊椎麻醉（半身）、鞍部麻醉,ITM|SEDSPINAL|NALD
-一般外科,Fistulectomy / Fistulotomy,Fistulectomy|Fistulotomy|Anal fistula|廔管,廔管切除術,處理肛門旁的廔管或膿瘍,脊椎麻醉（半身）,SEDSPINAL|ITM
+一般外科,Laparoscopic inguinal hernia repair,TEP|TAPP|TEP herniorrhaphy|TAPP herniorrhaphy|TEP hernioplasty|Laparoscopic hernia|Lap hernia|Lap. hernia|Laparoscopic repair of inguinal hernia|Laparoscopic repair of ingui|75619C|腹腔鏡疝氣,腹腔鏡腹股溝疝氣修補術（TEP/TAPP）,用腹腔鏡從腹壁內側補強疝氣，需打氣所以插管,全身麻醉（氣管插管）,B|NB
+一般外科,Robotic IPOM+,IPOM+|IPOM plus|IPOM|Robotic IPOM+|Robotic IPOM|Intraperitoneal onlay mesh|Ventral hernia repair|Incisional hernia repair|75622C|腹壁疝氣|切口疝氣,機械手臂腹腔內補網修補術（IPOM+）,用機械手臂從腹腔內縫合腹壁缺損再貼補網，治療腹壁或切口疝氣,全身麻醉（氣管插管）,B|NB|IVPCA|ONDAN
+大腸直腸外科,Hemorrhoidectomy,Hemorrhoidectomy|74410C|Hemorrhoidectomy internal & external|Haemorrhoidectomy|PPH|Hemorrhoid|痔瘡,痔瘡切除術,切除肛門痔瘡,脊椎麻醉（半身）、鞍部麻醉,ITM|SEDSPINAL|NALD
+大腸直腸外科,Fistulectomy / Fistulotomy,Fistulectomy|Fistulotomy|Anal fistulotomy|Anal fistulectomy|Fistulectomy or fistulotomy|74411C|Anal fistula|廔管,廔管切除術,處理肛門旁的廔管或膿瘍,脊椎麻醉（半身）,SEDSPINAL|ITM
 一般外科,Incision and drainage,I&D|I & D|Incision & Drainage|Incision and drainage|Abscess|Perianal abscess|切開引流|膿瘍,切開引流,切開膿瘍把膿引流出來,全身麻醉（喉罩）、脊椎麻醉（半身）、局部麻醉,A
 一般外科,Modified radical mastectomy,MRM|Modified radical mastectomy|乳房切除|M.R.M,改良根治性乳房切除術,切除整個乳房並處理腋下淋巴結,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB|IVPCA
 一般外科,Mastectomy,Mastectomy|Total mastectomy|Simple mastectomy|乳房切除,乳房切除術,切除整個乳房,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB|IVPCA
@@ -17,16 +19,16 @@
 一般外科,Radical mastectomy,Radical mastectomy|根治性乳房切除,根治性乳房切除術,切除乳房、胸肌及腋下淋巴結,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB|IVPCA
 一般外科,Breast-conserving surgery,BCS|Partial mastectomy|Lumpectomy|Wide excision breast|SLNB|Sentinel lymph node biopsy|乳房部分切除,乳房部分切除術＋前哨淋巴結切片,只切除乳房腫瘤及周邊組織，保留乳房,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB
 一般外科,Port-A implantation,Port-A|Port A|Port-A-Cath|Port implantation|人工血管,人工血管植入術,在胸前皮下放化療用的人工血管,局部麻醉、監測麻醉照護（MAC）,
-一般外科,Thyroidectomy,Thyroidectomy|Total thyroidectomy|Subtotal thyroidectomy|Lobectomy thyroid|Hemithyroidectomy|甲狀腺切除|Nearly Total Thyroidectomy|Near-total thyroidectomy|亞全甲狀腺切除|近全甲狀腺切除,甲狀腺切除術,切除部分或全部甲狀腺，前頸部,全身麻醉（氣管插管）,B|ONDAN
-一般外科,Parathyroidectomy,Parathyroidectomy|PTx|副甲狀腺,副甲狀腺切除術,切除副甲狀腺，前頸部,全身麻醉（氣管插管）,B
+一般外科,Thyroidectomy,Thyroidectomy|Total thyroidectomy|Subtotal thyroidectomy|Lobectomy thyroid|Hemithyroidectomy|82004B|甲狀腺切除|Nearly Total Thyroidectomy|Near-total thyroidectomy|亞全甲狀腺切除|近全甲狀腺切除,甲狀腺切除術,切除部分或全部甲狀腺，前頸部,全身麻醉（氣管插管）,B|ONDAN
+一般外科,Parathyroidectomy,Parathyroidectomy|PTx|Parathyroid autotransplantation|Autotransplantation|82013B|副甲狀腺,副甲狀腺切除術（±自體移植）,切除副甲狀腺，必要時把一小部分移植到前臂肌肉保留功能，前頸部,全身麻醉（氣管插管）,B|ONDAN
 一般外科,Whipple operation,Whipple|PPPD|Pancreaticoduodenectomy|胰十二指腸|Whipple's OP|Whipple's,Whipple's 手術（胰臟癌）,切除胰頭、十二指腸與膽管並重建，大型腹部手術,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|WARM|NALD
 一般外科,Distal pancreatectomy,Distal pancreatectomy|DP|胰尾切除,遠端胰臟切除術,切除胰臟尾部，常合併脾臟切除,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|IVPCA
 一般外科,Gastrectomy,Gastrectomy|Subtotal gastrectomy|Total gastrectomy|Distal gastrectomy|LADG|胃切除|Subtotal Gastrectomy|Total Gastrectomy|亞全胃切除|全胃切除,胃切除術,切除部分或全部的胃，上腹部,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|IVPCA
 一般外科,Gastrostomy,Gastrostomy|PEG|胃造口,胃造口術,在胃放灌食管,全身麻醉（氣管插管）、靜脈鎮靜,B
-一般外科,Colectomy,Colectomy|Sigmoidectomy|大腸切除,大腸切除術,切除部分大腸並接合，腹腔鏡或開腹,全身麻醉（氣管插管）、硬脊膜外麻醉,B|IVPCA|EPCA
-一般外科,Hemicolectomy,Hemicolectomy|Right hemicolectomy|Left hemicolectomy|半結腸切除,半結腸切除術,切除右側或左側一半的大腸,全身麻醉（氣管插管）、硬脊膜外麻醉,B|IVPCA|EPCA
-一般外科,Low anterior resection,LAR|L.A.R|Low Anterior Resection|Anterior resection|低位前直腸,低位前直腸切除術,切除直腸腫瘤並接合，保留肛門,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|IVPCA
-一般外科,Abdominoperineal resection,APR|Abdominoperineal resection|腹會陰|A.P.R|Abdominal Perineal Resection,腹會陰聯合切除術,切除直腸與肛門並做永久人工肛門,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|WARM
+大腸直腸外科,Colectomy,Colectomy|Sigmoidectomy|大腸切除,大腸切除術,切除部分大腸並接合，腹腔鏡或開腹,全身麻醉（氣管插管）、硬脊膜外麻醉,B|IVPCA|EPCA
+大腸直腸外科,Hemicolectomy,Hemicolectomy|Right hemicolectomy|Left hemicolectomy|半結腸切除,半結腸切除術,切除右側或左側一半的大腸,全身麻醉（氣管插管）、硬脊膜外麻醉,B|IVPCA|EPCA
+大腸直腸外科,Low anterior resection,LAR|Laparoscopic LAR|Lap LAR|74221B|L.A.R|Low Anterior Resection|Anterior resection|低位前直腸,低位前直腸切除術,切除直腸腫瘤並接合，保留肛門,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|IVPCA
+大腸直腸外科,Abdominoperineal resection,APR|Abdominoperineal resection|腹會陰|A.P.R|Abdominal Perineal Resection,腹會陰聯合切除術,切除直腸與肛門並做永久人工肛門,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|WARM
 一般外科,Hepatectomy,Hepatectomy|Lap hepatectomy|Segmentectomy liver|Lobectomy liver|Wedge resection liver|肝切除,肝臟切除術,切除部分肝臟（常為肝癌），右上腹,全身麻醉（氣管插管）,B|IVPCA|NB|WARM
 一般外科,Liver transplantation,Liver transplantation|LDLT|DDLT|Living donor liver|Donor hepatectomy|肝臟移植|肝移植,肝臟移植手術,以捐贈者肝臟取代病肝（活體 LDLT／大愛 DDLT）,全身麻醉（氣管插管）,CV
 一般外科,Splenectomy,Splenectomy|脾臟切除,脾臟切除術,切除脾臟，左上腹,全身麻醉（氣管插管）,B|IVPCA
@@ -58,26 +60,30 @@
 骨科,PCL repair,PCL repair|P.C.L. Repair|Post Cruciate Ligament Repair|Posterior cruciate ligament repair|後十字韌帶修補|PCL,後十字韌帶修補術,修補斷裂的後十字韌帶,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
 骨科,Rotator cuff repair,RCR|Rotator cuff repair|Arthroscopic rotator cuff|Shoulder arthroscopy|Bankart|旋轉肌,肩旋轉肌袖修補術,關節鏡修補肩膀破裂的肌腱,全身麻醉（氣管插管）、斜角肌間神經阻斷,B|NB|ONDAN
 骨科,Total shoulder arthroplasty,TSA|Reverse TSA|RSA|Shoulder arthroplasty|人工肩關節|TSR|T.S.R|Total Shoulder Replacement,肩關節置換術,以人工關節取代肩關節,全身麻醉（氣管插管）、神經阻斷,B|NB|IVPCA
+骨科,Peripheral nerve decompression,Decompression of median or ulnar nerve|Decompression of median|Decompression of ulnar|Nerve decompression|Ulnar nerve decompression|Ulnar nerve transposition|Cubital tunnel release|Cubital tunnel|Neurolysis|83006C|肘隧道|尺神經|神經減壓,周邊神經減壓術（正中／尺神經）,切開壓迫處解除正中神經或尺神經壓迫（如肘隧道症候群），手臂,全身麻醉（喉罩）、神經阻斷、局部麻醉,A|NB
+骨科,Synovectomy / capsulectomy,Synovectomy|Capsulectomy|Synovectomy or capsulectomy|Arthroscopic synovectomy|64057B|滑膜切除|關節囊切除,滑膜切除術／關節囊切除術,切除發炎增生的關節滑膜或沾黏的關節囊，恢復活動度（可用關節鏡）,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|IVPCA
 骨科,Carpal tunnel release,CTR|Carpal tunnel release|Carpal tunnel|腕隧道,腕隧道症候群減壓術,切開腕橫韌帶解除正中神經壓迫,局部麻醉、神經阻斷,NB
 骨科,Trigger finger release,Trigger finger|A1 pulley release|板機指,板機指鬆解術,切開手指屈肌腱鞘,局部麻醉,
 骨科,Tendon repair,Tendon repair|Tenorrhaphy|Achilles tendon repair|Flexor tendon|Extensor tendon|肌腱修補|阿基里斯,肌腱修補術,縫合斷裂的肌腱。手部等平躺手術可用喉罩；阿基里斯腱多為趴姿需插管（改推組套B）,全身麻醉（喉罩）、神經阻斷、脊椎麻醉（半身）,A|NB
 骨科,Tenolysis,Tenolysis|肌腱融合|肌腱鬆解,肌腱鬆解術,分離沾黏的肌腱，恢復活動度,全身麻醉（喉罩）、神經阻斷,A|NB
 骨科,Hallux valgus correction,Hallux valgus|Bunionectomy|Chevron osteotomy|拇趾外翻,拇趾外翻矯正術,截骨矯正大腳趾外翻,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB|SEDSPINAL
-骨科,High tibial osteotomy,HTO|High tibial osteotomy|脛骨高位截骨|H.T.O|High Tibia Osteotomy,高位脛骨切開術,截骨改變下肢受力線，減緩膝關節退化,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|IVPCA
+骨科,High tibial osteotomy,HTO|HTO +/- Bone grafting|HTO + Bone grafting|High tibial osteotomy|脛骨高位截骨|H.T.O|High Tibia Osteotomy,高位脛骨切開術,截骨改變下肢受力線，減緩膝關節退化,全身麻醉（喉罩）、脊椎麻醉（半身）,A|NB|IVPCA
 神經外科,Laminectomy,Laminectomy|Laminotomy|Decompression|椎板切除,椎板切除術,切除部分椎板減輕神經壓迫，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA
-神經外科,Microdiscectomy,Microdiscectomy|Micro-Discotomy|Micro Discotomy|Discectomy|Discotomy|MED|Endoscopic discectomy|椎間盤顯微切除|椎間盤切除,椎間盤顯微切除術,用顯微鏡切除突出壓迫神經的椎間盤，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA
+神經外科,Microdiscectomy,Microdiscectomy|Microdisectomy|Micro-disectomy|Micro-Discotomy|Micro Discotomy|Discectomy|Disectomy|Discotomy|MED|Endoscopic discectomy|椎間盤顯微切除|椎間盤切除,椎間盤顯微切除術,用顯微鏡切除突出壓迫神經的椎間盤，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA
 骨科,Posterior decompression,PD|P.D|Posterior Decompression|背側減壓,背側減壓術,從背側移除壓迫神經的骨頭或組織，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA
 骨科,Posterior fusion,PF|P.F|Posterior Fusion|背側融合,背側融合術,從背側用骨釘把脊椎固定融合，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA|WARM
-骨科,Lumbar spinal fusion,PLIF|TLIF|ALIF|OLIF|XLIF|MIS-TLIF|Spinal fusion|Pedicle screw|Instrumentation|融合,腰椎融合固定術,減壓後用骨釘和支架把脊椎固定融合，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA|WARM|NALD
+神經外科,Lumbar spinal fusion,PLIF|TLIF|ALIF|OLIF|XLIF|MIS-TLIF|MISTLIF|MIS TLIF|Spinal fusion|Pedicle screw|Instrumentation|融合,腰椎融合固定術,減壓後用骨釘和支架把脊椎固定融合，趴姿（MIS-TLIF 為微創小傷口）,全身麻醉（氣管插管）,B|SPINE|IVPCA|WARM|NALD
 骨科,Anterior decompression + anterior fusion,AD+AF|AD + AF|A D + A F|AD/AF|Anterior Decompression|Anterior Fusion|Anterior Decompression + Anterior Fusion|前減壓|前融合,前減壓＋前融合術,從身體前側移除壓迫神經的組織並融合脊椎。頸椎從前頸部（ACDF）；胸腰椎從腹部或側腹進入（ALIF／OLIF）,全身麻醉（氣管插管）,B|IVPCA|WARM
-骨科,Anterior cervical discectomy and fusion,ACDF|Anterior cervical discectomy|Cervical fusion|Corpectomy|頸椎,前位頸椎椎間盤切除融合術（ACDF）,從前頸部移除椎間盤並融合,全身麻醉（氣管插管）,B|IVPCA
+神經外科,Anterior cervical discectomy and fusion,ACDF|Anterior cervical discectomy|Cervical fusion|Corpectomy|頸椎,前位頸椎椎間盤切除融合術（ACDF）,從前頸部移除椎間盤並融合，平躺,全身麻醉（氣管插管）,B|IVPCA
 骨科,Cervical laminoplasty,Laminoplasty|Cervical laminoplasty|頸椎椎板成形,頸椎椎板成形術,從後頸部擴大椎管減壓，趴姿,全身麻醉（氣管插管）,B|SPINE|IVPCA
 骨科,Scoliosis correction,Scoliosis|Scoliosis correction|Deformity correction|脊柱側彎,脊柱側彎矯正手術,長節段骨釘矯正脊椎彎曲，大型手術,全身麻醉（氣管插管）,B|SPINE|NIRS|TEG|IVPCA|WARM
 骨科,Vertebroplasty / kyphoplasty,Vertebroplasty|Kyphoplasty|PVP|PKP|骨水泥,椎體成形術（灌骨水泥）,在壓迫性骨折的椎體打入骨水泥，趴姿,監測麻醉照護（MAC）、靜脈鎮靜、全身麻醉（氣管插管）,REMI|BIS
 婦產科,Cesarean section,C/S|CS|Cesarean section|Caesarean section|C-section|LTCS|剖腹產|Caesarean,剖腹產,經腹部切開子宮取出胎兒,脊椎麻醉（半身）、硬脊膜外麻醉,ITM|IVPCA|EPCA|SEDSPINAL
 婦產科,Labor analgesia,NSD|Normal spontaneous delivery|Vaginal delivery|Labor|減痛分娩|自然產,自然產（減痛分娩）,陰道分娩，可選擇減痛分娩,硬脊膜外麻醉,LABOR|ITLABOR
 婦產科,Dilatation and curettage,D&C|D/C|D and C|Dilatation and curettage|Suction curettage|Evacuation|子宮擴刮,子宮內膜刮除術,經陰道刮除子宮內膜或流產組織,全身麻醉（喉罩）、靜脈全身麻醉,A|BIS|ONDAN
-婦產科,Hysteroscopy,Hysteroscopy|Hysteroscopic|Hysteroscopic polypectomy|Hysteroscopic myomectomy|子宮鏡,子宮鏡,經陰道用內視鏡檢查或切除子宮內病灶,全身麻醉（喉罩）、靜脈全身麻醉,A|ONDAN
+婦產科,Hysteroscopy,Hysteroscopy|Hysteroscopic|Hysteroscopic polypectomy|Hysteroscopic removal of polyp|80422B|Hysteroscopic myomectomy|Em biopsy|Hysteroscopic Em biopsy|Endometrial biopsy|子宮鏡|子宮內膜切片,子宮鏡,經陰道用內視鏡檢查或切除子宮內病灶（息肉、內膜切片等）,全身麻醉（喉罩）、靜脈全身麻醉,A|ONDAN
+婦產科,Transcervical resection,TCR|TCRE|TCRP|TCRM|Transcervical resection|Hysteroscopic resection|Cold knife endometrial shaving|Endometrial shaving|Meta-Regen|Mate-Regen|子宮鏡電切|子宮內膜刮除,子宮鏡經子宮頸切除術（TCR）,經陰道用子宮鏡切除子宮內膜、息肉、肌瘤或沾黏（可用冷刀刮內膜）,全身麻醉（喉罩）、靜脈全身麻醉,A|ONDAN
+婦產科,Mirena insertion,Mirena|LNG-IUS|LNG-IUD|IUD insertion|蜜蕊娜|子宮內避孕器,子宮內投藥避孕器（蜜蕊娜 Mirena）置放,在子宮內放入含黃體素的避孕器（治療經血過多、肌腺症等），常與子宮鏡一起做,全身麻醉（喉罩）、靜脈全身麻醉,A|ONDAN
 婦產科,Laparoscopic hysterectomy,TLH|Laparoscopic hysterectomy|Total laparoscopic hysterectomy|腹腔鏡子宮切除,全腹腔鏡子宮切除術,用腹腔鏡切除子宮,全身麻醉（氣管插管）,B|NB|ONDAN
 婦產科,Laparoscopically assisted vaginal hysterectomy,LAVH|L.A.V.H|Laparoscopically Assisted Vaginal Hysterectomy|Laparoscopic-assisted vaginal hysterectomy,經腹腔鏡輔助陰道子宮切除,腹腔鏡輔助、從陰道取出子宮,全身麻醉（氣管插管）,B|NB|ONDAN
 婦產科,Total abdominal hysterectomy,ATH|TAH|Total abdominal hysterectomy|Abdominal hysterectomy|全子宮切除|A.T.H|Abdominal Total Hysterectomy,腹式子宮全切除術,開腹切除子宮，常合併切除卵巢輸卵管,全身麻醉（氣管插管）、硬脊膜外麻醉,B|IVPCA|EPCA
@@ -89,17 +95,20 @@
 婦產科,Salpingectomy,Salpingectomy|Ectopic pregnancy|Salpingostomy|子宮外孕|輸卵管|Ectopic Preg,輸卵管切除（子宮外孕）,處理子宮外孕或結紮輸卵管,全身麻醉（氣管插管）,B|ONDAN
 婦產科,Tubal ligation,Tubal ligation|T/L|BTL|輸卵管結紮,輸卵管結紮,結紮輸卵管避孕,全身麻醉（氣管插管）、脊椎麻醉（半身）,B|ONDAN
 婦產科,Tubal reanastomosis,Tubal reanastomosis|Tubal Reanastomosis|輸卵管再吻合,輸卵管再吻合術,把結紮過的輸卵管重新接回,全身麻醉（氣管插管）,B|ONDAN
-婦產科,Conization,Conization|LEEP|Cone biopsy|錐狀切除,圓錐形切除法,切除子宮頸病變組織,全身麻醉（喉罩）、靜脈全身麻醉,A
+婦產科,Conization,Conization|Cervical conization|80205B|CKC|Cold knife conization|LEEP|Cone biopsy|錐狀切除|子宮頸錐狀切除,圓錐形切除法,切除子宮頸病變組織,全身麻醉（喉罩）、靜脈全身麻醉,A
 婦產科,Cervical cerclage,Cerclage|McDonald|Shirodkar|子宮頸環紮,子宮頸環紮術,懷孕時縫合子宮頸預防早產,脊椎麻醉（半身）,SEDSPINAL
 婦產科,Staging surgery,Staging surgery|Staging|分期手術,婦癌分期手術,切除子宮、卵巢、網膜與淋巴結，大型手術,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|WARM|IVPCA
 婦產科,Debulking surgery,Debulking|Debulking surgery|Cytoreductive surgery|腫瘤縮減,腫瘤縮減術,盡量切除腹腔內的腫瘤（卵巢癌），大型手術,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|WARM|IVPCA
 婦產科,Radical hysterectomy,Radical hysterectomy|根除性子宮切除|根治性子宮切除,根除性子宮切除術,切除子宮、周邊組織及淋巴結（子宮頸癌）,全身麻醉（氣管插管）、硬脊膜外麻醉,B|EPCA|WARM|IVPCA
 婦產科,Anti-incontinence surgery,TVT|TOT|Mid-urethral sling|Pelvic floor reconstruction|Prolapse|尿失禁,尿失禁中段尿道吊帶術,放吊帶改善應力性尿失禁,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
-泌尿科,Transurethral resection of prostate,TURP|TUR-P|Transurethral resection of prostate|ThuLEP|HoLEP|PVP laser|前列腺|Trans-Urethral Resection of the Prostate,經尿道前列腺切除術,經尿道用內視鏡刮除肥大的攝護腺,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
+泌尿科,Transurethral resection of prostate,TURP|TUR-P|TUR-P and TRUS-P biopsy|TURP and TRUS biopsy|Transurethral resection of prostate|ThuLEP|HoLEP|PVP laser|前列腺|Trans-Urethral Resection of the Prostate,經尿道前列腺切除術,經尿道用內視鏡刮除肥大的攝護腺,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
 泌尿科,Transurethral resection of bladder tumor,TURBT|TUR-BT|TUR-Bt|Transurethral resection of bladder tumor|膀胱腫瘤,經尿道膀胱腫瘤切除術,經尿道刮除膀胱腫瘤,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
-泌尿科,Ureteroscopic lithotripsy,URSL|URS|Ureteroscopic lithotripsy|Ureteroscopy|RIRS|Retrograde intrarenal surgery|輸尿管鏡|碎石|URS-SM|URS SM|Uretero-Renal Scopy Stone Manipulation|Uretero-Renal Scopy Stone Menapulation|輸尿管鏡取石,輸尿管鏡取石術,經尿道用輸尿管鏡把結石打碎取出,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
+泌尿科,Ureteroscopic lithotripsy,URSL|URS|Ureteroscopic lithotripsy|Ureteroscopy|RIRS|Retrograde intrarenal surgery|輸尿管鏡|碎石|URS-SM|URS SM|URS-exam|URS exam|Ureter tumor biopsy|Ureteral tumor biopsy|Uretero-Renal Scopy Stone Manipulation|Uretero-Renal Scopy Stone Menapulation|輸尿管鏡取石,輸尿管鏡取石術,經尿道用輸尿管鏡把結石打碎取出,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
 泌尿科,Percutaneous nephrolithotomy,PCNL|Percutaneous nephrolithotomy|PCN|經皮腎|Percutaneous Nephrolithotripsy|Nephrolithotripsy|P.C.N.L,經皮行腎結石碎石術,從背部腰部打洞進腎臟取出大顆結石，趴姿,全身麻醉（氣管插管）,B|IVPCA|NB
-泌尿科,Double-J stent,DJ|D-J|Double J|DJ stent|Double-J|雙J|Double J stent,雙J支架（用於輸尿管狹窄）,經尿道放入或更換輸尿管支架,全身麻醉（喉罩）、監測麻醉照護（MAC）,A|REMI
+泌尿科,Double-J stent,DJ|D-J|Double J|DJ stent|Double-J|DBJ|DBJ stent|DBJ stent renewal|DJ renewal|DJ change|雙J|Double J stent,雙J支架（用於輸尿管狹窄）,經尿道放入或更換輸尿管支架,全身麻醉（喉罩）、監測麻醉照護（MAC）,A|REMI
+泌尿科,TRUS prostate biopsy,TRUS-P biopsy|TRUS biopsy|TRUS-P|TRUS|Transrectal ultrasound prostate biopsy|Prostate biopsy|攝護腺切片,經直腸超音波攝護腺切片,經肛門用超音波導引，用細針取攝護腺組織檢查是否有癌細胞,靜脈麻醉、全身麻醉（喉罩）,A|REMI
+泌尿科,Intravesical injection,Intravesical injection|Intravesical PROP|Intravesical PRP|Intravesical botox|Botox injection|PFM triamcinolone injection|Triamcinolone injection|Bladder injection|膀胱內注射,膀胱內注射治療,用膀胱鏡把藥物（如 PRP、肉毒桿菌素、類固醇）注射到膀胱壁或骨盆底肌肉（間質性膀胱炎、膀胱過動等）,全身麻醉（喉罩）、靜脈麻醉,A
+泌尿科,Urethral caruncle excision,Urethral caruncle|Urethral caruncle excision|Caruncle|尿道肉阜,尿道肉阜切除術,切除女性尿道口長出的良性肉芽組織,全身麻醉（喉罩）、脊椎麻醉（半身）、靜脈麻醉,A|SEDSPINAL
 泌尿科,Cystoscopy,Cystoscopy|Cysto|膀胱鏡,膀胱鏡檢查,經尿道用內視鏡檢查膀胱,全身麻醉（喉罩）、局部麻醉,A
 泌尿科,Radical prostatectomy,RP|RARP|Radical prostatectomy|Robotic prostatectomy|達文西|攝護腺癌,根除性攝護腺切除術（達文西）,切除整個攝護腺，常用機械手臂,全身麻醉（氣管插管）,B|IVPCA|WARM
 泌尿科,Nephrectomy,Nephrectomy|Radical nephrectomy|Partial nephrectomy|Nephroureterectomy|Lap nephrectomy|腎切除,腎切除術,切除全部或部分腎臟,全身麻醉（氣管插管）,B|IVPCA|NB
@@ -114,25 +123,26 @@
 耳鼻喉科,Functional endoscopic sinus surgery,FESS|ESS|Functional endoscopic sinus surgery|Endoscopic sinus surgery|鼻竇|F.E.S.S|Functional Endoscopy Sinus Surgery,功能性內視鏡鼻竇切除術,用內視鏡清除鼻竇病灶、打通引流,全身麻醉（氣管插管）,B|ONDAN
 耳鼻喉科,Septoplasty,Septoplasty|Septal deviation|鼻中隔,鼻中隔矯正術,矯正彎曲的鼻中隔,全身麻醉（氣管插管）,B|ONDAN
 耳鼻喉科,Submucous resection,SMR|S.M.R|Submucous Resection|鼻粘膜切除|鼻黏膜切除,鼻粘膜切除,經鼻內切除黏膜下彎曲的軟骨骨頭，改善鼻塞,全身麻醉（氣管插管）,B|ONDAN
-耳鼻喉科,Submucous turbinectomy,Turbinoplasty|Turbinate reduction|ITR|Inferior turbinate|下鼻甲|SMT|S.M.T|Submucous Turbinectomy|Turbinectomy|鼻甲,鼻甲切除術,縮小肥厚的下鼻甲改善鼻塞,全身麻醉（氣管插管）,B
+耳鼻喉科,Submucous turbinectomy,Turbinoplasty|Turbinate reduction|ITR|Inferior turbinate|下鼻甲|SMT|S.M.T|SMP|S.M.P|Submucosal turbinoplasty|Submucous Turbinectomy|Turbinectomy|鼻甲,鼻甲切除術,縮小肥厚的下鼻甲改善鼻塞,全身麻醉（氣管插管）,B
 耳鼻喉科,Tonsillectomy,Tonsillectomy|Adenotonsillectomy|T&A|Adenoidectomy|扁桃腺|腺樣體,扁桃腺切除術,切除扁桃腺或腺樣體，口咽部,全身麻醉（氣管插管）,B|ONDAN|NALD
 耳鼻喉科,Uvulopalatopharyngoplasty,UPPP|Uvulopalatopharyngoplasty|Palatoplasty|OSA surgery|懸壅垂|Uvulopalatopharngoplasty|U.P.P.P,懸壅顎咽成型術,切除多餘軟顎組織改善打鼾與睡眠呼吸中止,全身麻醉（氣管插管）,B|ONDAN|NALD
 耳鼻喉科,Total laryngectomy,Total laryngectomy|Laryngectomy|全喉切除,全喉切除術,切除整個喉頭並做永久氣切（喉癌）,全身麻醉（氣管插管）,B|WARM|IVPCA
-耳鼻喉科,Laryngomicrosurgery,LMS|MLS|Laryngomicrosurgery|Microlaryngeal surgery|Vocal cord polyp|Vocal polyp|聲帶|Laryngo Micro Surgery|L.M.S,喉頭顯微手術,用顯微鏡切除聲帶息肉或病灶,全身麻醉（氣管插管）,B|NMT
+耳鼻喉科,Laryngomicrosurgery,LMS|MLS|LMS biopsy|Laryngomicrosurgery|Microlaryngeal surgery|Vocal cord polyp|Vocal polyp|聲帶|Laryngo Micro Surgery|L.M.S,喉頭顯微手術,用顯微鏡切除聲帶息肉或病灶,全身麻醉（氣管插管）,B|NMT
 耳鼻喉科,Direct laryngoscopy,Direct laryngoscopy|DL biopsy|DL|咽喉鏡,直接喉鏡檢查／切片,全身麻醉下檢查咽喉食道並切片,全身麻醉（氣管插管）,B|NMT
-耳鼻喉科,Tympanoplasty,Tympanoplasty,耳膜成形術,修補耳膜並重建中耳,全身麻醉（氣管插管）,B|ONDAN
+耳鼻喉科,Tympanoplasty,Tympanoplasty|Endoscopic tympanoplasty|TEES|Transcanal endoscopic ear surgery|耳內視鏡,耳膜成形術,修補耳膜並重建中耳（可經耳道用內視鏡，不需耳後切口）,全身麻醉（氣管插管）,B|ONDAN
 耳鼻喉科,Myringoplasty,Myringoplasty|鼓膜成形,鼓膜成形術,修補耳膜破洞,全身麻醉（氣管插管）,B|ONDAN
 耳鼻喉科,Mastoidectomy,Mastoidectomy|Canal wall up|Canal wall down|乳突,乳突竇切除術,清除耳後乳突內的慢性發炎或膽脂瘤,全身麻醉（氣管插管）,B|ONDAN
 耳鼻喉科,Grommet insertion,V-T|VT|Ventilation tube|Tympanostomy tube|中耳通氣管|Grommet|Grommet insertion,耳道通氣植入術,在耳膜放通氣管（多為兒童）,全身麻醉（喉罩）,A
 耳鼻喉科,Myringotomy,Myringotomy|鼓膜切開,鼓膜切開術,切開耳膜引流中耳積水,全身麻醉（喉罩）,A
+耳鼻喉科,Tumor wide excision,TWE|T.W.E|Tumor wide excision|Wide excision of tumor|腫瘤廣泛切除,腫瘤廣泛切除術,連同周邊安全範圍切除腫瘤（常見口腔、頭頸部），範圍大小差異很大,全身麻醉（氣管插管）,B|ONDAN
 耳鼻喉科,Parotidectomy,Parotidectomy|Superficial parotidectomy|腮腺|Parotid tumor,腮腺切除術,切除耳前腮腺腫瘤,全身麻醉（氣管插管）,B
 耳鼻喉科,Neck dissection / oral cancer surgery,Neck dissection|MRND|SOND|Wide excision|Composite resection|Mandibulectomy|Glossectomy|口腔癌|皮瓣,頸部淋巴廓清／口腔癌切除＋皮瓣重建,切除口腔腫瘤及頸部淋巴，並用皮瓣重建，長時間手術,全身麻醉（氣管插管）,B|WARM|IVPCA|NIRS
 耳鼻喉科,Tracheostomy,Tracheostomy|Trach|氣切,氣管切開術,在頸部氣管開口放氣切管,全身麻醉（氣管插管）、局部麻醉,
-眼科,Cataract surgery,Phaco|Phacoemulsification|PE+IOL|IOL|ECCE|Cataract|白內障|CATA|C.A.T.A|ACIOL|A.C.I.O.L|PCIOL|P.C.I.O.L|Anterior chamber intra-ocular lens|Posterior chamber intra-ocular lens|前房眼內人工水晶體|後房眼內人工水晶體,白內障手術,打碎混濁的水晶體並植入人工水晶體,表面麻醉、監測麻醉照護（MAC）,REMI
+眼科,Cataract surgery,Phaco|Phacoemulsification|PE+IOL|IOL|ECCE|Cataract|白內障|CATA|C.A.T.A|ACIOL|A.C.I.O.L|PCIOL|P.C.I.O.L|IOL implantation|Secondary IOL|Anterior chamber intra-ocular lens|Posterior chamber intra-ocular lens|前房眼內人工水晶體|後房眼內人工水晶體,白內障手術,打碎混濁的水晶體並植入人工水晶體,表面麻醉、監測麻醉照護（MAC）,REMI
 眼科,Vitrectomy,PPV|Vitrectomy|Pars plana vitrectomy|ERM|Macular hole|Retinal detachment|玻璃體,玻璃體切除術,清除玻璃體處理視網膜問題,全身麻醉（氣管插管）、球後麻醉、監測麻醉照護（MAC）,B|ONDAN|REMI
 眼科,Scleral buckle,Scleral buckle|SB|鞏膜扣壓,鞏膜扣壓術,治療視網膜剝離,全身麻醉（氣管插管）,B|ONDAN
 眼科,Strabismus surgery,Strabismus|Recession|Resection EOM|斜視,斜視矯正術,調整眼外肌位置（多為兒童）,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|ONDAN
-眼科,Trabeculectomy,Trabeculectomy|Glaucoma surgery|Ahmed valve|青光眼,小梁切除術,建立房水引流降低眼壓,球後麻醉、全身麻醉（氣管插管）,REMI
+眼科,Trabeculectomy,Trabeculectomy|TRAB|TRAB+MMC|Trabeculectomy with MMC|MMC|Mitomycin C|Glaucoma surgery|Ahmed valve|青光眼,小梁切除術,建立房水引流降低眼壓（常加抗瘢痕藥 MMC 防止引流口癒合阻塞）,球後麻醉、全身麻醉（氣管插管）,REMI
 眼科,Scheie's operation,Scheie|Scheie's operation|Seheie's Operation|Seheie|Thermal sclerostomy|熱鞏膜造廔,熱鞏膜造廔術（Scheie 氏手術）,燒灼鞏膜建立房水引流，降低眼壓（青光眼）,球後麻醉、全身麻醉（氣管插管）,REMI
 眼科,Dacryocystorhinostomy,DCR|Dacryocystorhinostomy|淚囊|D.C.R,淚囊鼻腔切開術,打通阻塞的淚管,全身麻醉（氣管插管）,B
 眼科,Blepharoplasty / ptosis,Blepharoplasty|Ptosis|Ptosis correction|眼瞼下垂|眼瞼,眼瞼整形／眼瞼下垂矯正術,矯正眼皮鬆弛或下垂,局部麻醉、監測麻醉照護（MAC）,REMI
@@ -162,7 +172,7 @@
 心臟血管外科,Endovascular aortic repair,EVAR|TEVAR|Endovascular|Stent graft|主動脈支架,主動脈支架置放術,經鼠蹊部血管放入主動脈支架,全身麻醉（氣管插管）、監測麻醉照護（MAC）,B|NIRS
 心臟血管外科,Transcatheter aortic valve implantation,TAVI|TAVR|Transcatheter aortic valve|經導管主動脈瓣,經導管主動脈瓣膜置換術,經鼠蹊部導管置放人工主動脈瓣,監測麻醉照護（MAC）、全身麻醉（氣管插管）,REMI|BIS|NIRS
 心臟血管外科,Arteriovenous fistula creation,AVF|AV fistula|AVG|AV graft|Arteriovenous fistula|PTA|動靜脈廔管|洗腎|A-V shunt|AV shunt|Arterio-Venous Shunt,動靜脈導管（動靜脈廔管）,做洗腎用的血管通路（手臂）,神經阻斷、局部麻醉,NB
-心臟血管外科,Varicose vein surgery,Varicose vein|High ligation|Stripping|RFA varicose|EVLA|靜脈曲張,靜脈枝剝離術（靜脈曲張）,處理腿部靜脈曲張,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
+心臟血管外科,Varicose vein surgery,Varicose vein|Varicose ablation|Varicose ablation + sclerotherapy|Varicose|Endovenous ablation|Sclerotherapy|硬化劑|High ligation|Stripping|RFA varicose|EVLA|靜脈曲張,靜脈枝剝離術（靜脈曲張）,處理腿部靜脈曲張,全身麻醉（喉罩）、脊椎麻醉（半身）,A|SEDSPINAL
 心臟血管外科,Pericardiectomy,Pericardiectomy|心包膜|Pericardietomy,心包切除術,切除增厚的心包膜（縮窄性心包炎）,全身麻醉（氣管插管）,B|IVPCA
 心臟血管外科,Pericardial drainage,Pericardial drainage|Pericardial window|Pericardiocentesis|心包膜腔引流|心包膜開窗,心包膜腔引流,引流心包膜積液（心包填塞）,局部麻醉、全身麻醉（氣管插管）,B
 心臟內科（導管）,Catheter ablation,RFA|PFA|Ablation|Catheter ablation|Cryoablation|PVI|AF ablation|EPS|電燒,心律不整電氣燒灼術,經導管燒灼心臟異常電路（如心房顫動）,靜脈鎮靜、全身麻醉（氣管插管）,BISSED|REMI|BIS
@@ -227,6 +237,9 @@
 診斷縮寫,Left,Lt|Left|左側,左側,診斷或病歷常見縮寫,,
 診斷縮寫,Right,Rt|Right|右側,右側,診斷或病歷常見縮寫,,
 診斷縮寫,Bilateral,Bil|Bilateral|雙側,雙側,診斷或病歷常見縮寫,,
+診斷縮寫,Oculus dexter (right eye),OD|O.D|Oculus dexter|Right eye|右眼,右眼,眼科常見縮寫,,
+診斷縮寫,Oculus sinister (left eye),OS|O.S|Oculus sinister|Left eye|左眼,左眼,眼科常見縮寫,,
+診斷縮寫,Oculus uterque (both eyes),OU|O.U|Oculus uterque|Both eyes|雙眼,雙眼,眼科常見縮寫,,
 診斷縮寫,Diabetic foot ulcer,DFU|Diabetic foot ulcer|糖尿病足潰瘍,糖尿病足潰瘍,診斷或病歷常見縮寫,,
 診斷縮寫,Chronic paranasal sinusitis,CPS|Chronic paranasal sinusitis|C.P.S|CRS|Chronic rhinosinusitis|慢性副鼻竇炎,慢性副鼻竇炎,診斷或病歷常見縮寫,,
 診斷縮寫,Parotid tumor,Parotid tumor|腮腺腫瘤,腮腺腫瘤,診斷或病歷常見縮寫,,
@@ -258,6 +271,7 @@
 整形外科,Augmentation,Augmentation|Breast augmentation|增大|隆乳,增大，增進（Augmentation，如隆乳）,植入物增加組織體積，如隆乳,全身麻醉（喉罩）、全身麻醉（氣管插管）,A|NB
 整形外科,Abdominal flap,Abdominal flap|腹部皮瓣,腹部皮瓣,用腹部組織做皮瓣重建（如乳房重建）,全身麻醉（氣管插管）,B|WARM|IVPCA
 整形外科,Arch bar,Arch bar|Arch bars|牙弓槓,牙弓槓,在牙齒上固定牙弓槓治療顎骨骨折,全身麻醉（經鼻氣管插管）,B
+整形外科,Open reduction + MMF,Open reduction+MMF|Open reduction + MMF|ORIF+MMF|ORIF + MMF|MMF|Maxillomandibular fixation|IMF|Intermaxillary fixation|ORIF mandible|Mandible fracture|下顎骨折|顎間固定,開放性復位＋上下顎間固定術（MMF）,打開顎骨骨折處復位固定，再把上下排牙齒綁在一起固定咬合，術後暫時無法張口,全身麻醉（經鼻氣管插管）,B|ONDAN
 整形外科,Cross finger flap,Cross finger flap|手指交叉皮瓣,手指交叉皮瓣,用鄰近手指的皮瓣覆蓋指頭傷口,全身麻醉（喉罩）、神經阻斷,A|NB
 整形外科,Curettage,Curettage|刮除,刮除術,刮除病灶組織（皮膚、骨頭等）,全身麻醉（喉罩）、局部麻醉,A
 整形外科,Fasciotomy,Fasciotomy|筋膜切開,筋膜切開術,切開筋膜解除腔室症候群的壓力,全身麻醉（喉罩）、脊椎麻醉（半身）、神經阻斷,A|NB
@@ -283,6 +297,7 @@
 一般外科,Jejunostomy,Jejunostomy|空腸造口,空腸造口術,在空腸放灌食管,全身麻醉（氣管插管）,B
 一般外科,Pyloroplasty,Pyloroplasty|幽門成形,幽門成形術,擴大胃出口（幽門）,全身麻醉（氣管插管）,B|IVPCA
 一般外科,Radiofrequency coagulation,RF|R.F|RFA liver|Radiofrequency coagulation|Radiofrequency ablation|高頻熱凝,高頻熱凝,用高頻電流燒灼腫瘤（常見肝腫瘤）,靜脈麻醉、全身麻醉（氣管插管）,BISSED|REMI
+一般外科,Thoracoscopic radiofrequency ablation,Thoracoscopic RFA|Thoracoscopic radiofrequency ablation|VATS RFA|胸腔鏡射頻燒灼|胸腔鏡電燒,胸腔鏡輔助射頻燒灼術（肝腫瘤）,經胸腔鏡穿過橫膈燒灼肝頂部腫瘤（經皮超音波難以到達的位置）；若需單肺通氣改推單肺組套,全身麻醉（氣管插管）、雙腔氣管內管,B|NB|IVPCA
 一般外科,Vagotomy,Vagotomy|迷走神經切斷,迷走神經切斷術,切斷迷走神經減少胃酸（消化性潰瘍）,全身麻醉（氣管插管）,B|IVPCA
 診斷縮寫,Nodular goiter,Nodular goiter|甲狀腺結節,甲狀腺結節,診斷或病歷常見縮寫,,
 診斷縮寫,Rectal cancer,Rectal cancer|直腸癌,直腸癌,診斷或病歷常見縮寫,,
