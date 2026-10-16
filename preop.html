@@ -31,24 +31,31 @@
 html{overflow-anchor:none}
 body{margin:0;background:var(--paper);color:var(--ink);
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  font-size:18px;line-height:1.6;-webkit-text-size-adjust:100%}
+  font-size:23px;line-height:1.6;-webkit-text-size-adjust:100%}
 main{max-width:640px;margin:0 auto;padding:16px 16px 48px}
-h1{font-size:24px;line-height:1.3;margin:4px 0;font-weight:700;letter-spacing:.02em}
-.privacy{background:var(--amber-bg);color:var(--amber);border-radius:10px;padding:8px 14px;font-size:15px;margin:10px 0 16px}
+h1{font-size:31px;line-height:1.3;margin:4px 0;font-weight:700;letter-spacing:.02em}
 .composer{border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:10px 10px 10px 14px}
+.composer{position:relative}
 .composer:focus-within{border-color:var(--pine)}
-.composer textarea{width:100%;min-height:56px;max-height:200px;field-sizing:content;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:18px;resize:none;padding:4px 0}
+.suggest{display:none;position:absolute;left:-1.5px;right:-1.5px;top:calc(100% + 6px);z-index:20;background:var(--card);border:1.5px solid var(--pine);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.2);max-height:60vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.suggest.on{display:block}
+.suggest button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:12px 16px;font:inherit;font-size:23px;line-height:1.35;color:var(--ink);cursor:pointer}
+.suggest button:last-child{border-bottom:0}
+.suggest button:active,.suggest button:focus-visible{background:var(--mint)}
+.suggest b{color:var(--pine)}
+.suggest small{display:block;font-size:18px;color:var(--muted);margin-top:2px}
+.composer textarea{width:100%;min-height:68px;max-height:240px;field-sizing:content;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:23px;resize:none;padding:4px 0}
 .bar{display:flex;align-items:center;gap:6px}
-.icon{width:48px;height:48px;border-radius:12px;border:0;background:var(--mint);color:var(--pine);cursor:pointer;display:grid;place-items:center}
-.icon svg{width:26px;height:26px}
+.icon{width:58px;height:58px;border-radius:12px;border:0;background:var(--mint);color:var(--pine);cursor:pointer;display:grid;place-items:center}
+.icon svg{width:30px;height:30px}
 .spacer{flex:1}
-.clear{height:48px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:16px;cursor:pointer}
+.clear{height:58px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:transparent;color:var(--muted);font:inherit;font-size:21px;cursor:pointer}
 input[type=file]{display:none}
 .patient{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
-.plabel{font-size:14px;color:var(--muted);margin:2px 0 6px}
+.plabel{font-size:18px;color:var(--muted);margin:2px 0 6px}
 .plabel:not(:first-child){margin-top:12px}
 .tags{display:flex;flex-wrap:wrap;gap:8px}
-.tag{font:inherit;font-size:16px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.tag{font:inherit;font-size:21px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
 .tag[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
 details.anes{border:1.5px solid var(--line);border-radius:14px;margin:10px 0;background:var(--card)}
 details.anes[open]{border-color:var(--pine)}
@@ -56,88 +63,88 @@ details.anes>summary{list-style:none;cursor:pointer;padding:12px 14px;display:fl
 details.anes>summary::-webkit-details-marker{display:none}
 details.anes>summary::after{content:"＋";color:var(--pine);font-weight:700}
 details.anes[open]>summary::after{content:"－"}
-details.anes>summary .sum{font-weight:500;font-size:15px;color:var(--muted);margin-left:auto}
+details.anes>summary .sum{font-weight:500;font-size:20px;color:var(--muted);margin-left:auto}
 details.item>summary{list-style:none;cursor:pointer}
 details.item>summary::-webkit-details-marker{display:none}
-details.item>summary .name::after{content:" ⓘ";color:var(--muted);font-weight:400;font-size:14px}
+details.item>summary .name::after{content:" ⓘ";color:var(--muted);font-weight:400;font-size:18px}
 details.item[open]>summary .name::after{content:""}
 .badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.badge{font-size:13px;padding:1px 8px;border-radius:999px;background:var(--amber-bg);color:var(--amber)}
+.badge{font-size:17px;padding:1px 8px;border-radius:999px;background:var(--amber-bg);color:var(--amber)}
 details.opt{border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:10px;margin:10px 0;background:var(--paper)}
-details.opt>summary{list-style:none;cursor:pointer;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:16px}
+details.opt>summary{list-style:none;cursor:pointer;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:21px}
 details.opt>summary::-webkit-details-marker{display:none}
 details.opt>summary::after{content:"＋";color:var(--amber)}
 details.opt[open]>summary::after{content:"－"}
-details.opt>summary .sum{margin-left:auto;font-weight:500;color:var(--muted);font-size:15px}
+details.opt>summary .sum{margin-left:auto;font-weight:500;color:var(--muted);font-size:20px}
 details.opt .sug,details.opt>.note{margin:0 12px 10px}
 .card-body{padding:0 14px 12px}
 .card-body .sug{margin:0}
 .sug li.on,.sug li.off{display:flex;gap:10px;align-items:flex-start}
 .sug li>details{flex:1;min-width:0}
-.pick-toggle{flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--pine);background:var(--pine);color:var(--pine-ink);font:inherit;font-size:22px;font-weight:900;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
+.pick-toggle{flex:none;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--pine);background:var(--pine);color:var(--pine-ink);font:inherit;font-size:29px;font-weight:900;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0}
 .sug li.off .pick-toggle{background:transparent;color:var(--muted);border-color:var(--line)}
 .sug li.off .name,.sug li.off .price{color:var(--muted);font-weight:400}
 .sug li.off .badges{opacity:.6}
 .total{display:flex;justify-content:space-between;font-weight:700;padding:10px 0 0;color:var(--pine)}
 button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--pine);outline-offset:2px}
-.status{margin-top:14px;font-size:16px;color:var(--muted);min-height:1.6em}
+.status{margin-top:14px;font-size:21px;color:var(--muted);min-height:1.6em}
 .err{color:var(--danger)}
 .bar-progress{height:6px;border-radius:3px;background:var(--mint);overflow:hidden;margin-top:6px}
 .bar-progress i{display:block;height:100%;background:var(--pine);width:0;transition:width .2s}
 details.ocr{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;background:var(--card)}
-details.ocr summary{cursor:pointer;font-size:15px;color:var(--muted)}
-details.ocr textarea{width:100%;min-height:120px;margin-top:8px;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--paper);color:var(--ink)}
-.small-btn{font:inherit;font-size:15px;border:1.5px solid var(--pine);background:transparent;color:var(--pine);border-radius:10px;padding:6px 14px;cursor:pointer;margin-top:6px}
+details.ocr summary{cursor:pointer;font-size:20px;color:var(--muted)}
+details.ocr textarea{width:100%;min-height:120px;margin-top:8px;font:inherit;font-size:20px;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--paper);color:var(--ink)}
+.small-btn{font:inherit;font-size:20px;border:1.5px solid var(--pine);background:transparent;color:var(--pine);border-radius:10px;padding:6px 14px;cursor:pointer;margin-top:6px}
 .thumb{width:100%;height:220px;object-fit:contain;border-radius:10px;margin-top:10px;background:var(--mint)}
 
 .proc{border-left:6px solid var(--pine);padding:4px 0 4px 14px;margin:20px 0 10px}
-.proc .cat{font-size:14px;color:var(--muted)}
-.proc h2{font-size:24px;line-height:1.35;margin:0}
-.proc .en{color:var(--muted);font-size:16px;margin:2px 0 0;word-break:break-word}
-.proc .alias{font-size:14px;color:var(--muted);margin:4px 0 0;word-break:break-word}
+.proc .cat{font-size:18px;color:var(--muted)}
+.proc h2{font-size:31px;line-height:1.35;margin:0}
+.proc .en{color:var(--muted);font-size:21px;margin:2px 0 0;word-break:break-word}
+.proc .alias{font-size:18px;color:var(--muted);margin:4px 0 0;word-break:break-word}
 .what{margin:10px 0 0}
-h3{font-size:17px;margin:20px 0 8px;color:var(--pine);font-weight:700}
+h3{font-size:22px;margin:20px 0 8px;color:var(--pine);font-weight:700}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{background:var(--mint);border-radius:999px;padding:4px 14px;font-size:16px}
+.chip{background:var(--mint);border-radius:999px;padding:4px 14px;font-size:21px}
 .sug{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .sug li{padding:12px 0;border-bottom:1px solid var(--line)}
 .sug .row{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
 .sug .name{font-weight:700}
 .sug .price{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--pine);font-weight:700}
-.sug .why{font-size:16px;color:var(--muted);margin-top:2px}
-.sug .inside{font-size:14px;color:var(--muted);margin-top:4px}
-.note{font-size:14px;color:var(--muted);margin-top:12px}
+.sug .why{font-size:21px;color:var(--muted);margin-top:2px}
+.sug .inside{font-size:18px;color:var(--muted);margin-top:4px}
+.note{font-size:18px;color:var(--muted);margin-top:12px}
 .others{margin-top:24px}
 .others h3{margin-bottom:4px}
 .pick{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;font:inherit;color:var(--ink);cursor:pointer}
-.pick small{display:block;color:var(--muted);font-size:14px}
+.pick small{display:block;color:var(--muted);font-size:18px}
 .dx{display:flex;flex-wrap:wrap;gap:8px}
-.dx button{border:1px solid var(--line);border-radius:10px;padding:4px 10px;font:inherit;font-size:15px;background:var(--card);color:var(--ink);cursor:pointer}
+.dx button{border:1px solid var(--line);border-radius:10px;padding:4px 10px;font:inherit;font-size:20px;background:var(--card);color:var(--ink);cursor:pointer}
 .dx b{font-weight:500;margin-right:4px}
 .empty{margin-top:18px;padding:14px;border-radius:12px;background:var(--amber-bg);color:var(--amber)}
 
 details.browse{margin-top:36px;border-top:1px solid var(--line);padding-top:12px}
-details.browse summary{cursor:pointer;font-weight:700;font-size:17px;padding:6px 0}
+details.browse summary{cursor:pointer;font-weight:700;font-size:22px;padding:6px 0}
 .deptbar{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
-.dept{font:inherit;font-size:15px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
-.dept small{color:var(--muted);font-size:12px;margin-left:3px}
+.dept{font:inherit;font-size:20px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.dept small{color:var(--muted);font-size:16px;margin-left:3px}
 .dept[aria-pressed="true"]{background:var(--pine);border-color:var(--pine);color:var(--pine-ink)}
 .dept[aria-pressed="true"] small{color:inherit;opacity:.8}
-.list h4{font-size:15px;color:var(--pine);margin:16px 0 4px}
-.list .it{display:flex;justify-content:space-between;gap:12px;font-size:15px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.list h4{font-size:20px;color:var(--pine);margin:16px 0 4px}
+.list .it{display:flex;justify-content:space-between;gap:12px;font-size:20px;padding:6px 0;border-bottom:1px dashed var(--line)}
 .list .it span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
-.list .it small{display:block;color:var(--muted);font-size:13px}
-.list button.it{width:100%;background:none;border:0;border-bottom:1px dashed var(--line);text-align:left;font:inherit;font-size:15px;color:var(--ink);cursor:pointer}
+.list .it small{display:block;color:var(--muted);font-size:17px}
+.list button.it{width:100%;background:none;border:0;border-bottom:1px dashed var(--line);text-align:left;font:inherit;font-size:20px;color:var(--ink);cursor:pointer}
 @media (prefers-reduced-motion:no-preference){ #result.show{animation:fadein .2s ease-out} @keyframes fadein{from{opacity:0}to{opacity:1}} }
 </style>
 </head>
 <body>
 <main>
   <h1>術式查詢與自費配對</h1>
-  <div class="privacy">拍照前請遮住病人姓名、病歷號、身分證字號。照片只在手機上辨識，不會上傳。</div>
 
   <div class="composer">
-    <textarea id="txt" rows="2" placeholder="輸入術式或縮寫，例：TKR、Lap chole、剖腹產" aria-label="術式或縮寫"></textarea>
+    <textarea id="txt" rows="2" placeholder="輸入術式或縮寫，例：TKR、Lap chole、剖腹產" aria-label="術式或縮寫" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+    <div class="suggest" id="suggest" role="listbox" aria-label="可能的術式"></div>
     <div class="bar">
       <button class="icon" id="camBtn" type="button" aria-label="拍照辨識">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
@@ -547,7 +554,7 @@ const txt = $("txt"), statusEl = $("status"), result = $("result"), ocrBox = $("
 let PROCS = [], PAY = {}, PAYLIST = [];
 
 /* ---------- 外科分類（依序） ---------- */
-const DEPTS = ["骨科","泌尿科","整外","心臟外科","大腸直腸外","小兒外科","神經外科","一般外科","腸胃內科","胸腔外科","耳鼻喉外科","婦產科","眼科","其他","診斷縮寫"];
+const DEPTS = ["骨科","泌尿科","整外","心臟外科","大腸直腸外","小兒外科","神經外科","一般外科","腸胃內科","胸腔外科","耳鼻喉外科","牙科","婦產科","眼科","其他","診斷縮寫"];
 const CAT2DEPT = {
   "骨科":"骨科","泌尿科":"泌尿科","整形外科":"整外","心臟血管外科":"心臟外科","大腸直腸外科":"大腸直腸外",
   "神經外科":"神經外科","一般外科":"一般外科","內視鏡／檢查":"腸胃內科","胸腔外科":"胸腔外科","耳鼻喉科":"耳鼻喉外科",
@@ -557,7 +564,7 @@ const CAT2DEPT = {
 const EN2DEPT = {
   "Colostomy":"大腸直腸外","Ileostomy / stoma closure":"大腸直腸外",
   "Split-thickness skin graft":"整外","Cleft lip / palate repair":"整外","Liposuction / cosmetic":"整外",
-  "Pediatric herniotomy":"小兒外科","Bronchoscopy / EBUS":"其他"
+  "Pediatric herniotomy":"小兒外科", "Dental treatment under general anesthesia":"牙科","Bronchoscopy / EBUS":"其他"
 };
 const deptOf = p => EN2DEPT[p.en] || CAT2DEPT[p.cat] || (DEPTS.includes(p.cat) ? p.cat : "其他");
 
@@ -592,9 +599,9 @@ function prepare(){
   PROCS.forEach(p => {
     p.keys = [...new Set([p.en, p.zh, ...p.aliases])].map(a => {
       const n = norm(a); if (!n) return null;
-      if (CJK.test(n)) return { n, cjk: true, len: n.length * 2 };
+      if (CJK.test(n)) return { n, cjk: true, len: n.length * 2, label: a };
       const pat = n.split(" ").map(escapeRe).join("[\\s\\-\\.]*");
-      return { n, cjk: false, len: n.replace(/\s/g, "").length, re: new RegExp("(^|[^a-z0-9])" + pat + "(?=$|[^a-z0-9])") };
+      return { n, label: a, cjk: false, len: n.replace(/\s/g, "").length, re: new RegExp("(^|[^a-z0-9])" + pat + "(?=$|[^a-z0-9])") };
     }).filter(Boolean);
   });
 }
@@ -859,11 +866,56 @@ function build(matches, fromPhoto){
 }
 function jumpToResult(){ window.scrollTo(0, Math.max(0, result.getBoundingClientRect().top + window.scrollY - 12)); }
 
+/* ---------- 輸入時的猜測字 ---------- */
+const sugBox = $("suggest");
+function guesses(raw){
+  const t = norm(raw).replace(/\s/g, ""); if (!t) return [];
+  const out = [];
+  for (const p of PROCS){
+    let best = null;
+    for (const k of p.keys){
+      const kn = k.n.replace(/\s/g, "");
+      let s = 0;
+      if (kn.startsWith(t)) s = 3;
+      else if (!k.cjk && k.n.split(/[\s\-\/+]/).some(w => w.startsWith(t))) s = 2;
+      else if ((k.cjk || t.length >= 3) && kn.includes(t)) s = 1;
+      if (s && (!best || s > best.s || (s === best.s && k.label.length < best.label.length))) best = { s, label: k.label };
+    }
+    if (best) out.push({ p, ...best });
+  }
+  return out.sort((a, b) => b.s - a.s || (a.p.isDx - b.p.isDx) || a.label.length - b.label.length).slice(0, 8);
+}
+function renderGuesses(){
+  const list = document.activeElement === txt ? guesses(txt.value) : [];
+  sugBox.replaceChildren();
+  list.forEach(g => {
+    const b = el("button"); b.type = "button"; b.setAttribute("role","option");
+    b.append(el("b","", g.label));
+    b.append(el("small","", (g.label === g.p.zh ? g.p.en : g.p.zh) + "　·　" + g.p.dept));
+    b.addEventListener("pointerdown", e => e.preventDefault());   // 不讓輸入框先失去焦點
+    b.onclick = () => pickGuess(g);
+    sugBox.append(b);
+  });
+  sugBox.classList.toggle("on", list.length > 0);
+}
+function hideGuesses(){ sugBox.classList.remove("on"); sugBox.replaceChildren(); }
+function pickGuess(g){
+  clearTimeout(timer);
+  txt.value = g.label; hideGuesses(); txt.blur();
+  ocrBox.replaceChildren(); statusEl.textContent = "";
+  openCards.clear(); openItems.clear(); lastTop = "";
+  show([{ p: g.p, score: 999 }], false); jumpToResult();
+}
+txt.addEventListener("focus", renderGuesses);
+txt.addEventListener("blur", () => setTimeout(hideGuesses, 120));
+txt.addEventListener("keydown", e => { if (e.key === "Escape") hideGuesses(); });
+
 /* ---------- 文字輸入 ---------- */
 const autoSize = !(window.CSS && CSS.supports && CSS.supports("field-sizing","content"));
 let timer;
 txt.addEventListener("input", () => {
-  if (autoSize){ const y = window.scrollY; txt.style.height = "auto"; txt.style.height = Math.min(txt.scrollHeight, 200) + "px"; window.scrollTo(0, y); }
+  if (autoSize){ const y = window.scrollY; txt.style.height = "auto"; txt.style.height = Math.min(txt.scrollHeight, 240) + "px"; window.scrollTo(0, y); }
+  renderGuesses();
   clearTimeout(timer);
   timer = setTimeout(() => {
     ocrBox.replaceChildren(); statusEl.textContent = "";
@@ -871,7 +923,7 @@ txt.addEventListener("input", () => {
     show(search(txt.value), false);
   }, 300);
 });
-$("clearBtn").onclick = () => { txt.value = ""; if (autoSize) txt.style.height = ""; last = null; lastTop = ""; resetPanel(); result.replaceChildren(); ocrBox.replaceChildren(); statusEl.textContent = ""; window.scrollTo(0, 0); txt.focus({preventScroll:true}); };
+$("clearBtn").onclick = () => { txt.value = ""; hideGuesses(); if (autoSize) txt.style.height = ""; last = null; lastTop = ""; resetPanel(); result.replaceChildren(); ocrBox.replaceChildren(); statusEl.textContent = ""; window.scrollTo(0, 0); txt.focus({preventScroll:true}); };
 
 /* ---------- 拍照 OCR ---------- */
 $("camBtn").onclick = () => $("camInput").click();
