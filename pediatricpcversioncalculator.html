@@ -499,6 +499,8 @@
   /* Epinephrine：上黑底紫字、下紫底（比照 Epinephrine 針筒標籤） */
   .dname-cell.epi-cell{background:#c9a8e6 !important;}
   .epi-cell .scc-top{color:#c9a8e6;}
+  /* 寬螢幕時 SCC 藥名會折成兩行：雙色標籤的黑色區統一兩行高（以 SCC 為準） */
+  @media(min-width:641px){.scc-cell .scc-top{box-sizing:border-box;min-height:calc(2.4em + 24px);line-height:1.2;}}
   /* ---- 手機版：藥名欄統一高度（有無仿單連結、名稱一行或兩行都一樣高），內容垂直置中 ---- */
   @media(max-width:640px){
     .drug-table .dname-cell{min-height:112px;box-sizing:border-box;display:flex !important;flex-direction:column;justify-content:center;}
@@ -1462,7 +1464,8 @@ function buildDrugTable(cat, weight, ageMonths){
     if(/^Succinylcholine/.test(plain)){
       nameCell = `<td class="dname-cell scc-cell"><span class="scc-top">${name}</span><span class="scc-bottom">${piLink(name)}</span></td>`;
     } else if(/^Epinephrine/.test(plain)){
-      nameCell = `<td class="dname-cell scc-cell epi-cell"><span class="scc-top">${name}</span><span class="scc-bottom">${piLink(name)}</span></td>`;
+      const [epiTop, ...epiRest] = name.split('<br>');   // 藥名放上方黑底（與 SCC 同高），用途小字移到下方紫底
+      nameCell = `<td class="dname-cell scc-cell epi-cell"><span class="scc-top">${epiTop}</span><span class="scc-bottom">${epiRest.join('<br>')}${piLink(name)}</span></td>`;
     } else if(striped || (cat==='reversal' && !keepOwn)){
       nameCell = `<td class="dname-cell striped-cell"><span class="stripe-badge">${name}${piLink(name)}</span></td>`;
     } else {
