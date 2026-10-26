@@ -265,8 +265,8 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3eRDck_dhuvGBLYHrt
 /* 2. 教學部 BeClass 登記網址 */
 const BECLASS_URL = "https://www.beclass.com/rid=3050258694b2e9980297";
 /* 3. 可預約的日期、時段：平常會自動跟 BeClass 同步；下面只是讀不到 BeClass 時的備用 */
-/* 讀不到 BeClass 時的備用日期：從今天起往後 4 週的週一到週五（不含國定假日，以 BeClass 實際開放為準） */
-let DATES = (()=>{ const out=[], d=new Date(); for(let i=0;i<28;i++){ const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i); const w=x.getDay(); if(w>0&&w<6) out.push(`${x.getMonth()+1}/${x.getDate()}`); } return out; })();
+/* 日期只採用 BeClass 實際開放的時段（從試算表「BeClass貼上區」讀取），不自行推算 */
+let DATES = [];
 let TIMES = ["0800-0900","0900-1000","1000-1100","1100-1200","1400-1500","1500-1600","1600-1700"];
 /* 4. BeClass 已額滿的時段（會自動從 BeClass 更新） */
 let BECLASS_FULL = [];
@@ -489,7 +489,7 @@ function currentPlan(){
 function renderDates(){
   const box=$("dates"); box.replaceChildren();
   const days=visibleDates();
-  if(!days.length){ box.append(el("p",{class:"empty"},"目前沒有開放預約的日期，請稍後再查看。")); return; }
+  if(!days.length){ box.append(el("p",{class:"empty"}, state.bc && state.bc.slots && state.bc.slots.length ? "BeClass 目前開放的日期都已經過了，請等教學部開放新日期後再預約。" : "還沒有 BeClass 開放時段的資料，請負責人到試算表「BeClass貼上區」貼上 BeClass 頁面內容。")); return; }
   if(!days.includes(state.date)) state.date=firstOpenDate();
   for(const d of days){
     const open = TIMES.filter(t=>!slotProblem(d,t)).length;
@@ -738,7 +738,7 @@ function renderSync(){
     const at=new Date(state.bc.fetchedAt);
     txt += state.bc.source==="paste" ? `｜BeClass 時段更新於 ${fmtDay(at)}` : `｜BeClass 同步 ${fmt(at)}${state.bc.stale?"（暫時讀不到，用上次資料）":""}`;
   }
-  else if(state.loaded && !DEMO) txt += "｜BeClass 未同步，使用備用時段";
+  else if(state.loaded && !DEMO) txt += "｜尚未取得 BeClass 時段";
   $("sync").textContent = txt;
 }
 
