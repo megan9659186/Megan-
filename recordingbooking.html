@@ -265,10 +265,11 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3eRDck_dhuvGBLYHrt
 /* 2. 教學部 BeClass 登記網址 */
 const BECLASS_URL = "https://www.beclass.com/rid=3050258694b2e9980297";
 /* 3. 可預約的日期、時段：平常會自動跟 BeClass 同步；下面只是讀不到 BeClass 時的備用 */
-let DATES = ["10/1","10/2","10/5","10/6","10/7","10/8","10/9","10/12","10/13","10/14","10/15","10/16","10/19","10/20"];
+/* 讀不到 BeClass 時的備用日期：從今天起往後 4 週的週一到週五（不含國定假日，以 BeClass 實際開放為準） */
+let DATES = (()=>{ const out=[], d=new Date(); for(let i=0;i<28;i++){ const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i); const w=x.getDay(); if(w>0&&w<6) out.push(`${x.getMonth()+1}/${x.getDate()}`); } return out; })();
 let TIMES = ["0800-0900","0900-1000","1000-1100","1100-1200","1400-1500","1500-1600","1600-1700"];
 /* 4. BeClass 已額滿的時段（會自動從 BeClass 更新） */
-let BECLASS_FULL = ["10/12 1400-1500","10/12 1500-1600"];
+let BECLASS_FULL = [];
 /* 5. 課程清單：[代碼, 課程名稱, 時數]
       代碼不可重複；基礎用 B 開頭、進階用 A 開頭，後面兩位數字。時數不知道可以留空。 */
 /* 課程清單平常從試算表「課程清單」分頁讀取；下面只是讀不到時的備用 */
