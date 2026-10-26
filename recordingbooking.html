@@ -66,6 +66,9 @@ header .lead{max-width:62ch;color:var(--muted);margin:.4rem 0 0}
 .date .n{font-size:.72rem;color:var(--accent)}
 .date[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .date.past{opacity:.5}
+.datehint{margin:0 0 8px;font-size:.85rem;color:var(--accent);font-weight:600}
+.date.closed{opacity:.4;cursor:not-allowed;background:var(--line)}
+.date.closed .n{color:var(--muted)}
 .half{display:grid;gap:8px}
 .half h3{margin:0;font-size:.8rem;color:var(--muted);font-weight:500;letter-spacing:.06em}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
@@ -227,6 +230,7 @@ tr.past td{color:var(--muted)}
     </section>
     <section class="pane" aria-labelledby="h-slot">
       <div class="pane-head"><span class="step">2</span><h2 id="h-slot">選擇錄製日期與時段</h2><span class="sync" id="sync"></span></div>
+      <p class="datehint">請先到 BeClass 確認教學部有開放這一天，再預約。</p>
       <div class="dates" id="dates" role="group" aria-label="錄製日期"></div>
       <div id="slotArea" class="half"></div>
     </section>
@@ -266,7 +270,13 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3eRDck_dhuvGBLYHrt
 const BECLASS_URL = "https://www.beclass.com/rid=3050258694b2e9980297";
 /* 3. 可預約的日期、時段：平常會自動跟 BeClass 同步；下面只是讀不到 BeClass 時的備用 */
 /* 日期只採用 BeClass 實際開放的時段（從試算表「BeClass貼上區」讀取），不自行推算 */
-let DATES = [];
+/* 日期列到年底的平日；BeClass 還沒開放的日期反灰不能選 */
+function weekdaysToYearEnd(){ const out=[], n=new Date(); const end=new Date(n.getFullYear(),11,31);
+  if((end-n)/86400000 < 28) end.setFullYear(end.getFullYear()+1,0,31);   // 接近年底時多列到明年 1 月
+  for(let x=new Date(n.getFullYear(),n.getMonth(),n.getDate()); x<=end; x.setDate(x.getDate()+1)){ const w=x.getDay(); if(w>0&&w<6) out.push(`${x.getMonth()+1}/${x.getDate()}`); }
+  return out; }
+const BASE_DATES = weekdaysToYearEnd();
+let DATES = BASE_DATES.slice();
 let TIMES = ["0800-0900","0900-1000","1000-1100","1100-1200","1400-1500","1500-1600","1600-1700"];
 /* 4. BeClass 已額滿的時段（會自動從 BeClass 更新） */
 let BECLASS_FULL = [];
@@ -337,11 +347,14 @@ function followingSlots(d,t,n){
 
 function slotKey(d,t){ const [m,dd]=d.split("/"); return m.padStart(2,"0")+dd.padStart(2,"0")+"-"+t.slice(0,4); }
 let KEY_INFO = {};
-let SLOT_SET = null;      // BeClass 有開放的時段；null = 用備用清單
+
 let BC_LEFT = {};         // 每個時段在 BeClass 剩幾個名額
 function buildKeyInfo(){ KEY_INFO={}; for (const d of DATES) for (const t of TIMES) KEY_INFO[slotKey(d,t)] = {d,t}; }
 buildKeyInfo();
-function slotExists(d,t){ return !SLOT_SET || SLOT_SET.has(slotKey(d,t)); }
+/* 網頁讀不到 BeClass，所以平日的時段都開放預約；BeClass 是否開放由老師登記時確認 */
+function slotExists(d,t){ return true; }
+function dateOpen(d){ return true; }
+function dayNum(d){ return slotStart(d,"0000").getTime(); }
 /* 年份：月份比今天早很多（例如現在 12 月、時段是 1 月）就算明年 */
 function yearFor(m){ const now=new Date(); let y=now.getFullYear(); if(+m < now.getMonth()+1-6) y++; return y; }
 function slotStart(d,t){ const [m,dd]=d.split("/"); return new Date(`${yearFor(m)}-${m.padStart(2,"0")}-${dd.padStart(2,"0")}T${t.slice(0,2)}:${t.slice(2,4)}:00+08:00`); }
@@ -350,21 +363,16 @@ function weekday(d){ const [m,dd]=d.split("/"); return WD[new Date(Date.UTC(year
 /* 套用 Apps Script 傳回的 BeClass 時段 */
 function applyBeClass(bc){
   state.bc = bc || null;
+  BC_LEFT = {}; BECLASS_FULL = [];
   if(!bc || !bc.slots || !bc.slots.length) return;
-  const defs = bc.slots.slice().sort((a,b)=>slotKey(a.d,a.t).localeCompare(slotKey(b.d,b.t)));
-  DATES = [...new Set(defs.map(s=>s.d))];
-  TIMES = [...new Set(defs.map(s=>s.t))].sort();
-  SLOT_SET = new Set(defs.map(s=>slotKey(s.d,s.t)));
-  BC_LEFT = {}; defs.forEach(s=>{ BC_LEFT[slotKey(s.d,s.t)] = s.left; });
-  BECLASS_FULL = defs.filter(s=>s.left===0).map(s=>`${s.d} ${s.t}`);
-  buildKeyInfo();
-  if(!DATES.includes(state.date) || DATES.indexOf(state.date) < DATES.indexOf(firstOpenDate())) state.date = firstOpenDate();
+  // 如果試算表有貼 BeClass 資料，只用來標示「BeClass 已額滿」，不限制可預約的日期
+  bc.slots.forEach(s=>{ BC_LEFT[slotKey(s.d,s.t)] = s.left; if(s.left===0) BECLASS_FULL.push(`${s.d} ${s.t}`); });
 }
 /* 今天（含）以後的日期才顯示 */
 function isPastDay(d){ const [m,dd]=d.split("/"); return new Date(`${yearFor(m)}-${m.padStart(2,"0")}-${dd.padStart(2,"0")}T23:59:59+08:00`).getTime() < Date.now(); }
 function visibleDates(){ return DATES.filter(d=>!isPastDay(d)); }
 /* 預設選今天；今天時段都過了就選下一個還能預約的日子 */
-function firstOpenDate(){ const v=visibleDates(); return v.find(d => TIMES.some(t=>slotExists(d,t) && !isPast(d,t))) || v[0] || null; }
+function firstOpenDate(){ const v=visibleDates().filter(dateOpen); return v.find(d => TIMES.some(t=>slotExists(d,t) && !isPast(d,t))) || v[0] || null; }
 function isPast(d,t){ return slotStart(d,t).getTime() <= Date.now(); }
 function keysOf(b){ return String(b.slotKey||"").split(",").filter(Boolean); }
 /* 幾個連續時段合併成一個標籤，例如 10/14 0900-1100 */
@@ -489,9 +497,13 @@ function currentPlan(){
 function renderDates(){
   const box=$("dates"); box.replaceChildren();
   const days=visibleDates();
-  if(!days.length){ box.append(el("p",{class:"empty"}, state.bc && state.bc.slots && state.bc.slots.length ? "BeClass 目前開放的日期都已經過了，請等教學部開放新日期後再預約。" : "還沒有 BeClass 開放時段的資料，請負責人到試算表「BeClass貼上區」貼上 BeClass 頁面內容。")); return; }
-  if(!days.includes(state.date)) state.date=firstOpenDate();
+  if(state.date && !dateOpen(state.date)) state.date=firstOpenDate();
   for(const d of days){
+    if(!dateOpen(d)){
+      box.append(el("button",{type:"button",class:"date closed",disabled:"",title:"BeClass 尚未開放這一天"},
+        el("span",{class:"d"},d), el("span",{class:"w"},"週"+weekday(d)), el("span",{class:"n"},"未開放")));
+      continue;
+    }
     const open = TIMES.filter(t=>!slotProblem(d,t)).length;
     const allPast = TIMES.filter(t=>slotExists(d,t)).every(t=>isPast(d,t));   // 今天的時段都過了
     box.append(el("button",{type:"button",class:"date"+(allPast?" past":""),"aria-pressed":String(d===state.date),
@@ -733,12 +745,6 @@ async function requestDelete(b, name, reason, errBox){
 function renderSync(){
   const fmt=d=>d.toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
   let txt = state.lastSync ? `更新於 ${fmt(state.lastSync)}` : "讀取中…";
-  const fmtDay=d=>`${d.getMonth()+1}/${d.getDate()} ${fmt(d)}`;
-  if(state.bc && state.bc.fetchedAt){
-    const at=new Date(state.bc.fetchedAt);
-    txt += state.bc.source==="paste" ? `｜BeClass 時段更新於 ${fmtDay(at)}` : `｜BeClass 同步 ${fmt(at)}${state.bc.stale?"（暫時讀不到，用上次資料）":""}`;
-  }
-  else if(state.loaded && !DEMO) txt += "｜尚未取得 BeClass 時段";
   $("sync").textContent = txt;
 }
 
@@ -770,7 +776,7 @@ function showDone(b){
   const pre=el("pre",{},text);
   const confirmBtn=el("button",{class:"btn primary",type:"button",style:"width:100%;justify-content:center",
     onclick:e=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) confirmDone(bb,e.currentTarget); }},"我已完成 BeClass 登記");
-  const cancelLink=el("button",{class:"linkbtn",type:"button",onclick:()=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) openDelete(bb); }},"填錯了？刪除這筆預約");
+  const cancelLink=el("button",{class:"linkbtn",type:"button",onclick:()=>{ const bb=state.bookings.find(x=>x.keys[0]===b.keys[0]); if(bb) openDelete(bb); }},"填錯了或 BeClass 沒開放？刪除這筆預約");
   $("done").replaceChildren(
     el("div",{class:"done-head"},el("strong",{},"✓ 時段已鎖定"),el("span",{class:"mono"},b.slotLabel)),
     el("ol",{class:"done-steps"},
