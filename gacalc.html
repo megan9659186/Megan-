@@ -27,8 +27,8 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v4.0";
-var TOOL_UPDATED = "2026-10-11";
+var TOOL_VERSION = "v4.3";
+var TOOL_UPDATED = "2026-10-23";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
 var BUILD_KEY  = "gacalc_build";
@@ -343,9 +343,10 @@ b.dv{font-weight:700;color:#4C7A57}
 .dw-name{width:150px}
 .dw-tbl .dw-name .pill{display:table;margin-top:7px}
 .dw-dose{min-width:210px}
-.dw-dose .dd-w{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:3px}
+.dw-tbl .dw-name .pill .pw{display:block;font-size:14.5px;font-weight:600;margin-top:1px;white-space:nowrap}
 .dw-dose .dd-l{display:block;font-size:15.5px;line-height:1.6}
-.dw-dose .dd-l b{color:#3F7A5E;font-weight:700;white-space:nowrap}
+.dw-dose .dd-l b{color:#2B4A6E;font-weight:700;white-space:nowrap;background:#D9E5F2;
+  padding:1px 7px;border-radius:5px;margin:1px 0;display:inline-block;line-height:1.5}
 .dw-dose .dd-sub{font-size:13.5px;color:var(--ink-soft)}
 .dw-dose .dd-cap{display:block;font-style:normal;font-size:12.5px;color:var(--warn)}
 
@@ -597,13 +598,25 @@ function doseFmt(v){
   if(v >= 10) return String(Math.round(v));
   return String(Math.round(v*10)/10);
 }
-function doseHtml(x, r, tbw){
-  if(!r || !(tbw>0)) return "請先輸入身高體重";
+function doseWt(x, r, tbw){
+  if(!r || !(tbw>0)) return null;
   const map = { TBW:tbw, LBW:r.lbw, IBW:r.ibw, AdjBW:r.adj };
   let w = map[x.w];
   let swap = false;
   if(x.w !== "TBW" && w > tbw){ w = tbw; swap = true; }
-  const head = `<span class='dd-w'>${swap ? "改用 TBW" : x.w} ${w.toFixed(1)} kg</span>`;
+  return { w, swap };
+}
+/* 左欄體重標籤:類別 + 換算體重;偏瘦者改用 TBW 時一併註明 */
+function dosePill(x, r, tbw){
+  const o = doseWt(x, r, tbw);
+  if(!o) return x.w;
+  return `${o.swap ? x.w + " → 改用 TBW" : x.w}<span class='pw'>${o.w.toFixed(1)} kg</span>`;
+}
+function doseHtml(x, r, tbw){
+  const o = doseWt(x, r, tbw);
+  if(!o) return "請先輸入身高體重";
+  const w = o.w;
+  const head = "";
   const lines = (x.dose||[]).map(d=>{
     if(d.prop){
       return `<span class='dd-l'>TCI:設 Ce 或 Cp 目標濃度(見上方 TIVA 模型)</span>`
@@ -870,11 +883,11 @@ function calcHtml(){
     </div>
 
     <div class="tool-box">
-      <h3 class="th-new">常用藥物該用哪個體重${isNewItem({ updated:"2026-10-11" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
+      <h3 class="th-new">常用藥物該用哪個體重${isNewItem({ updated:"2026-10-23" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
       <div class="tool-scroll">
         <table class="tool-tbl dw-tbl">
           <tr><th>藥物／依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr>
-          ${DOSE_WEIGHT.map(x=>`<tr><td class="dw-name">${x.d}<span class="pill ${x.cls}">${x.w}</span></td><td class="dw-dose">${doseHtml(x, r, CALC_STATE.wt)}</td><td>${x.n||"—"}</td></tr>`).join("")}
+          ${DOSE_WEIGHT.map(x=>`<tr><td class="dw-name">${x.d}<span class="pill ${x.cls}">${dosePill(x, r, CALC_STATE.wt)}</span></td><td class="dw-dose">${doseHtml(x, r, CALC_STATE.wt)}</td><td>${x.n||"—"}</td></tr>`).join("")}
         </table>
       </div>
       <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,老年、血行動力不穩、合併其他鎮靜藥時要往下修;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
@@ -974,6 +987,7 @@ function wireCalc(){
       if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
     });
     document.querySelectorAll(".dw-dose").forEach((td,i)=>{ td.innerHTML = doseHtml(DOSE_WEIGHT[i], r, wt); });
+    document.querySelectorAll(".dw-name .pill").forEach((p,i)=>{ p.innerHTML = dosePill(DOSE_WEIGHT[i], r, wt); });
     updTiva();
     syncPatient();
   };
