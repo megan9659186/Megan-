@@ -27,8 +27,8 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v4.3";
-var TOOL_UPDATED = "2026-10-23";
+var TOOL_VERSION = "v4.4";
+var TOOL_UPDATED = "2026-10-27";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
 var BUILD_KEY  = "gacalc_build";
@@ -394,7 +394,7 @@ function toggleInfo(btn){
    麻醉計算機
    ------------------------------------------------------------
    IBW(Devine)、PBW(ARDSNet)、AdjBW、LBW(Janmahasatian)、
-   BMI、BSA(Mosteller);另附各類藥物該用哪個體重的對照表。
+   BMI;另附各類藥物該用哪個體重的對照表。
    ============================================================ */
 const CALC_STATE = { sex:"M", age:45, ht:170, wt:70 };
 const FLUID_STATE = { wt:70, npo:8, manual:false };
@@ -448,6 +448,18 @@ function calcAll(sex, ht, wt){
     : (9270*wt)/(8780 + 244*bmi);
   const bsa = Math.sqrt(ht*wt/3600);
   return { bmi, ibw, pbw, adj:Math.max(adj, ibw), lbw, bsa };
+}
+
+/* 各換算體重卡片下方顯示的公式;IBW、LBW、PBW 依性別不同 */
+function wtHint(sex, r){
+  const m = sex === "M";
+  const base = m ? "50" : "45.5";
+  return {
+    ibw: `${base} + 2.3 ×(身高 ÷ 2.54 − 60)`,
+    lbw: m ? "9270 × 體重 ÷(6680 + 216 × BMI)" : "9270 × 體重 ÷(8780 + 244 × BMI)",
+    adj: "IBW + 0.4 ×(實際 − IBW)",
+    pbw: `${base} + 0.91 ×(身高 − 152.4)` + (r ? `;潮氣容積 ${(r.pbw*6).toFixed(0)}–${(r.pbw*8).toFixed(0)} mL` : "")
+  };
 }
 
 function bmiBand(b){
@@ -642,6 +654,7 @@ function doseHtml(x, r, tbw){
 function calcHtml(){
   const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
   const f = (x,n=1) => x==null ? "—" : x.toFixed(n);
+  const wh = wtHint(CALC_STATE.sex, r);
   const newTag = isNewItem({ updated:"2026-08-04" })
     ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
   const tv = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
@@ -666,7 +679,7 @@ function calcHtml(){
     </div>
 
     <div class="tool-box">
-      <h3>基本資料</h3>
+      <h3 class="th-new">基本資料${isNewItem({ updated:"2026-10-27" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
       <div class="calc-form">
         <div class="calc-f">
           <label for="cSex">生理性別</label>
@@ -698,27 +711,22 @@ function calcHtml(){
         <div class="calc-cell">
           <div class="k">IBW 理想體重</div>
           <div class="v">${f(r&&r.ibw)}<span class="u">kg</span></div>
-          <div class="h">Devine 公式</div>
+          <div class="h">${wh.ibw}</div>
         </div>
         <div class="calc-cell">
           <div class="k">LBW 淨體重</div>
           <div class="v">${f(r&&r.lbw)}<span class="u">kg</span></div>
-          <div class="h">Janmahasatian 公式</div>
+          <div class="h">${wh.lbw}</div>
         </div>
         <div class="calc-cell">
           <div class="k">AdjBW 校正體重</div>
           <div class="v">${f(r&&r.adj)}<span class="u">kg</span></div>
-          <div class="h">IBW + 0.4 ×(實際 − IBW)</div>
+          <div class="h">${wh.adj}</div>
         </div>
         <div class="calc-cell">
           <div class="k">PBW 預測體重</div>
           <div class="v">${f(r&&r.pbw)}<span class="u">kg</span></div>
-          <div class="h">設潮氣容積用:${r?(r.pbw*6).toFixed(0)+"–"+(r.pbw*8).toFixed(0)+" mL":"—"}</div>
-        </div>
-        <div class="calc-cell">
-          <div class="k">BSA 體表面積</div>
-          <div class="v">${f(r&&r.bsa,2)}<span class="u">m²</span></div>
-          <div class="h">Mosteller 公式</div>
+          <div class="h">${wh.pbw}</div>
         </div>
       </div>
       <div class="calc-note">BMI 分級採國民健康署成人標準(正常 18.5–24、過重 24–27、肥胖 ≥27)。校正體重取 IBW 與計算值的較大者。</div>
@@ -875,7 +883,6 @@ function calcHtml(){
           <tr><td><b>PBW</b> 預測體重</td><td>設定呼吸器潮氣容積專用,肺的大小由身高決定</td><td>男 50、女 45.5 kg + 0.91 ×(身高 cm − 152.4)</td></tr>
           <tr><td><b>LBW</b> 淨體重</td><td>扣掉脂肪後的體重(肌肉、骨骼、內臟);心輸出量與多數藥物清除率跟著它走</td><td>男 9270 × 體重 ÷(6680 + 216 × BMI)<br>女 9270 × 體重 ÷(8780 + 244 × BMI)</td></tr>
           <tr><td><b>AdjBW</b> 校正體重</td><td>介於理想與實際之間,承認脂肪組織也有部分分布容積</td><td>IBW + 0.4 ×(實際體重 − IBW)</td></tr>
-          <tr><td><b>BSA</b> 體表面積</td><td>部分藥物與心輸出指數以此換算</td><td>√(身高 cm × 體重 kg ÷ 3600)</td></tr>
         </table>
       </div>
       <div class="calc-note">肥胖病人身上,脂肪組織血流低、但脂溶性藥物會蓄積,所以<b>單次誘導劑量</b>看的是初期分布容積與心輸出量(用 LBW),<b>持續輸注</b>看的是清除率(較接近實際體重),<b>肌鬆劑</b>幾乎不分布到脂肪(用 IBW)。</div>
@@ -971,14 +978,14 @@ function wireCalc(){
     const r = calcAll(sex, ht, wt);
     const f = (x,n=1) => (x==null || !isFinite(x)) ? "—" : x.toFixed(n);
     const cells = el("cOut").querySelectorAll(".calc-cell");
+    const wh = wtHint(sex, r);
     const vals = r ? [
       [f(r.bmi), bmiBand(r.bmi)],
-      [f(r.ibw), null],
-      [f(r.lbw), null],
-      [f(r.adj), null],
-      [f(r.pbw), `設潮氣容積用:${(r.pbw*6).toFixed(0)}–${(r.pbw*8).toFixed(0)} mL`],
-      [f(r.bsa,2), null]
-    ] : [["—",'—'],["—",null],["—",null],["—",null],["—","設潮氣容積用:—"],["—",null]];
+      [f(r.ibw), wh.ibw],
+      [f(r.lbw), wh.lbw],
+      [f(r.adj), wh.adj],
+      [f(r.pbw), wh.pbw]
+    ] : [["—",'—'],["—",wh.ibw],["—",wh.lbw],["—",wh.adj],["—",wh.pbw]];
     cells.forEach((c,i)=>{
       const v = c.querySelector(".v");
       const u = v.querySelector(".u");
