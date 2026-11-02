@@ -27,8 +27,8 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v4.4";
-var TOOL_UPDATED = "2026-10-27";
+var TOOL_VERSION = "v5.1";
+var TOOL_UPDATED = "2026-11-02";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
 var BUILD_KEY  = "gacalc_build";
@@ -349,6 +349,64 @@ b.dv{font-weight:700;color:#4C7A57}
   padding:1px 7px;border-radius:5px;margin:1px 0;display:inline-block;line-height:1.5}
 .dw-dose .dd-sub{font-size:13.5px;color:var(--ink-soft)}
 .dw-dose .dd-cap{display:block;font-style:normal;font-size:12.5px;color:var(--warn)}
+/* 藥物分類與查詢 */
+.dw-tools{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.dw-q{font:inherit;font-size:17px;padding:11px 14px;border-radius:10px;border:1.5px solid var(--line);
+  background:var(--bg);color:var(--ink);width:100%}
+.dw-q:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px var(--sage-tint)}
+.dw-cats{display:flex;flex-wrap:wrap;gap:7px}
+.dw-cat-btn{font:inherit;font-size:15px;font-weight:600;padding:6px 14px;border-radius:18px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink-soft)}
+.dw-cat-btn[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+.dw-pt{font-size:14.5px;line-height:1.7;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:9px;padding:8px 12px}
+.dw-pt b{color:var(--ink)}
+.dw-tbl tr.dw-cat td{background:var(--sage-tint);color:#4F5C4F;font-size:15.5px;font-weight:700;
+  padding:8px 12px;letter-spacing:.03em}
+.dw-dose .dd-old{display:block;font-size:13.5px;color:#7A5D54}
+.dw-dose .dd-old b{background:var(--clay-tint);color:#6B4E46}
+.dw-kid{font-size:15.5px;line-height:1.7}
+.dw-kid a{color:var(--sage);font-weight:700}
+.dw-empty{font-size:15px;color:var(--ink-soft);padding:10px 2px}
+/* 依針筒標籤色系上底色(與小兒計算機一致) */
+.dw-cat-btn[data-c="ind"],.dw-cat-btn[data-c="sed"]{background:#f4e08a;border-color:#d9c25f;color:#4a3f12}
+.dw-cat-btn[data-c="opi"]{background:#b9d6ee;border-color:#8fb6d6;color:#1f3c55}
+.dw-cat-btn[data-c="nmb"]{background:#ee8a66;border-color:#d46f4b;color:#3d1608}
+.dw-cat-btn[data-c="rev"]{border:5px solid transparent;color:#3d1608;padding:3px 11px;
+  background:linear-gradient(#f7f1e3,#f7f1e3) padding-box,repeating-linear-gradient(135deg,#c8473d 0 7px,#fff 7px 14px) border-box}
+.dw-cat-btn[data-c="oth"]{background:#f6f4ee;border-color:#d8d4ca;color:#3b3b38}
+.dw-cat-btn[data-c][aria-pressed="true"]{outline:3px solid #2c2823;outline-offset:2px;font-weight:800}
+.dw-cat-btn[data-c="all"][aria-pressed="true"]{outline:none}
+/* 依據體重:純文字,不上底色 */
+.dw-tbl .dw-name .pill{display:block;background:none;padding:0;margin-top:6px;border-radius:0;
+  font-size:14.5px;font-weight:600;color:var(--ink-soft);white-space:normal}
+.dw-tbl .dw-name .pill .pw{display:inline;font-size:14.5px;font-weight:600;margin:0 0 0 6px;color:var(--ink-soft)}
+.dw-label{display:inline-block;padding:3px 10px;border-radius:6px;font-weight:700;color:#2c2823;line-height:1.45}
+.dw-label.bg-ind{background:#f4e08a}
+.dw-label.bg-benzo{background:#f3c48f}
+.dw-label.bg-opi{background:#b9d6ee}
+.dw-label.bg-nmb{background:#ee8a66}
+.dw-label.bg-local{background:#dcdcd8}
+.dw-label.bg-acho{background:#c9d6a8}
+.dw-label.bg-oth{background:#f6f4ee;border:1px solid #d8d4ca}
+.dw-label.bg-scc{background:#1f1c19;color:#ee8a66}
+.dw-label.bg-rev{border:4px solid transparent;padding:1px 7px;
+  background:linear-gradient(#fff,#fff) padding-box,repeating-linear-gradient(135deg,#c8473d 0 6px,#fff 6px 12px) border-box}
+.dw-tbl tr.dw-add td{background:#faf8f3}
+.dw-add-box{position:relative;max-width:420px}
+.dw-add-box label{display:block;font-size:14px;font-weight:700;color:var(--ink-soft);margin-bottom:5px}
+.dw-add-in{font:inherit;font-size:16.5px;width:100%;padding:9px 11px;border-radius:8px;border:1.5px solid #d9c25f;background:#fff;color:var(--ink)}
+.dw-add-in:focus{outline:none;box-shadow:0 0 0 3px #f4e08a}
+.dw-sug{list-style:none;margin-top:4px;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
+.dw-sug[hidden]{display:none}
+.dw-sug li{padding:9px 12px;font-size:16px;cursor:pointer;border-bottom:1px solid var(--line)}
+.dw-sug li:last-child{border-bottom:none}
+.dw-sug li.on,.dw-sug li:hover{background:var(--sage-tint)}
+.dw-sug li .sg-c{font-size:13px;color:var(--ink-soft);margin-left:8px}
+.dw-rm{font:inherit;font-size:13px;font-weight:600;margin-top:7px;display:inline-block;padding:2px 9px;border-radius:12px;
+  border:1px solid rgba(0,0,0,.25);background:rgba(255,255,255,.75);color:#6E4F49;cursor:pointer}
+.dw-reset{margin-top:9px}
+.dw-addtag{display:block;font-size:12.5px;font-weight:600;color:#4a3f12;margin-top:3px}
 
 </style>
 </head>
@@ -575,33 +633,76 @@ function tivaWarnHtml(v){
   return (v.warn ? "<b class='w'>注意</b>:" + v.warn + "。" : "") + base;
 }
 
+/* c:分類;k:查詢用別名;dose 內 old 為 65 歲以上的起始範圍 */
+const DOSE_CATS = [
+  { k:"ind", t:"誘導" },
+  { k:"sed", t:"麻醉鎮靜" },
+  { k:"opi", t:"鴉片類止痛藥" },
+  { k:"nmb", t:"肌肉鬆弛劑" },
+  { k:"rev", t:"逆轉劑" },
+  { k:"oth", t:"其他" }
+];
 const DOSE_WEIGHT = [
-  { d:"Propofol(誘導)",            w:"LBW",  cls:"s", n:"用實際體重會過量,容易低血壓",
-    dose:[{t:"誘導 1.5–2.5 mg/kg", lo:1.5, hi:2.5, u:"mg"}] },
-  { d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  n:"本院多用 TCI;手動輸注時幫浦以 mg/kg/hr 設定。清除率隨體重上升,仍需依反應滴定",
-    dose:[{prop:true}] },
-  { d:"Fentanyl",                    w:"LBW",  cls:"s", n:"依實際體重給會明顯過量",
-    dose:[{t:"誘導 1–2 µg/kg", lo:1, hi:2, u:"µg"}] },
-  { d:"Remifentanil",                w:"LBW",  cls:"s", n:"TCI 亦以 LBW 或 IBW 設定",
-    dose:[{t:"維持 0.05–0.5 µg/kg/min", lo:0.05, hi:0.5, u:"µg/min"}] },
-  { d:"Morphine",                    w:"IBW",  cls:"b", n:"肥胖者呼吸抑制風險高,小量滴定",
-    dose:[{t:"0.05–0.1 mg/kg", lo:0.05, hi:0.1, u:"mg"}] },
-  { d:"Rocuronium",                  w:"IBW",  cls:"b", n:"用實際體重會使作用時間大幅延長",
-    dose:[{t:"插管 0.6 mg/kg", lo:0.6, u:"mg"}, {t:"RSI 1.2 mg/kg", lo:1.2, u:"mg"}] },
-  { d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", n:"同 rocuronium,用實際體重會延長作用時間",
-    dose:[{t:"Cisatracurium 0.15–0.2 mg/kg", lo:0.15, hi:0.2, u:"mg"}, {t:"Atracurium 0.4–0.5 mg/kg", lo:0.4, hi:0.5, u:"mg"}] },
-  { d:"Succinylcholine",             w:"TBW",  cls:"",  n:"血漿膽鹼酯酶活性隨體重增加",
+  { c:"ind", d:"Propofol(誘導)",            w:"LBW",  cls:"s", k:"diprivan 普洛福 異丙酚",
+    n:"用實際體重會過量,容易低血壓",
+    dose:[{t:"誘導 1.5–2.5 mg/kg", lo:1.5, hi:2.5, u:"mg", old:{t:"1–1.5 mg/kg", lo:1, hi:1.5}}] },
+  { c:"ind", d:"Etomidate",                  w:"LBW",  cls:"s", k:"amidate 依托咪酯",
+    n:"血行動力較穩定;會短暫抑制腎上腺皮質功能",
+    dose:[{t:"誘導 0.2–0.3 mg/kg", lo:0.2, hi:0.3, u:"mg"}] },
+  { c:"ind", d:"Ketamine",                   w:"LBW",  cls:"s", k:"ketalar 愷他命 k他命",
+    n:"肥胖者劑量證據有限,依反應滴定",
+    dose:[{t:"誘導 1–2 mg/kg IV", lo:1, hi:2, u:"mg"}] },
+  { c:"ind", d:"Lidocaine(IV)",             w:"IBW",  cls:"b", k:"xylocaine 利多卡因 局麻",
+    n:"誘導時減輕插管反應;單次上限 1.5 mg/kg",
     dose:[{t:"1–1.5 mg/kg", lo:1, hi:1.5, u:"mg"}] },
-  { d:"Sugammadex",                  w:"TBW",  cls:"",  n:"依仿單以實際體重計算",
-    dose:[{t:"T2 已出現 2 mg/kg", lo:2, u:"mg"}, {t:"PTC 1–2 4 mg/kg", lo:4, u:"mg"}, {t:"立即逆轉 16 mg/kg", lo:16, u:"mg"}] },
-  { d:"Neostigmine",                 w:"TBW",  cls:"",  n:"有單次最大劑量上限",
-    dose:[{t:"0.03–0.07 mg/kg", lo:0.03, hi:0.07, u:"mg", cap:5}] },
-  { d:"Dexmedetomidine",             w:"AdjBW",cls:"",  n:"",
+  { c:"sed", d:"Propofol(維持輸注)",        w:"TBW",  cls:"",  k:"diprivan tci tiva 普洛福",
+    n:"本院多用 TCI;手動輸注時幫浦以 mg/kg/hr 設定。清除率隨體重上升,仍需依反應滴定",
+    dose:[{prop:true}] },
+  { c:"sed", d:"Midazolam(單次)",           w:"TBW",  cls:"",  k:"dormicum 導美睡 bzd",
+    n:"重複給藥改用 IBW,脂溶性高易蓄積",
+    dose:[{t:"鎮靜 0.02–0.04 mg/kg", lo:0.02, hi:0.04, u:"mg", old:{t:"0.01–0.02 mg/kg", lo:0.01, hi:0.02}}] },
+  { c:"sed", d:"Dexmedetomidine",            w:"AdjBW",cls:"",  k:"precedex 右美 dex",
+    n:"負荷劑量易心搏過緩與低血壓;老年或血行動力不穩者可略過負荷劑量",
     dose:[{t:"負荷 0.5–1 µg/kg(10 分鐘)", lo:0.5, hi:1, u:"µg"}, {t:"維持 0.2–0.7 µg/kg/hr", lo:0.2, hi:0.7, u:"µg/hr"}] },
-  { d:"Midazolam(單次)",           w:"TBW",  cls:"",  n:"重複給藥改用 IBW,脂溶性高易蓄積",
-    dose:[{t:"鎮靜 0.02–0.04 mg/kg", lo:0.02, hi:0.04, u:"mg"}] },
-  { d:"Paracetamol",                 w:"AdjBW",cls:"",  n:"有每日總量上限",
-    dose:[{t:"IV q6h", para:true}] }
+  { c:"opi", d:"Fentanyl",                    w:"LBW",  cls:"s", k:"吩坦尼 管制藥",
+    n:"依實際體重給會明顯過量",
+    dose:[{t:"誘導 1–2 µg/kg", lo:1, hi:2, u:"µg", old:{t:"0.5–1 µg/kg", lo:0.5, hi:1}}] },
+  { c:"opi", d:"Remifentanil",                w:"LBW",  cls:"s", k:"ultiva 瑞芬 remi 管制藥",
+    n:"TCI 亦以 LBW 或 IBW 設定",
+    dose:[{t:"維持 0.05–0.5 µg/kg/min", lo:0.05, hi:0.5, u:"µg/min", old:{t:"0.025–0.25 µg/kg/min", lo:0.025, hi:0.25}}] },
+  { c:"opi", d:"Morphine",                    w:"IBW",  cls:"b", k:"嗎啡 管制藥",
+    n:"肥胖者呼吸抑制風險高,小量滴定",
+    dose:[{t:"0.05–0.1 mg/kg", lo:0.05, hi:0.1, u:"mg", old:{t:"0.025–0.05 mg/kg", lo:0.025, hi:0.05}}] },
+  { c:"nmb", d:"Rocuronium",                  w:"IBW",  cls:"b", k:"esmeron 肌鬆 roc",
+    n:"用實際體重會使作用時間大幅延長",
+    dose:[{t:"插管 0.6 mg/kg", lo:0.6, u:"mg"}, {t:"RSI 1.2 mg/kg", lo:1.2, u:"mg"}] },
+  { c:"nmb", d:"Cisatracurium / Atracurium",  w:"IBW",  cls:"b", k:"nimbex tracrium 肌鬆",
+    n:"同 rocuronium,用實際體重會延長作用時間",
+    dose:[{t:"Cisatracurium 0.15–0.2 mg/kg", lo:0.15, hi:0.2, u:"mg"}, {t:"Atracurium 0.4–0.5 mg/kg", lo:0.4, hi:0.5, u:"mg"}] },
+  { c:"nmb", d:"Succinylcholine",             w:"TBW",  cls:"",  k:"scc sux anectine 琥珀膽鹼 肌鬆",
+    n:"血漿膽鹼酯酶活性隨體重增加",
+    dose:[{t:"1–1.5 mg/kg", lo:1, hi:1.5, u:"mg"}] },
+  { c:"rev", d:"Sugammadex",                  w:"TBW",  cls:"",  k:"bridion 布瑞亭 逆轉",
+    n:"依仿單以實際體重計算;中度阻斷時,以 AdjBW 計算的逆轉時間與 TBW 相近",
+    dose:[{t:"T2 已出現 2 mg/kg", lo:2, u:"mg"}, {t:"PTC 1–2 4 mg/kg", lo:4, u:"mg"}, {t:"立即逆轉 16 mg/kg", lo:16, u:"mg"}] },
+  { c:"rev", d:"Neostigmine",                 w:"TBW",  cls:"",  k:"vagostigmin 逆轉 glycopyrrolate robinul",
+    n:"有單次最大劑量上限;需搭配抗膽鹼藥",
+    dose:[{t:"0.03–0.07 mg/kg", lo:0.03, hi:0.07, u:"mg", cap:5, glyco:true}] },
+  { c:"rev", d:"Glycopyrrolate",              w:"FIX",  cls:"",  k:"robinul 抗膽鹼 glyco",
+    n:"不易通過血腦屏障,心跳上升較 atropine 溫和;搭配 neostigmine 時兩者同時給",
+    dose:[{fx:"搭配 neostigmine:每 1 mg 配 <b>0.2 mg</b>(劑量見 Neostigmine)"}, {fx:"術中心搏過緩:<b>0.1 mg</b> IV,可每 2–3 分鐘重複"}] },
+  { c:"oth", d:"Paracetamol(IV)",           w:"AdjBW",cls:"",  k:"acetaminophen 普拿疼 止痛",
+    n:"自費;有每日總量上限",
+    dose:[{t:"IV q6h", para:true}] },
+  { c:"oth", d:"Dexamethasone",               w:"FIX",  cls:"",  k:"decadron 地塞米松 類固醇 ponv 止吐",
+    n:"PONV 預防,誘導後給;會使血糖上升;清醒病人推注可能有會陰部灼熱感",
+    dose:[{fx:"PONV 預防 <b>4–5 mg</b> IV"}] },
+  { c:"oth", d:"Dynastat",                    w:"FIX",  cls:"",  k:"parecoxib 帕瑞昔布 cox-2 nsaid 止痛 自費",
+    n:"自費;禁忌:CABG 術後、磺胺過敏、缺血性心臟病或腦血管疾病、NYHA II–IV 心衰竭、嚴重肝功能不全、活動性消化性潰瘍",
+    dose:[{dyn:true}] },
+  { c:"oth", d:"Dantrolene",                  w:"TBW",  cls:"",  k:"dantrium mh 惡性高熱",
+    n:"惡性高熱處置;可重複給予直到症狀緩解",
+    dose:[{t:"起始 2.5 mg/kg", lo:2.5, u:"mg"}, {t:"累計常見上限 10 mg/kg", lo:10, u:"mg"}] }
 ];
 
 /* 依輸入的身高體重,換算各藥建議劑量;依據體重大於實際體重時改用實際體重 */
@@ -612,6 +713,7 @@ function doseFmt(v){
 }
 function doseWt(x, r, tbw){
   if(!r || !(tbw>0)) return null;
+  if(x.w === "FIX") return { w:tbw, swap:false, fix:true };
   const map = { TBW:tbw, LBW:r.lbw, IBW:r.ibw, AdjBW:r.adj };
   let w = map[x.w];
   let swap = false;
@@ -621,10 +723,11 @@ function doseWt(x, r, tbw){
 /* 左欄體重標籤:類別 + 換算體重;偏瘦者改用 TBW 時一併註明 */
 function dosePill(x, r, tbw){
   const o = doseWt(x, r, tbw);
-  if(!o) return x.w;
+  if(!o) return x.w === "FIX" ? "固定劑量" : x.w;
+  if(o.fix) return "固定劑量";
   return `${o.swap ? x.w + " → 改用 TBW" : x.w}<span class='pw'>${o.w.toFixed(1)} kg</span>`;
 }
-function doseHtml(x, r, tbw){
+function doseHtml(x, r, tbw, age){
   const o = doseWt(x, r, tbw);
   if(!o) return "請先輸入身高體重";
   const w = o.w;
@@ -634,6 +737,14 @@ function doseHtml(x, r, tbw){
       return `<span class='dd-l'>TCI:設 Ce 或 Cp 目標濃度(見上方 TIVA 模型)</span>`
         + `<span class='dd-l'>手動:幫浦設 <b>6–12 mg/kg/hr</b>,體重輸入 <b>${doseFmt(w)} kg</b></span>`
         + `<span class='dd-l dd-sub'>= ${doseFmt(6*w)}–${doseFmt(12*w)} mg/hr,1% 原液約 ${doseFmt(0.6*w)}–${doseFmt(1.2*w)} mL/hr</span>`;
+    }
+    if(d.fx) return `<span class='dd-l'>${d.fx}</span>`;
+    if(d.dyn){
+      const half = age >= 65 && tbw < 50;
+      return half
+        ? `<span class='dd-l'>65 歲以上且體重 < 50 kg:起始 <b>20 mg</b> IV/IM,每日 ≤ 40 mg</span>`
+        : `<span class='dd-l'>起始 <b>40 mg</b> IV/IM,之後每 6–12 小時 20–40 mg,每日 ≤ 80 mg</span>`
+          + `<span class='dd-l dd-sub'>中度肝功能不全減半(每日 ≤ 40 mg);CrCl < 30 起始 20 mg</span>`;
     }
     if(d.para){
       const v = w >= 50 ? "<b>1000 mg</b>,每日 ≤ 4 g"
@@ -646,9 +757,146 @@ function doseHtml(x, r, tbw){
       if(hi!=null && hi > d.cap){ hi = d.cap; capped = true; }
     }
     const val = hi!=null && doseFmt(hi)!==doseFmt(lo) ? `${doseFmt(lo)}–${doseFmt(hi)}` : doseFmt(lo);
-    return `<span class='dd-l'>${d.t} → <b>${val} ${d.u}</b>${capped ? `<i class='dd-cap'>已達上限 ${d.cap} ${d.u}</i>` : ""}</span>`;
+    let extra = "";
+    if(d.old && age >= 65){
+      const ol = d.old.lo*w, oh = d.old.hi!=null ? d.old.hi*w : null;
+      const ov = oh!=null && doseFmt(oh)!==doseFmt(ol) ? `${doseFmt(ol)}–${doseFmt(oh)}` : doseFmt(ol);
+      extra += `<span class='dd-l dd-old'>65 歲以上起始 ${d.old.t} → <b>${ov} ${d.u}</b></span>`;
+    }
+    if(d.glyco){
+      const gl = lo*0.2, gh = hi!=null ? hi*0.2 : null;
+      const gv = gh!=null && doseFmt(gh)!==doseFmt(gl) ? `${doseFmt(gl)}–${doseFmt(gh)}` : doseFmt(gl);
+      extra += `<span class='dd-l dd-sub'>搭配 Glycopyrrolate(每 1 mg neostigmine 配 0.2 mg)→ <b>${gv} mg</b></span>`;
+    }
+    return `<span class='dd-l'>${d.t} → <b>${val} ${d.u}</b>${capped ? `<i class='dd-cap'>已達上限 ${d.cap} ${d.u}</i>` : ""}</span>` + extra;
   }).join("");
   return head + lines;
+}
+
+/* ---------- 藥物分類與查詢 ---------- */
+const DOSE_VIEW = { cat:"all", q:"", added:[], hidden:[] };   /* hidden:從誘導區移除的內建藥物索引 */   /* added:手動加入誘導的藥物索引 */
+/* 藥名格底色:依分類;Midazolam(鎮靜安眠類橙)、Dexmedetomidine(白)、Lidocaine(局麻灰)、Glycopyrrolate(抗膽鹼綠)維持各自顏色 */
+function doseBg(x){
+  if(/^Midazolam/.test(x.d)) return "benzo";
+  if(/^Dexmedetomidine/.test(x.d)) return "oth";
+  if(/^Lidocaine/.test(x.d)) return "local";
+  if(/^Succinylcholine/.test(x.d)) return "scc";
+  if(/^Glycopyrrolate/.test(x.d)) return "acho";
+  return { ind:"ind", sed:"ind", opi:"opi", nmb:"nmb", rev:"rev", oth:"oth" }[x.c] || "oth";
+}
+/* 手動加入的候選:非誘導類、尚未加入者;比對藥名或別名的字首 */
+function doseSuggest(q){
+  q = (q||"").trim().toLowerCase();
+  if(!q) return [];
+  return DOSE_WEIGHT.map((x,i)=>({x,i})).filter(({x,i})=>{
+    if(x.c === "ind" ? DOSE_VIEW.hidden.indexOf(i) < 0 : DOSE_VIEW.added.indexOf(i) >= 0) return false;
+    const words = (x.d + " " + (x.k||"")).toLowerCase().split(/[\s\/()(),]+/).filter(Boolean);
+    return words.some(w => w.indexOf(q) === 0);
+  }).slice(0, 8);
+}
+function doseMatch(x){
+  if(DOSE_VIEW.cat !== "all" && x.c !== DOSE_VIEW.cat) return false;
+  const q = DOSE_VIEW.q.trim().toLowerCase();
+  if(!q) return true;
+  const key = (x.d + " " + (x.k||"") + " " + (DOSE_CATS.find(c=>c.k===x.c)||{}).t).toLowerCase();
+  return q.split(/\s+/).every(t => key.indexOf(t) >= 0);
+}
+function dosePtHtml(r){
+  const S = CALC_STATE;
+  if(!r) return "請先在上方輸入身高與體重";
+  const sx = S.sex === "F" ? "女" : "男";
+  let t = `依 <b>${S.age} 歲、${sx}、${S.ht} cm、${S.wt} kg</b>(BMI ${r.bmi.toFixed(1)})換算。`;
+  if(S.age < 16) t += `<b class='w'>未滿 16 歲</b>,請改用小兒計算機。`;
+  else if(S.age >= 65) t += `<b>65 歲以上</b>:誘導、鎮靜與鴉片類另列老年起始範圍,從低處開始。`;
+  if(S.age >= 16 && r.bmi < 27) t += `BMI 未達肥胖,各種體重差異不大。`;
+  return t;
+}
+function doseRowsHtml(r){
+  const S = CALC_STATE;
+  const kid = S.age < 16;
+  const showInd = DOSE_VIEW.cat === "all" || DOSE_VIEW.cat === "ind";
+  const q = DOSE_VIEW.q.trim();
+  const list = DOSE_WEIGHT.map((x,i)=>({x,i})).filter(o=>doseMatch(o.x));
+  /* 手動加入誘導的藥物:在誘導區另列一份(搜尋時仍需符合關鍵字) */
+  const added = showInd ? DOSE_VIEW.added.map(i=>({x:DOSE_WEIGHT[i], i, add:true}))
+    .filter(o => !q || doseMatch(Object.assign({}, o.x, { c: DOSE_VIEW.cat === "all" ? o.x.c : "ind" }))) : [];
+  const row = ({x,i,add,ind}) => {
+    const bg = doseBg(x);
+    const pill = `<span class="pill ${x.cls}">${dosePill(x, r, S.wt)}</span>`;
+    const rm = `<button type="button" class="dw-rm" data-rm="${i}">✕ 移除</button>`;
+    const tag = add ? `<span class='dw-addtag'>手動加入(${(DOSE_CATS.find(c=>c.k===x.c)||{}).t})</span>${rm}` : (ind ? rm : "");
+    const name = `<span class="dw-label bg-${bg}">${x.d}</span>${pill}${tag}`;
+    return `<tr data-i="${i}"${add?' data-add="1"':""}><td class="dw-name">${name}</td>`
+      + `<td class="dw-dose">${kid ? `<span class='dw-kid'>未滿 16 歲不適用成人劑量,請改用<a href="pediatricpcversioncalculator.html">小兒麻醉計算機</a></span>` : doseHtml(x, r, S.wt, S.age)}</td>`
+      + `<td>${x.n||"—"}</td></tr>`;
+  };
+  const addRow = (showInd && !q) ? `<tr class="dw-add"><td colspan="3"><div class="dw-add-box">
+      <label for="dwAdd">手動加入誘導藥物</label>
+      <input id="dwAdd" class="dw-add-in" type="text" autocomplete="off" placeholder="打藥名前幾個字,例如 f、roc、mid">
+      <ul class="dw-sug" id="dwSug" hidden></ul>
+      ${(DOSE_VIEW.hidden.length || DOSE_VIEW.added.length) ? `<button type="button" class="dw-rm dw-reset" id="dwReset">↺ 恢復預設誘導藥物</button>` : ""}</div></td></tr>` : "";
+  if(!list.length && !added.length) return addRow + `<tr><td colspan="3" class="dw-empty">查無符合的藥物,可改用英文、商品名或中文名查詢。</td></tr>`;
+  const group = c => {
+    const g = list.filter(o=>o.x.c===c.k);
+    const extra = c.k === "ind" ? added : [];
+    const head = DOSE_VIEW.cat === "all" ? `<tr class="dw-cat"><td colspan="3">${c.t}</td></tr>` : "";
+    if(c.k === "ind" && showInd){
+      const keep = g.filter(o => DOSE_VIEW.hidden.indexOf(o.i) < 0).map(o => Object.assign({ ind:true }, o));
+      return head + addRow + keep.map(row).join("") + extra.map(row).join("");
+    }
+    return g.length ? head + g.map(row).join("") : "";
+  };
+  if(DOSE_VIEW.cat !== "all") return group(DOSE_CATS.find(c=>c.k===DOSE_VIEW.cat));
+  return DOSE_CATS.map(group).join("");
+}
+function wireDoseAdd(){
+  const inp = el("dwAdd"), ul = el("dwSug");
+  if(!inp || !ul) return;
+  let hit = [], cur = 0;
+  const pick = i => {
+    if(i == null) return;
+    if(DOSE_WEIGHT[i].c === "ind") DOSE_VIEW.hidden = DOSE_VIEW.hidden.filter(x=>x!==i);
+    else if(DOSE_VIEW.added.indexOf(i) < 0) DOSE_VIEW.added.push(i);
+    paintDoseTable();
+    const n = el("dwAdd"); if(n) n.focus();
+  };
+  const show = () => {
+    hit = doseSuggest(inp.value); cur = 0;
+    if(!inp.value.trim()){ ul.hidden = true; ul.innerHTML = ""; return; }
+    ul.innerHTML = hit.length
+      ? hit.map((o,k)=>`<li data-i="${o.i}" class="${k===cur?"on":""}">${o.x.d}<span class="sg-c">${(DOSE_CATS.find(c=>c.k===o.x.c)||{}).t}</span></li>`).join("")
+      : `<li class="sg-none">找不到相符的藥物</li>`;
+    ul.hidden = false;
+  };
+  const mark = () => ul.querySelectorAll("li[data-i]").forEach((li,k)=>li.classList.toggle("on", k===cur));
+  inp.addEventListener("input", show);
+  inp.addEventListener("keydown", e=>{
+    if(ul.hidden || !hit.length) return;
+    if(e.key === "ArrowDown"){ cur = (cur+1) % hit.length; mark(); e.preventDefault(); }
+    else if(e.key === "ArrowUp"){ cur = (cur-1+hit.length) % hit.length; mark(); e.preventDefault(); }
+    else if(e.key === "Enter"){ pick(hit[cur].i); e.preventDefault(); }
+    else if(e.key === "Escape"){ ul.hidden = true; }
+  });
+  inp.addEventListener("blur", ()=>setTimeout(()=>{ ul.hidden = true; }, 150));
+  ul.addEventListener("mousedown", e=>{
+    const li = e.target.closest("li[data-i]"); if(!li) return;
+    e.preventDefault(); pick(+li.dataset.i);
+  });
+  el("dwBody").querySelectorAll("[data-rm]").forEach(b=>b.addEventListener("click", ()=>{
+    const i = +b.dataset.rm;
+    if(DOSE_WEIGHT[i].c === "ind"){ if(DOSE_VIEW.hidden.indexOf(i) < 0) DOSE_VIEW.hidden.push(i); }
+    else DOSE_VIEW.added = DOSE_VIEW.added.filter(x=>x!==i);
+    paintDoseTable();
+  }));
+  const rs = el("dwReset");
+  if(rs) rs.addEventListener("click", ()=>{ DOSE_VIEW.hidden = []; DOSE_VIEW.added = []; paintDoseTable(); });
+}
+function paintDoseTable(){
+  const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
+  const tb = el("dwBody"); if(tb){ tb.innerHTML = doseRowsHtml(r); wireDoseAdd(); }
+  const pt = el("dwPt"); if(pt) pt.innerHTML = dosePtHtml(r);
+  const cs = el("dwCats");
+  if(cs) cs.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.c===DOSE_VIEW.cat ? "true" : "false"));
 }
 
 function calcHtml(){
@@ -890,14 +1138,22 @@ function calcHtml(){
     </div>
 
     <div class="tool-box">
-      <h3 class="th-new">常用藥物該用哪個體重${isNewItem({ updated:"2026-10-23" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
+      <h3 class="th-new">常用藥物劑量(依年齡體重換算)${isNewItem({ updated:"2026-11-02" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
+      <div class="dw-tools">
+        <input id="dwQ" class="dw-q" type="search" autocomplete="off" placeholder="輸入藥名查詢,例如 roc、sugammadex、吩坦尼" value="${DOSE_VIEW.q}">
+        <div class="dw-cats" id="dwCats">
+          <button type="button" class="dw-cat-btn" data-c="all" aria-pressed="${DOSE_VIEW.cat==="all"}">全部</button>
+          ${DOSE_CATS.map(c=>`<button type="button" class="dw-cat-btn" data-c="${c.k}" aria-pressed="${DOSE_VIEW.cat===c.k}">${c.t}</button>`).join("")}
+        </div>
+        <div class="dw-pt" id="dwPt">${dosePtHtml(r)}</div>
+      </div>
       <div class="tool-scroll">
         <table class="tool-tbl dw-tbl">
-          <tr><th>藥物／依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr>
-          ${DOSE_WEIGHT.map(x=>`<tr><td class="dw-name">${x.d}<span class="pill ${x.cls}">${dosePill(x, r, CALC_STATE.wt)}</span></td><td class="dw-dose">${doseHtml(x, r, CALC_STATE.wt)}</td><td>${x.n||"—"}</td></tr>`).join("")}
+          <thead><tr><th>藥物／依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr></thead>
+          <tbody id="dwBody">${doseRowsHtml(r)}</tbody>
         </table>
       </div>
-      <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,老年、血行動力不穩、合併其他鎮靜藥時要往下修;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
+      <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,65 歲以上另列老年起始範圍;血行動力不穩、合併其他鎮靜藥時要再往下修。固定劑量的藥不隨體重換算;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
     </div>
 
     <div class="tool-box">
@@ -930,6 +1186,16 @@ function calcHtml(){
 }
 
 function wireCalc(){
+  wireDoseAdd();
+  const dq = el("dwQ");
+  if(dq) dq.addEventListener("input", ()=>{ DOSE_VIEW.q = dq.value || ""; paintDoseTable(); });
+  const dc = el("dwCats");
+  if(dc) dc.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      DOSE_VIEW.cat = (DOSE_VIEW.cat === b.dataset.c && b.dataset.c !== "all") ? "all" : b.dataset.c;
+      paintDoseTable();
+    });
+  });
   const updTiva = () => {
     const box = el("tOut"); if(!box) return;
     const o = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
@@ -993,8 +1259,7 @@ function wireCalc(){
       if(u) v.appendChild(u);
       if(vals[i][1] != null){ const h = c.querySelector(".h"); if(h) h.textContent = vals[i][1]; }
     });
-    document.querySelectorAll(".dw-dose").forEach((td,i)=>{ td.innerHTML = doseHtml(DOSE_WEIGHT[i], r, wt); });
-    document.querySelectorAll(".dw-name .pill").forEach((p,i)=>{ p.innerHTML = dosePill(DOSE_WEIGHT[i], r, wt); });
+    paintDoseTable();
     updTiva();
     syncPatient();
   };
