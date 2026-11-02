@@ -27,7 +27,7 @@
    並改為提供下載新檔,不會讓人開到空白頁。
    線上版(http/https)不走這條路,直接讀伺服器上的檔案。
    ============================================================ */
-var TOOL_VERSION = "v5.1";
+var TOOL_VERSION = "v5.5";
 var TOOL_UPDATED = "2026-11-02";
 var IS_CACHED_BUILD = false; /*BUILD-FLAG*/
 var UPDATE_SRC = "https://raw.githubusercontent.com/megan9659186/Megan-/main/gacalc.html";
@@ -406,6 +406,40 @@ b.dv{font-weight:700;color:#4C7A57}
 .dw-rm{font:inherit;font-size:13px;font-weight:600;margin-top:7px;display:inline-block;padding:2px 9px;border-radius:12px;
   border:1px solid rgba(0,0,0,.25);background:rgba(255,255,255,.75);color:#6E4F49;cursor:pointer}
 .dw-reset{margin-top:9px}
+/* 字體放大;換算出的數字一律粗體、比說明文字大 */
+.dw-tbl{font-size:18px}
+.dw-tbl th{font-size:16.5px}
+.dw-tbl td{font-size:17px;line-height:1.65}
+.dw-label{font-size:19px}
+.dw-tbl .dw-name .pill,.dw-tbl .dw-name .pill .pw{font-size:16px}
+.dw-dose .dd-l{font-size:17.5px;line-height:1.7}
+.dw-dose .dd-sub,.dw-dose .dd-old{font-size:16px}
+.dw-dose .dd-l b{font-size:21px;font-weight:800;padding:1px 8px}
+.dw-dose .dd-sub b,.dw-dose .dd-old b{font-size:19px;font-weight:800}
+.dw-dose .dd-cap{font-size:14.5px}
+.dw-q{font-size:18.5px}
+.dw-cat-btn{font-size:17px;padding:7px 16px}
+.dw-cat-btn[data-c="rev"]{padding:3px 12px}
+.dw-pt{font-size:16.5px}
+.dw-tbl tr.dw-cat td{font-size:17px}
+.dw-add-box label{font-size:15.5px}
+.dw-add-in{font-size:18px}
+.dw-sug li{font-size:17.5px}
+.dw-addtag{font-size:14px}
+.dw-rm{font-size:14.5px}
+.dw-kid{font-size:17px}
+/* 手機:每支藥改為上下排列(藥名 → 劑量 → 備註),不用左右滑 */
+@media(max-width:760px){
+  .dw-tbl{min-width:0;table-layout:auto}
+  .dw-tbl thead{display:none}
+  .dw-tbl,.dw-tbl tbody,.dw-tbl tr,.dw-tbl td{display:block;width:100%}
+  .dw-tbl tr[data-i]{border-bottom:1px solid var(--line);padding:10px 0}
+  .dw-tbl tr[data-i] td{border-bottom:none;padding:4px 4px}
+  .dw-tbl tr[data-i] td:last-child{font-size:15.5px;color:var(--ink-soft)}
+  .dw-name{width:auto}
+  .dw-tbl .dw-name .pill{display:inline;margin:0 0 0 8px}
+  .dw-tbl .dw-name .dw-rm{margin:0 0 0 8px}
+}
 .dw-addtag{display:block;font-size:12.5px;font-weight:600;color:#4a3f12;margin-top:3px}
 
 </style>
@@ -643,15 +677,9 @@ const DOSE_CATS = [
   { k:"oth", t:"其他" }
 ];
 const DOSE_WEIGHT = [
-  { c:"ind", d:"Propofol(誘導)",            w:"LBW",  cls:"s", k:"diprivan 普洛福 異丙酚",
+  { c:"ind", d:"Propofol",            w:"LBW",  cls:"s", k:"diprivan 普洛福 異丙酚",
     n:"用實際體重會過量,容易低血壓",
     dose:[{t:"誘導 1.5–2.5 mg/kg", lo:1.5, hi:2.5, u:"mg", old:{t:"1–1.5 mg/kg", lo:1, hi:1.5}}] },
-  { c:"ind", d:"Etomidate",                  w:"LBW",  cls:"s", k:"amidate 依托咪酯",
-    n:"血行動力較穩定;會短暫抑制腎上腺皮質功能",
-    dose:[{t:"誘導 0.2–0.3 mg/kg", lo:0.2, hi:0.3, u:"mg"}] },
-  { c:"ind", d:"Ketamine",                   w:"LBW",  cls:"s", k:"ketalar 愷他命 k他命",
-    n:"肥胖者劑量證據有限,依反應滴定",
-    dose:[{t:"誘導 1–2 mg/kg IV", lo:1, hi:2, u:"mg"}] },
   { c:"ind", d:"Lidocaine(IV)",             w:"IBW",  cls:"b", k:"xylocaine 利多卡因 局麻",
     n:"誘導時減輕插管反應;單次上限 1.5 mg/kg",
     dose:[{t:"1–1.5 mg/kg", lo:1, hi:1.5, u:"mg"}] },
@@ -664,7 +692,13 @@ const DOSE_WEIGHT = [
   { c:"sed", d:"Dexmedetomidine",            w:"AdjBW",cls:"",  k:"precedex 右美 dex",
     n:"負荷劑量易心搏過緩與低血壓;老年或血行動力不穩者可略過負荷劑量",
     dose:[{t:"負荷 0.5–1 µg/kg(10 分鐘)", lo:0.5, hi:1, u:"µg"}, {t:"維持 0.2–0.7 µg/kg/hr", lo:0.2, hi:0.7, u:"µg/hr"}] },
-  { c:"opi", d:"Fentanyl",                    w:"LBW",  cls:"s", k:"吩坦尼 管制藥",
+  { c:"sed", d:"Etomidate",                  w:"LBW",  cls:"s", k:"amidate 依托咪酯",
+    n:"血行動力較穩定;會短暫抑制腎上腺皮質功能",
+    dose:[{t:"誘導 0.2–0.3 mg/kg", lo:0.2, hi:0.3, u:"mg"}] },
+  { c:"sed", d:"Ketamine",                   w:"LBW",  cls:"s", k:"ketalar 愷他命 k他命",
+    n:"肥胖者劑量證據有限,依反應滴定",
+    dose:[{t:"誘導 1–2 mg/kg IV", lo:1, hi:2, u:"mg"}] },
+  { c:"opi", also:"ind", d:"Fentanyl",        w:"LBW",  cls:"s", k:"吩坦尼 管制藥",
     n:"依實際體重給會明顯過量",
     dose:[{t:"誘導 1–2 µg/kg", lo:1, hi:2, u:"µg", old:{t:"0.5–1 µg/kg", lo:0.5, hi:1}}] },
   { c:"opi", d:"Remifentanil",                w:"LBW",  cls:"s", k:"ultiva 瑞芬 remi 管制藥",
@@ -734,7 +768,7 @@ function doseHtml(x, r, tbw, age){
   const head = "";
   const lines = (x.dose||[]).map(d=>{
     if(d.prop){
-      return `<span class='dd-l'>TCI:設 Ce 或 Cp 目標濃度(見上方 TIVA 模型)</span>`
+      return `<span class='dd-l'>TCI:設 Ce 或 Cp 目標濃度(見「麻醉計算機」分頁 TIVA 模型)</span>`
         + `<span class='dd-l'>手動:幫浦設 <b>6–12 mg/kg/hr</b>,體重輸入 <b>${doseFmt(w)} kg</b></span>`
         + `<span class='dd-l dd-sub'>= ${doseFmt(6*w)}–${doseFmt(12*w)} mg/hr,1% 原液約 ${doseFmt(0.6*w)}–${doseFmt(1.2*w)} mL/hr</span>`;
     }
@@ -789,13 +823,15 @@ function doseSuggest(q){
   q = (q||"").trim().toLowerCase();
   if(!q) return [];
   return DOSE_WEIGHT.map((x,i)=>({x,i})).filter(({x,i})=>{
-    if(x.c === "ind" ? DOSE_VIEW.hidden.indexOf(i) < 0 : DOSE_VIEW.added.indexOf(i) >= 0) return false;
+    if(isIndDefault(x) ? DOSE_VIEW.hidden.indexOf(i) < 0 : DOSE_VIEW.added.indexOf(i) >= 0) return false;
     const words = (x.d + " " + (x.k||"")).toLowerCase().split(/[\s\/()(),]+/).filter(Boolean);
     return words.some(w => w.indexOf(q) === 0);
   }).slice(0, 8);
 }
+/* 誘導預設藥物:誘導類本身,加上標記 also:"ind" 者(如 Fentanyl,同時列在鴉片類) */
+function isIndDefault(x){ return x.c === "ind" || x.also === "ind"; }
 function doseMatch(x){
-  if(DOSE_VIEW.cat !== "all" && x.c !== DOSE_VIEW.cat) return false;
+  if(DOSE_VIEW.cat !== "all" && x.c !== DOSE_VIEW.cat && !(DOSE_VIEW.cat === "ind" && x.also === "ind")) return false;
   const q = DOSE_VIEW.q.trim().toLowerCase();
   if(!q) return true;
   const key = (x.d + " " + (x.k||"") + " " + (DOSE_CATS.find(c=>c.k===x.c)||{}).t).toLowerCase();
@@ -832,12 +868,12 @@ function doseRowsHtml(r){
   };
   const addRow = (showInd && !q) ? `<tr class="dw-add"><td colspan="3"><div class="dw-add-box">
       <label for="dwAdd">手動加入誘導藥物</label>
-      <input id="dwAdd" class="dw-add-in" type="text" autocomplete="off" placeholder="打藥名前幾個字,例如 f、roc、mid">
+      <input id="dwAdd" class="dw-add-in" type="text" autocomplete="off" placeholder="藥物名稱">
       <ul class="dw-sug" id="dwSug" hidden></ul>
       ${(DOSE_VIEW.hidden.length || DOSE_VIEW.added.length) ? `<button type="button" class="dw-rm dw-reset" id="dwReset">↺ 恢復預設誘導藥物</button>` : ""}</div></td></tr>` : "";
   if(!list.length && !added.length) return addRow + `<tr><td colspan="3" class="dw-empty">查無符合的藥物,可改用英文、商品名或中文名查詢。</td></tr>`;
   const group = c => {
-    const g = list.filter(o=>o.x.c===c.k);
+    const g = list.filter(o => c.k === "ind" ? isIndDefault(o.x) : o.x.c === c.k);
     const extra = c.k === "ind" ? added : [];
     const head = DOSE_VIEW.cat === "all" ? `<tr class="dw-cat"><td colspan="3">${c.t}</td></tr>` : "";
     if(c.k === "ind" && showInd){
@@ -855,7 +891,7 @@ function wireDoseAdd(){
   let hit = [], cur = 0;
   const pick = i => {
     if(i == null) return;
-    if(DOSE_WEIGHT[i].c === "ind") DOSE_VIEW.hidden = DOSE_VIEW.hidden.filter(x=>x!==i);
+    if(isIndDefault(DOSE_WEIGHT[i])) DOSE_VIEW.hidden = DOSE_VIEW.hidden.filter(x=>x!==i);
     else if(DOSE_VIEW.added.indexOf(i) < 0) DOSE_VIEW.added.push(i);
     paintDoseTable();
     const n = el("dwAdd"); if(n) n.focus();
@@ -884,7 +920,7 @@ function wireDoseAdd(){
   });
   el("dwBody").querySelectorAll("[data-rm]").forEach(b=>b.addEventListener("click", ()=>{
     const i = +b.dataset.rm;
-    if(DOSE_WEIGHT[i].c === "ind"){ if(DOSE_VIEW.hidden.indexOf(i) < 0) DOSE_VIEW.hidden.push(i); }
+    if(isIndDefault(DOSE_WEIGHT[i])){ if(DOSE_VIEW.hidden.indexOf(i) < 0) DOSE_VIEW.hidden.push(i); }
     else DOSE_VIEW.added = DOSE_VIEW.added.filter(x=>x!==i);
     paintDoseTable();
   }));
@@ -923,7 +959,7 @@ function calcHtml(){
   <div class="tool-wrap">
     <div>
       <div class="tool-head">麻醉計算機</div>
-      <div class="tool-sub">體重過重的病人,不同藥物要用不同的體重去算。輸入年齡身高體重後對照下方表格取用;另附 TIVA 模型選擇、4-2-1 維持輸液與預估失血量。結果僅供輔助,實際劑量與輸液仍需依病人狀況與臨床反應調整。</div>
+      <div class="tool-sub">體重過重的病人,不同藥物要用不同的體重去算。各藥劑量請到「藥物．劑量」分頁查詢;本頁另附 TIVA 模型選擇、4-2-1 維持輸液與預估失血量。結果僅供輔助,實際劑量與輸液仍需依病人狀況與臨床反應調整。</div>
     </div>
 
     <div class="tool-box">
@@ -1138,25 +1174,6 @@ function calcHtml(){
     </div>
 
     <div class="tool-box">
-      <h3 class="th-new">常用藥物劑量(依年齡體重換算)${isNewItem({ updated:"2026-11-02" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
-      <div class="dw-tools">
-        <input id="dwQ" class="dw-q" type="search" autocomplete="off" placeholder="輸入藥名查詢,例如 roc、sugammadex、吩坦尼" value="${DOSE_VIEW.q}">
-        <div class="dw-cats" id="dwCats">
-          <button type="button" class="dw-cat-btn" data-c="all" aria-pressed="${DOSE_VIEW.cat==="all"}">全部</button>
-          ${DOSE_CATS.map(c=>`<button type="button" class="dw-cat-btn" data-c="${c.k}" aria-pressed="${DOSE_VIEW.cat===c.k}">${c.t}</button>`).join("")}
-        </div>
-        <div class="dw-pt" id="dwPt">${dosePtHtml(r)}</div>
-      </div>
-      <div class="tool-scroll">
-        <table class="tool-tbl dw-tbl">
-          <thead><tr><th>藥物／依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr></thead>
-          <tbody id="dwBody">${doseRowsHtml(r)}</tbody>
-        </table>
-      </div>
-      <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,65 歲以上另列老年起始範圍;血行動力不穩、合併其他鎮靜藥時要再往下修。固定劑量的藥不隨體重換算;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
-    </div>
-
-    <div class="tool-box">
       <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
         <details class="refs-det">
           <summary><span>文獻出處　References</span><span class="refs-num">13</span></summary>
@@ -1186,16 +1203,6 @@ function calcHtml(){
 }
 
 function wireCalc(){
-  wireDoseAdd();
-  const dq = el("dwQ");
-  if(dq) dq.addEventListener("input", ()=>{ DOSE_VIEW.q = dq.value || ""; paintDoseTable(); });
-  const dc = el("dwCats");
-  if(dc) dc.querySelectorAll("button").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      DOSE_VIEW.cat = (DOSE_VIEW.cat === b.dataset.c && b.dataset.c !== "all") ? "all" : b.dataset.c;
-      paintDoseTable();
-    });
-  });
   const updTiva = () => {
     const box = el("tOut"); if(!box) return;
     const o = tivaPick(CALC_STATE.sex, CALC_STATE.age, CALC_STATE.ht, CALC_STATE.wt);
@@ -2216,6 +2223,95 @@ function wireRisk(){
 }
 
 /* ============================================================
+   藥物．劑量 分頁
+   ------------------------------------------------------------
+   性別、年齡、身高、體重與麻醉計算機共用 CALC_STATE,改一邊另一邊同步。
+   ============================================================ */
+function doseTabHtml(){
+  const r = calcAll(CALC_STATE.sex, CALC_STATE.ht, CALC_STATE.wt);
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">藥物．劑量</div>
+      <div class="tool-sub">輸入病人資料後,各藥依該用的體重(TBW、IBW、LBW、AdjBW)自動換算成人起始劑量。性別、年齡、身高、體重與麻醉計算機共用,改一邊另一邊同步。</div>
+    </div>
+
+    <div class="tool-box">
+      <h3>基本資料</h3>
+      <div class="calc-form">
+        <div class="calc-f"><label for="dSex">生理性別</label>
+          <select id="dSex"><option value="M"${CALC_STATE.sex==="M"?" selected":""}>男</option><option value="F"${CALC_STATE.sex==="F"?" selected":""}>女</option></select></div>
+        <div class="calc-f"><label for="dAge">年齡(歲)</label>
+          <input id="dAge" type="number" inputmode="numeric" min="0" max="120" step="1" value="${CALC_STATE.age}"></div>
+        <div class="calc-f"><label for="dHt">身高(cm)</label>
+          <input id="dHt" type="number" inputmode="decimal" min="100" max="230" step="0.5" value="${CALC_STATE.ht}"></div>
+        <div class="calc-f"><label for="dWt">體重(kg)</label>
+          <input id="dWt" type="number" inputmode="decimal" min="20" max="300" step="0.5" value="${CALC_STATE.wt}"></div>
+      </div>
+    </div>
+
+    <div class="tool-box">
+      <h3 class="th-new">常用藥物劑量(依年齡體重換算)${isNewItem({ updated:"2026-11-02" }) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</h3>
+      <div class="dw-tools">
+        <input id="dwQ" class="dw-q" type="search" autocomplete="off" placeholder="輸入藥名查詢,例如 roc、sugammadex、吩坦尼" value="${DOSE_VIEW.q}">
+        <div class="dw-cats" id="dwCats">
+          <button type="button" class="dw-cat-btn" data-c="all" aria-pressed="${DOSE_VIEW.cat==="all"}">全部</button>
+          ${DOSE_CATS.map(c=>`<button type="button" class="dw-cat-btn" data-c="${c.k}" aria-pressed="${DOSE_VIEW.cat===c.k}">${c.t}</button>`).join("")}
+        </div>
+        <div class="dw-pt" id="dwPt">${dosePtHtml(r)}</div>
+      </div>
+      <div class="tool-scroll">
+        <table class="tool-tbl dw-tbl">
+          <thead><tr><th>藥物／依據體重</th><th>依輸入換算劑量</th><th>備註</th></tr></thead>
+          <tbody id="dwBody">${doseRowsHtml(r)}</tbody>
+        </table>
+      </div>
+      <div class="calc-note">換算劑量為<b>一般成人起始範圍</b>,65 歲以上另列老年起始範圍;血行動力不穩、合併其他鎮靜藥時要再往下修。固定劑量的藥不隨體重換算;依據體重大於實際體重(偏瘦者)時自動改用實際體重。本表為一般原則,個別藥品仍以仿單與本院用藥規範為準;體重極端(BMI 大於 50 或極瘦)時各公式的可靠度都下降,請以臨床反應滴定。</div>
+    </div>
+
+    <div class="tool-box">
+      <div class="refs-box" style="margin-top:0;padding:0;border:none;background:none">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">5</span></summary>
+          <ol>
+            <li>Hussain, Z., Curtain, C., Mirkazemi, C., &amp; Zaidi, S. T. R. (2018). Peri-operative medication dosing in adult obese elective surgical patients: A systematic review of clinical studies. Clinical Drug Investigation, 38(8), 673–693.</li>
+            <li>Ingrande, J., &amp; Lemmens, H. J. M. (2010). Dose adjustment of anaesthetics in the morbidly obese. British Journal of Anaesthesia, 105(Suppl 1), i16–i23.</li>
+            <li>Janmahasatian, S., Duffull, S. B., Ash, S., et al. (2005). Quantification of lean bodyweight. Clinical Pharmacokinetics, 44(10), 1051–1065.</li>
+            <li>Liao, J.-Q., Shih, D., Lin, T.-Y., Lee, M., &amp; Lu, C.-W. (2022). Appropriate dosing of sugammadex for reversal of rocuronium-/vecuronium-induced muscle relaxation in morbidly obese patients: A meta-analysis of randomized controlled trials. Journal of International Medical Research, 50(8).</li>
+            <li>Nightingale, C. E., Margarson, M. P., Shearer, E., et al. (2015). Peri-operative management of the obese surgical patient 2015. Anaesthesia, 70(7), 859–876.</li>
+          </ol>
+        </details>
+      </div>
+    </div>
+  </div>`;
+}
+
+function wireDoseTab(){
+  wireDoseAdd();
+  const dq = el("dwQ");
+  if(dq) dq.addEventListener("input", ()=>{ DOSE_VIEW.q = dq.value || ""; paintDoseTable(); });
+  const dc = el("dwCats");
+  if(dc) dc.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      DOSE_VIEW.cat = (DOSE_VIEW.cat === b.dataset.c && b.dataset.c !== "all") ? "all" : b.dataset.c;
+      paintDoseTable();
+    });
+  });
+  const upd = () => {
+    const sx = el("dSex"); if(sx) CALC_STATE.sex = sx.value;
+    const age = parseFloat(el("dAge").value), ht = parseFloat(el("dHt").value), wt = parseFloat(el("dWt").value);
+    if(age>=0 && isFinite(age)) CALC_STATE.age = age;
+    if(ht>0) CALC_STATE.ht = ht;
+    if(wt>0) CALC_STATE.wt = wt;
+    paintDoseTable();
+  };
+  ["dSex","dAge","dHt","dWt"].forEach(id=>{
+    const n = el(id);
+    if(n){ n.addEventListener("input", upd); n.addEventListener("change", upd); }
+  });
+}
+
+/* ============================================================
    兩個工具頁的切換
    ------------------------------------------------------------
    CALC_CHIP / DRUG_CHIP 兩顆 chip;選到哪個就 render 哪個並重新
@@ -2226,7 +2322,8 @@ const CALC_CHIP = "麻醉計算機";
 const DRUG_CHIP = "藥物泡法";
 const FIND_CHIP = "藥物查詢";
 const RISK_CHIP = "術前風險";
-const TABS = [CALC_CHIP, RISK_CHIP, DRUG_CHIP, FIND_CHIP];
+const DOSE_CHIP = "藥物．劑量";
+const TABS = [CALC_CHIP, DOSE_CHIP, RISK_CHIP, DRUG_CHIP, FIND_CHIP];
 let activeTab = CALC_CHIP;
 
 function renderChips(){
@@ -2247,6 +2344,9 @@ function renderPane(){
     wireDrugSearch();
     const q = el("dsQ");
     if(q && !("ontouchstart" in window)) q.focus();
+  } else if(activeTab === DOSE_CHIP){
+    p.innerHTML = doseTabHtml() + DISCLAIMER;
+    wireDoseTab();
   } else if(activeTab === RISK_CHIP){
     p.innerHTML = riskHtml() + DISCLAIMER;
     wireRisk();
