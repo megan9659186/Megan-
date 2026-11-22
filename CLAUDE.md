@@ -2,6 +2,8 @@
 
 「科別 → 手術 → 全身麻醉注意事項」的快速查詢網頁，放在 GitHub Pages(https://megan9659186.github.io/Megan-/gaquickercheck.html)。
 使用對象：臨床速查、帶學生教學、給同事共用(手機加到主畫面、院內電腦離線開單檔)。內容需教學等級的臨床正確度。
+
+**回覆 Megan 一律使用繁體中文**(英文術語、檔名、指令照原樣保留)。
 內容為繁體中文夾英文術語。Morandi 低彩度風格。雙欄「清單→詳情」流程，手機自動堆疊。
 
 ## 檔案結構(重要)
@@ -32,10 +34,12 @@ tools/validate.mjs         驗證
    - 有改到的手術在卡片右上角顯示 NEW(七天後自動消失，沿用現有機制)
 3. `node tools/build.mjs` 組裝。
 4. `node tools/validate.mjs` 驗證，✗ 錯誤必須清零才能交付。
-5. 回報精簡摘要，結尾固定提醒：**上線前請對照機構 protocol 逐台校過。**
+5. **先給 Megan 預覽**：把組裝好的 `gaquickercheck.html` 用 SendUserFile(`display: "render"`)送到右邊側欄，讓 Megan 直接看修改後的畫面。
+6. 回報精簡摘要，結尾固定提醒：**上線前請對照機構 protocol 逐台校過。**
+7. 等 Megan 看過、說要改就回到步驟 1 再改再預覽；Megan 明確說確定 / 可以上傳後，才 commit 並 push 到 GitHub。
 
 只動程式、使用者端沒有任何可見變化 → 不加公告、不動版本號。
-未經 Megan 同意不要 commit / push。
+未經 Megan 同意不要 commit / push —— 預覽確認前一律不上傳。
 
 ## 資料結構(每台手術)
 
