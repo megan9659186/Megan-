@@ -6131,10 +6131,28 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v13.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-09-23";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v14.0";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-10-31";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-10-31",
+    note: "危機處理新增六張卡片。",
+    items: [
+      "危機處理新增:術中心跳停止(成人),含電擊與給藥流程、手術室常見可逆原因",
+      "危機處理新增:低血氧、低血壓、高氣道壓三張依序排查卡",
+      "危機處理新增:高血鉀(含肝移植再灌流)",
+      "危機處理新增:心包填塞(含心導管與電燒術中)"
+    ]
+  },
+  {
+    date: "2026-10-31",
+    note: "危機處理新增骨水泥植入症候群與 TURP 症候群。",
+    items: [
+      "危機處理新增:骨水泥植入症候群(辨識分級、立即處置、升壓用藥、預防)",
+      "危機處理新增:TURP 症候群(單極與雙極灌流液差異、驗鈉、高張鹽水與矯正速度上限)"
+    ]
+  },
   {
     date: "2026-09-23",
     note: "心臟電燒新增本院流程筆記。",
@@ -7984,10 +8002,221 @@ function initScrollRails(){
    字串用雙引號,內文不可再出現雙引號;class 一律單引號;
    小於與大於符號一律寫成 &lt; 與 &gt;,避免被當成標籤。
    ============================================================ */
-const CRISIS_UPDATED = "2026-08-09";
+const CRISIS_UPDATED = "2026-10-31";
 let CRISIS_OPEN = null;   /* null = 停在列表層;否則為展開中的 crisis id */
 
 const CRISIS = [
+  {
+    group: "通用急救",
+    id: "arrest",
+    name: "術中心跳停止(成人)",
+    en: "Intraoperative Cardiac Arrest (Adult)",
+    key: "沒脈搏就壓 → 喊人、貼電擊片、關掉麻醉藥與血管擴張藥,同時找 H 與 T",
+    recog: [
+      "## 怎麼發現",
+      "<b>EtCO₂ 突然掉很低或消失</b>、血氧波形消失、動脈波形變平或 MAP &lt;20 mmHg",
+      "量不到 NIBP、摸不到頸動脈或股動脈(周邊脈搏不可靠;外科醫師常比較好摸)",
+      "心電圖 VF/VT、asystole,或看似正常節律但沒有脈搏(PEA)",
+      "清醒或半身麻醉病人:突然沒反應、類似抽搐、停止呼吸",
+      "<b class='w'>先處理病人,不要先懷疑機器</b>;同時檢查導線與監測,但不可因此延誤按壓",
+      "## 術中常見原因",
+      "出血與低血容、低血氧(含未發現的食道插管)、高血鉀",
+      "半身麻醉後心搏過緩、強烈迷走反射、麻醉藥過量或給藥錯誤、LAST",
+      "張力性氣胸、氣體滯留(auto-PEEP)、心包填塞、肺栓塞或氣體栓塞、過敏、惡性高熱"
+    ],
+    actNote: "手術室的心跳停止通常有人目擊、原因可逆,關鍵是立即高品質按壓並同步找原因。",
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>立即告知外科團隊並啟動院內急救流程",
+      "<b>立即開始胸外按壓</b>:每分鐘 100–120 次、深度約 5–6 cm、讓胸廓完全回彈;每 2 分鐘換手,中斷 &lt;10 秒",
+      "貼上電擊貼片、推急救車",
+      "<b>關掉所有吸入與靜脈麻醉藥、血管擴張藥</b>,100% 氧氣高流量",
+      "已插管:每分鐘 10 次通氣,按壓不停;未插管:30:2 面罩通氣,準備聲門上呼吸道或插管",
+      "用 EtCO₂ 與動脈舒張壓看按壓品質:EtCO₂ 至少 10 mmHg、舒張壓 &gt;20 mmHg,達不到就改善按壓",
+      "<b>可電擊心律(VF/無脈 VT)</b>:儘快電擊,電擊後立即按壓 2 分鐘再看心律;第 2 次電擊後給 epinephrine,頑固者加 amiodarone",
+      "<b>不可電擊心律(PEA/asystole)</b>:儘快給 epinephrine,每 3–5 分鐘重複",
+      "<b>同時找可逆原因</b>:放掉氣腹、解除拉鉤壓迫、懷孕者子宮左推、拆開迴路排除氣體滯留、檢查所有點滴與輸注藥物",
+      "抽動脈血氣與電解質(鉀、鈣、血糖);有條件時以 TEE 或超音波找心包填塞、右心擴大、低血容",
+      "俯臥手術:若氣道已固定,可先在俯臥姿勢按壓兩側肩胛骨之間,同時準備翻身",
+      "恢復自發循環的徵象:EtCO₂ 突然上升、出現動脈波形或可摸到脈搏"
+    ],
+    dose: [
+      ["Epinephrine", "<b>1 mg IV/IO,每 3–5 分鐘</b>", "不可電擊心律儘早給;可電擊心律在第 2 次電擊後給"],
+      ["電擊", "雙相 120–200 J(依機型建議),之後同等或更高", "每 2 分鐘檢查一次心律;充電時繼續按壓"],
+      ["Amiodarone", "<b>首劑 300 mg IV,第二劑 150 mg</b>", "頑固性 VF/無脈 VT"],
+      ["Lidocaine", "1–1.5 mg/kg IV,之後 0.5–0.75 mg/kg", "可取代 amiodarone;<b class='w'>懷疑 LAST 時不可用</b>"],
+      ["Calcium chloride", "10% CaCl₂ 500–1000 mg IV", "懷疑高血鉀、低血鈣或大量輸血時"],
+      ["Magnesium sulfate", "2 g IV", "Torsades de pointes"]
+    ],
+    avoid: [
+      "<b class='w'>不要為了確認監測或找原因而停止按壓</b>",
+      "<b class='w'>懷疑 LAST 時 epinephrine 單次 ≤1 µg/kg,並給脂肪乳劑</b>(見局部麻醉藥全身毒性卡)",
+      "不要在可電擊心律延誤電擊;不要電擊後先摸脈搏,應立即恢復按壓"
+    ],
+    after: [
+      "恢復循環後:維持 SpO₂ 92–98%、正常 PaCO₂、MAP ≥65 mmHg,避免發燒",
+      "做 12 導程心電圖,與心臟科討論是否需要心導管",
+      "轉加護病房;與團隊討論是否繼續或終止手術",
+      "事後團隊回顧(debriefing),記錄時間點、給藥與電擊次數"
+    ],
+    refs: [
+      "Wigginton, J. G., Agarwal, S., Bartos, J. A., Coute, R. A., Drennan, I. R., Haamid, A., et al. (2025). Part 9: Adult advanced life support: 2025 American Heart Association guidelines for cardiopulmonary resuscitation and emergency cardiovascular care. Circulation, 152(16_suppl_2), S538–S577.",
+      "Cao, D., Arens, A. M., Chow, S. L., Easter, S. R., Hoffman, R. S., Lagina, A. T., et al. (2025). Part 10: Adult and pediatric special circumstances of resuscitation: 2025 American Heart Association guidelines for cardiopulmonary resuscitation and emergency cardiovascular care. Circulation, 152(16_suppl_2), S578–S672.",
+      "Hirsch, K. G., Amorim, E., Coppler, P. J., Drennan, I. R., Elliott, A., Gordon, A. J., et al. (2025). Part 11: Post-cardiac arrest care: 2025 American Heart Association guidelines for cardiopulmonary resuscitation and emergency cardiovascular care. Circulation, 152(16_suppl_2), S673–S718.",
+      "Hinkelbein, J., Andres, J., Böttiger, B. W., Brazzi, L., De Robertis, E., Einav, S., et al. (2023). Cardiac arrest in the perioperative period: A consensus guideline for identification, treatment, and prevention from the European Society of Anaesthesiology and Intensive Care and the European Society for Trauma and Emergency Surgery. European Journal of Anaesthesiology, 40(10), 724–736.",
+      "Gaba, D. M., Howard, S. K., & Burden, A. (Eds.). (2026). Crisis management in anesthesiology (3rd ed.). Elsevier."
+    ]
+  },
+  {
+    group: "通用排查",
+    id: "hypoxemia",
+    name: "低血氧",
+    en: "Hypoxemia",
+    key: "100% 氧氣、改手動通氣 → 照順序查:氧氣 → 管子 → 肺 → 循環;插管後 10 分鐘內先想食道插管",
+    recog: [
+      "SpO₂ 下降超過 5%,或 &lt;90%",
+      "術中可能看到深色血液;麻醉下對低血氧的心跳呼吸反應被壓抑",
+      "晚期:心搏過緩、心律不整、低血壓、心跳停止",
+      "## 先排除假警報(但不要先假設是假的)",
+      "電燒干擾、低體溫或末梢循環差、探頭位置或外界光線、指甲油、亞甲藍等染劑",
+      "## 常見原因",
+      "吸入氧濃度不足(供氧或迴路問題)、通氣不足、肺塌陷、單側支氣管插管、支氣管痙攣、吸入、氣胸、肺水腫、肺栓塞",
+      "心輸出量下降也會讓血氧下降"
+    ],
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>",
+      "<b>FiO₂ 100%、高流量氧氣</b>,確認氧氣分析儀上的濃度真的上升",
+      "<b class='w'>插管後 10 分鐘內出現低血氧,先當食道插管處理</b>,除非持續有正常 EtCO₂ 波形,或直接看到管子通過聲門",
+      "<b>改手動通氣</b>,感覺肺順應性,確認 EtCO₂ 波形與氣道壓",
+      "氣道壓高 → 依高氣道壓卡排查;氣道壓低 → 找漏氣或脫落",
+      "聽診兩側並看胸廓起伏:排除單側支氣管插管、支氣管痙攣、氣胸",
+      "以抽痰管通過氣管內管,排除扭折或痰栓;分泌物多就積極抽吸,必要時纖維支氣管鏡",
+      "確認血氧計:看波形、換探頭位置,但<b>邊處理邊確認</b>",
+      "血壓穩定時做肺部復張,並加 PEEP 約 5 cmH₂O",
+      "維持循環與血紅素;抽動脈血氣",
+      "告知外科:放掉氣腹、恢復平躺、移開壓迫胸腹的拉鉤、暫停骨水泥或擴髓;單肺通氣時讓上側肺恢復通氣",
+      "仍未改善:考慮吸入、肺栓塞、氣體栓塞、過敏、肺水腫、甲基血紅素血症、惡性高熱;儘快結束手術並安排加護病房"
+    ],
+    dose: [
+      ["潮氣量", "6–8 mL/kg 預測體重", "依 EtCO₂ 調整呼吸次數"],
+      ["PEEP", "約 5 cmH₂O 起", "減少肺塌陷;注意血壓"]
+    ],
+    avoid: [
+      "<b class='w'>不要執著於血氧計是否故障而延誤處理</b>,先當成真的低血氧",
+      "不要在血壓不穩時做肺部復張",
+      "拔管後的低血氧:別忘了殘餘肌鬆與鴉片類造成的通氣不足"
+    ],
+    after: [
+      "找出原因並記錄;安排胸部 X 光或血氣追蹤",
+      "拔管前重新評估氧合與通氣;必要時延後拔管、轉加護病房",
+      "神經學評估:嚴重或長時間低血氧可能造成意識改變或延遲甦醒"
+    ],
+    refs: [
+      "Kane, A. D., Kothmann, E., & Giussani, D. A. (2020). Detection and response to acute systemic hypoxia. BJA Education, 20(2), 58–64.",
+      "Lumb, A. B. (2019). Why do patients need extra oxygen during a general anaesthetic? BJA Education, 19(2), 37–39.",
+      "Chrimes, N., Higgs, A., Hagberg, C. A., et al. (2022). Preventing unrecognised oesophageal intubation: A consensus guideline from the Project for Universal Management of Airways and international airway societies. Anaesthesia, 77(12), 1395–1415.",
+      "Goldhaber-Fiebert, S. N., Austin, N., Sultan, E., et al. (2021). Emergency manual: Cognitive aids for perioperative crises (Version 4). Stanford Anesthesia Cognitive Aid Program.",
+      "Gaba, D. M., Howard, S. K., & Burden, A. (Eds.). (2026). Crisis management in anesthesiology (3rd ed.). Elsevier."
+    ]
+  },
+  {
+    group: "通用排查",
+    id: "hypotension",
+    name: "低血壓",
+    en: "Hypotension",
+    key: "先確認是真的 → 減麻醉、補液、升壓,同時找原因;沒脈搏就 CPR",
+    recog: [
+      "收縮壓 &lt;90 mmHg、MAP &lt;60–65 mmHg,或比術前基準下降超過 20%",
+      "伴隨:EtCO₂ 下降、血氧波形變差、心跳變快或變慢、尿量減少;清醒病人噁心或意識改變",
+      "## 先確認不是量錯",
+      "NIBP 袖帶尺寸、有人壓到袖帶;動脈導管 damping、換能器高度或沒歸零、接頭鬆脫;側臥時上下手臂差異",
+      "## 依機轉想原因",
+      "<b>前負荷不足</b>:出血(含隱性出血)、拉鉤或氣腹壓迫下腔靜脈、體位、懷孕子宮、氣胸、心包填塞、肺栓塞",
+      "<b>血管張力下降</b>:麻醉藥過深、半身麻醉、過敏、敗血症、腎上腺功能不全、長期服用 ACEI/ARB",
+      "<b>心臟收縮力下降</b>:心肌缺血、心衰竭、低血氧;<b>心律</b>:過快、過慢或不規則"
+    ],
+    actNote: "容易漏掉的致命原因:隱性出血、麻醉藥過量、心肌缺血、氣胸、氣體滯留(auto-PEEP)、過敏、氣腹或下腔靜脈受壓。",
+    act: [
+      "<b>確認是真的</b>:摸脈搏、看 EtCO₂ 與血氧波形、重測 NIBP、沖洗動脈導管並檢查換能器高度",
+      "<b class='w'>沒有脈搏 → 開始 CPR</b>(見術中心跳停止卡)",
+      "嚴重低血壓:<b class='w'>通知麻醉主治醫師、Call Help!</b>,FiO₂ 100%",
+      "<b>降低或關掉吸入與靜脈麻醉藥、血管擴張藥</b>",
+      "抬腿或頭低腳高,<b>快速輸液</b>;心衰竭病人小量多次並反覆評估",
+      "<b>給升壓藥</b>維持灌流,需要反覆推注就改持續輸注",
+      "告知外科:有無出血、拉鉤或器械壓迫、氣腹壓;必要時請求支援或暫停手術",
+      "高氣道壓或懷疑氣體滯留時,短暫拆開迴路觀察血壓是否回升",
+      "懷疑過敏 → 停止可疑藥物,給 epinephrine 與大量輸液(見過敏卡)",
+      "放置動脈導管與導尿管;抽血氣、血紅素、電解質、鈣、乳酸;備血",
+      "看心電圖有無缺血;有條件時以 TEE 或超音波評估容積與心臟功能"
+    ],
+    dose: [
+      ["Phenylephrine", "50–200 µg IV,可重複", "心跳偏快或正常時"],
+      ["Ephedrine", "5–10 mg IV,可重複", "心跳偏慢時"],
+      ["Epinephrine", "10–100 µg IV 滴定", "嚴重或對上述無效時"],
+      ["Norepinephrine", "持續輸注,依血壓滴定", "需要反覆推注時"],
+      ["晶體液", "250–500 mL 快速輸注", "依反應重複;心衰竭者小量"],
+      ["Hydrocortisone", "100 mg IV", "懷疑腎上腺功能不全或長期使用類固醇者"]
+    ],
+    avoid: [
+      "<b class='w'>不要沒確認就把假警報當真猛給升壓藥</b>,但也不要因確認而延誤真的低血壓",
+      "<b class='w'>不要只給升壓藥而不找原因</b>",
+      "心衰竭或心包填塞者,不要一次大量輸液"
+    ],
+    after: [
+      "一般維持 MAP 至少 60–65 mmHg;高風險病人依術前基準個別化",
+      "記錄低血壓持續時間與處置;追蹤心肌酵素、腎功能與尿量",
+      "持續需要升壓藥者轉加護病房"
+    ],
+    refs: [
+      "Saugel, B., Fletcher, N., Gan, T. J., Grocott, M. P. W., Myles, P. S., Sessler, D. I., et al. (2024). PeriOperative Quality Initiative (POQI) international consensus statement on perioperative arterial pressure management. British Journal of Anaesthesia, 133(2), 264–276.",
+      "Wesselink, E. M., Kappen, T. H., Torn, H. M., Slooter, A. J. C., & van Klei, W. A. (2018). Intraoperative hypotension and the risk of postoperative adverse outcomes: A systematic review. British Journal of Anaesthesia, 121(4), 706–721.",
+      "D'Amico, F., Fominskiy, E. V., Turi, S., Pruna, A., Fresilli, S., Triulzi, M., et al. (2023). Intraoperative hypotension and postoperative outcomes: A meta-analysis of randomised trials. British Journal of Anaesthesia, 131(5), 823–831.",
+      "Gaba, D. M., Howard, S. K., & Burden, A. (Eds.). (2026). Crisis management in anesthesiology (3rd ed.). Elsevier."
+    ]
+  },
+  {
+    group: "通用排查",
+    id: "highpip",
+    name: "高氣道壓",
+    en: "High Peak Inspiratory Pressure",
+    key: "100% 氧氣、改手動通氣 → 拆開 Y 接頭:壓力還高是機器迴路,壓力下降是管子或病人",
+    recog: [
+      "氣道壓比原本上升 &gt;5 cmH₂O,或 &gt;40 cmH₂O;高氣道壓警報",
+      "呼吸袋變硬、潮氣量變小(壓力控制模式尤其明顯)、胸廓起伏小",
+      "EtCO₂ 波形改變(上升支變斜)、SpO₂ 下降;嚴重時靜脈回流受阻 → 頑固性低血壓",
+      "## 依位置想原因",
+      "<b>機器與迴路</b>:呼吸器/手動切換錯誤、活瓣卡住、管路扭折、意外加了 PEEP、快速供氧鍵卡住",
+      "<b>氣管內管</b>:扭折、被咬、痰栓或血塊、氣囊疝出、單側支氣管插管、食道插管",
+      "<b>肺與胸壁</b>:支氣管痙攣、吸入、肺水腫、氣胸、肺塌陷;嗆咳、肌鬆不足、鴉片類造成胸壁僵直、惡性高熱",
+      "<b>腹部與體位</b>:氣腹、肥胖、俯臥腹部受壓、陡峭頭低位、拉鉤"
+    ],
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>",
+      "<b>FiO₂ 100%</b>,確認仍有 EtCO₂",
+      "<b>改手動通氣</b>,感受阻力",
+      "<b class='w'>合併低血壓:先把迴路與管子拆開數秒</b>,排除氣體滯留(auto-PEEP)",
+      "<b>拆開 Y 接頭,擠壓呼吸袋</b>:壓力仍高 → 機器或迴路問題,立刻改用甦醒球(Ambu)通氣並請人處理;壓力下降 → 問題在管子或病人",
+      "聽診兩側:不對稱 → 單側支氣管插管(退管)或氣胸;對稱有喘鳴 → 支氣管痙攣;有囉音 → 肺水腫",
+      "<b>抽痰管通過氣管內管</b>:過不去 → 扭折、被咬、痰栓或氣囊疝出;氣囊放氣再試、纖維支氣管鏡檢查,無法排除就換管",
+      "檢查麻醉深度與肌鬆、氣腹壓、體位與拉鉤;告知外科",
+      "懷疑張力性氣胸(低血壓、單側呼吸音消失、氣管偏移)→ 立即請外科或有經驗者減壓並置放胸管"
+    ],
+    dose: [],
+    avoid: [
+      "<b class='w'>不要在原因未明時一直加大呼吸器壓力</b>,會增加氣壓傷與氣胸風險",
+      "不要忽略機器端:先拆 Y 接頭分辨,比在病人身上找原因快"
+    ],
+    after: [
+      "處理後血壓可能反彈上升(先前給的輸液與升壓藥開始作用)",
+      "懷疑氣壓傷:安排胸部 X 光",
+      "移除的氣管內管保留檢查;機器問題通報並更換"
+    ],
+    refs: [
+      "Hinkelbein, J., Andres, J., Böttiger, B. W., Brazzi, L., De Robertis, E., Einav, S., et al. (2023). Cardiac arrest in the perioperative period: A consensus guideline for identification, treatment, and prevention from the European Society of Anaesthesiology and Intensive Care and the European Society for Trauma and Emergency Surgery. European Journal of Anaesthesiology, 40(10), 724–736.",
+      "Shum, S., Huang, A., & Slinger, P. (2023). Hypoxaemia during one lung ventilation. BJA Education, 23(9), 328–336.",
+      "Goldhaber-Fiebert, S. N., Austin, N., Sultan, E., et al. (2021). Emergency manual: Cognitive aids for perioperative crises (Version 4). Stanford Anesthesia Cognitive Aid Program.",
+      "Gaba, D. M., Howard, S. K., & Burden, A. (Eds.). (2026). Crisis management in anesthesiology (3rd ed.). Elsevier."
+    ]
+  },
   {
     checked: "2026-08-07",
     group: "氣道與呼吸",
@@ -8028,7 +8257,6 @@ const CRISIS = [
       "Chrimes, N., Higgs, A., Hagberg, C. A., et al. (2022). Preventing unrecognised oesophageal intubation: A consensus guideline from the Project for Universal Management of Airways and international airway societies. Anaesthesia, 77(12), 1395–1415."
     ]
   },
-
   {
     checked: "2026-08-07",
     group: "氣道與呼吸",
@@ -8070,7 +8298,6 @@ const CRISIS = [
       "Regli, A., Becke, K., & von Ungern-Sternberg, B. S. (2017). An update on the perioperative management of children with upper respiratory tract infections. Current Opinion in Anaesthesiology, 30(3), 362–367."
     ]
   },
-
   {
     checked: "2026-08-07",
     group: "氣道與呼吸",
@@ -8117,7 +8344,6 @@ const CRISIS = [
       "Kew, K. M., Kirtchuk, L., & Michell, C. I. (2014). Intravenous magnesium sulfate for treating adults with acute asthma in the emergency department. Cochrane Database of Systematic Reviews, 2014(5), CD010909."
     ]
   },
-
   {
     checked: "2026-08-07",
     group: "氣道與呼吸",
@@ -8163,7 +8389,6 @@ const CRISIS = [
       "Mehta, S. P., Bhananker, S. M., Posner, K. L., & Domino, K. B. (2013). Operating room fires: A closed claims analysis. Anesthesiology, 118(5), 1133–1139."
     ]
   },
-
   {
     checked: "2026-08-07",
     group: "循環與出血",
@@ -8210,7 +8435,6 @@ const CRISIS = [
       "CRASH-2 Trial Collaborators. (2010). Effects of tranexamic acid on death, vascular occlusive events, and blood transfusion in trauma patients with significant haemorrhage (CRASH-2): A randomised, placebo-controlled trial. The Lancet, 376(9734), 23–32."
     ]
   },
-
   {
     checked: "2026-08-07",
     group: "循環與出血",
@@ -8259,7 +8483,178 @@ const CRISIS = [
       "Mirski, M. A., Lele, A. V., Fitzsimmons, L., & Toung, T. J. K. (2007). Diagnosis and treatment of vascular air embolism. Anesthesiology, 106(1), 164–177."
     ]
   },
-
+  {
+    group: "循環與出血",
+    id: "tamponade",
+    name: "心包填塞",
+    en: "Cardiac Tamponade",
+    key: "快、滿、緊:維持心跳、補足容積、撐住血管張力 → 儘快引流",
+    recog: [
+      "## 誰會發生",
+      "<b>心導管與電燒術中</b>(心臟穿孔,常在穿中膈或燒灼時)、心臟手術後出血、中央靜脈導管或心律調節器導線穿孔、外傷、主動脈剝離",
+      "## 表現",
+      "<b>突然低血壓、心跳變快、脈壓變窄</b>;EtCO₂ 下降",
+      "Beck 三徵:低血壓、頸靜脈怒張、心音遙遠",
+      "吸氣時收縮壓下降 &gt;10 mmHg(奇脈);各心室舒張壓趨於相等",
+      "<b>心臟超音波或 TEE 見心包積液合併右心房/右心室塌陷</b>;透視下心臟輪廓的搏動變小",
+      "心臟手術後:縱膈引流量突然先增後減(血塊堵住)",
+      "<b class='w'>急性出血只要 150–200 mL 就可能壓垮心臟</b>",
+      "## 需要鑑別",
+      "低血容、張力性氣胸、肺栓塞、急性右心梗塞、氣體滯留(auto-PEEP)"
+    ],
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>立即通知心臟科或心臟外科",
+      "100% 氧氣",
+      "<b>快速輸液</b>,加開大口徑靜脈管路",
+      "<b>升壓維持血壓與心跳</b>:phenylephrine、norepinephrine,必要時 epinephrine",
+      "貼上電擊貼片,備急救車",
+      "以心臟超音波或 TEE 確認",
+      "<b>心導管室</b>:準備心包膜穿刺包;與心臟科討論以 protamine 逆轉 heparin",
+      "<b>心臟手術後</b>:準備緊急重新開胸,通知開刀房與體外循環師",
+      "<b>引流後血壓常迅速回升</b>,注意反彈性高血壓,準備調降升壓藥與加深麻醉",
+      "抽血氣、凝血功能、ACT;矯正凝血異常與酸中毒"
+    ],
+    actNote: "若需全身麻醉:儘量保留自主呼吸到最後、先消毒鋪單再誘導;選擇對交感張力影響小的藥物(如 ketamine);正壓通氣時用低氣道壓、不加 PEEP。插管肌鬆依本院作法以 rocuronium 為主。",
+    dose: [
+      ["晶體液", "250–500 mL 快速輸注", "可重複,增加前負荷"],
+      ["Phenylephrine", "100–200 µg IV,可重複", "維持血管張力"],
+      ["Norepinephrine", "8–16 µg IV 推注,或持續輸注", "依血壓滴定"],
+      ["Epinephrine", "5–10 µg IV 起,依反應增加", "兼具強心;嚴重時使用"],
+      ["Ketamine", "誘導 0.25–1 mg/kg IV", "交感維持較佳,仍可能血壓下滑"],
+      ["Protamine", "約 1 mg 中和 100 U heparin,緩慢給", "心導管室逆轉抗凝,劑量與心臟科確認;注意 protamine 反應"]
+    ],
+    avoid: [
+      "<b class='w'>避免心跳變慢、血管擴張與降低前負荷</b>(高 PEEP、大量鎮靜藥、過深麻醉)",
+      "<b class='w'>不要在未準備好引流前貿然誘導全身麻醉</b>",
+      "心包膜穿刺抽不到液體不代表沒有填塞(可能是血塊)"
+    ],
+    after: [
+      "引流後持續監測積液是否再增加;追蹤血紅素與凝血",
+      "心導管室病人:確認穿孔是否需外科修補",
+      "轉加護病房觀察"
+    ],
+    refs: [
+      "Madhivathanan, P. R., Corredor, C., & Smith, A. (2020). Perioperative implications of pericardial effusions and cardiac tamponade. BJA Education, 20(7), 226–234.",
+      "Ekanem, E., Neuzil, P., Reichlin, T., Kautzner, J., van der Voort, P., Jais, P., et al. (2024). Safety of pulsed field ablation in more than 17,000 patients with atrial fibrillation in the MANIFEST-17K study. Nature Medicine, 30(7), 2020–2029.",
+      "Darma, A., Dinov, B., Bertagnolli, L., Torri, F., Lurz, J. A., Dagres, N., et al. (2023). Cardiac tamponade complicating ventricular arrhythmia ablation: Real life data on incidence, management, and outcome. Journal of Cardiovascular Electrophysiology, 34(2), 403–411.",
+      "Gaba, D. M., Howard, S. K., & Burden, A. (Eds.). (2026). Crisis management in anesthesiology (3rd ed.). Elsevier."
+    ]
+  },
+  {
+    group: "術式相關",
+    id: "bcis",
+    name: "骨水泥植入症候群",
+    en: "Bone Cement Implantation Syndrome (BCIS)",
+    key: "灌骨水泥、插假體或復位後血壓、SpO₂、EtCO₂ 驟降 → 100% 氧氣、升壓、支撐右心",
+    recog: [
+      "## 發生時機",
+      "多在<b>灌注骨水泥、插入假體或關節復位</b>的當下至數分鐘內出現",
+      "未使用骨水泥的關節置換也可能發生,只是通常較輕",
+      "## 表現與分級",
+      "第 1 級:中度低血氧(SpO₂ &lt;94%)或收縮壓下降 &gt;20%",
+      "第 2 級:嚴重低血氧(SpO₂ &lt;88%)、收縮壓下降 &gt;40% 或意外失去意識",
+      "<b class='w'>第 3 級:心血管崩潰,需要 CPR</b>",
+      "全身麻醉下 <b>EtCO₂ 突降</b>常是最早線索;半身麻醉的清醒病人可能先出現喘、躁動或意識改變",
+      "心律不整、肺動脈壓上升、急性右心衰竭(TEE 可見右心擴大或栓子)",
+      "## 高風險族群",
+      "高齡、ASA 3–4、心肺儲備差或肺高壓、骨質疏鬆、病理性骨折或骨轉移、轉子間骨折、長柄假體"
+    ],
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>",
+      "立即告知外科團隊,暫停進一步操作",
+      "<b>100% 氧氣</b>,確保氣道與通氣;半身麻醉病人意識變差或無法維持氧合時準備插管",
+      "<b>升壓以維持冠狀動脈灌流</b>:phenylephrine 或 norepinephrine,嚴重者 epinephrine 滴定",
+      "補足血容量,但<b class='w'>右心衰竭時避免盲目大量輸液</b>",
+      "心搏過緩給 atropine;心跳停止依 ACLS 進行 CPR",
+      "有條件時以 TEE 或心臟超音波評估右心功能,並排除出血等其他原因"
+    ],
+    dose: [
+      ["Phenylephrine", "50–100 µg IV,可重複", "維持血壓與冠狀動脈灌流,避免右心缺血惡化"],
+      ["Norepinephrine", "持續輸注,依血壓滴定", "需要反覆推注時改持續輸注"],
+      ["Epinephrine", "10–100 µg IV 滴定", "嚴重循環衰竭時使用;心跳停止依 ACLS 劑量"],
+      ["Atropine", "0.5 mg IV", "心搏過緩時"]
+    ],
+    prevent: [
+      "術前辨識高風險病人;團隊講好灌骨水泥前外科先口頭告知,麻醉端回覆已準備好",
+      "灌骨水泥前提高吸入氧濃度、確認血容量足夠、維持血壓,升壓藥先抽好備用",
+      "高風險者放置動脈導管,置入前後密切監測血壓、SpO₂ 與 EtCO₂",
+      "外科端:髓腔充分沖洗與抽吸、以骨水泥槍逆行灌注、避免過度加壓;極高風險者可與外科討論改用非骨水泥假體"
+    ],
+    avoid: [
+      "<b class='w'>不要把血壓下降當成麻醉太深或失血而延誤處理</b>",
+      "不要等到心跳停止才給升壓藥,低血壓一出現就積極處理"
+    ],
+    after: [
+      "第 2–3 級者術後轉加護病房觀察",
+      "追蹤心電圖、心肌酵素與血氣;必要時以心臟超音波評估右心功能",
+      "依分級記錄事件並告知外科,作為日後同類手術的風險參考"
+    ],
+    refs: [
+      "Brokke, K. E., Graman, M., Servaas, S., Sierevelt, I. N., Steegers, M. A. H., & Nolte, P. A. (2025). Bone cement implantation syndrome: A scoping review. British Journal of Anaesthesia, 135(4), 1038–1050.",
+      "Barakat, N., & Browne, J. A. (2025). Is bone cement implantation syndrome actually caused by cement? A systematic review of the literature using the Bradford-Hill criteria. The Journal of Arthroplasty, 40(8S1), S353–S359.",
+      "Griffiths, R., White, S. M., Moppett, I. K., Parker, M. J., Chesser, T. J., Costa, M. L., et al. (2015). Safety guideline: Reducing the risk from cemented hemiarthroplasty for hip fracture 2015. Anaesthesia, 70(5), 623–626.",
+      "Griffiths, R., Babu, S., Dixon, P., Freeman, N., Hurford, D., Kelleher, E., Moppett, I., Ray, D., Sahota, O., Shields, M., & White, S. (2021). Guideline for the management of hip fractures 2020: Guideline by the Association of Anaesthetists. Anaesthesia, 76(2), 225–237."
+    ]
+  },
+  {
+    group: "術式相關",
+    id: "turp",
+    name: "TURP 症候群",
+    en: "Transurethral Resection (TURP) Syndrome",
+    key: "灌流液吸收過多 → 請外科盡快結束、驗鈉;症狀性低血鈉給 3% 高張鹽水",
+    recog: [
+      "## 誰會發生",
+      "經尿道刮除(攝護腺、膀胱腫瘤)或子宮鏡手術,灌流液經開放的靜脈竇或包膜穿孔進入循環",
+      "風險升高:<b>手術超過 60 分鐘</b>、灌流袋過高、腺體大、包膜穿孔或出血多",
+      "## 早期(半身麻醉的清醒病人最容易察覺)",
+      "躁動、混亂、噁心嘔吐、頭痛、視力模糊或看不見(glycine 灌流液)",
+      "血壓先上升、心跳變慢(容積過負荷),之後可轉為低血壓",
+      "## 晚期或嚴重",
+      "<b class='w'>喘、SpO₂ 下降、肺水腫</b>",
+      "<b class='w'>抽搐、意識喪失、昏迷</b>;血鈉 &lt;120 mmol/L 時症狀多半明顯",
+      "全身麻醉下常只表現為不明原因的血壓心跳變化或延遲甦醒",
+      "## 灌流液種類決定表現",
+      "<b>單極刮除用無電解質灌流液</b>(glycine、sorbitol、mannitol):液體過負荷合併稀釋性低血鈉",
+      "<b>雙極刮除用生理食鹽水</b>:不會低血鈉,但吸收量並未減少,<b class='w'>仍可能液體過負荷與肺水腫</b>"
+    ],
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>",
+      "<b>請外科團隊止血、盡快結束手術</b>,並降低灌流袋高度",
+      "給氧、支持氣道;抽搐、意識變差或無法維持氧合時插管",
+      "<b>立即抽血驗鈉</b>(血氣機最快),一併看血糖與血氣",
+      "停止低張靜脈輸液,限制輸液量",
+      "液體過負荷或肺水腫:給 furosemide",
+      "<b class='w'>症狀性低血鈉(抽搐、昏迷、意識混亂)給 3% 高張鹽水</b>,每次給完重驗血鈉",
+      "抽搐給 benzodiazepine;心搏過緩給 atropine,血壓不穩給升壓藥"
+    ],
+    dose: [
+      ["3% NaCl", "<b>100–150 mL IV,10–20 分鐘給完</b>", "依症狀與血鈉可重複 2–3 次;症狀改善即停,目標先升 4–6 mmol/L"],
+      ["矯正速度上限", "<b class='w'>前 24 小時血鈉升幅 ≤10 mmol/L</b>", "過快可能造成滲透壓性去髓鞘症候群"],
+      ["Furosemide", "20–40 mg IV", "用於液體過負荷、肺水腫"],
+      ["Atropine", "0.5 mg IV", "心搏過緩時"]
+    ],
+    prevent: [
+      "灌流袋高度維持約 60 cm 以內;手術超過 60 分鐘時提醒外科並考慮驗鈉",
+      "記錄灌流液進出差額,估算吸收量",
+      "半身麻醉並保持病人清醒或輕鎮靜,可及早發現意識與行為變化",
+      "雙極刮除(生理食鹽水灌流)可避免低血鈉,但仍要注意液體過負荷"
+    ],
+    avoid: [
+      "<b class='w'>不要給低張輸液或大量輸液</b>",
+      "<b class='w'>不要矯正血鈉過快</b>",
+      "半身麻醉時避免過度鎮靜,會掩蓋早期的意識變化"
+    ],
+    after: [
+      "術後持續追蹤血鈉、意識與呼吸狀態;嚴重者轉加護病房",
+      "glycine 引起的視力模糊通常為暫時性,多在 24 小時內恢復",
+      "記錄手術時間、灌流液吸收量與處置經過"
+    ],
+    refs: [
+      "Hahn, R. G. (2015). Fluid absorption and the ethanol monitoring method. Acta Anaesthesiologica Scandinavica, 59(9), 1081–1093.",
+      "Alexander, C. E., Scullion, M. M., Omar, M. I., Yuan, Y., Mamoulakis, C., N'Dow, J. M., et al. (2019). Bipolar versus monopolar transurethral resection of the prostate for lower urinary tract symptoms secondary to benign prostatic obstruction. Cochrane Database of Systematic Reviews, 12(12), CD009629.",
+      "Hoorn, E. J., & Zietse, R. (2017). Diagnosis and treatment of hyponatremia: Compilation of the guidelines. Journal of the American Society of Nephrology, 28(5), 1340–1349."
+    ]
+  },
   {
     checked: "2026-08-09",
     group: "藥物與過敏",
@@ -8312,7 +8707,6 @@ const CRISIS = [
       "Riazi, S., Kraeva, N., & Hopkins, P. M. (2018). Malignant hyperthermia in the post-genomics era: New perspectives on an old concept. Anesthesiology, 128(1), 168–180."
     ]
   },
-
   {
     checked: "2026-08-09",
     group: "藥物與過敏",
@@ -8358,7 +8752,6 @@ const CRISIS = [
       "Macfarlane, A. J. R., Gitman, M., Bornstein, K. J., et al. (2021). Updates in our understanding of local anaesthetic systemic toxicity: A narrative review. Anaesthesia, 76(S1), 27–39."
     ]
   },
-
   {
     checked: "2026-08-09",
     group: "藥物與過敏",
@@ -8410,7 +8803,58 @@ const CRISIS = [
       "Kolawole, H., Marshall, S. D., Crilly, H., et al. (2017). Australian and New Zealand Anaesthetic Allergy Group/Australian and New Zealand College of Anaesthetists perioperative anaphylaxis management guidelines. Anaesthesia and Intensive Care, 45(2), 151–158."
     ]
   },
-
+  {
+    group: "代謝與電解質",
+    id: "hyperk",
+    name: "高血鉀",
+    en: "Hyperkalemia",
+    key: "心電圖有變化 → 先給鈣穩定心肌,再把鉀推回細胞內、排出體外",
+    recog: [
+      "血鉀 &gt;5.5 mmol/L;多在 &gt;6.5 mmol/L 後出現心電圖變化",
+      "心電圖依序:T 波高尖 → PR 延長、P 波消失 → QRS 變寬 → 正弦波 → VF 或 asystole",
+      "<b class='w'>鉀上升很快時,第一個表現可能就是 VF 或心跳停止</b>",
+      "## 術中常見情境",
+      "<b>肝移植再灌流</b>、主動脈或大血管阻斷放開、止血帶放氣",
+      "大量輸血(儲存較久的紅血球)、組織壞死或擠壓傷、溶血",
+      "腎衰竭、酸中毒、惡性高熱;易感病人給 succinylcholine(燒傷、脊髓損傷、長期臥床、神經肌肉疾病)",
+      "## 先排除假性高血鉀",
+      "抽血溶血、抽血技術不良、血小板或白血球極高"
+    ],
+    act: [
+      "<b class='w'>通知麻醉主治醫師、Call Help!</b>貼上電擊貼片,持續看心電圖",
+      "<b>停止所有含鉀輸液</b>(含乳酸林格氏液);輸血改用較新鮮的血品並經加溫器",
+      "<b class='w'>心電圖有變化或血鉀 ≥6.5:立即給鈣</b>,可重複",
+      "<b>把鉀推回細胞內</b>:insulin 加葡萄糖、過度換氣、合併酸中毒時給碳酸氫鈉、吸入型 β₂ 促效劑",
+      "<b>把鉀排出體外</b>:有尿量者給 furosemide;腎衰竭者緊急聯絡腎臟科安排透析",
+      "立即抽血確認(血氣機最快),之後每 30–60 分鐘追蹤血鉀與血糖",
+      "心跳停止 → 依心跳停止卡處置,同時給鈣",
+      "<b>肝移植</b>:再灌流前先把鉀降下來、備好鈣與升壓藥,並與外科溝通沖洗與放開時機"
+    ],
+    dose: [
+      ["Calcium chloride", "10% CaCl₂ <b>500–1000 mg IV</b>", "中心靜脈給藥為佳;作用快但只維持約 30–60 分鐘"],
+      ["Calcium gluconate", "10% <b>30 mL(3 g)IV</b>", "周邊靜脈可用;等同 CaCl₂ 1 g 的鈣量"],
+      ["Insulin + 葡萄糖", "Regular insulin <b>10 U IV</b> + 50% 葡萄糖 <b>50 mL</b>", "15–30 分鐘起效;<b class='w'>給完追蹤血糖,低血糖可延遲數小時出現</b>"],
+      ["Sodium bicarbonate", "50–100 mEq IV", "合併代謝性酸中毒時"],
+      ["Salbutamol 吸入", "經氣管內管 6–10 下", "輔助降鉀,注意心搏過速"],
+      ["Furosemide", "20–40 mg IV", "有尿量者"]
+    ],
+    avoid: [
+      "<b class='w'>不要只給降鉀藥而不先給鈣</b>(心電圖有變化時)",
+      "<b class='w'>易感病人不要給 succinylcholine</b>",
+      "不要用含鉀溶液做大量輸液"
+    ],
+    after: [
+      "insulin 的作用會消退,鉀可能再升:持續追蹤至穩定",
+      "監測血糖至少數小時",
+      "找出原因並與腎臟科討論後續透析需求"
+    ],
+    refs: [
+      "Chang, W., Xu, M. R., George, A., Kingeter, M., Henson, C. P., Mishra, K., et al. (2025). Hyperkalemia in liver transplantation. Journal of Clinical Anesthesia, 103, 111822.",
+      "Clase, C. M., Carrero, J. J., Ellison, D. H., Grams, M. E., Hemmelgarn, B. R., Jardine, M. J., et al. (2020). Potassium homeostasis and management of dyskalemia in kidney diseases: Conclusions from a Kidney Disease: Improving Global Outcomes (KDIGO) Controversies Conference. Kidney International, 97(1), 42–61.",
+      "Cao, D., Arens, A. M., Chow, S. L., Easter, S. R., Hoffman, R. S., Lagina, A. T., et al. (2025). Part 10: Adult and pediatric special circumstances of resuscitation: 2025 American Heart Association guidelines for cardiopulmonary resuscitation and emergency cardiovascular care. Circulation, 152(16_suppl_2), S578–S672.",
+      "Gaba, D. M., Howard, S. K., & Burden, A. (Eds.). (2026). Crisis management in anesthesiology (3rd ed.). Elsevier."
+    ]
+  },
   {
     group: "藥物與過敏",
     id: "totalspinal",
@@ -8460,7 +8904,6 @@ const CRISIS = [
       "Cook, T. M., Counsell, D., & Wildsmith, J. A. W. (2009). Major complications of central neuraxial block: Report on the Third National Audit Project of the Royal College of Anaesthetists. British Journal of Anaesthesia, 102(2), 179–190."
     ]
   },
-
   {
     group: "產科",
     id: "csection",
@@ -8509,7 +8952,6 @@ const CRISIS = [
       "Bampoe, S., Odor, P. M., & Lucas, D. N. (2020). Novel attributes of perioperative anaesthetic care for caesarean delivery. Anaesthesia, 75(S1), e101–e110."
     ]
   },
-
   {
     group: "產科",
     id: "pph",
@@ -8556,7 +8998,6 @@ const CRISIS = [
       "Collins, P. W., Bell, S. F., de Lloyd, L., & Collis, R. E. (2019). Management of postpartum haemorrhage: From research into practice, a narrative review of the literature and the Cardiff experience. International Journal of Obstetric Anesthesia, 37, 106–117."
     ]
   },
-
   {
     group: "小兒",
     id: "pedairway",
@@ -8603,7 +9044,6 @@ const CRISIS = [
       "Black, A. E., Flynn, P. E. R., Smith, H. L., et al. (2015). Development of a guideline for the management of the unanticipated difficult airway in pediatric practice. Paediatric Anaesthesia, 25(4), 346–362."
     ]
   },
-
   {
     group: "小兒",
     id: "pedbrady",
@@ -8650,7 +9090,6 @@ const CRISIS = [
       "Habre, W., Disma, N., Virag, K., et al. (2017). Incidence of severe critical events in paediatric anaesthesia (APRICOT): A prospective multicentre observational study in 261 hospitals in Europe. The Lancet Respiratory Medicine, 5(5), 412–425."
     ]
   },
-
   {
     group: "甦醒期",
     id: "delayed",

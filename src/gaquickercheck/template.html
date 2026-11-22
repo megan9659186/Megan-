@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="麻醉速查">
+<meta name="theme-color" content="#FBF8F1">
+<link rel="manifest" href="gaquickercheck.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
+<title>各科手術全身麻醉快速查詢</title>
+<style>html{background:#FBF8F1;color-scheme:light}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all';this.onload=null">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet"></noscript>
+<style>
+:root{
+  --bg:#FBF8F1;         /* 淺米白底 */
+  --surface:#F4F1EB;    /* 卡片乳白 */
+  --surface-2:#EDE9E1;
+  --ink:#423E39;        /* 暖深灰褐 主文字 */
+  --ink-soft:#726B62;   /* 次文字 */
+  --line:#D6CFC3;       /* 細分隔線 */
+  --sage:#8B9A8B;       /* 主色 灰綠 */
+  --sage-tint:#DDE3D9;
+  --clay:#B8968C;       /* 副色 灰玫 */
+  --clay-tint:#EBDDD7;
+  --flag:#A87E76;       /* 警示 灰陶紅 */
+  --flag-tint:#EAD9D3;
+  --warn:#C0392B;       /* 警示紅字 */
+  --slate:#8892A0;      /* 監測 灰藍 */
+  --slate-tint:#DCE0E5;
+  --ochre:#B7A177;      /* 用藥 灰赭 */
+  --ochre-tint:#E9E1D0;
+  --grey-tint:#E7E3DB;  /* 待校對底色 淺灰 */
+  --grey-line:#D2CCC0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html,body{touch-action:manipulation}   /* 關閉點兩下放大,保留雙指縮放 */
+body{
+  font-family:"Noto Sans TC",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.6;font-size:16.5px;
+}
+.app{max-width:1180px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* ---------- Header ---------- */
+header{padding:22px 22px 16px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.5px}
+.brand .sub{font-size:13.5px;color:var(--ink-soft);letter-spacing:.5px}
+.search{margin-top:14px;position:relative}
+.search input{
+  width:100%;padding:11px 14px 11px 40px;border:1px solid var(--line);
+  border-radius:10px;background:var(--surface);color:var(--ink);
+  font-family:inherit;font-size:16.5px;outline:none;transition:border-color .15s;
+}
+.search input:focus{border-color:var(--sage)}
+.search input::placeholder{color:#A69E92}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#A69E92}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{
+  padding:6px 13px;border-radius:20px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-soft);font-size:14px;cursor:pointer;
+  transition:all .15s;font-family:inherit;
+}
+.chip:hover{border-color:var(--sage)}
+.chip[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+/* 學習區 chip(歷屆考古題複習 / AI 練習題):莫蘭迪淺藍,與科別 chip 區隔 */
+.chip.study{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:500}
+.chip.study:hover{border-color:var(--slate)}
+.chip.study[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+/* 外區麻醉 chip:沿用原本的莫蘭迪灰藍色 */
+.chip.nora{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:500}
+.chip.nora:hover{border-color:var(--slate)}
+.chip.nora[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+/* 危機處理 chip:莫蘭迪黃,與科別、學習區 chip 區隔 */
+.chip.crisis{background:var(--ochre-tint);border-color:#D6C9A8;color:#6E6047;font-weight:600}
+.chip.tx{background:var(--clay-tint);border-color:#DCC7BF;color:#8a6a60;font-weight:500}
+.chip.tx:hover{border-color:var(--clay)}
+.chip.tx[aria-pressed="true"]{background:var(--clay);border-color:var(--clay);color:#fff}
+.chip.crisis:hover{border-color:var(--ochre)}
+.chip.crisis[aria-pressed="true"]{background:var(--ochre);border-color:var(--ochre);color:#fff}
+
+/* ---------- 題庫 Quiz(歷屆考古題複習 / AI 練習題) ---------- */
+.set-card{position:relative;background:var(--slate-tint);border:1px solid #C6CCD4;border-radius:11px;
+  padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s}
+.set-card .badge-new{position:absolute;top:12px;right:12px}
+.set-card.has-new .name{padding-right:48px}
+.set-card:hover{border-color:var(--slate);transform:translateY(-1px)}
+.set-card .name{font-weight:600;font-size:15.5px;color:#4A525E}
+.set-card .sub{font-size:13px;color:#6E7684;margin-top:3px;line-height:1.5}
+.set-card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.set-card .meta span{font-size:11.5px;padding:2px 8px;border-radius:11px;
+  background:#fff;color:#5C6573;border:1px solid #C6CCD4}
+.set-empty{padding:18px;border:1px dashed #C6CCD4;border-radius:11px;
+  background:var(--slate-tint);color:#5C6573;font-size:14.5px;line-height:1.8}
+.set-empty b{display:block;font-size:15.5px;color:#4A525E;margin-bottom:6px}
+/* 歷屆考古題:先選年度,點入後再列該年度各科目 */
+.set-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;
+  color:var(--slate);font-size:13.5px;font-weight:600;cursor:pointer;
+  padding:0;margin-bottom:10px;font-family:inherit}
+.set-back:hover{text-decoration:underline}
+.set-group{font-size:12.5px;color:#6E7684;letter-spacing:.03em;margin:0 0 9px}
+.quiz-head{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+.quiz-meta{font-size:13.5px;color:var(--ink-soft);margin-top:8px}
+.quiz-score{background:var(--slate);color:#fff;border-radius:10px;padding:12px 16px;
+  font-weight:600;font-size:17px;margin-bottom:18px;text-align:center}
+.q-item{border:1px solid var(--line);border-radius:11px;background:var(--surface);
+  padding:15px 17px;margin-bottom:13px}
+.q-stem{font-weight:500;line-height:1.75;margin-bottom:11px}
+.q-no{display:inline-block;min-width:26px;height:22px;line-height:22px;text-align:center;
+  background:var(--slate);color:#fff;border-radius:11px;font-size:12.5px;
+  margin-right:9px;vertical-align:1px}
+.q-fig{margin:0 0 11px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 12px 10px}
+.q-fig img{display:block;width:100%;height:auto;max-width:480px;margin:0 auto;border-radius:5px}
+.q-fig figcaption{margin-top:8px;font-size:13px;color:var(--ink-soft);line-height:1.55;text-align:center}
+.q-opts{display:flex;flex-direction:column;gap:7px}
+.q-opt{display:flex;align-items:flex-start;gap:9px;text-align:left;width:100%;
+  padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--bg);
+  color:var(--ink);font-family:inherit;font-size:15.5px;line-height:1.6;cursor:pointer;
+  transition:all .12s}
+.q-opt:hover{border-color:var(--slate)}
+.q-lab{flex-shrink:0;font-weight:700;color:var(--ink-soft)}
+.q-opt.sel{background:var(--slate-tint);border-color:var(--slate)}
+.q-opt.right{background:var(--sage-tint);border-color:var(--sage)}
+.q-opt.right .q-lab{color:#5F7060}
+.q-opt.wrong{background:var(--flag-tint);border-color:var(--flag)}
+.q-opt.wrong .q-lab{color:var(--flag)}
+.q-exp{margin-top:11px;padding:11px 13px;border-left:3px solid var(--slate);
+  background:var(--surface-2);border-radius:0 8px 8px 0;font-size:14.5px;line-height:1.8}
+.quiz-bar{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 8px}
+.quiz-btn{padding:11px 20px;border-radius:9px;border:1px solid var(--slate);
+  background:var(--slate);color:#fff;font-family:inherit;font-size:15.5px;
+  font-weight:600;cursor:pointer}
+.quiz-btn.ghost{background:var(--bg);color:#5C6573}
+.quiz-btn:active{opacity:.85}
+
+/* ---------- Body layout ---------- */
+.body{display:flex;flex:1;min-height:0}
+.list{
+  width:340px;flex-shrink:0;border-right:1px solid var(--line);
+  overflow-y:auto;padding:12px;
+}
+.detail{flex:1;overflow-y:auto;padding:26px 30px 60px}
+
+/* ---------- List cards ---------- */
+.card{
+  position:relative;
+  background:var(--surface);border:1px solid var(--line);border-radius:11px;
+  padding:13px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s;
+}
+/* 待校對:底色改淺灰,與已校對的乳白底區隔 */
+.card.unchecked{background:var(--grey-tint);border-color:var(--grey-line)}
+.badge-new{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.7px;
+  line-height:1.5;padding:1px 6px;border-radius:5px;
+  background:var(--clay);color:#FBF8F1;vertical-align:middle}
+.card .badge-new{position:absolute;top:12px;right:12px}
+.card.has-new .name{padding-right:48px}
+.d-title .badge-new{margin-left:9px;position:relative;top:-4px}
+.rv-prog{margin:12px 0 2px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:var(--surface)}
+.rv-prog .rv-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.rv-row{margin-top:10px}
+.rv-row .rv-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+  font-size:13px;font-weight:600;color:var(--ink)}
+.rv-row .rv-h span{font-size:12.5px;font-weight:500;color:var(--ink-soft)}
+.rv-bar{height:7px;border-radius:4px;background:var(--surface-2);margin:7px 0 6px;overflow:hidden}
+.rv-bar i{display:block;height:100%;background:var(--sage);border-radius:4px}
+.rv-line{font-size:12.5px;color:var(--ink-soft);line-height:1.75}
+.rv-line b{color:var(--ink);font-weight:600}
+.rv-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.rv-dot.ok{background:var(--sage)}
+.rv-dot.todo{background:var(--ochre)}
+.rv-foot{margin-top:10px;font-size:12px;color:var(--ink-soft);line-height:1.6}
+.chip.has-new{position:relative}
+.chip .chip-new{position:absolute;top:-8px;right:-8px;font-size:9px;letter-spacing:.5px;padding:0 4px;
+  border-radius:4px;box-shadow:0 0 0 2px var(--bg)}
+.card:hover{border-color:var(--sage);transform:translateY(-1px)}
+.card.active{border-color:var(--sage);background:var(--sage-tint)}
+.card .name{font-weight:500;font-size:16.5px}
+.card .en{font-size:13px;color:var(--ink-soft);margin-top:1px}
+.card .meta{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.tag{font-size:12.5px;padding:2px 8px;border-radius:6px;background:var(--surface-2);color:var(--ink-soft)}
+.tag.spec{background:var(--clay-tint);color:#8a6a60}
+.empty{padding:40px 20px;text-align:center;color:var(--ink-soft);font-size:15px}
+/* 更新紀錄(首頁預設畫面) */
+.upd{padding:20px 20px 28px}
+.upd-h{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.upd-notice{border:1px solid var(--clay-tint);border-left:5px solid var(--clay);border-radius:11px;
+  background:var(--clay-tint);color:#8a6a60;font-size:14px;line-height:1.85;
+  padding:13px 16px;margin-bottom:16px;font-weight:600}
+.upd-notice b{color:#8a6a60}
+.upd-ver{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.03em;color:#5E6B5E;
+  background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 10px;margin-bottom:10px}
+.upd-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.6}
+.upd-block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.upd-date{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;color:#5E6B5E;
+  background:var(--sage-tint);border-radius:20px;padding:3px 11px;margin-bottom:9px}
+.upd-note{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+.upd-list{list-style:none;margin:0;padding:0}
+.upd-list li{position:relative;padding-left:17px;font-size:14.5px;line-height:1.8;color:var(--ink)}
+.upd-list li+li{margin-top:2px}
+.upd-list li::before{content:"";position:absolute;left:3px;top:12px;width:5px;height:5px;border-radius:50%;background:var(--clay)}
+.upd-link{font:inherit;color:var(--ink);background:none;border:0;padding:0;text-align:left;cursor:pointer;
+  text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.upd-link:hover{color:#5E6B5E;text-decoration-color:var(--sage)}
+.rv-chip{display:inline-block;padding:1px 8px;margin:1px 0;border-radius:7px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--ink-soft);
+  text-decoration:none;line-height:1.5}
+button.rv-chip{cursor:pointer}
+button.rv-chip:hover{background:#E3DFD6;color:var(--ink);text-decoration:none}
+.upd-tip{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:18px;line-height:1.6}
+
+/* ---------- Detail view ---------- */
+.detail .placeholder{
+  height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#A69E92;text-align:center;gap:10px;
+}
+.detail .placeholder svg{opacity:.5}
+.d-head{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:4px}
+.back{display:none;align-items:center;gap:6px;background:none;border:none;color:var(--sage);
+  font-family:inherit;font-size:15px;cursor:pointer;padding:0;margin-bottom:14px}
+.back-bottom{width:100%;justify-content:center;margin:26px 0 4px;padding:13px 16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  color:var(--sage);font-size:15.5px;font-weight:500}
+.back-bottom:hover{border-color:var(--sage);background:var(--sage-tint)}
+.d-title{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spacing:.3px;overflow-wrap:anywhere;-webkit-hyphens:auto;hyphens:auto}
+.d-title-zh{font-size:16.5px;color:var(--ink-soft);margin-top:2px}
+.d-en{color:var(--ink-soft);font-size:13.5px;margin-top:6px;letter-spacing:.4px}
+.d-summary{
+  display:flex;gap:22px;flex-wrap:wrap;margin-top:14px;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 16px;
+}
+.d-summary .item{font-size:14px}
+.d-summary .item .k{color:var(--ink-soft);font-size:12.5px;letter-spacing:.5px}
+.d-summary .item .v{font-weight:500;margin-top:1px}
+.d-summary .item.pos .v{display:flex;align-items:center;gap:7px}
+.d-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.d-title-main{min-width:0;flex:1}
+.d-title-icon{width:144px;height:144px;flex:0 0 144px;background:transparent;border:0;padding:0;overflow:visible}
+.d-title-icon img{display:block;width:100%;height:100%;object-fit:contain;background:transparent}
+.posico{width:30px;height:14px;flex-shrink:0;color:var(--ink)}
+
+/* ---------- 麻醉方式分區(GA / SA)---------- */
+.vpick{margin-top:18px}
+.vpick-h{font-size:13.5px;color:var(--ink-soft);letter-spacing:.5px;margin-bottom:10px}
+.vopt{display:block;width:100%;text-align:left;cursor:pointer;font-family:inherit;
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--sage);
+  border-radius:11px;padding:15px 17px;margin-bottom:11px;transition:all .15s}
+.vopt:hover{border-color:var(--sage);background:var(--sage-tint)}
+.vopt.v-ga{border-left-color:var(--clay)}
+.vopt.v-ga:hover{border-color:var(--clay);background:var(--clay-tint)}
+.vopt-en{font-family:"Noto Serif TC",serif;font-weight:600;font-size:19px;color:var(--ink);letter-spacing:.2px}
+.vopt-zh{font-size:15px;color:var(--ink-soft);margin-top:1px}
+.vopt-note{font-size:14.5px;color:var(--ink);margin-top:8px;line-height:1.6}
+.vopt-img{float:right;width:72px;height:72px;object-fit:contain;margin:0 0 6px 12px;background:transparent}
+.vopt::after{content:"";display:block;clear:both}
+.vopt-go{font-size:13px;color:var(--sage);margin-top:9px;letter-spacing:.4px}
+.vopt.v-ga .vopt-go{color:var(--clay)}
+.v-crumb{display:inline-block;font-size:12.5px;color:var(--ink-soft);letter-spacing:.4px;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:6px;
+  padding:2px 9px;margin-bottom:8px}
+
+.section{margin-top:22px;padding-left:15px;border-left:3px solid var(--sage);position:relative}
+.section h3{font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.section .dot{width:8px;height:8px;border-radius:50%;background:var(--sage);flex-shrink:0}
+.section ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.section li{position:relative;padding-left:16px;font-size:16px;color:var(--ink)}
+.section li::before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--line)}
+.section li b{font-weight:600;color:var(--ink)}
+.section li b.w{font-weight:700;color:var(--warn)}
+
+.s-prep{border-left-color:var(--ochre)}   .s-prep .dot{background:var(--ochre)}
+
+/* 醒目標示(非警示) */
+.section li b.hl,.flag-box li b.hl,.info-panel b.hl{background:#F0E3BE;color:#6B5722;
+  font-weight:700;padding:1px 6px;border-radius:5px;box-decoration-break:clone;
+  -webkit-box-decoration-break:clone}
+
+/* 術中四時期色塊 */
+.section li:has(>.pbar),.section li:has(>.ptit){padding-left:0}
+.section li:has(>.pbar)::before,.section li:has(>.ptit)::before{display:none}
+.pbar{display:block;border-radius:10px;padding:8px 13px;font-weight:700;font-size:16px;letter-spacing:.3px}
+.pbar em{display:block;font-style:normal;font-weight:600;font-size:13px;opacity:.72;margin-top:2px}
+.section li:has(>.pbar){margin-top:6px}
+.section li:has(>.ptit){border-left:3px solid var(--line);padding-left:11px;margin-left:4px}
+.ptit{display:block;font-weight:700;font-size:15.5px;line-height:1.5}
+.ptit i{display:inline-block;font-style:normal;min-width:23px;height:23px;line-height:23px;
+  text-align:center;border-radius:50%;font-size:13.5px;font-weight:700;margin-right:7px;vertical-align:1px}
+.pdet{display:block;margin-top:3px;font-size:15.5px;line-height:1.72;color:var(--ink)}
+.pbar-a{background:var(--ochre-tint);color:#6E6047}
+.pbar-b{background:var(--sage-tint);color:#4C5A4C}
+.pbar-c{background:var(--slate-tint);color:#4F5865}
+.pbar-d{background:var(--clay-tint);color:#8A6A60}
+.ptit-a{color:#6E6047}  .ptit-a i{background:var(--ochre-tint);color:#6E6047}
+.ptit-b{color:#4C5A4C}  .ptit-b i{background:var(--sage-tint);color:#4C5A4C}
+.ptit-c{color:#4F5865}  .ptit-c i{background:var(--slate-tint);color:#4F5865}
+.ptit-d{color:#8A6A60}  .ptit-d i{background:var(--clay-tint);color:#8A6A60}
+.section li:has(>.ptit-a){border-left-color:var(--ochre)}
+.section li:has(>.ptit-b){border-left-color:var(--sage)}
+.section li:has(>.ptit-c){border-left-color:var(--slate)}
+.section li:has(>.ptit-d){border-left-color:var(--clay)}
+
+/* section color variants */
+.s-airway{border-left-color:var(--slate)}   .s-airway .dot{background:var(--slate)}
+.s-monitor{border-left-color:var(--slate)}  .s-monitor .dot{background:var(--slate)}
+.s-drug{border-left-color:var(--ochre)}     .s-drug .dot{background:var(--ochre)}
+.s-hemo{border-left-color:var(--clay)}      .s-hemo .dot{background:var(--clay)}
+
+/* red flag block */
+.flag-box{margin-top:24px;background:var(--flag-tint);border:1px solid #DDBEB4;
+  border-radius:11px;padding:15px 17px}
+.flag-box h3{color:var(--warn);font-size:16.5px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.flag-box ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.flag-box li{position:relative;padding-left:18px;font-size:16px;color:var(--warn);font-weight:700}
+.flag-box li b{font-weight:700;color:var(--warn)}
+.flag-box li::before{content:"▲";position:absolute;left:0;top:1px;font-size:11px;color:var(--warn)}
+
+/* 區塊收合(術式物件設 collapse:true 時使用) */
+details.sec-fold{margin-top:12px}
+details.sec-fold>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;
+  font-size:16.5px;font-weight:700;padding:7px 0;-webkit-tap-highlight-color:transparent}
+details.sec-fold>summary::-webkit-details-marker{display:none}
+details.sec-fold>summary::after{content:'▾';margin-left:auto;font-size:13px;opacity:.6;transition:transform .18s}
+details.sec-fold[open]>summary::after{transform:rotate(180deg)}
+details.sec-fold[open]>summary{margin-bottom:6px}
+details.sec-fold .sec-tools{display:flex;justify-content:flex-end;margin-bottom:8px}
+details.fold-flag>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;
+  color:var(--warn);font-size:16.5px;font-weight:700;-webkit-tap-highlight-color:transparent}
+details.fold-flag>summary::-webkit-details-marker{display:none}
+details.fold-flag>summary::after{content:'▾';margin-left:auto;font-size:13px;opacity:.6;transition:transform .18s}
+details.fold-flag[open]>summary::after{transform:rotate(180deg)}
+details.fold-flag[open]>summary{margin-bottom:9px}
+/* 內容來源:本院筆記 vs 文獻/教科書 */
+.src-chips{display:inline-flex;gap:5px;flex-wrap:wrap}
+.src-chip{font-size:11px;font-weight:600;letter-spacing:.3px;padding:1px 8px;border-radius:20px;border:1px solid;line-height:1.6}
+.src-chip.note{color:#4C5A4C;background:var(--sage-tint);border-color:#C7D0C4}
+.src-chip.miller{color:#6E6047;background:var(--ochre-tint);border-color:#D8CCB2}
+.src-chip.uptodate{color:#4F5865;background:var(--slate-tint);border-color:#C9D0D8}
+.src-chip.otherlit{color:#7A5D54;background:var(--clay-tint);border-color:#DCC3BB}
+.src-chip.src-toggle{cursor:pointer;font-family:inherit;transition:all .15s;opacity:.62}
+.src-chip.src-toggle:hover{opacity:1;transform:translateY(-1px)}
+.src-chip.src-toggle[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 2px rgba(66,62,57,.10);font-weight:700}
+.src-piece[hidden]{display:none!important}
+
+.src-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:13.5px;font-weight:700;letter-spacing:.3px;margin:2px 0 8px}
+.src-h span{font-weight:400;color:var(--ink-soft);font-size:12.5px;letter-spacing:0}
+.src-h.note{color:#4C5A4C}
+.lit-block{margin-top:14px;padding:11px 13px 12px;border-radius:10px;border:1px dashed #D8CCB2;background:#FAF6EE}
+.lit-block .src-h{color:#6E6047}
+.lit-block.uptodate{border-color:#C9D0D8;background:#F1F3F6}
+.lit-block.uptodate .src-h{color:#4F5865}
+.lit-block.otherlit{border-color:#DCC3BB;background:#F7EEEA}
+.lit-block.otherlit .src-h{color:#7A5D54}
+.flag-box .lit-block{background:rgba(255,255,255,.45)}
+/* 指定顏色粗體 */
+.section li b.bl{color:#35609A;font-weight:700}
+.section li b.pu{color:#744E96;font-weight:700}
+.section li b.pk{color:#C8407E;font-weight:700}
+
+.asa-btn{margin-left:auto;font-family:inherit;font-size:12.5px;color:var(--slate);
+  background:var(--slate-tint);border:1px solid #C9D0D8;border-radius:20px;
+  padding:3px 10px;cursor:pointer;font-weight:500;transition:all .15s;white-space:nowrap}
+.asa-btn:hover{background:#CED6DE}
+.asa-btn[aria-expanded="true"]{background:var(--slate);color:#fff;border-color:var(--slate)}
+.asa-panel{margin-top:10px;background:var(--slate-tint);border:1px solid #D2D8DF;
+  border-radius:10px;padding:13px 15px;line-height:1.6;color:var(--ink)}
+.asa-panel[hidden]{display:none}
+.asa-panel h4{font-size:13.5px;font-weight:700;color:#5a6470;margin-bottom:8px;letter-spacing:.3px}
+.asa-panel .std{margin-bottom:6px;font-size:13.8px}
+.asa-panel .std b{color:var(--ink);font-weight:700}
+.asa-panel ul{list-style:none;display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.asa-panel li{position:relative;padding-left:15px;font-size:13.5px;color:var(--ink-soft)}
+.asa-panel li::before{content:"";position:absolute;left:3px;top:8px;width:4px;height:4px;border-radius:50%;background:var(--slate)}
+.asa-panel li b{color:var(--ink);font-weight:600}
+.asa-panel .src{margin-top:9px;padding-top:8px;border-top:1px solid #D2D8DF;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+
+.d-figure{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 12px 10px}
+.d-figure svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
+.d-figure img{display:block;width:100%;height:auto;max-width:360px;margin:0 auto;border-radius:10px}
+.d-figure figcaption{margin-top:8px;font-size:13px;color:var(--ink-soft);line-height:1.55;text-align:center}
+/* 條目內的步驟分格圖 */
+.step-fig{display:block;margin:9px 0 2px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:8px}
+.step-fig img{display:block;width:100%;height:auto;max-width:440px;margin:0 auto;border-radius:8px}
+.step-fig.wide img{max-width:100%}
+/* 螢光筆(個人標記) */
+mark.umk{color:inherit;border-radius:3px;padding:0 1px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.umk-y{background:rgba(245,212,80,.55)}
+.umk-g{background:rgba(143,201,128,.5)}
+.umk-p{background:rgba(239,146,172,.45)}
+.umk-b{background:rgba(124,176,232,.45)}
+.pen-btn{margin-left:auto;align-self:center;font-family:inherit;font-size:14px;line-height:1;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 9px;filter:grayscale(.6);opacity:.75}
+.pen-btn[aria-pressed="true"]{filter:none;opacity:1;background:#FBF1C9;border-color:#E3CF86;box-shadow:0 0 0 2px rgba(227,207,134,.35)}
+.pen-row{display:flex;justify-content:flex-end;margin:0 0 6px}
+.pen-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);z-index:60;
+  width:min(560px,calc(100% - 20px));background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 6px 22px rgba(60,50,40,.18);padding:8px 10px 10px}
+.pen-bar[hidden]{display:none}
+.pen-tip{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-bottom:6px}
+.pen-tools{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.pen-tools button{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);cursor:pointer;
+  border:1px solid var(--line);border-radius:10px;padding:7px 11px;min-width:44px;background:var(--surface);
+  -webkit-user-select:none;user-select:none}
+.pen-tools .pen-sw[aria-pressed="true"],.pen-tools .pen-erase[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:1px}
+.pen-tools .pen-done{background:var(--sage-tint);border-color:#C7D0C4}
+.pen-tools .pen-sw.umk-y{background:rgba(245,212,80,.55)}
+.pen-tools .pen-sw.umk-g{background:rgba(143,201,128,.5)}
+.pen-tools .pen-sw.umk-p{background:rgba(239,146,172,.45)}
+.pen-tools .pen-sw.umk-b{background:rgba(124,176,232,.45)}
+body.pen-on #detail{padding-bottom:110px}
+body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,60,.5)}
+.pen-stale{margin:6px 0 10px;padding:8px 10px;border-radius:9px;background:#FBF1C9;font-size:13px;color:#6B5722;
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* 通用「點擊展開說明」按鈕與面板 */
+.info-btn{display:inline-flex;align-items:center;margin-left:6px;font-family:inherit;font-size:12.5px;
+  color:var(--sage);background:var(--sage-tint);border:1px solid #C7D0C4;border-radius:20px;
+  padding:1px 8px;cursor:pointer;font-weight:500;vertical-align:middle;line-height:1.6;transition:all .15s}
+.info-btn:hover{background:#CED6C9}
+.info-btn[aria-expanded="true"]{background:var(--sage);color:#fff;border-color:var(--sage)}
+.info-panel{display:block;margin-top:8px;background:var(--surface-2);border:1px solid var(--line);
+  border-left:3px solid var(--sage);border-radius:8px;padding:10px 13px;
+  font-size:15px;line-height:1.65;color:var(--ink-soft);font-weight:400}
+.info-panel[hidden]{display:none}
+.info-panel b{color:var(--ink);font-weight:600}
+
+.refs-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:15px 17px}
+.refs-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.refs-box ol{list-style:none;counter-reset:r;display:flex;flex-direction:column;gap:8px}
+.refs-box li{counter-increment:r;position:relative;padding-left:24px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.refs-box li::before{content:counter(r);position:absolute;left:0;top:0;width:17px;height:17px;
+  background:var(--sage-tint);color:#5a6a5a;border-radius:5px;font-size:12.5px;font-weight:600;
+  display:flex;align-items:center;justify-content:center}
+.refs-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:700;color:var(--ink-soft)}
+.refs-det>summary::-webkit-details-marker{display:none}
+.refs-det>summary::after{content:'▾';margin-left:auto;font-size:12px;opacity:.65;transition:transform .18s}
+.refs-det[open]>summary::after{transform:rotate(180deg)}
+.refs-num{font-size:12px;font-weight:600;color:#5a6a5a;background:var(--sage-tint);
+  border-radius:5px;padding:1px 7px}
+.refs-det[open]>ol{margin-top:12px}
+
+.tool-wrap{display:flex;flex-direction:column;gap:16px}
+.tool-head{font-size:19px;font-weight:700;color:var(--ink)}
+.tool-sub{font-size:13.5px;line-height:1.7;color:var(--ink-soft);margin-top:4px}
+.tool-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.tool-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin-bottom:11px}
+.tool-det>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  font-size:15px;font-weight:700;color:var(--ink-soft)}
+.tool-det>summary::-webkit-details-marker{display:none}
+.tool-det>summary::after{content:'▾';margin-left:auto;font-size:12px;opacity:.65;transition:transform .18s}
+.tool-det[open]>summary{margin-bottom:11px}
+.tool-det[open]>summary::after{transform:rotate(180deg)}
+.dw-tbl .pill{font-size:14px;padding:3px 10px;border-radius:6px}
+.tool-det.sm{margin-top:10px}
+.tool-det.sm>summary{font-size:13px;font-weight:600}
+.tool-det.sm>summary::after{font-size:11px}
+.tool-det.sm[open]>summary{margin-bottom:6px}
+.tool-det.sm .calc-note{margin-top:0}
+.calc-form{display:flex;flex-wrap:wrap;gap:11px}
+.calc-seg{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 2px}
+.calc-seg button{font:inherit;font-size:14.5px;font-weight:600;color:var(--ink-soft);background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;padding:8px 18px;cursor:pointer}
+.calc-seg button[aria-pressed="true"]{background:var(--sage-tint);border-color:#BFCBBD;color:var(--ink)}
+.calc-seg .seg-hint{font-size:12px;color:var(--ink-soft)}
+.calc-f{display:flex;flex-direction:column;gap:5px;flex:1 1 120px;min-width:110px}
+.calc-f label{font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+.calc-f input,.calc-f select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.calc-f input:focus,.calc-f select:focus{outline:2px solid var(--sage);outline-offset:-1px}
+.calc-out{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.calc-cell{flex:1 1 132px;min-width:126px;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px}
+.calc-cell .k{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em}
+.calc-cell .v{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
+.calc-cell .u{font-size:12px;font-weight:600;color:var(--ink-soft);margin-left:3px}
+.calc-cell .h{font-size:11.5px;line-height:1.5;color:var(--ink-soft);margin-top:4px}
+.calc-cell.hi{background:var(--sage-tint);border-color:#BFCBBD}
+.calc-note{font-size:12.5px;line-height:1.65;color:var(--ink-soft);margin-top:10px}
+.tool-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tool-tbl th{text-align:left;font-weight:700;color:var(--ink-soft);font-size:12px;
+  padding:7px 8px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+.tool-tbl td{padding:8px;border-bottom:1px solid var(--line);line-height:1.55;color:var(--ink);vertical-align:top}
+.tool-tbl tr:last-child td{border-bottom:none}
+.tool-tbl td b{font-weight:600}
+.tool-box h3.th-new{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.drug-tbl{table-layout:fixed;min-width:760px}
+.drug-tbl td,.drug-tbl th{padding:9px 12px}
+.drug-tbl .dn{font-weight:600;color:var(--ink);line-height:1.45}
+.drug-tbl .dc{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-top:3px}
+.drug-tbl .pill{white-space:normal;line-height:1.5;padding:2px 7px}
+.drug-tbl tr.drug-sub td{background:var(--clay-tint);color:#7A5D54;font-size:12.5px;
+  font-weight:700;letter-spacing:.02em;padding:6px 12px;border-bottom:1px solid #DCC3BB}
+.scroll-hint{font-size:11.5px;color:var(--ink-soft);margin-bottom:7px}
+.tool-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  scrollbar-width:none;-ms-overflow-style:none}
+.tool-scroll::-webkit-scrollbar{display:none;width:0;height:0}
+.scroll-rail{position:relative;height:9px;margin-top:8px;border-radius:5px;
+  background:var(--clay-tint);cursor:pointer;touch-action:none}
+.scroll-rail.off{display:none}
+.scroll-rail .scroll-thumb{position:absolute;top:0;bottom:0;left:0;min-width:26px;
+  border-radius:5px;background:var(--clay)}
+.scroll-rail:hover .scroll-thumb{background:#A6837A}
+.tool-warn{background:var(--flag-tint);border:1px solid #DCC3BB;border-left:3px solid var(--flag);
+  border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#6E4F49}
+.tool-warn b{color:var(--warn);font-weight:700}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:5px;
+  background:var(--ochre-tint);color:#6E6047;white-space:nowrap}
+.pill.s{background:var(--sage-tint);color:#4F5C4F}
+.pill.b{background:var(--slate-tint);color:#4E5766}
+
+/* ---------- 危機處理速查 ---------- */
+.cri-group{font-size:12.5px;font-weight:700;color:#8A7A50;letter-spacing:.06em;margin:0 0 8px}
+.cri-item{background:var(--ochre-tint);border:1px solid #D6C9A8;border-radius:11px;
+  padding:12px 15px;margin-bottom:9px;cursor:pointer;transition:all .15s}
+.cri-item.unchecked{background:var(--grey-tint);border-color:var(--grey-line)}
+.cri-item.unchecked .ci-name{color:#57534A}
+.cri-item.unchecked .ci-en,.cri-item.unchecked .ci-key{color:var(--ink-soft)}
+.cri-item:hover{border-color:var(--ochre);transform:translateY(-1px)}
+.cri-item .ci-name{font-weight:700;font-size:15.5px;color:#5F5335;line-height:1.4}
+.cri-item .ci-en{font-size:12px;color:#8A7A50;margin-top:2px;line-height:1.5}
+.cri-item .ci-key{font-size:13px;color:#6E6047;margin-top:6px;line-height:1.6}
+.cri-wrap-back{margin-bottom:2px}
+.cri-card{border-left:4px solid var(--ochre);scroll-margin-top:14px}
+.tool-wrap .set-back{color:#8A7A50;margin-bottom:0}
+.cri-h{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:4px}
+.cri-en{font-size:13px;font-weight:600;color:var(--ink-soft);letter-spacing:.02em;line-height:1.5}
+.cri-name{font-size:19px;font-weight:700;color:var(--ink);line-height:1.35;margin-top:2px}
+.cri-key{display:inline-block;margin-top:8px;font-size:13.5px;font-weight:700;color:#6E6047;
+  background:var(--ochre-tint);border-radius:7px;padding:4px 11px;line-height:1.6}
+.cri-sec{margin-top:15px}
+.cri-sec h4{font-size:12.5px;font-weight:700;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:7px}
+.cri-note{font-size:13px;line-height:1.7;color:var(--ink-soft);margin-bottom:8px}
+.cri-ul,.cri-ol{margin:0;padding-left:21px}
+.cri-ul li,.cri-ol li{font-size:14.5px;line-height:1.78;color:var(--ink);margin-bottom:6px}
+.cri-ul li:last-child,.cri-ol li:last-child{margin-bottom:0}
+.cri-ul li::marker{color:var(--ochre)}
+.cri-ul li.hd{list-style:none;margin-left:-21px;margin-top:11px;margin-bottom:6px;font-size:12.5px;font-weight:700;letter-spacing:.05em;color:var(--ink-soft)}
+.cri-ul li.hd:first-child{margin-top:0}
+.cri-ol li::marker{color:#8A7A50;font-weight:700}
+.cri-card b.w{font-weight:700;color:var(--warn)}
+.cri-avoid{background:var(--flag-tint);border:1px solid #DCC3BB;border-radius:10px;padding:12px 14px}
+.cri-avoid h4{color:var(--warn)}
+.cri-avoid li{color:#6E4F49}
+.cri-tbl{table-layout:fixed;min-width:640px}
+.cri-tbl td,.cri-tbl th{padding:9px 12px}
+.cri-refs{margin-top:17px;padding-top:12px;border-top:1px solid var(--line)}
+.cri-refs h4{font-size:12px;font-weight:700;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:6px}
+.cri-refs ol{margin:0;padding-left:20px}
+.cri-refs li{font-size:11.5px;line-height:1.65;color:var(--ink-soft);margin-bottom:5px}
+
+/* ---------- 個人筆記 / 照片(存在本機瀏覽器) ---------- */
+.note-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--clay);border-radius:11px;padding:15px 17px 16px}
+.note-box h3{font-size:15px;font-weight:700;color:var(--ink-soft);
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.note-local{font-size:12px;font-weight:500;color:#8a6a60;background:var(--clay-tint);
+  border-radius:20px;padding:2px 9px}
+.note-sub{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.note-ta{display:block;width:100%;min-height:110px;resize:vertical;font-family:inherit;
+  font-size:15.5px;line-height:1.7;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+.note-ta:focus{outline:none;border-color:var(--clay);box-shadow:0 0 0 2px var(--clay-tint)}
+.note-row{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+.note-status{font-size:12.5px;color:var(--ink-soft)}
+.note-btn{font-family:inherit;font-size:13px;font-weight:500;color:#8a6a60;
+  background:var(--clay-tint);border:1px solid #DCC7BF;border-radius:20px;
+  padding:5px 13px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.note-btn:hover{background:#E2CFC8}
+.note-btn.ghost{background:transparent;border-color:var(--line);color:var(--ink-soft)}
+.note-btn.ghost:hover{background:var(--surface-2)}
+
+.note-backup{margin:8px 0 12px;background:var(--ochre-tint);border:1px solid #DCCFAE;
+  border-radius:9px;padding:11px 13px}
+.note-backup .bk-msg{font-size:13.5px;line-height:1.65;color:#6b5d3c}
+.note-backup .bk-row{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+
+.ph-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.ph-wrap h4{font-size:14px;font-weight:700;color:var(--ink-soft);margin-bottom:7px}
+.ph-warn{font-size:12.5px;line-height:1.6;color:#8a5a50;background:var(--flag-tint);
+  border-radius:8px;padding:8px 11px;margin-bottom:10px}
+.ph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:9px;margin-bottom:10px}
+.ph-grid:empty{display:none}
+.ph-item{position:relative;aspect-ratio:1/1;border-radius:9px;overflow:hidden;
+  border:1px solid var(--line);background:var(--surface-2);cursor:pointer}
+.ph-item img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-item .cap{position:absolute;left:0;right:0;bottom:0;background:rgba(66,62,57,.72);
+  color:#fff;font-size:11.5px;line-height:1.35;padding:4px 6px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph-empty{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
+
+.lb{position:fixed;inset:0;z-index:99;background:rgba(40,37,33,.88);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;gap:12px}
+.lb img{max-width:100%;max-height:66vh;border-radius:10px;object-fit:contain;background:#000}
+.lb-bar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:center;width:100%;max-width:520px}
+.lb-cap{flex:1 1 200px;min-width:0;font-family:inherit;font-size:14.5px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 11px}
+.lb-cap:focus{outline:none;border-color:var(--clay)}
+.lb-btn{font-family:inherit;font-size:13.5px;font-weight:500;border-radius:20px;
+  padding:7px 14px;cursor:pointer;border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.12);color:#fff;white-space:nowrap}
+.lb-btn.del{background:rgba(192,57,43,.75);border-color:rgba(192,57,43,.9)}
+
+.tag.note-tag{background:var(--clay-tint);color:#8a6a60}
+
+footer .foot-tools{display:inline-flex;gap:8px;margin-left:10px;vertical-align:middle}
+.foot-btn{font-family:inherit;font-size:12px;color:var(--ink-soft);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:20px;padding:3px 10px;cursor:pointer}
+.foot-btn:hover{background:var(--surface)}
+
+.disclaimer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--ink-soft);line-height:1.7}
+
+footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color:#A69E92;text-align:center}
+
+/* ---------- Mobile two-stage ---------- */
+@media(max-width:760px){
+  .body{position:relative}
+  .list{width:100%;border-right:none}
+  .detail{display:none;position:absolute;inset:0;background:var(--bg);z-index:5}
+  .app.stage-detail .list{display:none}
+  .app.stage-detail .detail{display:block}
+  /* 進入手術詳情時收起標題／搜尋／科別列,讓內容佔滿螢幕(更新提示仍保留) */
+  .app.stage-detail header{padding:0;border-bottom:none}
+  .app.stage-detail header .brand,
+  .app.stage-detail header .search,
+  .app.stage-detail header .chips{display:none}
+  .app.stage-detail .updbar{margin:0}
+  .back{display:inline-flex}
+  .back-bottom{display:flex}
+  .d-summary{gap:16px}
+  /* 手機閱讀強化:字再放大、行距加寬、觸控目標加大 */
+  body{font-size:16.5px}
+  h1{font-size:23px}
+  .brand .sub{font-size:13px}
+  .search input{font-size:17px;padding:13px 14px 13px 40px}
+  .chip{font-size:14.5px;padding:8px 14px}
+  .card .name{font-size:17px}
+  .card .en{font-size:13px}
+  .section h3{font-size:17px}
+  .section li{font-size:16.5px;line-height:1.8}
+  .pbar{font-size:16.5px}
+  .ptit{font-size:16.5px}
+  .pdet{font-size:16px;line-height:1.8}
+  .flag-box h3{font-size:17px}
+  .flag-box li{font-size:16.5px;line-height:1.8}
+  .info-btn{font-size:13px;padding:3px 9px}
+  .info-panel{font-size:15.5px;line-height:1.75}
+  .d-title{font-size:24px}
+  .d-title-icon{width:120px;height:120px;flex-basis:120px}
+  .d-title-zh{font-size:17px}
+  .d-summary .item{font-size:15px}
+  .refs-box li{font-size:14px;line-height:1.6}
+  .disclaimer{font-size:13.5px;line-height:1.75}
+  .note-ta{font-size:16.5px;min-height:130px}
+  .note-btn{font-size:14px;padding:7px 15px}
+  .ph-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+  .ph-warn{font-size:13px}
+  .note-backup .bk-msg{font-size:14px}
+  .set-card .name{font-size:16.5px}
+  .set-card .sub{font-size:13.5px}
+  .set-empty{font-size:15.5px}
+  .q-stem{font-size:16.5px;line-height:1.8}
+  .q-opt{font-size:16px;padding:11px 13px}
+  .q-exp{font-size:15px}
+  .quiz-btn{font-size:16px;padding:13px 22px;width:100%}
+  .quiz-score{font-size:18px}
+
+  /* 手機版:術式摘要框與下方區塊同寬,改「標籤在左、內容在右」逐列排列降低高度 */
+  .d-summary{display:grid;grid-template-columns:max-content minmax(0,1fr);
+    gap:6px 12px;align-items:start;padding:10px 14px;margin-top:12px}
+  .d-summary .item{display:contents}
+  .d-summary .item .k{font-size:12.5px;letter-spacing:.3px;line-height:22px}
+  .d-summary .item .v{margin-top:0;line-height:22px}
+  .d-summary .item.pos .v{align-items:flex-start}
+  .d-summary .item.pos .posico{margin-top:4px}
+
+  /* 手機版:收合區塊 ▾ 與標題同一行、來源標籤排在下一行,減少空白 */
+  details.sec-fold{margin-top:8px}
+  details.sec-fold>summary{flex-wrap:wrap;padding:6px 0}
+  details.sec-fold>summary::after{order:1}
+  details.sec-fold>summary .src-chips{order:2;flex:0 0 calc(100% - 16px);
+    margin-left:16px;margin-top:4px;gap:6px}
+  details.sec-fold>summary .src-chip{margin-left:0}
+
+}
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-thumb{background:#CFC7B9;border-radius:6px}
+.updbar{display:none;align-items:center;justify-content:center;gap:8px;
+  background:var(--sage);color:#fff;font-weight:600;font-size:15px;
+  padding:11px 14px;border-radius:9px;margin-bottom:12px;cursor:pointer;
+  text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.updbar:active{opacity:.85}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div id="upd" class="updbar" onclick="applyUpdate()">🔄 已有新版本 · 點擊立即更新</div>
+    <div class="brand">
+      <h1>各科手術全身麻醉快速查詢</h1>
+      <span class="sub">Surgical GA Quick Reference</span>
+    </div>
+    <div class="search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="搜尋手術名稱、科別或關鍵字…" autocomplete="off">
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="body">
+    <div class="list" id="list"></div>
+    <div class="detail" id="detail">
+      <div class="placeholder">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M12 9v6"/><circle cx="12" cy="12" r="9"/></svg>
+        <div>從左側選擇一台手術<br>查看全身麻醉注意事項</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>臨床輔助工具 · 使用前請對照所屬機構protocol與最新指引</span>
+    <span class="foot-tools">
+      <button class="foot-btn" type="button" onclick="exportNotes()">匯出筆記</button>
+      <button class="foot-btn" type="button" onclick="pickImportFile()">匯入筆記</button>
+      <input id="impFile" type="file" accept="application/json,.json" hidden>
+    </span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   資料在這裡 —— 要新增一台手術,就複製一個 { } 物件貼進陣列即可。
+   每個欄位都對應詳情頁的一個區塊,不需要的欄位可留空陣列 []。
+   ============================================================ */
+const SURGERIES = /*@@SURGERIES@@*/;
+
+/* ============================================================
+   以下為介面邏輯,通常不需更動。
+   ============================================================ */
+const SECTION_DEFS = [
+  { key:"preop",     label:"術前評估重點",   cls:"" },
+  { key:"airway",    label:"氣道與呼吸",     cls:"s-airway" },
+  { key:"prep",      label:"備藥與備物",     cls:"s-prep" },
+  { key:"monitor",   label:"監測與管路",     cls:"s-monitor" },
+  { key:"hemo",      label:"血流動力學與體液", cls:"s-hemo" },
+  { key:"intraop",   label:"術中關鍵事項",   cls:"" },
+  { key:"drug",      label:"用藥考量",       cls:"s-drug" },
+  { key:"emergence", label:"甦醒與拔管",     cls:"" },
+  { key:"postop",    label:"術後照護",       cls:"" }
+];
+
+/* ============================================================
+   更新紀錄 UPDATES
+   ------------------------------------------------------------
+   首頁(未選科別、未搜尋)顯示的內容。最新的放最上面。
+   每筆 = { date, note(選填), items:[...] }
+   items 每一則可以是:
+     "純文字說明"                                   → 不可點
+     { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
+   en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
+   ============================================================ */
+const APP_VERSION = "v14.0";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-10-31";    /* 本版更新日期,顯示在首頁標題下 */
+
+const UPDATES = /*@@UPDATES@@*/;
+
+/* ============================================================
+   題庫 QUESTION BANKS
+   ------------------------------------------------------------
+   兩個題庫共用同一格式,新增題組 = 複製一個物件:
+     { id, title, sub, questions:[ { q, opts:[4個選項], ans:正解索引(0起算), exp:詳解 } ] }
+   EXAM_SETS = 「歷屆考古題複習」(依年度分題組)
+   QUIZ_SETS = 「AI 練習題」(模擬題組)
+   注意:字串用雙引號,內文不可再出現雙引號;需要強調用 <b>…</b>,
+        class 一律單引號(同本工具其他資料欄位慣例)。
+   ============================================================ */
+const EXAM_SETS = [];
+
+const QUIZ_SETS = [];
+
+/* ASA 基本監測參考內容(監測區塊的 ⓘ 展開面板) */
+const ASA_INFO = `
+  <h4>ASA 基本麻醉監測標準　Standards for Basic Anesthetic Monitoring</h4>
+  <div class="std"><b>Standard I</b>　全程需有合格麻醉人員在場。</div>
+  <div class="std"><b>Standard II</b>　所有麻醉期間,持續評估以下四項:</div>
+  <ul>
+    <li><b>氧合 Oxygenation</b>：O₂ 分析儀(附低氧警報)、脈搏血氧 SpO₂、膚色觀察</li>
+    <li><b>通氣 Ventilation</b>：capnography(EtCO₂)、以吐氣 CO₂ 確認 ETT／喉罩位置、呼吸器斷路警報</li>
+    <li><b>循環 Circulation</b>：連續 ECG、NIBP＋HR 至少每 5 分鐘;全身麻醉另加一項連續循環評估(觸診／聽診／動脈波形／血氧)</li>
+    <li><b>體溫 Temperature</b>：預期或懷疑有臨床上顯著變化時監測</li>
+  </ul>
+  <div class="src">首次採用 1986;2010 修訂將 EtCO₂ 納入中／深度鎮靜之必要監測。來源:American Society of Anesthesiologists, Standards for Basic Anesthetic Monitoring.</div>
+`;
+
+const el = id => document.getElementById(id);
+const HOME_CHIP = "首頁";   /* 按「首頁」→ 顯示更新紀錄;按「全部」→ 列出所有手術 */
+let activeSpec = HOME_CHIP;   /* 開啟時停在首頁(更新紀錄) */
+let activeId = null;
+let activeVar = null;   /* 目前檢視的麻醉方式分區索引;null = 尚未選擇 */
+
+/* 目前檢視中的卡片:有麻醉方式分區時回傳合併後的分區物件 */
+function curCard(){
+  if(activeId == null) return null;
+  const b = SURGERIES[activeId];
+  if(b && b.variants && activeVar != null && b.variants[activeVar]){
+    return Object.assign({}, b, b.variants[activeVar]);
+  }
+  return b;
+}
+
+const TX_SPEC = "移植";           /* 移植科別 chip;色系用灰玫 clay */
+const NORA_SPEC = "外區麻醉";      /* 手術室外麻醉;內容建置中,先開好科別 chip */
+const CRISIS_CHIP = "危機處理";
+const EXAM_CHIP = "歷屆考古題複習";
+const QUIZ_CHIP = "AI 練習題";
+/* 一台手術可用選填 alsoSpec:["科別"] 同時掛在其他科別 chip 下,不必複製卡片 */
+function inSpec(s, sp){ return s.specialty===sp || (s.alsoSpec||[]).includes(sp); }
+const specialties = [
+  HOME_CHIP, CRISIS_CHIP, "全部",
+  ...[...new Set([
+    ...SURGERIES.map(s=>s.specialty),
+    ...SURGERIES.flatMap(s=>s.alsoSpec||[]),
+    NORA_SPEC
+  ])]
+];
+
+/* ============================================================
+   個人筆記 / 擺位照片
+   ------------------------------------------------------------
+   資料只存在「使用者自己這台裝置的這個瀏覽器」裡(IndexedDB;
+   不支援時退回 localStorage,僅存文字)。GitHub Pages 是純靜態
+   網站、沒有後端,所以筆記不會上傳、不會同步、也不會被其他人
+   看到。要分享或備份,用頁尾的「匯出筆記 / 匯入筆記」。
+
+   索引鍵 = 手術英文名(en)正規化後的字串。
+   ⚠ 若日後修改某台手術的 en 欄位,舊筆記會對不上該卡(資料仍在,
+     可用匯出檔找回)。要改 en 時請一併提醒使用者。
+   ============================================================ */
+const NOTE_DB = "ga-quickref-notes", NOTE_STORE = "notes", LS_KEY = "ga-quickref-notes-fallback";
+let NOTES = {};            /* key -> {text, photos:[{id,src,cap,ts}], ts} */
+let noteTimer = null, lbState = null;
+
+/* 備份提醒:META 與筆記存在同一個 store,用保留鍵區隔(手術 en 不可能等於此字串) */
+const META_KEY = "__meta__", META_LS = "ga-quickref-meta";
+const BACKUP_DUE_MS = 30 * 24 * 60 * 60 * 1000;   /* 距上次匯出超過 30 天才提醒 */
+const BACKUP_SNOOZE_MS = 7 * 24 * 60 * 60 * 1000; /* 按「之後再說」暫停 7 天 */
+let META = { lastExport: 0, snoozeUntil: 0 };
+
+function noteKey(s){ return String(s.en || s.name || "").trim().toLowerCase().replace(/\s+/g," "); }
+function blankNote(){ return { text:"", photos:[], marks:[], ts:0 }; }
+function getNote(s){ return NOTES[noteKey(s)] || blankNote(); }
+function hasNote(s){
+  const chk = x => { const n = NOTES[noteKey(x)]; return !!(n && (n.text.trim() || n.photos.length || (n.marks && n.marks.length))); };
+  return chk(s) || (s.variants || []).some(chk);
+}
+
+/* ---------- 儲存層 ---------- */
+let idbFailed = false;
+function idb(){
+  return new Promise((res, rej)=>{
+    if(idbFailed || !window.indexedDB) return rej(new Error("no-idb"));
+    const r = indexedDB.open(NOTE_DB, 1);
+    r.onupgradeneeded = e => {
+      const db = e.target.result;
+      if(!db.objectStoreNames.contains(NOTE_STORE)) db.createObjectStore(NOTE_STORE);
+    };
+    r.onsuccess = e => res(e.target.result);
+    r.onerror   = () => { idbFailed = true; rej(r.error || new Error("idb-open")); };
+  });
+}
+function lsRead(){ try{ return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }catch(e){ return {}; } }
+function lsWrite(obj){
+  try{
+    /* localStorage 容量小(約 5MB),備援模式只保留文字,照片不寫入 */
+    const slim = {};
+    Object.keys(obj).forEach(k => {
+      if(k === META_KEY) return;
+      slim[k] = { text: obj[k].text, photos: [], marks: obj[k].marks || [], ts: obj[k].ts };
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify(slim));
+  }catch(e){}
+}
+
+async function storeLoad(){
+  try{
+    const db = await idb();
+    const out = await new Promise((res, rej)=>{
+      const tx = db.transaction(NOTE_STORE, "readonly").objectStore(NOTE_STORE);
+      const acc = {};
+      const cur = tx.openCursor();
+      cur.onsuccess = e => {
+        const c = e.target.result;
+        if(c){ acc[c.key] = c.value; c.continue(); } else res(acc);
+      };
+      cur.onerror = () => rej(cur.error);
+    });
+    return out;
+  }catch(e){ return lsRead(); }
+}
+async function storePut(key, val){
+  try{
+    const db = await idb();
+    await new Promise((res, rej)=>{
+      const tx = db.transaction(NOTE_STORE, "readwrite");
+      tx.objectStore(NOTE_STORE).put(val, key);
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
+    });
+  }catch(e){ lsWrite(NOTES); throw e; }
+}
+async function storeDel(key){
+  try{
+    const db = await idb();
+    await new Promise((res, rej)=>{
+      const tx = db.transaction(NOTE_STORE, "readwrite");
+      tx.objectStore(NOTE_STORE).delete(key);
+      tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+    });
+  }catch(e){ lsWrite(NOTES); }
+}
+
+async function saveMeta(){
+  try{ localStorage.setItem(META_LS, JSON.stringify(META)); }catch(e){}
+  try{ await storePut(META_KEY, META); }catch(e){}
+}
+function loadMetaFallback(){
+  try{ return JSON.parse(localStorage.getItem(META_LS) || "null"); }catch(e){ return null; }
+}
+
+/* 是否該提醒備份:有「上次匯出之後才改動過」的筆記,且距離參考時點超過 30 天。
+   從未匯出過的人,以最早一筆筆記的時間當參考時點,不會一寫完就跳提醒。 */
+function backupDue(){
+  const keys = Object.keys(NOTES);
+  if(!keys.length) return false;
+  if(Date.now() < (META.snoozeUntil || 0)) return false;
+  const stamps = keys.map(k => NOTES[k].ts || 0);
+  const newest = Math.max.apply(null, stamps);
+  if(newest <= (META.lastExport || 0)) return false;   /* 匯出後沒再改過,不用吵 */
+  const ref = META.lastExport || Math.min.apply(null, stamps);
+  return (Date.now() - ref) > BACKUP_DUE_MS;
+}
+function daysSince(ts){ return Math.floor((Date.now() - ts) / 86400000); }
+function backupBannerHtml(){
+  if(!backupDue()) return "";
+  const msg = META.lastExport
+    ? `距離上次匯出已經 ${daysSince(META.lastExport)} 天,期間筆記有新增或修改。`
+    : `這裡的筆記已經累積 ${daysSince(Math.min.apply(null, Object.keys(NOTES).map(k => NOTES[k].ts || Date.now())))} 天,還沒備份過。`;
+  return `
+      <div class="note-backup" id="backupBanner">
+        <div class="bk-msg">💾 ${msg}筆記只存在這台裝置,清除瀏覽器資料或換裝置就會消失,建議匯出一份留存。</div>
+        <div class="bk-row">
+          <button class="note-btn" type="button" onclick="exportNotes()">立即匯出備份</button>
+          <button class="note-btn ghost" type="button" onclick="snoozeBackup()">之後再說</button>
+        </div>
+      </div>`;
+}
+function snoozeBackup(){
+  META.snoozeUntil = Date.now() + BACKUP_SNOOZE_MS;
+  saveMeta();
+  const b = el("backupBanner"); if(b) b.remove();
+}
+function refreshBackupBanner(){
+  const b = el("backupBanner");
+  if(!backupDue()){ if(b) b.remove(); return; }
+  if(!b && activeId != null) showDetail(activeId);
+}
+
+/* 要求瀏覽器不要在空間不足時自動清掉這些資料(iOS 建議另存到主畫面) */
+function askPersist(){
+  try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+}
+
+async function saveNote(key, note, statusMsg){
+  note.ts = Date.now();
+  if(!note.text.trim() && !note.photos.length && !(note.marks && note.marks.length)){
+    delete NOTES[key];
+    await storeDel(key);
+  }else{
+    NOTES[key] = note;
+    try{ await storePut(key, note); }
+    catch(e){
+      setNoteStatus("儲存失敗(裝置空間不足或瀏覽器限制)", true);
+      return false;
+    }
+  }
+  setNoteStatus(statusMsg || ("已儲存 · " + new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"})));
+  renderList();
+  return true;
+}
+function setNoteStatus(msg, isErr){
+  const st = el("noteStatus"); if(!st) return;
+  st.textContent = msg;
+  st.style.color = isErr ? "var(--warn)" : "var(--ink-soft)";
+}
+
+/* ---------- 照片處理:上傳前縮圖壓縮,避免佔滿裝置空間 ---------- */
+const PH_MAX_EDGE = 1600, PH_QUALITY = 0.72;
+async function compressImage(file){
+  let w, h, draw;
+  if(window.createImageBitmap){
+    const bmp = await createImageBitmap(file, { imageOrientation:"from-image" });
+    w = bmp.width; h = bmp.height; draw = bmp;
+  }else{
+    draw = await new Promise((res, rej)=>{
+      const fr = new FileReader();
+      fr.onload = () => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = fr.result; };
+      fr.onerror = rej; fr.readAsDataURL(file);
+    });
+    w = draw.naturalWidth; h = draw.naturalHeight;
+  }
+  const sc = Math.min(1, PH_MAX_EDGE / Math.max(w, h));
+  const cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+  const cv = document.createElement("canvas");
+  cv.width = cw; cv.height = ch;
+  cv.getContext("2d").drawImage(draw, 0, 0, cw, ch);
+  if(draw.close) draw.close();
+  return cv.toDataURL("image/jpeg", PH_QUALITY);
+}
+
+async function addPhotos(input){
+  const files = Array.from(input.files || []).filter(f => /^image\//.test(f.type));
+  input.value = "";
+  if(!files.length || activeId == null) return;
+  const s = curCard(), key = noteKey(s), note = getNote(s);
+  note.photos = note.photos.slice();
+  setNoteStatus("處理照片中…");
+  for(const f of files){
+    try{
+      const src = await compressImage(f);
+      note.photos.push({ id: "p" + Date.now() + Math.random().toString(36).slice(2,7), src, cap:"", ts: Date.now() });
+    }catch(e){ setNoteStatus("有照片無法讀取,已略過", true); }
+  }
+  askPersist();
+  const ok = await saveNote(key, note, "照片已儲存");
+  if(ok) renderPhotos();
+}
+
+function renderPhotos(){
+  const g = el("phGrid"); if(g == null || activeId == null) return;
+  const photos = getNote(curCard()).photos;
+  const empty = el("phEmpty");
+  if(empty) empty.style.display = photos.length ? "none" : "block";
+  g.innerHTML = photos.map((p, i) =>
+    `<div class="ph-item" data-i="${i}"><img src="${p.src}" alt="擺位照片 ${i+1}" loading="lazy">${
+      p.cap ? `<div class="cap">${escHtml(p.cap)}</div>` : ""}</div>`
+  ).join("");
+  g.querySelectorAll(".ph-item").forEach(d => { d.onclick = () => openLightbox(+d.dataset.i); });
+}
+function escHtml(t){ return String(t).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+
+/* ---------- 照片放大檢視:可加圖說、刪除 ---------- */
+function openLightbox(i){
+  if(activeId == null) return;
+  const note = getNote(curCard());
+  const p = note.photos[i]; if(!p) return;
+  closeLightbox();
+  const d = document.createElement("div");
+  d.className = "lb"; d.id = "lightbox";
+  d.innerHTML =
+    `<img src="${p.src}" alt="擺位照片">
+     <div class="lb-bar">
+       <input class="lb-cap" id="lbCap" type="text" maxlength="60" placeholder="圖說(例:頭低 30 度 + 肩托)" value="${escHtml(p.cap)}">
+       <button class="lb-btn" type="button" id="lbSave">儲存圖說</button>
+       <button class="lb-btn del" type="button" id="lbDel">刪除照片</button>
+       <button class="lb-btn" type="button" id="lbClose">關閉</button>
+     </div>`;
+  document.body.appendChild(d);
+  lbState = i;
+  d.addEventListener("click", e => { if(e.target === d) closeLightbox(); });
+  el("lbClose").onclick = closeLightbox;
+  el("lbSave").onclick = async () => {
+    const s = curCard(), n = getNote(s);
+    n.photos = n.photos.slice();
+    n.photos[i] = Object.assign({}, n.photos[i], { cap: el("lbCap").value.trim() });
+    await saveNote(noteKey(s), n, "圖說已儲存");
+    renderPhotos(); closeLightbox();
+  };
+  el("lbDel").onclick = async () => {
+    if(!confirm("確定刪除這張照片?此動作無法復原。")) return;
+    const s = curCard(), n = getNote(s);
+    n.photos = n.photos.filter((_, k) => k !== i);
+    await saveNote(noteKey(s), n, "照片已刪除");
+    renderPhotos(); closeLightbox();
+  };
+}
+function closeLightbox(){
+  const d = el("lightbox"); if(d) d.remove();
+  lbState = null;
+}
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeLightbox(); });
+
+/* ---------- 筆記區塊 HTML ---------- */
+function noteBoxHtml(s){
+  const n = getNote(s);
+  return `
+    <div class="note-box">
+      <h3>📝 個人筆記<span class="note-local">只存在這台裝置</span></h3>${backupBannerHtml()}
+      <div class="note-sub">自動儲存。此處內容不會上傳、不會同步給其他人;換裝置或清除瀏覽器資料就會消失,請定期用頁尾「匯出筆記」備份。</div>
+      <textarea class="note-ta" id="noteTa" placeholder="這台刀自己的心得:主刀習慣、擺位細節、藥物反應、器械準備、交班要點…">${escHtml(n.text)}</textarea>
+      <div class="note-row">
+        <span class="note-status" id="noteStatus"></span>
+      </div>
+
+      <div class="ph-wrap">
+        <h4>擺位／設備照片</h4>
+        <div class="ph-warn">⚠ 上傳前請先確認畫面中沒有病人臉部、手圈、病歷號,以及監視器或白板上的個資;院內拍攝與影像保存請依所屬機構規定辦理。</div>
+        <div class="ph-grid" id="phGrid"></div>
+        <div class="ph-empty" id="phEmpty">尚未加入照片。</div>
+        <div class="note-row">
+          <button class="note-btn" type="button" onclick="el('phInput').click()">＋ 新增照片</button>
+          <input id="phInput" type="file" accept="image/*" multiple hidden>
+          <button class="note-btn ghost" type="button" id="noteClear">清除本台筆記</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function bindNoteBox(s){
+  const ta = el("noteTa"); if(!ta) return;
+  const key = noteKey(s);
+  ta.addEventListener("input", () => {
+    setNoteStatus("編輯中…");
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(() => {
+      const n = getNote(s); n.text = ta.value; askPersist(); saveNote(key, n);
+    }, 700);
+  });
+  ta.addEventListener("blur", () => {
+    clearTimeout(noteTimer);
+    const n = getNote(s);
+    if(n.text !== ta.value){ n.text = ta.value; askPersist(); saveNote(key, n); }
+  });
+  el("phInput").addEventListener("change", function(){ addPhotos(this); });
+  el("noteClear").onclick = async () => {
+    if(!confirm("確定清除這台手術的所有筆記、照片與螢光標記?此動作無法復原。")) return;
+    delete NOTES[key];
+    await storeDel(key);
+    ta.value = "";
+    renderPhotos(); renderList();
+    setNoteStatus("已清除");
+  };
+  renderPhotos();
+  if(hasNote(s)) setNoteStatus("已儲存");
+}
+
+/* ---------- 匯出 / 匯入(備份與同事分享) ---------- */
+function exportNotes(){
+  const keys = Object.keys(NOTES);
+  if(!keys.length){ alert("目前沒有任何筆記可以匯出。"); return; }
+  const payload = { app:"surgical-ga-quickref", type:"notes-backup", version:1, exportedAt:new Date().toISOString(), notes:NOTES };
+  const blob = new Blob([JSON.stringify(payload)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "ga-quickref-notes-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  META.lastExport = Date.now();
+  META.snoozeUntil = 0;
+  saveMeta();
+  const b = el("backupBanner"); if(b) b.remove();
+  setNoteStatus("已匯出備份 · " + new Date().toLocaleDateString("zh-TW"));
+}
+function pickImportFile(){ el("impFile").click(); }
+async function importNotes(file){
+  try{
+    const txt = await file.text();
+    const data = JSON.parse(txt);
+    const incoming = (data && data.notes && typeof data.notes === "object") ? data.notes : null;
+    if(!incoming) throw new Error("format");
+    const n = Object.keys(incoming).length;
+    if(!n){ alert("這個檔案裡沒有筆記。"); return; }
+    if(!confirm("將匯入 " + n + " 台手術的筆記。\n\n同一台手術若已有筆記,匯入的內容會接在後面、照片會合併,不會覆蓋既有內容。要繼續嗎?")) return;
+    for(const key of Object.keys(incoming)){
+      const inc = incoming[key] || {};
+      const cur = NOTES[key] || blankNote();
+      const incText = String(inc.text || "").trim();
+      const merged = blankNote();
+      merged.text = cur.text.trim() && incText
+        ? cur.text.trim() + "\n\n— 匯入的筆記 —\n" + incText
+        : (cur.text.trim() || incText);
+      const seen = new Set(cur.photos.map(p => p.src));
+      merged.photos = cur.photos.concat((inc.photos || []).filter(p => p && p.src && !seen.has(p.src)));
+      const curMarks = Array.isArray(cur.marks) ? cur.marks : [];
+      const markIds = new Set(curMarks.map(m => m.id));
+      merged.marks = curMarks.concat((Array.isArray(inc.marks) ? inc.marks : []).filter(m => m && m.id && m.q && !markIds.has(m.id)));
+      NOTES[key] = merged;
+      await saveNote(key, merged, "");
+    }
+    alert("匯入完成。");
+    if(activeId != null) showDetail(activeId); else renderList();
+  }catch(e){
+    alert("匯入失敗:這不是本工具匯出的筆記檔,或檔案已損毀。");
+  }
+}
+
+async function initNotes(){
+  const all = await storeLoad();
+  const meta = all[META_KEY] || loadMetaFallback();
+  if(meta) META = { lastExport: meta.lastExport || 0, snoozeUntil: meta.snoozeUntil || 0 };
+  delete all[META_KEY];
+  NOTES = all;
+  Object.keys(NOTES).forEach(k => {
+    const n = NOTES[k] || {};
+    NOTES[k] = { text: String(n.text || ""), photos: Array.isArray(n.photos) ? n.photos : [], marks: Array.isArray(n.marks) ? n.marks : [], ts: n.ts || 0 };
+  });
+  renderList();
+  if(activeId != null) showDetail(activeId);
+}
+
+function specHasNew(sp){
+  if(sp===CRISIS_CHIP) return isNewItem({ updated: CRISIS_UPDATED });
+  if(sp===HOME_CHIP || sp==="全部" || sp===EXAM_CHIP || sp===QUIZ_CHIP
+     ) return false;
+  return false;   /* 科別 chip 不再顯示 NEW;校對狀態統一看首頁的校對進度 */
+}
+
+function renderChips(){
+  el("chips").innerHTML = specialties.map(sp =>{
+    const cls = (sp===EXAM_CHIP || sp===QUIZ_CHIP) ? "chip study"
+              : (sp===CRISIS_CHIP) ? "chip crisis"
+              : (sp===TX_SPEC) ? "chip tx"
+              : (sp===NORA_SPEC) ? "chip nora" : "chip";
+    const isN = specHasNew(sp);
+    return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
+  }).join("");
+  el("chips").querySelectorAll(".chip").forEach(c=>{
+    c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; CRISIS_OPEN = null; renderChips(); renderList(); };
+  });
+}
+
+/* ============================================================
+   題庫介面:左欄列題組 → 右欄作答;全部作答後按「對答案」
+   ============================================================ */
+let QUIZ_STATE = null;
+
+function bankOf(chip){ return chip===EXAM_CHIP ? EXAM_SETS : QUIZ_SETS; }
+
+/* 歷屆考古題:清單先列年度,點入某年度後才列該年度的科目;null = 停在年度層 */
+let EXAM_YEAR = null;
+
+function examYears(){
+  const ys = [];
+  EXAM_SETS.forEach(s => { if(s.year != null && !ys.includes(s.year)) ys.push(s.year); });
+  return ys.sort((a,b)=>b-a);
+}
+
+function setCardHtml(key, name, sub, metas, isNew){
+  return `<div class="set-card${isNew?" has-new":""}" data-key="${key}">
+      ${isNew ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
+      <div class="name">${name}</div>
+      ${sub ? `<div class="sub">${sub}</div>` : ""}
+      <div class="meta">${metas.map(m=>`<span>${m}</span>`).join("")}</div>
+    </div>`;
+}
+
+function renderYearList(chip){
+  const years = examYears();
+  el("list").innerHTML = years.map(y=>{
+    const g = EXAM_SETS.filter(s=>s.year===y);
+    const n = g.reduce((a,s)=>a+s.questions.length,0);
+    return setCardHtml(y, `${y} 年 · 麻醉科專科護理師甄審筆試`,
+      `衛生福利部公告試題;點入後可分別練習 ${g.map(s=>s.subject).join("、")}。`,
+      [`${g.length} 個科目`, `共 ${n} 題`, "答案依官方公告"], g.some(s=>isNewItem(s)));
+  }).join("");
+  el("list").querySelectorAll(".set-card").forEach(c=>{
+    c.onclick = () => { EXAM_YEAR = +c.dataset.key; renderSetList(chip); };
+  });
+}
+
+function renderSetList(chip){
+  const sets = bankOf(chip);
+  if(!sets.length){
+    el("list").innerHTML = `<div class="set-empty"><b>${chip}</b>
+      尚未匯入題組。<br>提供歷屆考古題後,會依年度整理成題組放在這裡,
+      作答方式與「AI 練習題」相同。</div>`;
+    return;
+  }
+  if(chip===EXAM_CHIP){
+    if(EXAM_YEAR === null || !examYears().includes(EXAM_YEAR)){ renderYearList(chip); return; }
+    const rows = EXAM_SETS.filter(s=>s.year===EXAM_YEAR);
+    el("list").innerHTML =
+      `<button class="set-back" type="button" id="examBack">← 返回年度</button>
+       <div class="set-group">${EXAM_YEAR} 年 · 麻醉科專科護理師甄審筆試</div>` +
+      rows.map(s=>setCardHtml(s.id, s.subject, s.sub,
+        [`單選 ${s.questions.length} 題`, "先作答再對答案"], isNewItem(s))).join("");
+    el("examBack").onclick = () => { EXAM_YEAR = null; renderSetList(chip); };
+    el("list").querySelectorAll(".set-card").forEach(c=>{
+      c.onclick = () => showQuiz(chip, c.dataset.key);
+    });
+    return;
+  }
+  el("list").innerHTML = sets.map(s=>setCardHtml(s.id, s.title, s.sub,
+    [`單選 ${s.questions.length} 題`, "先作答再對答案"])).join("");
+  el("list").querySelectorAll(".set-card").forEach(c=>{
+    c.onclick = () => showQuiz(chip, c.dataset.key);
+  });
+}
+
+function showQuiz(chip, id){
+  const set = bankOf(chip).find(s=>s.id===id);
+  if(!set) return;
+  activeId = null; activeVar = null;
+  QUIZ_STATE = { set, pick: new Array(set.questions.length).fill(-1), done:false };
+  renderQuiz();
+  el("app").classList.add("stage-detail");
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+function quizAnswered(){
+  return QUIZ_STATE ? QUIZ_STATE.pick.filter(x=>x>=0).length : 0;
+}
+
+/* ans 可為單一索引,或陣列(疑義審查後的雙答案題) */
+function ansList(qq){ return Array.isArray(qq.ans) ? qq.ans : [qq.ans]; }
+
+function renderQuiz(){
+  const st = QUIZ_STATE;
+  if(!st) return;
+  const qs = st.set.questions;
+  const LAB = ["A","B","C","D","E"];
+  const body = qs.map((qq,i)=>{
+    const opts = qq.opts.map((o,j)=>{
+      let cls = "q-opt";
+      if(st.done){
+        if(ansList(qq).includes(j)) cls += " right";
+        else if(st.pick[i]===j) cls += " wrong";
+      }else if(st.pick[i]===j){ cls += " sel"; }
+      return `<button class="${cls}" type="button" data-q="${i}" data-o="${j}">
+        <span class="q-lab">${LAB[j]||(j+1)}</span><span>${o}</span></button>`;
+    }).join("");
+    const exp = st.done
+      ? `<div class="q-exp"><b>正解 ${ansList(qq).map(a=>LAB[a]||(a+1)).join("、")}</b>${qq.exp ? `　${qq.exp}` : ""}</div>` : "";
+    const fig = qq.fig
+      ? `<figure class="q-fig"><img src="${qq.fig.src}" alt="題目附圖" loading="lazy">${qq.fig.cap ? `<figcaption>${qq.fig.cap}</figcaption>` : ""}</figure>`
+      : "";
+    return `<div class="q-item">
+      <div class="q-stem"><span class="q-no">${i+1}</span>${qq.q}</div>
+      ${fig}<div class="q-opts">${opts}</div>${exp}</div>`;
+  }).join("");
+  const score = st.done ? st.pick.filter((p,i)=>ansList(qs[i]).includes(p)).length : 0;
+  el("detail").innerHTML = `
+    <button class="back" id="backBtn">← 返回清單</button>
+    <div class="quiz-head">
+      <div class="d-title">${st.set.title}</div>
+      ${st.set.sub ? `<div class="d-title-zh">${st.set.sub}</div>` : ""}
+      <div class="quiz-meta">單選題共 ${qs.length} 題 · 全部作答後按下方「對答案」一次揭曉答案與詳解</div>
+    </div>
+    ${st.done ? `<div class="quiz-score">得分 ${score} / ${qs.length}　(${Math.round(score/qs.length*100)} 分)</div>` : ""}
+    ${body}
+    <div class="quiz-bar">
+      ${st.done
+        ? `<button class="quiz-btn" type="button" id="quizReset">重做一次</button>`
+        : `<button class="quiz-btn" type="button" id="quizCheck">對答案　<span id="quizCount">(已作答 ${quizAnswered()}/${qs.length})</span></button>`}
+    </div>
+    <div class="disclaimer">
+      練習題僅供教學與自我檢核,答案與解析仍請對照最新指引與所屬機構protocol。
+    </div>
+    <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
+  el("backBtn").onclick = goBack;
+  el("backBtnBottom").onclick = goBack;
+  el("detail").querySelectorAll(".q-opt").forEach(b=>{
+    b.onclick = () => {
+      if(st.done) return;
+      const qi = +b.dataset.q;
+      st.pick[qi] = +b.dataset.o;
+      el("detail").querySelectorAll(`.q-opt[data-q="${qi}"]`).forEach(x=>x.classList.remove("sel"));
+      b.classList.add("sel");
+      const cnt = el("quizCount");
+      if(cnt) cnt.textContent = `(已作答 ${quizAnswered()}/${qs.length})`;
+    };
+  });
+  const chk = el("quizCheck");
+  if(chk) chk.onclick = () => {
+    const left = qs.length - quizAnswered();
+    if(left > 0 && !confirm(`還有 ${left} 題未作答,確定要對答案嗎?`)) return;
+    st.done = true;
+    renderQuiz();
+    el("detail").scrollTop = 0;
+    window.scrollTo(0,0);
+  };
+  const rst = el("quizReset");
+  if(rst) rst.onclick = () => {
+    st.pick = st.pick.map(()=>-1);
+    st.done = false;
+    renderQuiz();
+    el("detail").scrollTop = 0;
+    window.scrollTo(0,0);
+  };
+}
+
+function matches(s, q){
+  if(!q) return true;
+  const n = NOTES[noteKey(s)];
+  const hay = (s.name+s.en+s.specialty+JSON.stringify(s)+(n?n.text:"")).toLowerCase();
+  return hay.includes(q.toLowerCase());
+}
+
+function findByEn(en){
+  const k = String(en || "").trim().toLowerCase().replace(/\s+/g," ");
+  return SURGERIES.findIndex(s => String(s.en || "").trim().toLowerCase().replace(/\s+/g," ") === k);
+}
+
+function updatesHtml(){
+  /* 首頁只呈現最新一筆更新公告;舊公告保留在 UPDATES 陣列中但不顯示 */
+  const blocks = (typeof UPDATES !== "undefined" ? UPDATES : []).slice(0, 1).map(u=>{
+    const lis = (u.items || []).map(it=>{
+      const o = (typeof it === "string") ? { t:it } : it;
+      const id = o.en ? findByEn(o.en) : -1;
+      const body = id >= 0
+        ? `<button class="upd-link" type="button" data-go="${id}">${o.t}</button>`
+        : o.t;
+      return `<li>${body}</li>`;
+    }).join("");
+    return `<div class="upd-block">
+      <span class="upd-date">${u.date}</span>
+      ${u.note ? `<div class="upd-note">${u.note}</div>` : ""}
+      <ul class="upd-list">${lis}</ul>
+    </div>`;
+  }).join("");
+  return `<div class="upd">
+    <div class="upd-notice">
+      本工具為花蓮慈濟麻醉科醫師與麻醉專科護理師的<b>共筆分享</b>,非官方文件。<br>
+      內容多依<b>本院作法與流程</b>撰寫,他院作法未必相同,不適用於本院以外的臨床情境。<br>
+      臨床麻醉流程一律以<b>所屬單位 ISO 標準作業程序</b>為準;本工具為記憶輔助,不取代主治醫師指示與最新指引。<br>
+      <b>僅供花蓮慈濟麻醉學員參考使用,請勿轉傳予院外人員。</b>
+    </div>
+    ${reviewProgressHtml()}
+    <div class="upd-h">最近更新</div>
+    <div class="upd-ver">${typeof APP_VERSION !== "undefined" ? APP_VERSION : ""} · 更新日期 ${typeof APP_UPDATED !== "undefined" ? APP_UPDATED : ""}</div>
+    <div class="upd-sub">以下為本次更新項目;要查手術請按上方「全部」或各科別,亦可直接輸入手術名稱、關鍵字搜尋。</div>
+    ${blocks || `<div class="empty">尚無更新紀錄</div>`}
+    <div class="upd-tip">上線前請對照所屬機構 protocol 逐台校過。</div>
+  </div>`;
+}
+
+/* NEW 標示:術式物件加上選填欄位 updated:"YYYY-MM-DD",該日起 NEW_DAYS 天內顯示 */
+const NEW_DAYS = 7;
+function isNewItem(s){
+  if(!s || !s.updated) return false;
+  const t = Date.parse(s.updated + "T00:00:00");
+  if(isNaN(t)) return false;
+  return (Date.now() - t) < NEW_DAYS * 86400000;
+}
+
+/* ============================================================
+   校對進度
+   ------------------------------------------------------------
+   術式物件與危機處理項目的選填欄位 checked:"YYYY-MM-DD"
+   有這個欄位 = 已逐條校對過;沒有 = 尚待校對。
+   校對狀態不在卡片或科別標籤上顯示,只在首頁的「校對進度」呈現。
+   ============================================================ */
+function isChecked(x){ return !!(x && x.checked); }
+
+function progressRow(label, done, total, okText, todoText){
+  const pct = total ? Math.round(done / total * 100) : 0;
+  return `<div class="rv-row">
+      <div class="rv-h">${label}<span>${done} / ${total}　${pct}%</span></div>
+      <div class="rv-bar"><i style="width:${pct}%"></i></div>
+      ${okText   ? `<div class="rv-line"><span class="rv-dot ok"></span><b>已校對</b>　${okText}</div>` : ""}
+      ${todoText ? `<div class="rv-line"><span class="rv-dot todo"></span><b>待校對</b>　${todoText}</div>` : ""}
+    </div>`;
+}
+
+/* 把術式依科別分組,整科都校對完就只寫科別名,否則列出該科未校對的刀 */
+function surgSummary(list, todo){
+  const bySpec = [];
+  list.forEach(s => {
+    let g = bySpec.find(x => x.sp === s.specialty);
+    if(!g){ g = { sp:s.specialty, all:[], hit:[] }; bySpec.push(g); }
+  });
+  SURGERIES.forEach(s => {
+    const g = bySpec.find(x => x.sp === s.specialty);
+    if(g) g.all.push(s);
+  });
+  list.forEach(s => {
+    const g = bySpec.find(x => x.sp === s.specialty);
+    if(g) g.hit.push(s);
+  });
+  const cls = todo ? "upd-link rv-chip" : "upd-link";
+  const btn = s => `<button class="${cls}" type="button" data-go="${SURGERIES.indexOf(s)}">${s.name}</button>`;
+  return bySpec.map(g => {
+    /* 待校對一律逐台列出並加灰底方框;已校對整科完成時只寫科別名 */
+    if(!todo && g.hit.length === g.all.length) return `<b>${g.sp}</b>(全部)`;
+    return `<b>${g.sp}</b>:${g.hit.map(btn).join(todo ? " " : "、")}`;
+  }).join(todo ? "　" : ";");
+}
+
+function reviewProgressHtml(){
+  const sDone = SURGERIES.filter(isChecked);
+  const sTodo = SURGERIES.filter(s => !isChecked(s));
+  const cDone = CRISIS.filter(isChecked);
+  const cTodo = CRISIS.filter(c => !isChecked(c));
+  const cName = arr => arr.map(c => c.name).join("、");
+  const cChip = arr => arr.map(c => `<span class="rv-chip">${c.name}</span>`).join(" ");
+
+  return `<div class="rv-prog">
+      <div class="rv-title">校對進度</div>
+      ${progressRow("術式", sDone.length, SURGERIES.length,
+        sDone.length ? surgSummary(sDone, false) : "尚未開始",
+        sTodo.length ? surgSummary(sTodo, true) : "")}
+      ${progressRow("危機處理", cDone.length, CRISIS.length,
+        cDone.length ? cName(cDone) : "尚未開始",
+        cTodo.length ? cChip(cTodo) : "")}
+      <div class="rv-foot">「待校對」代表內容已建置但尚未逐條核對過,使用時請特別對照所屬單位作法與主治醫師醫囑。列表中<b>底色偏灰</b>的術式與危機處理項目即為待校對。</div>
+    </div>`;
+}
+
+
+/* ---------- 表格左右捲動指示條(常駐顯示)---------- */
+let RAIL_DRAG = null;
+let RAIL_GLOBAL_BOUND = false;
+
+function railBindGlobal(){
+  if(RAIL_GLOBAL_BOUND) return;
+  RAIL_GLOBAL_BOUND = true;
+  const move = e => {
+    if(!RAIL_DRAG) return;
+    const d = RAIL_DRAG;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const max = d.sc.scrollWidth - d.sc.clientWidth;
+    const track = d.rail.clientWidth - d.thumb.offsetWidth;
+    if(track > 0 && max > 0) d.sc.scrollLeft = d.left0 + (x - d.x0) * (max / track);
+  };
+  const up = () => { RAIL_DRAG = null; };
+  document.addEventListener("mousemove", move);
+  document.addEventListener("touchmove", move, { passive:true });
+  document.addEventListener("mouseup", up);
+  document.addEventListener("touchend", up);
+  document.addEventListener("touchcancel", up);
+}
+
+function initScrollRails(){
+  railBindGlobal();
+  document.querySelectorAll(".tool-scroll").forEach(sc => {
+    let rail = sc.nextElementSibling;
+    if(!rail || !rail.classList || !rail.classList.contains("scroll-rail")){
+      rail = document.createElement("div");
+      rail.className = "scroll-rail";
+      rail.innerHTML = `<div class="scroll-thumb"></div>`;
+      sc.parentNode.insertBefore(rail, sc.nextSibling);
+    }
+    const thumb = rail.querySelector(".scroll-thumb");
+    const sync = () => {
+      const max = sc.scrollWidth - sc.clientWidth;
+      if(max <= 2){ rail.classList.add("off"); return; }
+      rail.classList.remove("off");
+      const w = Math.max((sc.clientWidth / sc.scrollWidth) * 100, 14);
+      thumb.style.width = w + "%";
+      thumb.style.left = ((sc.scrollLeft / max) * (100 - w)) + "%";
+    };
+    if(!sc.dataset.railed){
+      sc.dataset.railed = "1";
+      sc.addEventListener("scroll", sync, { passive:true });
+      const start = e => {
+        const max = sc.scrollWidth - sc.clientWidth;
+        if(max <= 2) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const tb = thumb.getBoundingClientRect();
+        /* 直接點軌道任一處:先把滑塊移過去再開始拖曳 */
+        if(x < tb.left || x > tb.right){
+          const rb = rail.getBoundingClientRect();
+          const track = rail.clientWidth - thumb.offsetWidth;
+          if(track > 0){
+            const p = Math.min(Math.max((x - rb.left - thumb.offsetWidth/2) / track, 0), 1);
+            sc.scrollLeft = p * max;
+            sync();
+          }
+        }
+        RAIL_DRAG = { sc, rail, thumb, x0:x, left0:sc.scrollLeft };
+        if(e.cancelable) e.preventDefault();
+      };
+      rail.addEventListener("mousedown", start);
+      rail.addEventListener("touchstart", start, { passive:false });
+      window.addEventListener("resize", sync);
+    }
+    sync();
+    setTimeout(sync, 80);
+  });
+}
+
+/* ============================================================
+   危機處理速查
+   ------------------------------------------------------------
+   點列表中的項目才展開該項內容,一次只看一項(避免整頁太長)。
+   每個危機是一個物件,欄位:
+     group(分類,決定列表分組與順序)、id、name、en、key(一句話行動摘要)
+     recog(辨識)、actNote(選填,處置前的一句提示)、act(立即處置,自動編號)
+     dose(關鍵劑量表,每列 [項目, 劑量, 備註];不需要就給 [])
+     prevent(選填,預防)、avoid(不可做)、after(後續)、refs
+   字串用雙引號,內文不可再出現雙引號;class 一律單引號;
+   小於與大於符號一律寫成 &lt; 與 &gt;,避免被當成標籤。
+   ============================================================ */
+const CRISIS_UPDATED = "2026-10-31";
+let CRISIS_OPEN = null;   /* null = 停在列表層;否則為展開中的 crisis id */
+
+const CRISIS = /*@@CRISIS@@*/;
+
+function crisisGroups(){
+  const g = [];
+  CRISIS.forEach(c => { if(!g.includes(c.group)) g.push(c.group); });
+  return g;
+}
+
+/* 危機處理卡的選填示意圖:diagram:{ section, caption, svg };section 為區塊 key(recog / act / dose / avoid / after) */
+function criDia(c, key){
+  return (c.diagram && c.diagram.section === key)
+    ? `<figure class="d-figure">${c.diagram.svg}${c.diagram.caption ? `<figcaption>${c.diagram.caption}</figcaption>` : ""}</figure>`
+    : "";
+}
+
+function crisisCardHtml(c){
+  /* 條目以 "## " 開頭 → 渲染為分段小標題(無項目符號) */
+  const li = a => a.map(x => x.indexOf("## ") === 0
+    ? `<li class="hd">${x.slice(3)}</li>`
+    : `<li>${x}</li>`).join("");
+  return `
+    <div class="tool-box cri-card">
+      <div class="cri-h">
+        <div class="cri-en">${c.en}</div>
+        <div class="cri-name">${c.name}</div>
+        ${c.key ? `<div class="cri-key">${c.key}</div>` : ""}
+      </div>
+
+      <div class="cri-sec">
+        <h4>辨識</h4>
+        <ul class="cri-ul">${li(c.recog)}</ul>
+      </div>
+
+      <div class="cri-sec">
+        <h4>立即處置</h4>
+        ${c.actNote ? `<div class="cri-note">${c.actNote}</div>` : ""}
+        <ol class="cri-ol">${li(c.act)}</ol>
+        ${criDia(c, "act")}
+      </div>
+
+      ${(c.dose && c.dose.length) ? `
+      <div class="cri-sec">
+        <h4>關鍵劑量</h4>
+        <div class="scroll-hint">表格可左右滑動查看</div>
+        <div class="tool-scroll">
+          <table class="tool-tbl cri-tbl">
+            <colgroup><col style="width:150px"><col style="width:250px"><col style="width:250px"></colgroup>
+            <tr><th>項目</th><th>劑量</th><th>備註</th></tr>
+            ${c.dose.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("")}
+          </table>
+        </div>
+      </div>` : ""}
+
+      ${(c.prevent && c.prevent.length) ? `
+      <div class="cri-sec">
+        <h4>預防</h4>
+        <ul class="cri-ul">${li(c.prevent)}</ul>
+      </div>` : ""}
+
+      <div class="cri-sec cri-avoid">
+        <h4>不可做</h4>
+        <ul class="cri-ul">${li(c.avoid)}</ul>
+      </div>
+
+      <div class="cri-sec">
+        <h4>後續</h4>
+        <ul class="cri-ul">${li(c.after)}</ul>
+      </div>
+
+      <div class="cri-refs">
+        <h4>參考文獻</h4>
+        <ol>${li(c.refs)}</ol>
+      </div>
+    </div>`;
+}
+
+function crisisHtml(){
+  const cNew = isNewItem({ updated: CRISIS_UPDATED })
+    ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : "";
+  const warn = `
+    <div class="tool-warn">
+      <b>這是提示卡</b>:實際處置請依當房麻醉主治醫師醫囑及緊急應變流程處置執行。
+    </div>`;
+
+  const open = CRISIS_OPEN ? CRISIS.find(c => c.id === CRISIS_OPEN) : null;
+  if(open){
+    return `
+    <div class="tool-wrap">
+      <button class="set-back" type="button" id="criBack">← 回危機處理列表</button>
+      ${crisisCardHtml(open)}
+      ${warn}
+    </div>`;
+  }
+
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">危機處理速查${cNew}</div>
+      <div class="tool-sub">術中緊急狀況的辨識重點、立即處置順序與關鍵劑量。點選項目才會展開該項內容。</div>
+    </div>
+
+    ${warn}
+
+    ${crisisGroups().map(g => `
+      <div>
+        <div class="cri-group">${g}</div>
+        ${CRISIS.filter(c => c.group === g).map(c => `
+          <div class="cri-item ${isChecked(c)?'':'unchecked'}" data-go="${c.id}">
+            <div class="ci-name">${c.name}</div>
+            <div class="ci-en">${c.en}</div>
+            ${c.key ? `<div class="ci-key">${c.key}</div>` : ""}
+          </div>`).join("")}
+      </div>`).join("")}
+  </div>`;
+}
+
+function wireCrisis(){
+  document.querySelectorAll(".cri-item").forEach(b => {
+    b.onclick = () => { CRISIS_OPEN = b.dataset.go; renderList(); scrollListTop(); };
+  });
+  const back = el("criBack");
+  if(back) back.onclick = () => { CRISIS_OPEN = null; renderList(); scrollListTop(); };
+  initScrollRails();
+}
+
+function scrollListTop(){
+  const l = el("list");
+  if(l && typeof l.scrollTo === "function") l.scrollTo(0, 0);
+  if(typeof window !== "undefined" && window.scrollTo) window.scrollTo(0, 0);
+}
+function renderList(){
+  const q = el("search").value.trim();
+  if(activeSpec===EXAM_CHIP || activeSpec===QUIZ_CHIP){ renderSetList(activeSpec); return; }
+  if(activeSpec===CRISIS_CHIP && !q){ el("list").innerHTML = crisisHtml(); wireCrisis(); return; }
+  if((!activeSpec || activeSpec===HOME_CHIP) && !q){
+    el("list").innerHTML = updatesHtml();
+    el("list").querySelectorAll(".upd-link").forEach(b=>{
+      b.onclick = () => showDetail(+b.dataset.go);
+    });
+    return;
+  }
+  const allSpec = !activeSpec || activeSpec==="全部" || activeSpec===HOME_CHIP
+    || activeSpec===CRISIS_CHIP;   /* 在首頁或工具頁搜尋 = 全科搜尋 */
+  const items = SURGERIES.filter(s =>
+    (allSpec || inSpec(s,activeSpec)) && matches(s,q)
+  );
+  if(!items.length){
+    el("list").innerHTML = (activeSpec===NORA_SPEC && !q)
+      ? `<div class="set-empty"><b>${NORA_SPEC}(手術室外麻醉)</b>
+          內容建置中。預計涵蓋內視鏡、支氣管鏡、心導管與電生理、
+          CT／MRI 影像檢查、介入性放射線、電氣痙攣治療等。</div>`
+      : `<div class="empty">找不到符合的手術<br>試試其他關鍵字</div>`;
+    return;
+  }
+  el("list").innerHTML = items.map(s=>{
+    const id = SURGERIES.indexOf(s);
+    const isN = isNewItem(s);
+    return `<div class="card ${id===activeId?'active':''} ${isN?'has-new':''} ${isChecked(s)?'':'unchecked'}" data-id="${id}">
+      ${isN ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
+      <div class="name">${s.en}</div>
+      <div class="en">${s.name}</div>
+      <div class="meta">
+        <span class="tag spec">${s.specialty}</span>
+        <span class="tag">${s.summary.airway}</span>
+        ${hasNote(s) ? `<span class="tag note-tag" title="已有個人筆記">📝 筆記</span>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+  el("list").querySelectorAll(".card").forEach(c=>{
+    c.onclick = () => showDetail(+c.dataset.id);
+  });
+}
+
+function li(arr){ return arr && arr.length ? arr.map(x=>`<li>${x}</li>`).join("") : `<li style="color:var(--ink-soft)">—</li>`; }
+
+function toggleAsa(){
+  const p = el("asaPanel"); if(!p) return;
+  const btn = document.querySelector(".asa-btn");
+  const show = p.hasAttribute("hidden");
+  if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
+  if(btn) btn.setAttribute("aria-expanded", show ? "true" : "false");
+}
+
+/* 通用「點擊展開說明」:切換按鈕緊鄰的 .info-panel(平時收縮) */
+function toggleInfo(btn){
+  const p = btn.nextElementSibling; if(!p) return;
+  const show = p.hasAttribute("hidden");
+  if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
+  btn.setAttribute("aria-expanded", show ? "true" : "false");
+}
+
+/* 體位小圖示 —— 依醫院手術床遙控器(Skytron 3503)風格:實心圓點=頭(固定左側)、粗線=身體/床面、側面平躺視角。
+   type: 'supine'(LEVEL平躺) | 'revtrend'(頭高) | 'trend'(頭低) | 'prone'(俯臥) | 'lateral'(側臥) */
+function posIcon(type){
+  const icons = {
+    supine:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="7" cy="9.4" r="3"/><rect x="10" y="8" width="26" height="2.8" rx="1.4"/></svg>`,
+    revtrend:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="6.5" cy="6.6" r="3"/><rect x="10" y="8.6" width="26" height="2.8" rx="1.4" transform="rotate(7 23 10)"/></svg>`,
+    trend:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="6.5" cy="12.4" r="3"/><rect x="10" y="8.6" width="26" height="2.8" rx="1.4" transform="rotate(-7 23 10)"/></svg>`,
+    prone:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="7" cy="7.4" r="3"/><rect x="5.6" y="9.9" width="2.8" height="3.3" rx="1.3"/><rect x="10" y="8.1" width="26" height="2.8" rx="1.4"/></svg>`,
+    lateral:`<svg class="posico" viewBox="0 0 40 18" fill="currentColor">
+      <circle cx="7" cy="8.4" r="3"/><path d="M10 9 q7 0 11 5 q3 3.5 8 1.2" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  };
+  return icons[type] || icons.supine;
+}
+
+/* 來源切換(本院筆記 / Miller / UpToDate)：
+   - 點區塊標題：展開全部來源
+   - 第一次點來源 chip：切換成只看該來源
+   - 之後可再加選其他來源；再點一次則收合該來源
+*/
+function showAllSources(sec){
+  if(!sec) return;
+  sec.dataset.sourceMode = "all";
+  sec.querySelectorAll('.src-piece').forEach(p=>p.removeAttribute('hidden'));
+  sec.querySelectorAll('.src-toggle').forEach(b=>b.setAttribute('aria-pressed','false'));
+}
+
+function toggleSource(ev, btn){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  const sec = btn.closest('.sec-fold, .flag-box');
+  if(!sec) return false;
+
+  /* 若區塊是收合狀態，點來源時先展開 */
+  if(sec.tagName === 'DETAILS' && !sec.open) sec.open = true;
+
+  const key = btn.dataset.src;
+  const buttons = [...sec.querySelectorAll('.src-toggle')];
+  const pieces = [...sec.querySelectorAll('.src-piece')];
+
+  /* 從「全部顯示」第一次點來源 → 進入篩選模式，只顯示這一個 */
+  if(sec.dataset.sourceMode !== "filter"){
+    sec.dataset.sourceMode = "filter";
+    buttons.forEach(b=>b.setAttribute('aria-pressed','false'));
+    pieces.forEach(p=>p.setAttribute('hidden',''));
+    btn.setAttribute('aria-pressed','true');
+    pieces.filter(p=>p.dataset.src===key).forEach(p=>p.removeAttribute('hidden'));
+    return false;
+  }
+
+  /* 已在篩選模式 → 可多選 / 再點收合 */
+  const pressed = btn.getAttribute('aria-pressed') === 'true';
+  btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+  pieces.filter(p=>p.dataset.src===key).forEach(p=>{
+    if(pressed) p.setAttribute('hidden',''); else p.removeAttribute('hidden');
+  });
+
+  return false;
+}
+
+/* 點區塊標題展開時，一律回到「全部來源一起顯示」 */
+function sourceSectionToggle(det){
+  if(!det || !hasSourceToggle(currentSurgery)) return;
+  if(det.open) showAllSources(det);
+}
+
+/* 文獻/教科書補充(術式物件選填 lit:[{tag,cls,label,note,各區塊陣列}]),與本院筆記分開呈現 */
+function litHas(s, k){ return (s.lit||[]).some(L=>L[k] && L[k].length); }
+function hasSourceToggle(s){
+  /* 本院筆記 / Miller / UpToDate 可分別點選:凡是區塊可收合且有 lit 的術式都適用 */
+  return !!(s && s.collapse && (s.lit||[]).length);
+}
+function litBlocks(s, k){
+  const toggle = hasSourceToggle(s);
+  return (s.lit||[]).filter(L=>L[k] && L[k].length).map(L=>`
+      <div class="lit-block ${L.cls||''} ${toggle?'src-piece':''}" ${toggle?`data-src="${L.cls||L.tag}"`:''}>
+        <div class="src-h">${L.label}${L.note?`<span>${L.note}</span>`:''}</div>
+        <ul>${L[k].map(x=>`<li>${x}</li>`).join('')}</ul>
+      </div>`).join('');
+}
+function srcChips(s, k){
+  const lits = s.lit || [];
+  if(!lits.length) return '';
+  const toggle = hasSourceToggle(s);
+  if(toggle){
+    const own = ((s[k] && s[k].length) || s.showEmptyNote) ? `<button type="button" class="src-chip note src-toggle" data-src="note" aria-pressed="false" onclick="return toggleSource(event,this)">筆記</button>` : '';
+    const ext = lits.filter(L=>L[k] && L[k].length).map(L=>`<button type="button" class="src-chip ${L.cls||''} src-toggle" data-src="${L.cls||L.tag}" aria-pressed="false" onclick="return toggleSource(event,this)">${L.tag}</button>`).join('');
+    return `<span class="src-chips">${own}${ext}</span>`;
+  }
+  const own = ((s[k] && s[k].length) || s.showEmptyNote) ? `<span class="src-chip note">筆記</span>` : '';
+  return `<span class="src-chips">${own}${lits.filter(L=>L[k] && L[k].length).map(L=>`<span class="src-chip ${L.cls||''}">${L.tag}</span>`).join('')}</span>`;
+}
+function flagBoxHtml(s){
+  const own = (s.flags && s.flags.length) ? s.flags : [];
+  if(!own.length && !litHas(s,"flags")) return "";
+  const hasLit = (s.lit||[]).length > 0;
+  const ownHtml = own.length ? `${hasLit ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${own.map(x=>`<li>${x}</li>`).join("")}</ul>` : "";
+  const body = (own.length && hasSourceToggle(s) ? `<div class="src-piece" data-src="note">${ownHtml}</div>` : ownHtml)
+    + litBlocks(s,"flags");
+  if(s.collapse) return `
+      <details class="flag-box fold-flag" data-sec="flags">
+        <summary>⚠ 重要併發症${srcChips(s,"flags")}</summary>
+        ${body}
+      </details>`;
+  return `
+      <div class="flag-box" data-sec="flags">
+        <h3>⚠ 重要併發症</h3>
+        ${body}
+      </div>`;
+}
+
+/* ============================================================
+   螢光筆(個人標記)
+   ------------------------------------------------------------
+   與個人筆記存在同一處(只在這台裝置),隨「匯出/匯入筆記」一起備份。
+   每筆標記 = { id, b:區塊代號, q:標示文字, p:前文, x:後文, c:顏色, t:時間 }
+   區塊代號 = 區塊 key + 來源(note / miller / uptodate / otherlit)。
+   內容改版後找不到原文的標記,會在個人筆記區提示為「已失效」。
+   ============================================================ */
+const PEN_COLORS = [
+  { c:"y", name:"黃" }, { c:"g", name:"綠" }, { c:"p", name:"粉" }, { c:"b", name:"藍" }
+];
+const PEN = { on:false, erase:false, color:"y", s:null, sel:null, collapsedAt:0 };
+
+function penMarks(s){ const n = NOTES[noteKey(s)]; return (n && Array.isArray(n.marks)) ? n.marks : []; }
+
+function penBoxes(){
+  const d = el("detail"); if(!d) return [];
+  const out = [];
+  d.querySelectorAll("[data-sec]").forEach(sec => {
+    const key = sec.dataset.sec;
+    const heads = [...sec.querySelectorAll(".src-h")];
+    if(!heads.length){
+      out.push({ id:key + "|note", box:sec, head:null });
+      return;
+    }
+    heads.forEach(h => {
+      const box = h.parentElement;
+      const src = box === sec ? "note"
+        : (box.dataset.src || ["miller","uptodate","otherlit"].find(c => box.classList.contains(c)) || "note");
+      out.push({ id:key + "|" + src, box, head:h });
+    });
+  });
+  return out;
+}
+
+function penNodes(box){
+  const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){
+      const p = n.parentElement;
+      if(!p || p.closest("[data-pen]") !== box) return NodeFilter.FILTER_REJECT;
+      if(!p.closest("ul") || p.closest(".info-btn, .pen-row, .pen-btn")) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const a = []; let n; while((n = w.nextNode())) a.push(n);
+  return a;
+}
+
+function penLocate(text, m){
+  const hits = []; let i = text.indexOf(m.q);
+  while(i >= 0){ hits.push(i); i = text.indexOf(m.q, i + 1); }
+  if(!hits.length) return -1;
+  let best = hits[0], bs = -1;
+  hits.forEach(h => {
+    const pre = text.slice(0, h), suf = text.slice(h + m.q.length);
+    let sc = 0;
+    for(let k = 1; k <= (m.p||"").length && pre[pre.length-k] === m.p[m.p.length-k]; k++) sc++;
+    for(let k = 0; k < (m.x||"").length && suf[k] === m.x[k]; k++) sc++;
+    if(sc > bs){ bs = sc; best = h; }
+  });
+  return best;
+}
+
+function penWrap(box, s, e, m){
+  let base = 0;
+  penNodes(box).forEach(n => {
+    const len = n.length, ns = base, ne = base + len; base += len;
+    if(ne <= s || ns >= e) return;
+    let node = n;
+    const a = Math.max(s, ns) - ns, b = Math.min(e, ne) - ns;
+    if(b < len) node.splitText(b);
+    if(a > 0) node = node.splitText(a);
+    const mk = document.createElement("mark");
+    mk.className = "umk umk-" + m.c;
+    mk.dataset.mid = m.id;
+    node.parentNode.insertBefore(mk, node);
+    mk.appendChild(node);
+  });
+}
+
+function penRender(){
+  const d = el("detail"); if(!d || !PEN.s) return;
+  d.querySelectorAll("mark.umk").forEach(mk => {
+    const p = mk.parentNode;
+    while(mk.firstChild) p.insertBefore(mk.firstChild, mk);
+    p.removeChild(mk); p.normalize();
+  });
+  const boxes = {};
+  penBoxes().forEach(b => { boxes[b.id] = b.box; });
+  let stale = 0;
+  penMarks(PEN.s).forEach(m => {
+    const box = boxes[m.b];
+    if(!box){ stale++; return; }
+    const text = penNodes(box).map(n => n.data).join("");
+    const at = penLocate(text, m);
+    if(at < 0){ stale++; return; }
+    penWrap(box, at, at + m.q.length, m);
+  });
+  penStaleNote(stale);
+}
+
+function penStaleNote(n){
+  const nb = document.querySelector("#detail .note-box"); if(!nb) return;
+  let row = nb.querySelector(".pen-stale");
+  if(!n){ if(row) row.remove(); return; }
+  if(!row){
+    row = document.createElement("div");
+    row.className = "pen-stale";
+    const h = nb.querySelector("h3");
+    h ? h.insertAdjacentElement("afterend", row) : nb.prepend(row);
+  }
+  row.innerHTML = `🖍 有 ${n} 個螢光標記因內容更新找不到原本的文字,已無法顯示。<button type="button" class="note-btn ghost" onclick="penClearStale()">清除失效標記</button>`;
+}
+
+async function penClearStale(){
+  if(!PEN.s) return;
+  const boxes = {};
+  penBoxes().forEach(b => { boxes[b.id] = b.box; });
+  const keep = penMarks(PEN.s).filter(m => {
+    const box = boxes[m.b]; if(!box) return false;
+    const text = penNodes(box).map(n => n.data).join("");
+    return penLocate(text, m) >= 0;
+  });
+  await penSave(keep, "已清除失效標記");
+}
+
+async function penSave(marks, msg){
+  const key = noteKey(PEN.s);
+  const n = NOTES[key] || blankNote();
+  n.marks = marks;
+  await saveNote(key, n, msg);
+  penRender();
+}
+
+/* 把目前選取範圍換算成「區塊內的文字位置」 */
+function penRangeInfo(r){
+  const sn = r.startContainer.nodeType === 3 ? r.startContainer.parentElement : r.startContainer;
+  const box = sn && sn.closest && sn.closest("[data-pen]");
+  if(!box || !el("detail").contains(box)) return null;
+  const nodes = penNodes(box);
+  let base = 0, s = -1, e = -1;
+  nodes.forEach(n => {
+    if(r.intersectsNode(n)){
+      const a = n === r.startContainer ? r.startOffset : 0;
+      const b = n === r.endContainer ? r.endOffset : n.length;
+      if(s < 0) s = base + a;
+      e = base + b;
+    }
+    base += n.length;
+  });
+  if(s < 0 || e <= s) return null;
+  const text = nodes.map(n => n.data).join("");
+  while(s < e && /\s/.test(text[s])) s++;
+  while(e > s && /\s/.test(text[e-1])) e--;
+  if(e <= s) return null;
+  return { box, bid:box.dataset.pen, s, e, text };
+}
+
+function penCurrentSel(){
+  const sel = window.getSelection();
+  if(sel && sel.rangeCount && !sel.isCollapsed){
+    const info = penRangeInfo(sel.getRangeAt(0));
+    if(info) return info;
+  }
+  if(PEN.sel && (!PEN.collapsedAt || Date.now() - PEN.collapsedAt < 1200)) return PEN.sel;
+  return null;
+}
+
+function penClearSel(){
+  PEN.sel = null; PEN.collapsedAt = 0;
+  try{ window.getSelection().removeAllRanges(); }catch(e){}
+}
+
+async function penApply(color){
+  PEN.color = color;
+  PEN.erase = false;
+  penBarState();
+  const info = penCurrentSel();
+  if(!info){ penTip("先長按選取要標示的文字,再點顏色"); return; }
+  const q = info.text.slice(info.s, info.e);
+  const m = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    b: info.bid, q,
+    p: info.text.slice(Math.max(0, info.s - 16), info.s),
+    x: info.text.slice(info.e, info.e + 16),
+    c: color, t: Date.now()
+  };
+  penClearSel();
+  await penSave(penMarks(PEN.s).concat([m]), "已儲存螢光標記");
+  penTip("已標示");
+}
+
+async function penErase(){
+  const info = penCurrentSel();
+  if(info){
+    const rm = new Set();
+    info.box.querySelectorAll("mark.umk").forEach(mk => {
+      if(mk.closest("[data-pen]") !== info.box) return;
+      /* 以文字位置判斷是否與選取範圍重疊 */
+      let base = 0, ms = -1, me = -1;
+      penNodes(info.box).forEach(n => {
+        if(mk.contains(n)){ if(ms < 0) ms = base; me = base + n.length; }
+        base += n.length;
+      });
+      if(ms < info.e && me > info.s) rm.add(mk.dataset.mid);
+    });
+    penClearSel();
+    if(!rm.size){ penTip("選取範圍內沒有標記"); return; }
+    await penSave(penMarks(PEN.s).filter(m => !rm.has(m.id)), "已移除螢光標記");
+    penTip("已移除");
+    return;
+  }
+  PEN.erase = !PEN.erase;
+  penBarState();
+  penTip(PEN.erase ? "橡皮擦:點一下要移除的標記" : "選取文字後點顏色");
+}
+
+function penTip(t){ const x = el("penTip"); if(x) x.textContent = t; }
+
+function penBarState(){
+  const bar = el("penBar"); if(!bar) return;
+  bar.hidden = !PEN.on;
+  bar.querySelectorAll(".pen-sw").forEach(b =>
+    b.setAttribute("aria-pressed", (!PEN.erase && b.dataset.c === PEN.color) ? "true" : "false"));
+  const er = bar.querySelector(".pen-erase");
+  if(er) er.setAttribute("aria-pressed", PEN.erase ? "true" : "false");
+  document.querySelectorAll("#detail .pen-btn").forEach(b => b.setAttribute("aria-pressed", PEN.on ? "true" : "false"));
+  document.body.classList.toggle("pen-on", PEN.on);
+  document.body.classList.toggle("pen-erasing", PEN.on && PEN.erase);
+}
+
+function penToggle(ev){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  PEN.on = !PEN.on;
+  PEN.erase = false;
+  penClearSel();
+  penBarState();
+  if(PEN.on) penTip("長按選取文字,再點顏色");
+  return false;
+}
+
+function penEnsureBar(){
+  if(el("penBar")) return;
+  const bar = document.createElement("div");
+  bar.id = "penBar";
+  bar.className = "pen-bar";
+  bar.hidden = true;
+  bar.innerHTML = `
+    <div class="pen-tip" id="penTip">長按選取文字,再點顏色</div>
+    <div class="pen-tools">
+      ${PEN_COLORS.map(x => `<button type="button" class="pen-sw umk-${x.c}" data-c="${x.c}" aria-pressed="false">${x.name}</button>`).join("")}
+      <button type="button" class="pen-erase" aria-pressed="false">擦除</button>
+      <button type="button" class="pen-done">完成</button>
+    </div>`;
+  document.body.appendChild(bar);
+  /* 按下時不讓選取範圍消失(桌機) */
+  bar.addEventListener("mousedown", e => e.preventDefault());
+  bar.querySelectorAll(".pen-sw").forEach(b => b.addEventListener("click", () => penApply(b.dataset.c)));
+  bar.querySelector(".pen-erase").addEventListener("click", penErase);
+  bar.querySelector(".pen-done").addEventListener("click", () => { if(PEN.on) penToggle(); });
+
+  document.addEventListener("selectionchange", () => {
+    if(!PEN.on) return;
+    const sel = window.getSelection();
+    if(!sel || !sel.rangeCount || sel.isCollapsed){
+      if(PEN.sel && !PEN.collapsedAt) PEN.collapsedAt = Date.now();
+      return;
+    }
+    const info = penRangeInfo(sel.getRangeAt(0));
+    if(info){ PEN.sel = info; PEN.collapsedAt = 0; }
+  });
+
+  /* 橡皮擦模式:點標記即移除 */
+  document.addEventListener("click", async e => {
+    if(!PEN.on || !PEN.erase) return;
+    const mk = e.target.closest && e.target.closest("#detail mark.umk");
+    if(!mk) return;
+    e.preventDefault(); e.stopPropagation();
+    const id = mk.dataset.mid;
+    await penSave(penMarks(PEN.s).filter(m => m.id !== id), "已移除螢光標記");
+    penTip("已移除,可繼續點其他標記");
+  }, true);
+}
+
+/* 每次開啟術式詳情時呼叫:放按鈕、套用既有標記 */
+function initPen(s){
+  PEN.s = s;
+  PEN.on = false; PEN.erase = false;
+  PEN.sel = null; PEN.collapsedAt = 0;
+  penEnsureBar();
+  penBoxes().forEach(b => {
+    b.box.setAttribute("data-pen", b.id);
+    const btn = `<button type="button" class="pen-btn" aria-pressed="false" title="螢光筆" onclick="return penToggle(event)">🖍</button>`;
+    if(b.head){
+      b.head.insertAdjacentHTML("beforeend", btn);
+    }else{
+      const row = document.createElement("div");
+      row.className = "pen-row";
+      row.innerHTML = btn;
+      const anchor = b.box.querySelector(":scope > .sec-tools") || b.box.querySelector(":scope > summary, :scope > h3");
+      anchor ? anchor.insertAdjacentElement("afterend", row) : b.box.prepend(row);
+    }
+  });
+  penRender();
+  penBarState();
+}
+
+let currentSurgery = null;
+
+function showDetail(id, vi){
+  activeId = id;
+  const base = SURGERIES[id];
+  const vars = (base && base.variants && base.variants.length) ? base.variants : null;
+  activeVar = (vars && vi != null && vars[vi]) ? vi : null;
+  if(vars && activeVar == null){ showVariantPick(id); return; }
+  const s = vars ? Object.assign({}, base, vars[activeVar]) : base;
+  const sum = s.summary;
+  const lits = s.lit || [];
+  const fold = !!s.collapse;
+  const sections = SECTION_DEFS.filter(d=>(s[d.key] && s[d.key].length) || litHas(s,d.key)).map(d=>{
+    const isMon = d.key==="monitor";
+    const btn = isMon ? `<button class="asa-btn" type="button" aria-expanded="false" onclick="toggleAsa()">ⓘ ASA 基本監測</button>` : "";
+    const panel = isMon ? `<div class="asa-panel" id="asaPanel" hidden>${ASA_INFO}</div>` : "";
+    const dia = (s.diagram && s.diagram.section===d.key)
+      ? `<figure class="d-figure">${s.diagram.svg}${s.diagram.caption?`<figcaption>${s.diagram.caption}</figcaption>`:""}</figure>` : "";
+    const own = (s[d.key] && s[d.key].length)
+      ? (hasSourceToggle(s)
+          ? `<div class="src-piece" data-src="note">${lits.length ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${li(s[d.key])}</ul></div>`
+          : `${lits.length ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${li(s[d.key])}</ul>`)
+      : "";
+    const body = `${own}${dia}${litBlocks(s,d.key)}${panel}`;
+    if(fold) return `
+    <details class="section sec-fold ${d.cls}" data-sec="${d.key}">
+      <summary><span class="dot"></span>${d.label}${srcChips(s,d.key)}</summary>
+      ${btn ? `<div class="sec-tools">${btn}</div>` : ""}
+      ${body}
+    </details>`;
+    return `
+    <div class="section ${d.cls}" data-sec="${d.key}">
+      <h3><span class="dot"></span>${d.label}${btn}</h3>
+      ${body}
+    </div>`;
+  }).join("");
+
+  const backTxt = vars ? "← 返回麻醉方式" : "← 返回清單";
+  el("detail").innerHTML = `
+    <button class="back" id="backBtn">${backTxt}</button>
+    <div class="d-head">
+      ${vars ? `<div class="v-crumb">${base.en}　${base.name}</div>` : ""}
+      <div class="d-title-row">
+        <div class="d-title-main">
+          <div class="d-title" lang="en">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
+          <div class="d-title-zh">${s.name}</div>
+          <div class="d-en">${s.specialty}</div>
+        </div>
+        ${s.heroImage ? `<div class="d-title-icon"><img src="${s.heroImage.src}" alt="${s.heroImage.alt||""}"></div>` : ""}
+      </div>
+      ${(vars && base.hideVariantSummary) ? "" : `<div class="d-summary">
+        <div class="item pos"><div class="k">Position</div><div class="v">${posIcon(sum.posType)}<span>${sum.position||"—"}</span></div></div>
+        <div class="item"><div class="k">預估時間</div><div class="v">${sum.time||"—"}</div></div>
+        <div class="item"><div class="k">預估失血</div><div class="v">${sum.blood||"—"}</div></div>
+        <div class="item"><div class="k">麻醉方式</div><div class="v">${sum.airway||"—"}</div></div>
+      </div>`}
+    </div>
+    ${sections}
+    ${flagBoxHtml(s)}
+    ${s.refs && s.refs.length ? `
+      <div class="refs-box">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">${s.refs.length}</span></summary>
+          <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
+        </details>
+      </div>` : ""}
+    ${noteBoxHtml(s)}
+    <div class="disclaimer">
+      本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
+    </div>
+    <button class="back back-bottom" id="backBtnBottom" type="button">${backTxt}</button>`;
+  const back = vars ? (() => showDetail(id)) : goBack;
+  el("backBtn").onclick = back;
+  el("backBtnBottom").onclick = back;
+  bindNoteBox(s);
+  initPen(s);
+  el("app").classList.add("stage-detail");
+  renderList();
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+/* 有麻醉方式分區的手術:先顯示分區選擇頁(GA / SA) */
+function showVariantPick(id){
+  const s = SURGERIES[id];
+  const sum = s.summary;
+  const opts = s.variants.map((v,i)=>`
+    <button class="vopt ${v.cls||""}" type="button" data-vi="${i}">
+      ${v.heroImage ? `<img class="vopt-img" src="${v.heroImage.src}" alt="${v.heroImage.alt||""}">` : ""}
+      <div class="vopt-en">${v.en}</div>
+      <div class="vopt-zh">${v.name}</div>
+      ${v.note ? `<div class="vopt-note">${v.note}</div>` : ""}
+      <div class="vopt-go">查看重點 →</div>
+    </button>`).join("");
+  const common = (s.common && s.common.length) ? `
+    <div class="section">
+      <h3><span class="dot"></span>${s.commonLabel || "共同重點(兩種麻醉方式皆適用)"}</h3>
+      <ul>${li(s.common)}</ul>
+    </div>` : "";
+  el("detail").innerHTML = `
+    <button class="back" id="backBtn">← 返回清單</button>
+    <div class="d-head">
+      <div class="d-title-row">
+        <div class="d-title-main">
+          <div class="d-title" lang="en">${s.en}${isNewItem(s) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
+          <div class="d-title-zh">${s.name}</div>
+          <div class="d-en">${s.specialty}</div>
+        </div>
+        ${s.heroImage ? `<div class="d-title-icon"><img src="${s.heroImage.src}" alt="${s.heroImage.alt||""}"></div>` : ""}
+      </div>
+      <div class="d-summary">
+        <div class="item pos"><div class="k">Position</div><div class="v">${posIcon(sum.posType)}<span>${sum.position||"—"}</span></div></div>
+        <div class="item"><div class="k">預估時間</div><div class="v">${sum.time||"—"}</div></div>
+        <div class="item"><div class="k">預估失血</div><div class="v">${sum.blood||"—"}</div></div>
+        <div class="item"><div class="k">麻醉方式</div><div class="v">${sum.airway||"—"}</div></div>
+      </div>
+    </div>
+    <div class="vpick">
+      <div class="vpick-h">${s.pickLabel || "選擇麻醉方式,再點進去看該方式的重點"}</div>
+      ${opts}
+    </div>
+    ${common}
+    ${s.refs && s.refs.length ? `
+      <div class="refs-box">
+        <details class="refs-det">
+          <summary><span>文獻出處　References</span><span class="refs-num">${s.refs.length}</span></summary>
+          <ol>${s.refs.map(x=>`<li>${x}</li>`).join("")}</ol>
+        </details>
+      </div>` : ""}
+    <div class="disclaimer">
+      本卡為臨床記憶輔助,非取代臨床判斷。各項處置請依病人狀況、外科團隊需求與所屬機構protocol調整,並對照最新指引與文獻。
+    </div>
+    <button class="back back-bottom" id="backBtnBottom" type="button">← 返回清單</button>`;
+  el("detail").querySelectorAll(".vopt").forEach(b=>{
+    b.onclick = () => showDetail(id, +b.dataset.vi);
+  });
+  el("backBtn").onclick = goBack;
+  el("backBtnBottom").onclick = goBack;
+  el("app").classList.add("stage-detail");
+  renderList();
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+/* 往回一層:分區內頁 → 分區選擇頁 → 清單 */
+function stepBack(){
+  const b = (activeId != null) ? SURGERIES[activeId] : null;
+  if(b && b.variants && activeVar != null){ showDetail(activeId); return; }
+  goBack();
+}
+
+/* 返回清單:收起詳情、回到頁面頂端 */
+function goBack(){
+  activeVar = null;
+  if(typeof PEN !== "undefined" && PEN.on){ PEN.on = false; PEN.erase = false; penBarState(); }
+  el("app").classList.remove("stage-detail");
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   手勢:在手術詳情頁往右滑 → 返回清單
+   ------------------------------------------------------------
+   只在手機版(stage-detail 生效時)作用;若手指起點落在可橫向
+   捲動的元素(示意圖、表格等)上則不攔截,避免誤觸。
+   ============================================================ */
+(function(){
+  const SWIPE_X = 70;   /* 水平位移門檻 px */
+  const SWIPE_Y = 55;   /* 垂直位移上限 px,超過視為捲動 */
+  let x0 = 0, y0 = 0, live = false;
+  const pane = el("detail");
+  if(!pane) return;
+
+  function scrollableX(node){
+    while(node && node !== pane){
+      if(node.scrollWidth - node.clientWidth > 8) return true;
+      node = node.parentElement;
+    }
+    return false;
+  }
+  pane.addEventListener("touchstart", e => {
+    live = false;
+    if(e.touches.length !== 1) return;
+    if(!el("app").classList.contains("stage-detail")) return;
+    if(typeof PEN !== "undefined" && PEN.on) return;   /* 螢光筆模式時不觸發滑動返回,避免選字時誤觸 */
+    if(scrollableX(e.target)) return;
+    x0 = e.touches[0].clientX;
+    y0 = e.touches[0].clientY;
+    live = true;
+  }, { passive:true });
+  pane.addEventListener("touchend", e => {
+    if(!live) return;
+    live = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    if(dx > SWIPE_X && Math.abs(dy) < SWIPE_Y) stepBack();
+  }, { passive:true });
+})();
+
+el("search").addEventListener("input", renderList);
+el("impFile").addEventListener("change", function(){
+  const f = this.files && this.files[0];
+  this.value = "";
+  if(f) importNotes(f);
+});
+renderChips();
+renderList();
+initNotes();
+
+/* ============================================================
+   自動更新:檔案推上 GitHub 後,手機回到 app 或每隔一段時間
+   會自動偵測伺服器上的新版並更新,不必重開連結。
+   原理:以 no-store 抓自身網址,比對 ETag / Last-Modified
+   (取不到時退而比對內容雜湊)。只在 GitHub Pages 等 http(s)
+   環境有效;本機 file:// 開啟會靜默略過。
+   ============================================================ */
+(function(){
+  var SELF = location.href.split('#')[0].split('?')[0];
+  var baseline = null;
+  function hash(t){var h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0;}return t.length+':'+h;}
+  function getSig(){
+    /* 先用 HEAD 只取標頭,不下載整份檔案(省流量、不與首次載入搶頻寬) */
+    return fetch(SELF,{method:'HEAD',cache:'no-store'}).then(function(res){
+      if(!res.ok) throw 0;
+      var e=res.headers.get('etag'), m=res.headers.get('last-modified');
+      if(e) return 'e:'+e;
+      if(m) return 'm:'+m;
+      throw 0;
+    }).catch(function(){
+      /* 伺服器不支援 HEAD 或沒回這兩個標頭時,才退回抓全檔比對 */
+      return fetch(SELF,{cache:'no-store'}).then(function(res){
+        if(!res.ok) throw 0;
+        var e=res.headers.get('etag'), m=res.headers.get('last-modified');
+        if(e) return 'e:'+e;
+        if(m) return 'm:'+m;
+        return res.text().then(function(t){return 'h:'+hash(t);});
+      });
+    });
+  }
+  window.applyUpdate=function(){ location.reload(); };
+  function onNew(){
+    var app=document.getElementById('app');
+    if(app && app.classList.contains('stage-detail')){
+      var b=document.getElementById('upd'); if(b) b.style.display='flex';
+    } else { location.reload(); }
+  }
+  function check(){
+    getSig().then(function(sig){
+      if(baseline===null){ baseline=sig; return; }
+      if(sig!==baseline){ onNew(); }
+    }).catch(function(){});
+  }
+  check();
+  setInterval(check, 60000);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible') check(); });
+  window.addEventListener('focus', check);
+})();
+</script>
+</body>
+</html>
