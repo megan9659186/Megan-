@@ -148,9 +148,13 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .body{display:flex;flex:1;min-height:0}
 .list{
   width:340px;flex-shrink:0;border-right:1px solid var(--line);
-  overflow-y:auto;padding:12px;
+  overflow-y:auto;overflow-x:hidden;padding:12px;
 }
-.detail{flex:1;overflow-y:auto;padding:26px 30px 60px}
+.detail{flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;padding:26px 30px 60px}
+/* 鎖住整頁水平拖動(iOS 按住畫面會左右晃);表格仍在各自的 .tool-scroll 內橫向捲動 */
+html{overflow-x:hidden}
+@supports(overflow:clip){body{overflow-x:clip}}
+.list>*,.detail>*{max-width:100%}
 
 /* ---------- List cards ---------- */
 .card{
@@ -591,14 +595,14 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 #detail .pain-card{margin-top:4px}
 #detail .pain-card .d-figure svg{max-width:640px}
 /* 互動小工具(麻醉冷知識) */
-.kw{background:var(--surface);border:1px solid #D8CDDD;border-radius:11px;padding:13px 14px;margin:4px 0 10px}
-.kw-note{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.kw{margin:4px 0 12px}   /* 不再加外框:卡片本身已有框,避免框中框擠壓內容 */
+.kw-note{font-size:14.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
 .kw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px 12px}
-.kw-f{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--ink-soft);font-weight:600}
-.kw-f input,.kw-f select{font-family:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);width:100%}
+.kw-f{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--ink-soft);font-weight:600}
+.kw-f input,.kw-f select{font-family:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);width:100%}
 .kw-f input:focus,.kw-f select:focus{outline:2px solid #CFC3D5;border-color:#9C8AA5}
 .kw-out{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
-.kw-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kw-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
 .kw-row:last-child{border-bottom:none}
 .kw-row .k{color:var(--ink-soft);font-weight:600}
 .kw-row .v{font-weight:700;color:var(--ink);text-align:right}
@@ -607,11 +611,11 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 .kw-btns[hidden]{display:none}
 .kw-btn{font-family:inherit;font-size:13.5px;padding:6px 12px;border-radius:20px;border:1px solid #CFC3D5;background:#F4F0F6;color:#5A4A63;cursor:pointer;font-weight:600}
 .kw-btn[aria-pressed="true"]{background:#9C8AA5;border-color:#9C8AA5;color:#fff}
-.kw-step{border-left:3px solid #9C8AA5;background:#F7F4F8;border-radius:8px;padding:9px 12px;margin-top:8px;font-size:14px;line-height:1.7;color:var(--ink)}
+.kw-step{border-left:3px solid #9C8AA5;background:#F7F4F8;border-radius:8px;padding:10px 13px;margin-top:9px;font-size:15.5px;line-height:1.7;color:var(--ink)}
 .kw-step.go{border-left-color:#5F8370;background:#EEF3EF}
 .kw-step.warn{border-left-color:#B5645C;background:#F7ECE9}
 .kw-step b{font-weight:700}
-.kw-step .t{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink-soft);display:block;margin-bottom:2px}
+.kw-step .t{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--ink-soft);display:block;margin-bottom:2px}
 .kw svg{display:block;width:100%;max-width:460px;height:auto;margin:6px auto 0}
 .pain-item .pi-name{font-weight:700;font-size:15.5px;color:#5A4A63;line-height:1.4}
 .pain-item .pi-en{font-size:12px;color:#7E6B88;margin-top:2px;line-height:1.5}
@@ -692,6 +696,16 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .body{position:relative}
   .list{width:100%;border-right:none}
   .detail{display:none;position:absolute;inset:0;background:var(--bg);z-index:5}
+  /* 麻醉冷知識卡:手機上縮小頁面與卡片留白,卡片變寬、字放大 */
+  .detail:has(.pain-card){padding-left:8px;padding-right:8px}
+  #detail .pain-card{padding:14px 12px;border-radius:10px}
+  .pain-card .cri-ul li{font-size:16.5px;line-height:1.8}
+  .kw-note{font-size:15.5px}
+  .kw-f{font-size:15px}
+  .kw-f input,.kw-f select{font-size:17px;padding:9px 11px}
+  .kw-row{font-size:16px}
+  .kw-step{font-size:16.5px;padding:11px 13px}
+  .kw-step .t{font-size:14px}
   .app.stage-detail .list{display:none}
   .app.stage-detail .detail{display:block}
   /* 進入手術詳情時收起標題／搜尋／科別列,讓內容佔滿螢幕(更新提示仍保留) */
@@ -6581,10 +6595,18 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v14.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v15.0";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-11-22";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-11-22",
+    note: "修正手機畫面左右晃動;血液動力學互動工具版面放大。",
+    items: [
+      "手機版:按住畫面拖動時不再左右晃動(麻醉冷知識等列表與內容頁皆是);表格仍可在框內左右滑動",
+      "麻醉冷知識:互動計算與判讀工具拿掉多餘的內框;手機上卡片加寬、內文與輸入格字體放大,比較不擠"
+    ]
+  },
   {
     date: "2026-11-22",
     note: "腹腔鏡肝切除術新增 UpToDate 與其他文獻重點。",
