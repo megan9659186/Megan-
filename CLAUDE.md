@@ -15,6 +15,7 @@ src/gaquickercheck/
   template.html            版面、CSS、程式、APP_VERSION / APP_UPDATED(資料位置以 /*@@SURGERIES@@*/ 等標記)
   surgeries/<科別>/NNN-<英文名>.js   每台手術一個檔，內容就是一個物件 { … }
   crisis/<分組>/NNN-<id>.js         每張急救卡一個檔
+  pain/<分組>/NNN-<id>.js           「麻醉冷知識」教學區(chip 在外區麻醉之後;疼痛路徑、血流動力學)每張卡一個檔({ group, id, name, en, key, updated, sections:[{ h, items, table, widget }], diagram, refs });widget 為互動工具名稱(hemo-calc / svv-calc / starling / gdt-flow / mcgee / shock-match),程式在 template.html 的 WIDGETS
   updates.js               首頁公告 UPDATES 陣列
   img/                     圖片檔；資料裡用 @@IMG:檔名:png@@ 引用，組裝時自動內嵌
 tools/build.mjs            組裝 → gaquickercheck.html
@@ -34,7 +35,7 @@ tools/validate.mjs         驗證
    - 有改到的手術在卡片右上角顯示 NEW(七天後自動消失，沿用現有機制)
 3. `node tools/build.mjs` 組裝。
 4. `node tools/validate.mjs` 驗證，✗ 錯誤必須清零才能交付。
-5. **先給 Megan 預覽**：把組裝好的 `gaquickercheck.html` 用 SendUserFile(`display: "render"`)送到右邊側欄，讓 Megan 直接看修改後的畫面。
+5. **先給 Megan 預覽**：用 Artifact 工具重新發布 `gaquickercheck.html`(同一個 file_path，維持同一個私人網址 https://claude.ai/artifact/Pa9hkqyrNMn5vfV9komo6V)，讓 Megan 在右邊側欄直接點著看真正的網頁。不要用 SendUserFile 送 html 檔(側欄只會顯示原始碼)。必要時可另附 Playwright 截圖，標出有改到的地方。
 6. 回報精簡摘要，結尾固定提醒：**上線前請對照機構 protocol 逐台校過。**
 7. 等 Megan 看過、說要改就回到步驟 1 再改再預覽；Megan 明確說確定 / 可以上傳後，才 commit 並 push 到 GitHub。
 
@@ -68,6 +69,17 @@ tools/validate.mjs         驗證
 
 class 與屬性值一律單引號；面板內文字不可有雙引號(要引號用『』)；說明精簡、教學導向。
 
+## 術語補充(底線，點術語展開)
+
+內容裡出現需要額外補充說明的專業術語 → 在該術語加底線，點術語展開補充資訊，再點補充資訊即收起。寫法：
+
+```
+<span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>術語</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>補充文字，重點用 <b>…</b></span>
+```
+
+- 術語 span 後面**緊接** term-panel(中間不可有其他字)；class 與屬性值一律單引號；面板內不可有雙引號(要引號用『』)。
+- 用於「某個詞需要解釋」(定義、機轉、藥物清單)；整條 bullet 的延伸說明仍用 ⓘ 說明。
+
 ## 示意圖(diagram)
 
 ```
@@ -75,6 +87,14 @@ diagram:{ section:"hemo", caption:"圖說(可註明：原創示意圖)", svg:`<s
 ```
 
 `section` 必須是既有區塊 key；svg 用反引號包，svg 內不可出現反引號或 `${`。一律原創示意圖(Morandi 配色、自帶淺色底板)，不得嵌入 UpToDate 等外部圖檔。
+
+例外：Megan 提供、授權允許轉用的外部圖片(如 Wikimedia Commons 的 CC BY-SA)可改用 `img`：
+
+```
+diagram:{ section:"hemo", img:"@@IMG:檔名.jpg:jpeg@@", alt:"替代文字", caption:"圖說。圖片來源:作者,<a href='檔案頁網址' target='_blank' rel='noopener'>檔名</a>,Wikimedia Commons,<a href='授權網址' target='_blank' rel='noopener'>CC BY-SA 3.0</a>" }
+```
+
+caption 必須寫明作者、來源連結與授權；有改作要註明「經改作」。UpToDate、教科書等有版權的圖仍不得嵌入。
 
 ## 文獻標準(每台至少三篇近五到十年)
 

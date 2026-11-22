@@ -33,6 +33,7 @@ export function build() {
   const parts = {
     SURGERIES: joinArr(listItems(path.join(SRC, 'surgeries'))),
     CRISIS: joinArr(listItems(path.join(SRC, 'crisis'))),
+    PAIN: joinArr(listItems(path.join(SRC, 'pain'))),
     UPDATES: fs.readFileSync(path.join(SRC, 'updates.js'), 'utf8').trim(),
   };
   for (const [k, v] of Object.entries(parts)) {

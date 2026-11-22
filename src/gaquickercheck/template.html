@@ -387,7 +387,9 @@ details.fold-flag[open]>summary{margin-bottom:9px}
 .d-figure{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 12px 10px}
 .d-figure svg{display:block;width:100%;height:auto;max-width:520px;margin:0 auto}
 .d-figure img{display:block;width:100%;height:auto;max-width:360px;margin:0 auto;border-radius:10px}
+.d-figure img.d-img{max-width:460px}
 .d-figure figcaption{margin-top:8px;font-size:13px;color:var(--ink-soft);line-height:1.55;text-align:center}
+.d-figure figcaption a{color:#5F8370;text-decoration:underline;text-underline-offset:2px}
 /* 條目內的步驟分格圖 */
 .step-fig{display:block;margin:9px 0 2px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:8px}
 .step-fig img{display:block;width:100%;height:auto;max-width:440px;margin:0 auto;border-radius:8px}
@@ -402,6 +404,8 @@ mark.umk{color:inherit;border-radius:3px;padding:0 1px;box-decoration-break:clon
   background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 9px;filter:grayscale(.6);opacity:.75}
 .pen-btn[aria-pressed="true"]{filter:none;opacity:1;background:#FBF1C9;border-color:#E3CF86;box-shadow:0 0 0 2px rgba(227,207,134,.35)}
 .pen-row{display:flex;justify-content:flex-end;margin:0 0 6px}
+.asa-btn + .pen-btn{margin-left:8px}
+details.sec-fold>summary:has(.pen-btn)::after,details.fold-flag>summary:has(.pen-btn)::after{margin-left:10px}
 .pen-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom, 0px) + 12px);z-index:60;
   width:min(560px,calc(100% - 20px));background:var(--surface);border:1px solid var(--line);border-radius:14px;
   box-shadow:0 6px 22px rgba(60,50,40,.18);padding:8px 10px 10px}
@@ -432,6 +436,15 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
   border-left:3px solid var(--sage);border-radius:8px;padding:10px 13px;
   font-size:15px;line-height:1.65;color:var(--ink-soft);font-weight:400}
 .info-panel[hidden]{display:none}
+/* 術語補充:有底線的專業術語,點一下展開補充資訊,點補充資訊收起 */
+.term{text-decoration:underline;text-decoration-color:var(--sage);text-decoration-thickness:1.5px;text-underline-offset:3px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:3px}
+.term:hover,.term[aria-expanded="true"]{background:var(--sage-tint)}
+.term:focus-visible{outline:2px solid var(--sage);outline-offset:1px}
+.term-panel{display:block;margin-top:8px;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--sage);
+  border-radius:8px;padding:9px 12px;font-size:14px;line-height:1.7;color:var(--ink-soft);font-weight:400;cursor:pointer}
+.term-panel[hidden]{display:none}
+.term-panel b{color:var(--ink);font-weight:600}
 .info-panel b{color:var(--ink);font-weight:600}
 
 .refs-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:15px 17px}
@@ -559,6 +572,52 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 .cri-refs ol{margin:0;padding-left:20px}
 .cri-refs li{font-size:11.5px;line-height:1.65;color:var(--ink-soft);margin-bottom:5px}
 
+/* ---------- 疼痛路徑(獨立教學區,灰紫色系) ---------- */
+.chip.pain{background:#E6DFE9;border-color:#CFC3D5;color:#6B5A75;font-weight:600}
+.chip.pain:hover{border-color:#9C8AA5}
+.chip.pain[aria-pressed="true"]{background:#9C8AA5;border-color:#9C8AA5;color:#fff}
+.pain-group{font-size:12.5px;font-weight:700;color:#7E6B88;letter-spacing:.06em;margin:0 0 8px}
+.pain-item{background:#EEE8F0;border:1px solid #D8CDDD;border-radius:11px;padding:12px 14px;margin-bottom:9px;
+  cursor:pointer;transition:all .15s;position:relative}
+.pain-item:hover{border-color:#9C8AA5;transform:translateY(-1px)}
+.pain-item.active{border-color:#9C8AA5;background:#E3D9E7;box-shadow:0 0 0 2px rgba(156,138,165,.25)}
+#detail .pain-card{margin-top:4px}
+#detail .pain-card .d-figure svg{max-width:640px}
+/* 互動小工具(麻醉冷知識) */
+.kw{background:var(--surface);border:1px solid #D8CDDD;border-radius:11px;padding:13px 14px;margin:4px 0 10px}
+.kw-note{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.kw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px 12px}
+.kw-f{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:var(--ink-soft);font-weight:600}
+.kw-f input,.kw-f select{font-family:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);width:100%}
+.kw-f input:focus,.kw-f select:focus{outline:2px solid #CFC3D5;border-color:#9C8AA5}
+.kw-out{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+.kw-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kw-row:last-child{border-bottom:none}
+.kw-row .k{color:var(--ink-soft);font-weight:600}
+.kw-row .v{font-weight:700;color:var(--ink);text-align:right}
+.kw-row .r{font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-left:6px}
+.kw-pill{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:1px 8px;margin-left:6px;vertical-align:1px}
+.kw-pill.lo{background:#DCE3EC;color:#4D5D73}.kw-pill.ok{background:#DCE5DD;color:#3F5A4B}.kw-pill.hi{background:#F1DCD6;color:#8F4F48}
+.kw-btns{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 8px}
+.kw-btns[hidden]{display:none}
+.kw-btn{font-family:inherit;font-size:13.5px;padding:6px 12px;border-radius:20px;border:1px solid #CFC3D5;background:#F4F0F6;color:#5A4A63;cursor:pointer;font-weight:600}
+.kw-btn[aria-pressed="true"]{background:#9C8AA5;border-color:#9C8AA5;color:#fff}
+.kw-step{border-left:3px solid #9C8AA5;background:#F7F4F8;border-radius:8px;padding:9px 12px;margin-top:8px;font-size:14px;line-height:1.7;color:var(--ink)}
+.kw-step.go{border-left-color:#5F8370;background:#EEF3EF}
+.kw-step.warn{border-left-color:#B5645C;background:#F7ECE9}
+.kw-step b{font-weight:700}
+.kw-step .t{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink-soft);display:block;margin-bottom:2px}
+.kw svg{display:block;width:100%;max-width:460px;height:auto;margin:6px auto 0}
+.pain-item .pi-name{font-weight:700;font-size:15.5px;color:#5A4A63;line-height:1.4}
+.pain-item .pi-en{font-size:12px;color:#7E6B88;margin-top:2px;line-height:1.5}
+.pain-item .pi-key{font-size:13px;color:#6B5A75;margin-top:6px;line-height:1.6}
+.pain-item .badge-new{position:absolute;top:10px;right:10px}
+.pain-card{border-left:4px solid #9C8AA5}
+.pain-card .cri-key{background:#EEE8F0;color:#5A4A63}
+.pain-card .cri-ul li::marker{color:#9C8AA5}
+.pain-card .tool-tbl{min-width:620px}
+.pain-card .tool-tbl td:first-child{white-space:nowrap}
+
 /* ---------- 個人筆記 / 照片(存在本機瀏覽器) ---------- */
 .note-box{margin-top:22px;background:var(--surface);border:1px solid var(--line);
   border-left:3px solid var(--clay);border-radius:11px;padding:15px 17px 16px}
@@ -656,6 +715,7 @@ footer{padding:14px 22px;border-top:1px solid var(--line);font-size:12.5px;color
   .flag-box li{font-size:16.5px;line-height:1.8}
   .info-btn{font-size:13px;padding:3px 9px}
   .info-panel{font-size:15.5px;line-height:1.75}
+  .term-panel{font-size:15.5px;line-height:1.75}
   .d-title{font-size:24px}
   .d-title-icon{width:120px;height:120px;flex-basis:120px}
   .d-title-zh{font-size:17px}
@@ -770,8 +830,8 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v14.0";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-10-31";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v14.4";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-11-22";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = /*@@UPDATES@@*/;
 
@@ -822,6 +882,7 @@ function curCard(){
 const TX_SPEC = "移植";           /* 移植科別 chip;色系用灰玫 clay */
 const NORA_SPEC = "外區麻醉";      /* 手術室外麻醉;內容建置中,先開好科別 chip */
 const CRISIS_CHIP = "危機處理";
+const PAIN_CHIP = "麻醉冷知識";    /* 獨立教學區,不屬任何科別;排在外區麻醉之後 */
 const EXAM_CHIP = "歷屆考古題複習";
 const QUIZ_CHIP = "AI 練習題";
 /* 一台手術可用選填 alsoSpec:["科別"] 同時掛在其他科別 chip 下,不必複製卡片 */
@@ -832,7 +893,8 @@ const specialties = [
     ...SURGERIES.map(s=>s.specialty),
     ...SURGERIES.flatMap(s=>s.alsoSpec||[]),
     NORA_SPEC
-  ])]
+  ])],
+  PAIN_CHIP
 ];
 
 /* ============================================================
@@ -1220,6 +1282,7 @@ async function initNotes(){
 
 function specHasNew(sp){
   if(sp===CRISIS_CHIP) return isNewItem({ updated: CRISIS_UPDATED });
+  if(sp===PAIN_CHIP) return PAIN.some(isNewItem);
   if(sp===HOME_CHIP || sp==="全部" || sp===EXAM_CHIP || sp===QUIZ_CHIP
      ) return false;
   return false;   /* 科別 chip 不再顯示 NEW;校對狀態統一看首頁的校對進度 */
@@ -1229,13 +1292,14 @@ function renderChips(){
   el("chips").innerHTML = specialties.map(sp =>{
     const cls = (sp===EXAM_CHIP || sp===QUIZ_CHIP) ? "chip study"
               : (sp===CRISIS_CHIP) ? "chip crisis"
+              : (sp===PAIN_CHIP) ? "chip pain"
               : (sp===TX_SPEC) ? "chip tx"
               : (sp===NORA_SPEC) ? "chip nora" : "chip";
     const isN = specHasNew(sp);
     return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
   }).join("");
   el("chips").querySelectorAll(".chip").forEach(c=>{
-    c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; CRISIS_OPEN = null; renderChips(); renderList(); };
+    c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; CRISIS_OPEN = null; PAIN_OPEN = null; renderChips(); renderList(); };
   });
 }
 
@@ -1730,6 +1794,273 @@ function wireCrisis(){
   initScrollRails();
 }
 
+/* ============================================================
+   疼痛路徑:獨立教學區(資料在 src/gaquickercheck/pain/)
+   每張卡 = { group, id, name, en, key, updated, sections:[{ h, items:[...], table:{ head:[...], rows:[[...]] } }],
+              diagram:{ svg, caption }(選填,放在第一段之後), refs:[...] }
+   items 以 "## " 開頭 → 分段小標題
+   ============================================================ */
+let PAIN_OPEN = null;
+const PAIN = /*@@PAIN@@*/;
+
+function painGroups(){
+  const g = [];
+  PAIN.forEach(c => { if(!g.includes(c.group)) g.push(c.group); });
+  return g;
+}
+
+function painCardHtml(c){
+  const li = a => (a||[]).map(x => x.indexOf("## ") === 0
+    ? `<li class="hd">${x.slice(3)}</li>` : `<li>${x}</li>`).join("");
+  const tbl = t => !t ? "" : `
+        <div class="scroll-hint">表格可左右滑動查看</div>
+        <div class="tool-scroll">
+          <table class="tool-tbl">
+            <tr>${t.head.map(h => `<th>${h}</th>`).join("")}</tr>
+            ${t.rows.map(r => `<tr>${r.map((d,i) => `<td>${i===0 ? `<b>${d}</b>` : d}</td>`).join("")}</tr>`).join("")}
+          </table>
+        </div>`;
+  const dia = c.diagram
+    ? `<figure class="d-figure">${c.diagram.svg || (c.diagram.img ? `<img class="d-img" src="${c.diagram.img}" alt="${c.diagram.alt||""}" loading="lazy">` : "")}${c.diagram.caption ? `<figcaption>${c.diagram.caption}</figcaption>` : ""}</figure>` : "";
+  return `
+    <div class="tool-box cri-card pain-card">
+      <div class="cri-h">
+        <div class="cri-en">${c.en}</div>
+        <div class="cri-name">${c.name}${isNewItem(c) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}</div>
+        ${c.key ? `<div class="cri-key">${c.key}</div>` : ""}
+      </div>
+      ${(c.sections||[]).map((sec, i) => `
+      <div class="cri-sec">
+        ${sec.h ? `<h4>${sec.h}</h4>` : ""}
+        ${sec.widget ? `<div class="kw" data-widget="${sec.widget}"></div>` : ""}
+        ${(sec.items && sec.items.length) ? `<ul class="cri-ul">${li(sec.items)}</ul>` : ""}
+        ${tbl(sec.table)}
+      </div>${i === 0 ? dia : ""}`).join("")}
+      ${(c.refs && c.refs.length) ? `
+      <div class="cri-refs">
+        <h4>參考文獻</h4>
+        <ol>${c.refs.map(r => `<li>${r}</li>`).join("")}</ol>
+      </div>` : ""}
+    </div>`;
+}
+
+function painHtml(){
+  return `
+  <div class="tool-wrap">
+    <div>
+      <div class="tool-head">麻醉冷知識</div>
+      <div class="tool-sub">臨床背後的生理與藥理:『疼痛路徑』與『血流動力學』(附互動計算與判讀工具)。點選項目展開內容。</div>
+    </div>
+    ${painGroups().map(g => `
+      <div>
+        <div class="pain-group">${g}</div>
+        ${PAIN.filter(c => c.group === g).map(c => `
+          <div class="pain-item${c.id===PAIN_OPEN ? " active" : ""}" data-go="${c.id}">
+            ${isNewItem(c) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
+            <div class="pi-name">${c.name}</div>
+            <div class="pi-en">${c.en}</div>
+            ${c.key ? `<div class="pi-key">${c.key}</div>` : ""}
+          </div>`).join("")}
+      </div>`).join("")}
+  </div>`;
+}
+
+function wirePain(){
+  document.querySelectorAll(".pain-item").forEach(b => {
+    b.onclick = () => { PAIN_OPEN = b.dataset.go; renderList(); showPain(PAIN_OPEN); };
+  });
+}
+
+/* ============================================================
+   麻醉冷知識:互動小工具。資料卡 sections 裡寫 widget:"名稱" 即可插入。
+   可用:hemo-calc / svv-calc / starling / gdt-flow / mcgee / shock-match
+   ============================================================ */
+const KW = {
+  num(root, id){ const x = root.querySelector(`[data-k="${id}"]`); const v = x ? parseFloat(x.value) : NaN; return isFinite(v) ? v : NaN; },
+  f(v, d){ return isFinite(v) ? v.toFixed(d) : "—"; },
+  pill(v, lo, hi){
+    if(!isFinite(v)) return "";
+    if(v < lo) return `<span class="kw-pill lo">偏低</span>`;
+    if(v > hi) return `<span class="kw-pill hi">偏高</span>`;
+    return `<span class="kw-pill ok">正常</span>`;
+  },
+  row(k, v, unit, range, pill){ return `<div class="kw-row"><span class="k">${k}</span><span class="v">${v}${unit ? ` ${unit}` : ""}${pill||""}<span class="r">${range||""}</span></span></div>`; },
+  inp(id, label, val, step){ return `<label class="kw-f">${label}<input type="number" inputmode="decimal" data-k="${id}" value="${val}" step="${step||"any"}"></label>`; }
+};
+
+const WIDGETS = {
+  "hemo-calc": {
+    html: () => `
+      <div class="kw-note">輸入數值即時計算;BSA 用 Mosteller 公式。結果僅供教學練習。</div>
+      <div class="kw-grid">
+        ${KW.inp("h","身高 (cm)",165)}${KW.inp("w","體重 (kg)",65)}${KW.inp("hr","HR (bpm)",80)}
+        ${KW.inp("sv","SV (mL)",70)}${KW.inp("map","MAP (mmHg)",75)}${KW.inp("cvp","CVP (mmHg)",6)}
+      </div>
+      <div class="kw-out" data-o="out"></div>`,
+    calc(r){
+      const h=KW.num(r,"h"), w=KW.num(r,"w"), hr=KW.num(r,"hr"), sv=KW.num(r,"sv"), map=KW.num(r,"map"), cvp=KW.num(r,"cvp");
+      const bsa=Math.sqrt(h*w/3600), co=hr*sv/1000, ci=co/bsa, svi=sv/bsa, svr=(map-cvp)*80/co, svri=(map-cvp)*80/ci;
+      r.querySelector('[data-o="out"]').innerHTML =
+        KW.row("BSA", KW.f(bsa,2), "m²", "") +
+        KW.row("CO = HR × SV / 1000", KW.f(co,2), "L/min", "4–8", KW.pill(co,4,8)) +
+        KW.row("CI = CO / BSA", KW.f(ci,2), "L/min/m²", "2.5–4", KW.pill(ci,2.5,4)) +
+        KW.row("SVI = SV / BSA", KW.f(svi,0), "mL/m²", "33–47", KW.pill(svi,33,47)) +
+        KW.row("SVR = (MAP − CVP) × 80 / CO", KW.f(svr,0), "dyn·s/cm⁵", "800–1200", KW.pill(svr,800,1200)) +
+        KW.row("SVRI = (MAP − CVP) × 80 / CI", KW.f(svri,0), "", "1970–2390", KW.pill(svri,1970,2390));
+    }
+  },
+  "svv-calc": {
+    html: () => `
+      <div class="kw-note">SVV = (SVmax − SVmin) / SVmean × 100;SVmean 未填時以 (SVmax + SVmin) / 2 估算。</div>
+      <div class="kw-grid">${KW.inp("mx","SVmax (mL)",78)}${KW.inp("mn","SVmin (mL)",66)}${KW.inp("me","SVmean (mL,可空白)","")}</div>
+      <div class="kw-out" data-o="out"></div>`,
+    calc(r){
+      const mx=KW.num(r,"mx"), mn=KW.num(r,"mn"); let me=KW.num(r,"me"); if(!isFinite(me)) me=(mx+mn)/2;
+      const svv=(mx-mn)/me*100;
+      const msg = !isFinite(svv) ? "" : svv>13
+        ? `<div class="kw-step go"><span class="t">判讀</span>SVV &gt;13% → <b>可能對輸液有反應</b>(前負荷不足);前提是控制通氣、竇性心律、潮氣量足夠、未開胸。</div>`
+        : `<div class="kw-step"><span class="t">判讀</span>SVV ≤13% → <b>給水不太會增加 SV</b>;低血壓時改看 SVI 與 SVR 找原因(收縮力或血管張力)。</div>`;
+      r.querySelector('[data-o="out"]').innerHTML = KW.row("SVV", KW.f(svv,1), "%", "&lt;13%", KW.pill(svv,-1,13)) + msg;
+    }
+  },
+  "starling": {
+    html: () => `
+      <div class="kw-note">給 200–250 mL 輸液(5–10 分鐘內)前後各記一次 SV,看 ΔSV 決定要不要繼續給。</div>
+      <div class="kw-grid">${KW.inp("a","給水前 SV (mL)",60)}${KW.inp("b","給水後 SV (mL)",68)}</div>
+      <div class="kw-out" data-o="out"></div>`,
+    calc(r){
+      const a=KW.num(r,"a"), b=KW.num(r,"b"), d=(b-a)/a*100;
+      const steep = d>10;
+      /* 曲線上的位置:陡段或平台 */
+      const x = steep ? 118 : 330, y = steep ? 96 : 40;
+      const svg = `<svg viewBox="0 0 420 200" role="img"><title>Frank-Starling 曲線</title>
+        <rect x="0" y="0" width="420" height="200" rx="10" fill="#F4F1EB"/>
+        <line x1="50" y1="170" x2="400" y2="170" stroke="#8B837A" stroke-width="1.2"/><line x1="50" y1="170" x2="50" y2="20" stroke="#8B837A" stroke-width="1.2"/>
+        <text x="400" y="188" text-anchor="end" font-size="12" fill="#726B62" font-family="sans-serif">前負荷 Preload</text>
+        <text x="56" y="30" font-size="12" fill="#726B62" font-family="sans-serif">SV</text>
+        <path d="M60 165 C110 80 170 52 250 44 C300 40 350 38 395 38" fill="none" stroke="#B5645C" stroke-width="2.6"/>
+        <rect x="60" y="150" width="150" height="16" rx="4" fill="#DCE5DD" opacity=".7"/><text x="135" y="162" text-anchor="middle" font-size="11" fill="#3F5A4B" font-family="sans-serif">陡段:給水有效</text>
+        <rect x="260" y="150" width="135" height="16" rx="4" fill="#F1DCD6" opacity=".8"/><text x="327" y="162" text-anchor="middle" font-size="11" fill="#8F4F48" font-family="sans-serif">平台:停止給水</text>
+        ${isFinite(d) ? `<circle cx="${x}" cy="${y}" r="7" fill="${steep ? "#5F8370" : "#B5645C"}" stroke="#fff" stroke-width="2"/>` : ""}
+      </svg>`;
+      const msg = !isFinite(d) ? "" : steep
+        ? `<div class="kw-step go"><span class="t">建議</span>ΔSV &gt;10% → 仍在曲線陡段,<b>可再給一次 200–250 mL</b> 並再評估。</div>`
+        : `<div class="kw-step warn"><span class="t">建議</span>ΔSV ≤10% → 已接近平台,<b>停止給水</b>;持續監測 SV,若下降 &gt;10% 再考慮給水。低血壓仍在 → 找其他原因(升壓或強心)。</div>`;
+      r.querySelector('[data-o="out"]').innerHTML = KW.row("ΔSV", KW.f(d,1), "%", "門檻 10%") + svg + msg;
+    }
+  },
+  "gdt-flow": {
+    html: () => `
+      <div class="kw-note">依筆記中的流程:先把麻醉調好(Vt 約 8 mL/kg),目標 <b>CI ≥2.5 L/min/m²、MAP ≥65 mmHg</b>(收縮壓 &gt;100)。</div>
+      <div class="kw-grid">${KW.inp("map","MAP (mmHg)",58)}${KW.inp("ci","CI (L/min/m²)",2.1)}${KW.inp("svv","SVV (%)",15)}${KW.inp("svr","SVR (dyn·s/cm⁵)",1300)}</div>
+      <div class="kw-out" data-o="out"></div>`,
+    calc(r){
+      const map=KW.num(r,"map"), ci=KW.num(r,"ci"), svv=KW.num(r,"svv"), svr=KW.num(r,"svr");
+      let out;
+      if(!(isFinite(map)&&isFinite(ci)&&isFinite(svv)&&isFinite(svr))) out = "";
+      else if(ci>=2.5 && map>=65) out = `<div class="kw-step go"><span class="t">目標達成</span>CI 與 MAP 都已達標 → 持續監測;再確認組織灌流:<b>ScvO₂ &gt;70%</b> 或<b>乳酸持續下降</b>。</div>`;
+      else if(svv>12) out = `<div class="kw-step"><span class="t">① 前負荷不足(灌水)</span>SVV &gt;12% → <b>500 mL 晶體液或 250 mL 膠體液</b>,給完看 SV 是否上升 &gt;10%,再回到目標評估。</div>`;
+      else if(svr<800) out = `<div class="kw-step"><span class="t">② 後負荷低(血管擴張 → 升壓)</span>SVV ≤12% 且 SVR &lt;800 → <b>ephedrine 5–10 mg</b>;不足時 <b>norepinephrine 2–12 µg/min 或 10 µg bolus</b>(頑固休克可能需要到 30 µg/min)。</div>`;
+      else out = `<div class="kw-step"><span class="t">③ 收縮力不足(強心)</span>SVV ≤12% 且 SVR ≥800 → <b>ephedrine 5–10 mg</b>;不足時 <b>dobutamine 2–20 µg/kg/min</b>,或考慮其他強心劑/血管擴張劑。</div>`;
+      const extra = (isFinite(ci)&&isFinite(map)&&!(ci>=2.5&&map>=65)) ? `<div class="kw-step"><span class="t">之後</span>每次處置後重新評估 CI 與 MAP,直到達標;最後再看 ScvO₂ &gt;70% 或乳酸清除。</div>` : "";
+      r.querySelector('[data-o="out"]').innerHTML = out + extra;
+    }
+  },
+  "mcgee": {
+    html: () => `
+      <div class="kw-note">灌流不足時:先問『對輸液有反應嗎?』(SVV &gt;13%),再用 SVI 分流。</div>
+      <div class="kw-btns" data-g="svv">
+        <button type="button" class="kw-btn" data-v="y" aria-pressed="false">SVV &gt;13%(有反應)</button>
+        <button type="button" class="kw-btn" data-v="n" aria-pressed="false">SVV ≤13%(沒反應)</button>
+      </div>
+      <div class="kw-btns" data-g="svi" hidden>
+        <button type="button" class="kw-btn" data-v="lo" aria-pressed="false">SVI &lt;40</button>
+        <button type="button" class="kw-btn" data-v="mid" aria-pressed="false">SVI 40–50</button>
+        <button type="button" class="kw-btn" data-v="hi" aria-pressed="false">SVI &gt;50</button>
+      </div>
+      <div data-o="out"></div>`,
+    wire(r){
+      const st = {};
+      const show = () => {
+        r.querySelector('[data-g="svi"]').hidden = st.svv !== "n";
+        const o = r.querySelector('[data-o="out"]');
+        if(st.svv === "y") o.innerHTML = `<div class="kw-step go"><span class="t">Volume challenge</span>前負荷不足 → 給一次輸液挑戰(200–250 mL),看 SV 是否上升 &gt;10%。</div>`;
+        else if(st.svv === "n" && st.svi === "lo") o.innerHTML = `<div class="kw-step"><span class="t">Inotrope(強心)</span>容積已足但每搏量低 → <b>收縮力問題</b>,考慮強心劑(如 dobutamine)。</div>`;
+        else if(st.svv === "n" && st.svi === "mid") o.innerHTML = `<div class="kw-step"><span class="t">Pressor(升壓)</span>容積與每搏量都正常,血壓仍低 → <b>血管張力不足</b>,給升壓劑(如 norepinephrine)。</div>`;
+        else if(st.svv === "n" && st.svi === "hi") o.innerHTML = `<div class="kw-step warn"><span class="t">Diuretic(利尿)</span>沒有輸液反應且每搏量偏高 → 若有<b>容積過多</b>的表現,考慮利尿。</div>`;
+        else o.innerHTML = "";
+      };
+      r.querySelectorAll(".kw-btns").forEach(g => g.querySelectorAll(".kw-btn").forEach(b => b.onclick = () => {
+        st[g.dataset.g] = b.dataset.v;
+        if(g.dataset.g === "svv") st.svi = null;
+        g.querySelectorAll(".kw-btn").forEach(x => x.setAttribute("aria-pressed", x===b ? "true" : "false"));
+        if(g.dataset.g === "svv") r.querySelectorAll('[data-g="svi"] .kw-btn').forEach(x => x.setAttribute("aria-pressed","false"));
+        show();
+      }));
+    }
+  },
+  "shock-match": {
+    html: () => `
+      <div class="kw-note">選出病人的血流動力學型態,看看最像哪一種休克(真實病人常是混合型)。</div>
+      <div class="kw-grid">
+        <label class="kw-f">CO<select data-k="co"><option value="">—</option><option value="d">↓</option><option value="u">↑ / 正常</option></select></label>
+        <label class="kw-f">SVR<select data-k="svr"><option value="">—</option><option value="u">↑</option><option value="d">↓</option></select></label>
+        <label class="kw-f">CVP / PAOP<select data-k="cvp"><option value="">—</option><option value="d">↓</option><option value="u">↑</option></select></label>
+        <label class="kw-f">HR<select data-k="hr"><option value="">—</option><option value="u">↑</option><option value="d">↓</option></select></label>
+      </div>
+      <div data-o="out"></div>`,
+    calc(r){
+      const g = k => (r.querySelector(`[data-k="${k}"]`)||{}).value || "";
+      const v = { co:g("co"), svr:g("svr"), cvp:g("cvp"), hr:g("hr") };
+      const T = [
+        { n:"低血容性休克 Hypovolemic", p:{co:"d",svr:"u",cvp:"d",hr:"u"}, tx:"止血、輸液/輸血復甦", c:"" },
+        { n:"心因性休克 Cardiogenic", p:{co:"d",svr:"u",cvp:"u",hr:"u"}, tx:"強心劑、謹慎給水,必要時機械循環輔助(如 ECMO)", c:"" },
+        { n:"阻塞性休克 Obstructive", p:{co:"d",svr:"u",cvp:"u",hr:"u"}, tx:"解除阻塞:心包膜穿刺、胸管(張力性氣胸)、肺栓塞處置", c:"與心因性型態相似 → 用超音波或 TEE 區分" },
+        { n:"分佈性休克 Distributive", p:{co:"u",svr:"d",cvp:"d",hr:"u"}, tx:"敗血症:抗生素與輸液;過敏性休克:epinephrine;升壓劑", c:"CO 早期可升高、晚期可下降" },
+        { n:"神經性休克 Neurogenic", p:{co:"d",svr:"d",cvp:"d",hr:"d"}, tx:"輸液、升壓劑;心搏過緩給 atropine", c:"脊髓或腦部損傷,失去交感張力 → <b>低血壓合併心搏過緩</b>、四肢溫暖" }
+      ];
+      const picked = Object.values(v).filter(Boolean).length;
+      const o = r.querySelector('[data-o="out"]');
+      if(!picked){ o.innerHTML = ""; return; }
+      const scored = T.map(t => ({ t, s: Object.keys(v).reduce((a,k) => a + (v[k] ? (v[k]===t.p[k] ? 1 : -1) : 0), 0) }))
+        .sort((a,b) => b.s - a.s);
+      const best = scored[0].s, top = scored.filter(x => x.s === best && best > 0);
+      o.innerHTML = top.length ? top.map(x => `<div class="kw-step go"><span class="t">最符合</span><b>${x.t.n}</b>${x.t.c ? `<br>${x.t.c}` : ""}<br>處置:${x.t.tx}</div>`).join("")
+        : `<div class="kw-step"><span class="t">沒有典型型態</span>可能是混合型休克,或資料互相矛盾 → 重新評估並考慮超音波。</div>`;
+    }
+  }
+};
+
+function initWidgets(root){
+  (root || document).querySelectorAll(".kw[data-widget]").forEach(box => {
+    const w = WIDGETS[box.dataset.widget]; if(!w) return;
+    box.innerHTML = w.html();
+    if(w.calc){
+      const run = () => w.calc(box);
+      box.querySelectorAll("input,select").forEach(x => { x.oninput = run; x.onchange = run; });
+      run();
+    }
+    if(w.wire) w.wire(box);
+  });
+}
+
+/* 疼痛路徑內容顯示在右欄(手機自動切換成詳情頁,與手術卡相同) */
+function showPain(id){
+  const c = PAIN.find(x => x.id === id); if(!c) return;
+  activeId = null;
+  el("detail").innerHTML = `
+    <button class="back" id="painBackBtn" type="button">← 返回麻醉冷知識列表</button>
+    ${painCardHtml(c)}
+    <button class="back back-bottom" id="painBackBtnBottom" type="button">← 返回麻醉冷知識列表</button>`;
+  el("painBackBtn").onclick = goBack;
+  el("painBackBtnBottom").onclick = goBack;
+  initWidgets(el("detail"));
+  initScrollRails();
+  el("app").classList.add("stage-detail");
+  el("detail").scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
 function scrollListTop(){
   const l = el("list");
   if(l && typeof l.scrollTo === "function") l.scrollTo(0, 0);
@@ -1739,6 +2070,7 @@ function renderList(){
   const q = el("search").value.trim();
   if(activeSpec===EXAM_CHIP || activeSpec===QUIZ_CHIP){ renderSetList(activeSpec); return; }
   if(activeSpec===CRISIS_CHIP && !q){ el("list").innerHTML = crisisHtml(); wireCrisis(); return; }
+  if(activeSpec===PAIN_CHIP && !q){ el("list").innerHTML = painHtml(); wirePain(); return; }
   if((!activeSpec || activeSpec===HOME_CHIP) && !q){
     el("list").innerHTML = updatesHtml();
     el("list").querySelectorAll(".upd-link").forEach(b=>{
@@ -1780,12 +2112,26 @@ function renderList(){
 
 function li(arr){ return arr && arr.length ? arr.map(x=>`<li>${x}</li>`).join("") : `<li style="color:var(--ink-soft)">—</li>`; }
 
-function toggleAsa(){
-  const p = el("asaPanel"); if(!p) return;
+function toggleAsa(ev){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  const p = el("asaPanel"); if(!p) return false;
+  const det = p.closest("details"); if(det) det.open = true;
   const btn = document.querySelector(".asa-btn");
   const show = p.hasAttribute("hidden");
   if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
   if(btn) btn.setAttribute("aria-expanded", show ? "true" : "false");
+  return false;
+}
+
+/* 術語補充:點有底線的術語 → 展開緊鄰的 .term-panel;點補充資訊本身 → 收起 */
+function toggleTerm(t){
+  const p = t && t.nextElementSibling; if(!p || !p.classList.contains("term-panel")) return;
+  const show = p.hasAttribute("hidden");
+  if(show){ p.removeAttribute("hidden"); } else { p.setAttribute("hidden",""); }
+  t.setAttribute("aria-expanded", show ? "true" : "false");
+}
+function termKey(ev, t){
+  if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); toggleTerm(t); }
 }
 
 /* 通用「點擊展開說明」:切換按鈕緊鄰的 .info-panel(平時收縮) */
@@ -2208,8 +2554,8 @@ function initPen(s){
       const row = document.createElement("div");
       row.className = "pen-row";
       row.innerHTML = btn;
-      const anchor = b.box.querySelector(":scope > .sec-tools") || b.box.querySelector(":scope > summary, :scope > h3");
-      anchor ? anchor.insertAdjacentElement("afterend", row) : b.box.prepend(row);
+      const title = b.box.querySelector(":scope > summary, :scope > h3");
+      title ? title.insertAdjacentHTML("beforeend", btn) : b.box.prepend(row);
     }
   });
   penRender();
@@ -2230,10 +2576,10 @@ function showDetail(id, vi){
   const fold = !!s.collapse;
   const sections = SECTION_DEFS.filter(d=>(s[d.key] && s[d.key].length) || litHas(s,d.key)).map(d=>{
     const isMon = d.key==="monitor";
-    const btn = isMon ? `<button class="asa-btn" type="button" aria-expanded="false" onclick="toggleAsa()">ⓘ ASA 基本監測</button>` : "";
+    const btn = isMon ? `<button class="asa-btn" type="button" aria-expanded="false" onclick="return toggleAsa(event)">ⓘ ASA 基本監測</button>` : "";
     const panel = isMon ? `<div class="asa-panel" id="asaPanel" hidden>${ASA_INFO}</div>` : "";
     const dia = (s.diagram && s.diagram.section===d.key)
-      ? `<figure class="d-figure">${s.diagram.svg}${s.diagram.caption?`<figcaption>${s.diagram.caption}</figcaption>`:""}</figure>` : "";
+      ? `<figure class="d-figure">${s.diagram.svg || (s.diagram.img ? `<img class="d-img" src="${s.diagram.img}" alt="${s.diagram.alt||""}" loading="lazy">` : "")}${s.diagram.caption?`<figcaption>${s.diagram.caption}</figcaption>`:""}</figure>` : "";
     const own = (s[d.key] && s[d.key].length)
       ? (hasSourceToggle(s)
           ? `<div class="src-piece" data-src="note">${lits.length ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${li(s[d.key])}</ul></div>`
@@ -2242,8 +2588,7 @@ function showDetail(id, vi){
     const body = `${own}${dia}${litBlocks(s,d.key)}${panel}`;
     if(fold) return `
     <details class="section sec-fold ${d.cls}" data-sec="${d.key}">
-      <summary><span class="dot"></span>${d.label}${srcChips(s,d.key)}</summary>
-      ${btn ? `<div class="sec-tools">${btn}</div>` : ""}
+      <summary><span class="dot"></span>${d.label}${srcChips(s,d.key)}${btn}</summary>
       ${body}
     </details>`;
     return `

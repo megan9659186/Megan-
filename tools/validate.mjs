@@ -35,6 +35,12 @@ function checkHtmlBits(where, strs) {
     const btns = (s.match(/class='info-btn'/g) || []).length;
     if (panels.length !== btns) err(where, `ⓘ 說明按鈕(${btns})與面板(${panels.length})數量不符`);
     panels.forEach(p => { if (!/\bhidden\b/.test(p)) err(where, 'info-panel 少了 hidden(會預設展開)'); });
+    // 術語補充:每個 term 後面緊接一個 term-panel,且預設 hidden
+    const terms = (s.match(/<span class='term'[^>]*>/g) || []).length;
+    const tpanels = s.match(/<span class='term-panel'[^>]*>/g) || [];
+    if (terms !== tpanels.length) err(where, `術語(${terms})與補充面板(${tpanels.length})數量不符`);
+    tpanels.forEach(p => { if (!/\bhidden\b/.test(p)) err(where, 'term-panel 少了 hidden(會預設展開)'); });
+    if (/<span class='term'[^>]*>[^<]*<\/span>(?!<span class='term-panel')/.test(s)) err(where, '術語後面必須緊接 term-panel');
     if (/class="/.test(s) && !s.trim().startsWith('<svg')) warn(where, '字串內出現 class="…"(慣例用單引號)');
     if (/\bNIM\b|\bIOMN\b/.test(s)) err(where, '術中神經監測縮寫請用 IONM');
   }
@@ -61,6 +67,8 @@ for (const f of surgFiles) {
     ds.forEach(d => {
       if (!SECTION_KEYS.includes(d.section)) err(w, `diagram.section「${d.section}」不是合法區塊(${SECTION_KEYS.join(' / ')})`);
       if (d.svg && !(d.svg.trim().startsWith('<svg') && d.svg.trim().endsWith('</svg>'))) err(w, 'diagram.svg 需以 <svg 開頭、</svg> 結尾');
+      if (!d.svg && !d.img) err(w, 'diagram 需有 svg 或 img');
+      if (d.img && !d.caption) err(w, 'diagram.img(外部圖片)需有 caption 註明來源');
     });
   }
   checkHtmlBits(w, strings(o));
@@ -70,6 +78,21 @@ for (const f of surgFiles) {
 for (const f of listItems(path.join(SRC, 'crisis'))) {
   try { const o = vm.runInNewContext('(' + fs.readFileSync(f, 'utf8') + ')'); checkHtmlBits(rel(f), strings(o)); }
   catch (e) { err(rel(f), `語法錯誤 — ${e.message}`); }
+}
+
+// 2b) 疼痛路徑逐檔
+const painIds = new Set();
+for (const f of listItems(path.join(SRC, 'pain'))) {
+  const w = rel(f);
+  let o;
+  try { o = vm.runInNewContext('(' + fs.readFileSync(f, 'utf8') + ')'); }
+  catch (e) { err(w, `語法錯誤 — ${e.message}`); continue; }
+  for (const k of ['group', 'id', 'name', 'en']) if (!o[k]) err(w, `缺少 ${k}`);
+  if (painIds.has(o.id)) err(w, `id 重複：${o.id}`); painIds.add(o.id);
+  if (!Array.isArray(o.sections) || !o.sections.length) err(w, '缺少 sections');
+  if (!o.refs || !o.refs.length) err(w, '沒有 refs(文獻)');
+  if (o.diagram && o.diagram.svg && !(o.diagram.svg.trim().startsWith('<svg') && o.diagram.svg.trim().endsWith('</svg>'))) err(w, 'diagram.svg 需以 <svg 開頭、</svg> 結尾');
+  checkHtmlBits(w, strings(o));
 }
 
 // 3) 版本號與公告
