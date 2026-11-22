@@ -1,5 +1,6 @@
 {
-    group: "疼痛路徑:基本概念",
+    topic: "疼痛路徑",
+    group: "基本概念",
     id: "pain-basics",
     updated: "2026-11-22",
     name: "疼痛的四個步驟與傳導纖維",

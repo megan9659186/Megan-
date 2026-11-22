@@ -1,5 +1,6 @@
 {
-    group: "疼痛路徑:傳導路徑",
+    topic: "疼痛路徑",
+    group: "傳導路徑",
     id: "pain-sensitization",
     updated: "2026-11-22",
     name: "周邊與中樞敏感化",

@@ -1,5 +1,6 @@
 {
-    group: "疼痛路徑:臨床應用",
+    topic: "疼痛路徑",
+    group: "臨床應用",
     id: "multimodal-sites",
     updated: "2026-11-22",
     name: "多模式止痛:藥物作用在哪裡",

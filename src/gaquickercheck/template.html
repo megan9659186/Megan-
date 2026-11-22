@@ -580,6 +580,11 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 .pain-item{background:#EEE8F0;border:1px solid #D8CDDD;border-radius:11px;padding:12px 14px;margin-bottom:9px;
   cursor:pointer;transition:all .15s;position:relative}
 .pain-item:hover{border-color:#9C8AA5;transform:translateY(-1px)}
+.pain-item.pain-topic .pi-name{font-size:17px}
+.tool-wrap .set-back.pain-back{color:#7E6B88;margin-bottom:0}
+.kw-light{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px;box-shadow:0 0 0 2px rgba(255,255,255,.8),0 0 0 3px rgba(0,0,0,.08)}
+.kw-light.g{background:#5FA36F}.kw-light.y{background:#E2B33C}.kw-light.r{background:#C8574B}.kw-light.n{background:#C9C3BA}
+.kw-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--ink-soft);margin-top:8px}
 .pain-item.active{border-color:#9C8AA5;background:#E3D9E7;box-shadow:0 0 0 2px rgba(156,138,165,.25)}
 #detail .pain-card{margin-top:4px}
 #detail .pain-card .d-figure svg{max-width:640px}
@@ -596,8 +601,6 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 .kw-row .k{color:var(--ink-soft);font-weight:600}
 .kw-row .v{font-weight:700;color:var(--ink);text-align:right}
 .kw-row .r{font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-left:6px}
-.kw-pill{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:1px 8px;margin-left:6px;vertical-align:1px}
-.kw-pill.lo{background:#DCE3EC;color:#4D5D73}.kw-pill.ok{background:#DCE5DD;color:#3F5A4B}.kw-pill.hi{background:#F1DCD6;color:#8F4F48}
 .kw-btns{display:flex;flex-wrap:wrap;gap:7px;margin:4px 0 8px}
 .kw-btns[hidden]{display:none}
 .kw-btn{font-family:inherit;font-size:13.5px;padding:6px 12px;border-radius:20px;border:1px solid #CFC3D5;background:#F4F0F6;color:#5A4A63;cursor:pointer;font-weight:600}
@@ -830,7 +833,7 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v14.4";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v14.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-11-22";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = /*@@UPDATES@@*/;
@@ -1299,7 +1302,7 @@ function renderChips(){
     return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
   }).join("");
   el("chips").querySelectorAll(".chip").forEach(c=>{
-    c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; CRISIS_OPEN = null; PAIN_OPEN = null; renderChips(); renderList(); };
+    c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; CRISIS_OPEN = null; PAIN_OPEN = null; PAIN_TOPIC = null; renderChips(); renderList(); };
   });
 }
 
@@ -1801,11 +1804,21 @@ function wireCrisis(){
    items 以 "## " 開頭 → 分段小標題
    ============================================================ */
 let PAIN_OPEN = null;
+let PAIN_TOPIC = null;   /* null = 停在主題層(疼痛路徑 / 血液動力學);否則為選中的主題 */
+const PAIN_TOPIC_INFO = {
+  "疼痛路徑": { en:"Pain Pathways", desc:"從受器、脊髓背角到大腦:疼痛如何被感受、放大與抑制,以及各種止痛藥作用在哪一段" },
+  "血液動力學": { en:"Hemodynamics", desc:"正常值與公式、SVV 與輸液反應、目標導向輸液、休克分類;附互動計算與判讀工具" }
+};
 const PAIN = /*@@PAIN@@*/;
 
-function painGroups(){
+function painTopics(){
+  const t = [];
+  PAIN.forEach(c => { if(!t.includes(c.topic)) t.push(c.topic); });
+  return t;
+}
+function painGroups(topic){
   const g = [];
-  PAIN.forEach(c => { if(!g.includes(c.group)) g.push(c.group); });
+  PAIN.filter(c => c.topic === topic).forEach(c => { if(!g.includes(c.group||"")) g.push(c.group||""); });
   return g;
 }
 
@@ -1845,16 +1858,39 @@ function painCardHtml(c){
 }
 
 function painHtml(){
-  return `
+  if(!PAIN_TOPIC){
+    return `
   <div class="tool-wrap">
     <div>
       <div class="tool-head">麻醉冷知識</div>
-      <div class="tool-sub">臨床背後的生理與藥理:『疼痛路徑』與『血流動力學』(附互動計算與判讀工具)。點選項目展開內容。</div>
+      <div class="tool-sub">臨床背後的生理與藥理。先選主題,再點選項目看內容。</div>
     </div>
-    ${painGroups().map(g => `
+    <div>
+      ${painTopics().map(t => {
+        const items = PAIN.filter(c => c.topic === t);
+        const info = PAIN_TOPIC_INFO[t] || {};
+        return `
+        <div class="pain-item pain-topic" data-topic="${t}">
+          ${items.some(isNewItem) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
+          <div class="pi-name">${t}</div>
+          <div class="pi-en">${info.en||""}・${items.length} 個項目</div>
+          ${info.desc ? `<div class="pi-key">${info.desc}</div>` : ""}
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
+  }
+  return `
+  <div class="tool-wrap">
+    <button class="set-back pain-back" type="button" id="painTopicBack">← 回麻醉冷知識</button>
+    <div>
+      <div class="tool-head">${PAIN_TOPIC}</div>
+      <div class="tool-sub">${(PAIN_TOPIC_INFO[PAIN_TOPIC]||{}).desc||""}</div>
+    </div>
+    ${painGroups(PAIN_TOPIC).map(g => `
       <div>
-        <div class="pain-group">${g}</div>
-        ${PAIN.filter(c => c.group === g).map(c => `
+        ${g ? `<div class="pain-group">${g}</div>` : ""}
+        ${PAIN.filter(c => c.topic === PAIN_TOPIC && (c.group||"") === g).map(c => `
           <div class="pain-item${c.id===PAIN_OPEN ? " active" : ""}" data-go="${c.id}">
             ${isNewItem(c) ? `<span class="badge-new" title="近期新增或更新">NEW</span>` : ""}
             <div class="pi-name">${c.name}</div>
@@ -1866,9 +1902,14 @@ function painHtml(){
 }
 
 function wirePain(){
-  document.querySelectorAll(".pain-item").forEach(b => {
+  document.querySelectorAll(".pain-item[data-topic]").forEach(b => {
+    b.onclick = () => { PAIN_TOPIC = b.dataset.topic; renderList(); scrollListTop(); };
+  });
+  document.querySelectorAll(".pain-item[data-go]").forEach(b => {
     b.onclick = () => { PAIN_OPEN = b.dataset.go; renderList(); showPain(PAIN_OPEN); };
   });
+  const back = el("painTopicBack");
+  if(back) back.onclick = () => { PAIN_TOPIC = null; renderList(); scrollListTop(); };
 }
 
 /* ============================================================
@@ -1878,13 +1919,19 @@ function wirePain(){
 const KW = {
   num(root, id){ const x = root.querySelector(`[data-k="${id}"]`); const v = x ? parseFloat(x.value) : NaN; return isFinite(v) ? v : NaN; },
   f(v, d){ return isFinite(v) ? v.toFixed(d) : "—"; },
-  pill(v, lo, hi){
-    if(!isFinite(v)) return "";
-    if(v < lo) return `<span class="kw-pill lo">偏低</span>`;
-    if(v > hi) return `<span class="kw-pill hi">偏高</span>`;
-    return `<span class="kw-pill ok">正常</span>`;
-  },
   row(k, v, unit, range, pill){ return `<div class="kw-row"><span class="k">${k}</span><span class="v">${v}${unit ? ` ${unit}` : ""}${pill||""}<span class="r">${range||""}</span></span></div>`; },
+  /* 紅黃綠燈:綠 = 正常範圍內;黃 = 超出範圍 20% 以內;紅 = 超出更多 */
+  light(v, lo, hi){
+    if(!isFinite(v)) return `<span class="kw-light n" title="未計算"></span>`;
+    if(v >= lo && v <= hi) return `<span class="kw-light g" title="正常"></span>`;
+    const off = v < lo ? (lo - v) / lo : (v - hi) / hi;
+    return off <= 0.2 ? `<span class="kw-light y" title="輕度偏離"></span>` : `<span class="kw-light r" title="明顯偏離"></span>`;
+  },
+  lrow(k, v, d, unit, lo, hi, range){
+    const word = !isFinite(v) ? "" : v < lo ? "偏低" : v > hi ? "偏高" : "正常";
+    return `<div class="kw-row"><span class="k">${KW.light(v,lo,hi)}${k}</span><span class="v">${KW.f(v,d)}${unit ? ` ${unit}` : ""}<span class="r">${word ? word + " · " : ""}${range}</span></span></div>`;
+  },
+  legend: () => `<div class="kw-legend"><span><span class="kw-light g"></span>正常範圍</span><span><span class="kw-light y"></span>超出 20% 以內</span><span><span class="kw-light r"></span>超出 20% 以上</span></div>`,
   inp(id, label, val, step){ return `<label class="kw-f">${label}<input type="number" inputmode="decimal" data-k="${id}" value="${val}" step="${step||"any"}"></label>`; }
 };
 
@@ -1902,11 +1949,12 @@ const WIDGETS = {
       const bsa=Math.sqrt(h*w/3600), co=hr*sv/1000, ci=co/bsa, svi=sv/bsa, svr=(map-cvp)*80/co, svri=(map-cvp)*80/ci;
       r.querySelector('[data-o="out"]').innerHTML =
         KW.row("BSA", KW.f(bsa,2), "m²", "") +
-        KW.row("CO = HR × SV / 1000", KW.f(co,2), "L/min", "4–8", KW.pill(co,4,8)) +
-        KW.row("CI = CO / BSA", KW.f(ci,2), "L/min/m²", "2.5–4", KW.pill(ci,2.5,4)) +
-        KW.row("SVI = SV / BSA", KW.f(svi,0), "mL/m²", "33–47", KW.pill(svi,33,47)) +
-        KW.row("SVR = (MAP − CVP) × 80 / CO", KW.f(svr,0), "dyn·s/cm⁵", "800–1200", KW.pill(svr,800,1200)) +
-        KW.row("SVRI = (MAP − CVP) × 80 / CI", KW.f(svri,0), "", "1970–2390", KW.pill(svri,1970,2390));
+        KW.lrow("CO", co, 2, "L/min", 4, 8, "正常 4–8") +
+        KW.lrow("CI", ci, 2, "L/min/m²", 2.5, 4, "正常 2.5–4") +
+        KW.lrow("SVI", svi, 0, "mL/m²", 33, 47, "正常 33–47") +
+        KW.lrow("SVR", svr, 0, "dyn·s/cm⁵", 800, 1200, "正常 800–1200") +
+        KW.lrow("SVRI", svri, 0, "", 1970, 2390, "正常 1970–2390") +
+        KW.legend();
     }
   },
   "svv-calc": {
@@ -1920,7 +1968,7 @@ const WIDGETS = {
       const msg = !isFinite(svv) ? "" : svv>13
         ? `<div class="kw-step go"><span class="t">判讀</span>SVV &gt;13% → <b>可能對輸液有反應</b>(前負荷不足);前提是控制通氣、竇性心律、潮氣量足夠、未開胸。</div>`
         : `<div class="kw-step"><span class="t">判讀</span>SVV ≤13% → <b>給水不太會增加 SV</b>;低血壓時改看 SVI 與 SVR 找原因(收縮力或血管張力)。</div>`;
-      r.querySelector('[data-o="out"]').innerHTML = KW.row("SVV", KW.f(svv,1), "%", "&lt;13%", KW.pill(svv,-1,13)) + msg;
+      r.querySelector('[data-o="out"]').innerHTML = KW.lrow("SVV", svv, 1, "%", 0, 13, "&lt;13%") + msg;
     }
   },
   "starling": {
@@ -2049,9 +2097,9 @@ function showPain(id){
   const c = PAIN.find(x => x.id === id); if(!c) return;
   activeId = null;
   el("detail").innerHTML = `
-    <button class="back" id="painBackBtn" type="button">← 返回麻醉冷知識列表</button>
+    <button class="back" id="painBackBtn" type="button">← 返回 ${c.topic} 列表</button>
     ${painCardHtml(c)}
-    <button class="back back-bottom" id="painBackBtnBottom" type="button">← 返回麻醉冷知識列表</button>`;
+    <button class="back back-bottom" id="painBackBtnBottom" type="button">← 返回 ${c.topic} 列表</button>`;
   el("painBackBtn").onclick = goBack;
   el("painBackBtnBottom").onclick = goBack;
   initWidgets(el("detail"));

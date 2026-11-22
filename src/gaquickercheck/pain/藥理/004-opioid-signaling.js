@@ -1,5 +1,6 @@
 {
-    group: "疼痛路徑:藥理",
+    topic: "疼痛路徑",
+    group: "藥理",
     id: "opioid-signaling",
     updated: "2026-11-22",
     name: "類鴉片受體訊號",

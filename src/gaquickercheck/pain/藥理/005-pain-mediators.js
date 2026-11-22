@@ -1,5 +1,6 @@
 {
-    group: "疼痛路徑:藥理",
+    topic: "疼痛路徑",
+    group: "藥理",
     id: "pain-mediators",
     updated: "2026-11-22",
     name: "疼痛相關的神經傳導物質",

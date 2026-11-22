@@ -15,7 +15,7 @@ src/gaquickercheck/
   template.html            版面、CSS、程式、APP_VERSION / APP_UPDATED(資料位置以 /*@@SURGERIES@@*/ 等標記)
   surgeries/<科別>/NNN-<英文名>.js   每台手術一個檔，內容就是一個物件 { … }
   crisis/<分組>/NNN-<id>.js         每張急救卡一個檔
-  pain/<分組>/NNN-<id>.js           「麻醉冷知識」教學區(chip 在外區麻醉之後;疼痛路徑、血流動力學)每張卡一個檔({ group, id, name, en, key, updated, sections:[{ h, items, table, widget }], diagram, refs });widget 為互動工具名稱(hemo-calc / svv-calc / starling / gdt-flow / mcgee / shock-match),程式在 template.html 的 WIDGETS
+  pain/<主題或分組>/NNN-<id>.js           「麻醉冷知識」教學區(chip 在外區麻醉之後;先選主題 topic:疼痛路徑、血液動力學,再列項目)每張卡一個檔({ topic, group, id, name, en, key, updated, sections:[{ h, items, table, widget }], diagram, refs });widget 為互動工具名稱(hemo-calc / svv-calc / starling / gdt-flow / mcgee / shock-match),程式在 template.html 的 WIDGETS
   updates.js               首頁公告 UPDATES 陣列
   img/                     圖片檔；資料裡用 @@IMG:檔名:png@@ 引用，組裝時自動內嵌
 tools/build.mjs            組裝 → gaquickercheck.html

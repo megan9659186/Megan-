@@ -1,5 +1,6 @@
 {
-    group: "血流動力學",
+    topic: "血液動力學",
+    group: "輸液與目標導向",
     id: "gdt-flow",
     updated: "2026-11-22",
     name: "目標導向輸液流程(GDT)",

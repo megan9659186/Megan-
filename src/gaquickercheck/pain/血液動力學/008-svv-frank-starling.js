@@ -1,5 +1,6 @@
 {
-    group: "血流動力學",
+    topic: "血液動力學",
+    group: "輸液與目標導向",
     id: "svv-starling",
     updated: "2026-11-22",
     name: "SVV、Frank-Starling 與輸液反應",

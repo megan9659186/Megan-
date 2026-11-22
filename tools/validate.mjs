@@ -87,7 +87,7 @@ for (const f of listItems(path.join(SRC, 'pain'))) {
   let o;
   try { o = vm.runInNewContext('(' + fs.readFileSync(f, 'utf8') + ')'); }
   catch (e) { err(w, `語法錯誤 — ${e.message}`); continue; }
-  for (const k of ['group', 'id', 'name', 'en']) if (!o[k]) err(w, `缺少 ${k}`);
+  for (const k of ['topic', 'group', 'id', 'name', 'en']) if (!o[k]) err(w, `缺少 ${k}`);
   if (painIds.has(o.id)) err(w, `id 重複：${o.id}`); painIds.add(o.id);
   if (!Array.isArray(o.sections) || !o.sections.length) err(w, '缺少 sections');
   if (!o.refs || !o.refs.length) err(w, '沒有 refs(文獻)');
