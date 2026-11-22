@@ -1,5 +1,6 @@
 {
     checked: "2026-08-07",
+    updated:"2026-11-22",
     specialty:"一般外科",
     name:"腹腔鏡胃切除術(腫瘤)",
     en:"Laparoscopic Gastrectomy (Oncologic)",
@@ -7,7 +8,7 @@
     preop:[
       "胃癌病人常見營養不良、貧血、體重減輕 → 術前營養與貧血優化",
       "評估幽門阻塞/胃滯留 → <b class='w'>飽胃誤吸風險,考慮 RSI</b>",
-      "化療病史(心臟毒性、骨髓抑制)與合併症評估"
+      "化療病史(<span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>心臟毒性</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>胃癌常用、與心臟相關的化療藥:<b>5-FU / capecitabine</b>(FLOT、XELOX 等)→ 冠狀動脈痙攣、胸痛、心肌缺血、心律不整;<b>Trastuzumab</b>(HER2 陽性)→ 左心室收縮功能下降、心衰竭(多可逆);<b>Anthracycline(epirubicin,舊 ECF 方案)</b>→ 累積劑量相關心肌病變;<b>Docetaxel</b> → 體液滯留、周邊水腫;<b>Oxaliplatin</b> → 少見 QT 延長;<b>免疫治療(nivolumab 等)</b>→ 罕見但致命的心肌炎。術前問化療方案與最後一次用藥時間,有胸痛、心衰症狀或用過 trastuzumab/anthracycline 者看 <b>cardiac echo</b>(LVEF)與 ECG。</span>、骨髓抑制)與合併症評估"
     ],
     airway:[
       "ETT;胃出口阻塞或大量胃滯留 → <b class='w'>視為飽胃、RSI</b>,術前放置並抽吸鼻胃管",

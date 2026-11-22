@@ -1,5 +1,83 @@
 [
   {
+    date: "2026-11-22",
+    note: "腹腔鏡肝切除術新增 UpToDate 與其他文獻重點。",
+    items: [
+      { t:"腹腔鏡肝切除術:新增 UpToDate 重點(MILR 病人選擇與轉開腹風險、肝病凝血處理、低 CVP 與低容積放血、TXA 新證據、肝病藥物調整、術後凝血與止痛)與其他文獻重點(BJA Education:殘肝安全量、降 CVP 方法、ERAS 建議、術後併發症)", en:"Laparoscopic Liver Resection" },
+      "麻醉冷知識標籤的雪花移到標籤外框線上",
+      "各手術卡:筆記內容上方不再顯示「本院筆記」小標",
+      { t:"腹腔鏡肝切除術:Pringle 示意圖歸在筆記中,切換到 Miller、UpToDate 或其他文獻時不再顯示", en:"Laparoscopic Liver Resection" }
+    ]
+  },
+  {
+    date: "2026-11-22",
+    note: "血液動力學計算機新增下一步建議;標籤顏色調整。",
+    items: [
+      "血液動力學正常值與計算機:新增 SVV 欄位(可空白);依計算結果顯示「下一步怎麼做」:繼續觀察、給輸液、給升壓藥或強心劑,並提醒心搏過緩、容積過多與找根本原因",
+      "「外區麻醉」與「麻醉冷知識」標籤顏色互換;麻醉冷知識標籤左上角加上雪花小標示"
+    ]
+  },
+  {
+    date: "2026-11-22",
+    note: "麻醉冷知識改為先選主題;血液動力學計算結果改用紅黃綠燈。",
+    items: [
+      "麻醉冷知識改成和科別相同的瀏覽方式:先選「疼痛路徑」或「血液動力學」,點進去才是各項目內容",
+      "血液動力學正常值表:正常值欄移到公式欄前面",
+      "血液動力學計算機與 SVV 計算:結果在參數前以紅黃綠燈標示(綠 = 正常、黃 = 超出 20% 以內、紅 = 超出 20% 以上)",
+      "「血流動力學」統一改稱「血液動力學」"
+    ]
+  },
+  {
+    date: "2026-11-22",
+    note: "麻醉冷知識新增血流動力學四張卡,附互動計算與判讀工具。",
+    items: [
+      "麻醉冷知識新增「血流動力學正常值與計算機」:輸入身高、體重、HR、SV、MAP、CVP,即時算出 CO、CI、SVI、SVR、SVRI 並標示高低;附血流動力學與氧合參數公式表",
+      "麻醉冷知識新增「SVV、Frank-Starling 與輸液反應」:SVV 計算、輸液挑戰前後 SV 變化判讀(含曲線圖)、SVV 準確的前提與替代方法",
+      "麻醉冷知識新增「目標導向輸液流程(GDT)」:輸入 MAP、CI、SVV、SVR 即顯示灌水、升壓或強心的建議;另有 SV / SVV 簡易判讀(McGee)與實證重點",
+      "麻醉冷知識新增「休克分類速查」:選擇 CO、SVR、CVP、HR 的變化,判讀最像哪一種休克;附六種休克比較表"
+    ]
+  },
+  {
+    date: "2026-11-22",
+    note: "骨科各台加入 Miller 教科書重點;疼痛路徑移到「麻醉冷知識」。",
+    items: [
+      "「疼痛路徑」專區改名為「麻醉冷知識」,chip 移到外區麻醉之後;上行與下行路徑卡改用疼痛四步驟插圖,四步驟順序與插圖一致(轉導 → 傳遞 → 知覺 → 調控)",
+      { t:"全膝關節置換術:新增止血帶痛(tourniquet pain)補充說明;止血帶放氣與骨水泥植入症候群加上機轉、辨識與處理;新增 Miller 教科書重點(止血帶壓力與時間、放氣後低血壓、內收肌管阻斷、雙側同時置換風險)", en:"Total Knee Arthroplasty (TKA)" },
+      { t:"腰椎手術:新增 Miller 教科書重點(IONM 麻醉方式、術後視力喪失預防、術後止痛)", en:"Lumbar Spine Surgery (Decompression / Short-segment Fusion)" },
+      { t:"頸椎手術:新增 Miller 教科書重點(頸椎不穩定插管、左側入路、硬腦膜打開時避免過度頭高、脊髓損傷血壓目標)", en:"Cervical Spine Surgery (ACDF / Posterior)" },
+      { t:"經皮內視鏡腰椎間盤切除術:新增 Miller 教科書重點(IONM、俯臥視力保護、止痛)", en:"Percutaneous Endoscopic Lumbar Discectomy (PELD)" },
+      { t:"人工半髖關節置換術:新增 Miller 教科書重點(早期手術、麻醉方式選擇、骨水泥植入症候群危險因子)", en:"Bipolar Hemiarthroplasty (Femoral Neck Fracture)" },
+      { t:"股骨轉子間骨折固定術:新增 Miller 教科書重點(早期手術、神經阻斷、脂肪栓塞症候群)", en:"Intertrochanteric Fracture Fixation (ITC)" },
+      { t:"全髖關節置換術:新增 Miller 教科書重點(側臥氧合、股靜脈扭折與血栓、骨水泥植入症候群、VTE 預防)", en:"Total Hip Replacement (THR)" },
+      { t:"關節鏡手術:新增 Miller 教科書重點(沙灘椅位血壓與腦灌流、Bezold–Jarisch reflex、interscalene block、TNS)", en:"Arthroscopic Surgery (Knee / Shoulder)" },
+      { t:"開放性復位內固定術:新增 Miller 教科書重點(上肢阻斷、止血帶時間、骨盆骨折出血、脂肪栓塞症候群)", en:"Open Reduction and Internal Fixation (ORIF)" },
+      { t:"閉鎖性復位內固定術:新增 Miller 教科書重點(區域阻斷與腔室症候群、脂肪栓塞症候群)", en:"Closed Reduction and Internal Fixation (CRIF)" },
+      { t:"腹腔鏡肝切除術:Pringle 插圖的來源與授權移到文獻出處", en:"Laparoscopic Liver Resection" }
+    ]
+  },
+  {
+    date: "2026-11-22",
+    note: "新增「疼痛路徑」教學區。",
+    items: [
+      "新增「疼痛路徑」專區:疼痛四步驟與傳導纖維、上行與下行路徑(附示意圖)、周邊與中樞敏感化、類鴉片受體訊號、疼痛相關神經傳導物質、多模式止痛藥物作用位置",
+      { t:"腹腔鏡肝切除術:Pringle maneuver 示意圖改用維基百科插圖(註明作者與授權)", en:"Laparoscopic Liver Resection" },
+      { t:"乳房切除術:監測與管路改寫,說明 IV 與血壓計常需放在同一隻手臂時的注意事項與替代方式", en:"Mastectomy" }
+    ]
+  },
+  {
+    date: "2026-11-22",
+    note: "一般外科新增乳房切除術;新增術語點擊補充說明;修正區塊標題下方空白。",
+    items: [
+      { t:"新增手術:乳房切除術(Mastectomy),含前哨淋巴結藍色染劑對血氧與過敏的影響、手臂擺位、PONV 預防與區域阻斷", en:"Mastectomy" },
+      "新功能:內容中有底線的專業術語可點擊,展開補充說明;再點一下補充說明即收起",
+      "版面:各區塊標題下方不再空一大塊,ASA 基本監測與螢光筆按鈕移到標題列右側",
+      { t:"甲狀腺切除術:thyroid storm、Lugol's/SSKI 新增補充說明;監測與管路新增 IONM tube 不可塗 jelly(改用生理食鹽水);術中關鍵事項新增 IONM 時不給肌肉鬆弛劑、可考慮 remifentanil 或加深吸入麻醉;ETT 固定說明改寫", en:"Thyroidectomy" },
+      { t:"腹腔鏡肝切除術:化療相關脂肪肝炎新增補充說明;改寫 SV/SVV 導向輸液與 CUSA 失血低估兩條;新增 Miller 教科書重點(輸液、乳酸判讀)", en:"Laparoscopic Liver Resection" },
+      { t:"腹腔鏡胃切除術(腫瘤):化療心臟毒性新增補充說明(相關化療藥物)", en:"Laparoscopic Gastrectomy (Oncologic)" },
+      { t:"減重手術:藥物劑量改為參考麻醉計算機", en:"Bariatric Surgery (Sleeve / Gastric Bypass)" }
+    ]
+  },
+  {
     date: "2026-10-31",
     note: "危機處理新增六張卡片。",
     items: [
