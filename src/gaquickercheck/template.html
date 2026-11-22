@@ -79,9 +79,9 @@ h1{font-family:"Noto Serif TC",serif;font-weight:600;font-size:26px;letter-spaci
 .chip.study:hover{border-color:var(--slate)}
 .chip.study[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
 /* 外區麻醉 chip:沿用原本的莫蘭迪灰藍色 */
-.chip.nora{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:500}
-.chip.nora:hover{border-color:var(--slate)}
-.chip.nora[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+.chip.nora{background:#E6DFE9;border-color:#CFC3D5;color:#6B5A75;font-weight:500}
+.chip.nora:hover{border-color:#9C8AA5}
+.chip.nora[aria-pressed="true"]{background:#9C8AA5;border-color:#9C8AA5;color:#fff}
 /* 危機處理 chip:莫蘭迪黃,與科別、學習區 chip 區隔 */
 .chip.crisis{background:var(--ochre-tint);border-color:#D6C9A8;color:#6E6047;font-weight:600}
 .chip.tx{background:var(--clay-tint);border-color:#DCC7BF;color:#8a6a60;font-weight:500}
@@ -573,9 +573,11 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 .cri-refs li{font-size:11.5px;line-height:1.65;color:var(--ink-soft);margin-bottom:5px}
 
 /* ---------- 疼痛路徑(獨立教學區,灰紫色系) ---------- */
-.chip.pain{background:#E6DFE9;border-color:#CFC3D5;color:#6B5A75;font-weight:600}
-.chip.pain:hover{border-color:#9C8AA5}
-.chip.pain[aria-pressed="true"]{background:#9C8AA5;border-color:#9C8AA5;color:#fff}
+.chip.pain{background:var(--slate-tint);border-color:#C6CCD4;color:#5C6573;font-weight:600;position:relative}
+.chip.pain:hover{border-color:var(--slate)}
+.chip.pain[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+.chip .chip-snow{position:absolute;top:-11px;left:9px;font-size:20px;line-height:1;color:#6F86A3;pointer-events:none;
+  text-shadow:0 0 2px var(--bg),0 0 3px var(--bg),0 0 4px var(--bg)}
 .pain-group{font-size:12.5px;font-weight:700;color:#7E6B88;letter-spacing:.06em;margin:0 0 8px}
 .pain-item{background:#EEE8F0;border:1px solid #D8CDDD;border-radius:11px;padding:12px 14px;margin-bottom:9px;
   cursor:pointer;transition:all .15s;position:relative}
@@ -833,7 +835,7 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v14.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v14.7";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-11-22";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = /*@@UPDATES@@*/;
@@ -1299,7 +1301,7 @@ function renderChips(){
               : (sp===TX_SPEC) ? "chip tx"
               : (sp===NORA_SPEC) ? "chip nora" : "chip";
     const isN = specHasNew(sp);
-    return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
+    return `<button class="${cls}${isN?" has-new":""}" data-sp="${sp}" aria-pressed="${sp===activeSpec}">${sp===PAIN_CHIP?`<span class="chip-snow" aria-hidden="true">❄</span>`:""}${sp}${isN?`<span class="badge-new chip-new" title="近期新增或更新">NEW</span>`:""}</button>`;
   }).join("");
   el("chips").querySelectorAll(".chip").forEach(c=>{
     c.onclick = () => { activeSpec = c.dataset.sp; EXAM_YEAR = null; CRISIS_OPEN = null; PAIN_OPEN = null; PAIN_TOPIC = null; renderChips(); renderList(); };
@@ -1938,14 +1940,50 @@ const KW = {
 const WIDGETS = {
   "hemo-calc": {
     html: () => `
-      <div class="kw-note">輸入數值即時計算;BSA 用 Mosteller 公式。結果僅供教學練習。</div>
+      <div class="kw-note">輸入數值即時計算;BSA 用 Mosteller 公式。填入 SVV 可判斷給水是否有效。結果僅供教學練習。</div>
       <div class="kw-grid">
         ${KW.inp("h","身高 (cm)",165)}${KW.inp("w","體重 (kg)",65)}${KW.inp("hr","HR (bpm)",80)}
         ${KW.inp("sv","SV (mL)",70)}${KW.inp("map","MAP (mmHg)",75)}${KW.inp("cvp","CVP (mmHg)",6)}
+        ${KW.inp("svv","SVV (%,可空白)","")}
       </div>
-      <div class="kw-out" data-o="out"></div>`,
+      <div class="kw-out" data-o="out"></div>
+      <div data-o="next"></div>`,
+    /* 下一步建議:依 MAP、CI、SVV、SVR、SVI 判斷灌水 / 升壓 / 強心 / 觀察(教學用) */
+    next(v){
+      const { map, ci, svv, svr, svi, hr } = v;
+      if(![map, ci, svr, svi].every(isFinite)) return "";
+      const S = (cls, t, body) => `<div class="kw-step ${cls}"><span class="t">${t}</span>${body}</div>`;
+      const out = [];
+      const okMap = map >= 65, okCi = ci >= 2.5, hasSvv = isFinite(svv), resp = hasSvv && svv > 13;
+      if(okMap && okCi){
+        out.push(S("go", "建議:繼續觀察", `MAP ≥65、CI ≥2.5 → 目前達標,<b>不需要額外處置</b>;持續監測趨勢,並確認組織灌流(ScvO₂ &gt;70%、乳酸下降、尿量)。`));
+        if(resp) out.push(S("", "提醒", `SVV &gt;13% 代表病人仍在 Frank-Starling 曲線陡段;血壓與心輸出達標時不必為了 SVV 給水,但若出血持續或血壓開始下滑,給水會有效。`));
+        if(svr > 1200) out.push(S("", "提醒", `SVR 偏高(血管收縮)→ 想一想是否麻醉過淺、疼痛、低體溫,或代償性的容積不足。`));
+        return out.join("");
+      }
+      /* 未達標 */
+      if(hasSvv && resp){
+        out.push(S("", "建議:給輸液(前負荷不足)", `SVV ${svv.toFixed(0)}% &gt;13% → 對輸液可能有反應:<b>200–250 mL 輸液挑戰</b>(5–10 分鐘內),看 SV 是否上升 &gt;10%;有上升就可重複,不再上升就停止。`));
+        if(svr < 800) out.push(S("", "同時", `SVR 也偏低 → 給水期間血壓仍低可先以升壓劑支持(如 phenylephrine 或 norepinephrine),避免低血壓時間拉長。`));
+      } else if(!hasSvv){
+        out.push(S("warn", "先判斷:給水有沒有用?", `沒有 SVV 時,先做<b>被動抬腿</b>或<b>小量輸液挑戰(200–250 mL)</b>看 SV 變化:SV 上升 &gt;10% → 繼續給水;沒有上升 → 依下列判讀找原因。也可以在上方填入 SVV。`));
+      }
+      const brady = isFinite(hr) && hr < 50;
+      if(brady) out.push(S("warn", "優先:心搏過緩", `HR ${hr} 合併低血壓 → 心輸出低主要因為心跳太慢:<b>atropine 或 ephedrine</b>,並找原因(迷走反射、高位阻斷、藥物、心律不整)。`));
+      if(!resp && !brady){
+        const pre = hasSvv ? "SVV ≤13%(給水沒什麼幫助)," : "<b>若給水後 SV 沒有上升:</b>";
+        if(!okCi){
+          out.push(S("", hasSvv ? "建議:強心(收縮力不足)" : "接著:考慮強心", `${pre}CI ${ci.toFixed(2)} 偏低、SVR ${svr.toFixed(0)} 不低 → <b>心臟打不出去</b>:ephedrine 5–10 mg,不足時 dobutamine 2–20 µg/kg/min;排除心肌缺血、心律不整、麻醉藥抑制。`));
+        } else if(!okMap){
+          out.push(S("", hasSvv ? "建議:升壓(血管張力不足)" : "接著:考慮升壓", `${pre}CI ${ci.toFixed(2)} 還可以但 MAP 低(SVR ${svr.toFixed(0)})→ <b>血管擴張</b>:ephedrine 5–10 mg 或 phenylephrine;持續低血壓用 norepinephrine 2–12 µg/min 或 10 µg bolus;同時減淺麻醉、排除過敏或敗血。`));
+        }
+        if(svi > 47 && hasSvv) out.push(S("warn", "注意", `SVI 偏高且對輸液沒有反應 → 不要再給水;若有容積過多表現(肺水腫、氧合變差),與主治醫師討論利尿。`));
+      }
+      out.push(S("", "每次處置後", `重新評估 MAP、CI、SVV;同時想一想<b>根本原因</b>:出血、麻醉過深、體位、氣腹或手術壓迫大血管。`));
+      return out.join("");
+    },
     calc(r){
-      const h=KW.num(r,"h"), w=KW.num(r,"w"), hr=KW.num(r,"hr"), sv=KW.num(r,"sv"), map=KW.num(r,"map"), cvp=KW.num(r,"cvp");
+      const h=KW.num(r,"h"), w=KW.num(r,"w"), hr=KW.num(r,"hr"), sv=KW.num(r,"sv"), map=KW.num(r,"map"), cvp=KW.num(r,"cvp"), svv=KW.num(r,"svv");
       const bsa=Math.sqrt(h*w/3600), co=hr*sv/1000, ci=co/bsa, svi=sv/bsa, svr=(map-cvp)*80/co, svri=(map-cvp)*80/ci;
       r.querySelector('[data-o="out"]').innerHTML =
         KW.row("BSA", KW.f(bsa,2), "m²", "") +
@@ -1954,7 +1992,10 @@ const WIDGETS = {
         KW.lrow("SVI", svi, 0, "mL/m²", 33, 47, "正常 33–47") +
         KW.lrow("SVR", svr, 0, "dyn·s/cm⁵", 800, 1200, "正常 800–1200") +
         KW.lrow("SVRI", svri, 0, "", 1970, 2390, "正常 1970–2390") +
+        (isFinite(svv) ? KW.lrow("SVV", svv, 0, "%", 0, 13, "&lt;13%") : "") +
         KW.legend();
+      const nx = WIDGETS["hemo-calc"].next({ map, ci, svv, svr, svi, hr });
+      r.querySelector('[data-o="next"]').innerHTML = nx ? `<div class="kw-out"><div class="kw-note" style="margin-bottom:2px"><b>下一步怎麼做?</b>(教學判讀,實際處置依病人狀況與主治醫師指示)</div>${nx}</div>` : "";
     }
   },
   "svv-calc": {
@@ -2288,7 +2329,7 @@ function flagBoxHtml(s){
   const own = (s.flags && s.flags.length) ? s.flags : [];
   if(!own.length && !litHas(s,"flags")) return "";
   const hasLit = (s.lit||[]).length > 0;
-  const ownHtml = own.length ? `${hasLit ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${own.map(x=>`<li>${x}</li>`).join("")}</ul>` : "";
+  const ownHtml = own.length ? `<ul>${own.map(x=>`<li>${x}</li>`).join("")}</ul>` : "";
   const body = (own.length && hasSourceToggle(s) ? `<div class="src-piece" data-src="note">${ownHtml}</div>` : ownHtml)
     + litBlocks(s,"flags");
   if(s.collapse) return `
@@ -2327,6 +2368,11 @@ function penBoxes(){
     if(!heads.length){
       out.push({ id:key + "|note", box:sec, head:null });
       return;
+    }
+    const noteUl = sec.querySelector('.src-piece[data-src="note"] ul') || sec.querySelector(':scope > ul');
+    if(noteUl){
+      const nb = noteUl.closest('.src-piece') || sec;
+      if(nb !== sec) out.push({ id:key + "|note", box:nb, head:null });
     }
     heads.forEach(h => {
       const box = h.parentElement;
@@ -2602,7 +2648,9 @@ function initPen(s){
       const row = document.createElement("div");
       row.className = "pen-row";
       row.innerHTML = btn;
-      const title = b.box.querySelector(":scope > summary, :scope > h3");
+      const own = b.box.querySelector(":scope > summary, :scope > h3");
+      const sec = b.box.closest("[data-sec]");
+      const title = own || (sec && sec.querySelector(":scope > summary, :scope > h3"));
       title ? title.insertAdjacentHTML("beforeend", btn) : b.box.prepend(row);
     }
   });
@@ -2626,12 +2674,13 @@ function showDetail(id, vi){
     const isMon = d.key==="monitor";
     const btn = isMon ? `<button class="asa-btn" type="button" aria-expanded="false" onclick="return toggleAsa(event)">ⓘ ASA 基本監測</button>` : "";
     const panel = isMon ? `<div class="asa-panel" id="asaPanel" hidden>${ASA_INFO}</div>` : "";
-    const dia = (s.diagram && s.diagram.section===d.key)
+    const diaFig = (s.diagram && s.diagram.section===d.key)
       ? `<figure class="d-figure">${s.diagram.svg || (s.diagram.img ? `<img class="d-img" src="${s.diagram.img}" alt="${s.diagram.alt||""}" loading="lazy">` : "")}${s.diagram.caption?`<figcaption>${s.diagram.caption}</figcaption>`:""}</figure>` : "";
+    const dia = (diaFig && hasSourceToggle(s)) ? `<div class="src-piece" data-src="note">${diaFig}</div>` : diaFig;
     const own = (s[d.key] && s[d.key].length)
       ? (hasSourceToggle(s)
-          ? `<div class="src-piece" data-src="note">${lits.length ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${li(s[d.key])}</ul></div>`
-          : `${lits.length ? `<div class="src-h note">本院筆記</div>` : ""}<ul>${li(s[d.key])}</ul>`)
+          ? `<div class="src-piece" data-src="note"><ul>${li(s[d.key])}</ul></div>`
+          : `<ul>${li(s[d.key])}</ul>`)
       : "";
     const body = `${own}${dia}${litBlocks(s,d.key)}${panel}`;
     if(fold) return `

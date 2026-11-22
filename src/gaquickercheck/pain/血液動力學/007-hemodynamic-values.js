@@ -7,7 +7,7 @@
     en: "Hemodynamic Parameters & Calculator",
     key: "先記住正常範圍與公式,再看監視器上的數字",
     sections: [
-      { h: "互動計算:CO、CI、SVI、SVR(紅黃綠燈判讀)", widget: "hemo-calc" },
+      { h: "互動計算:CO、CI、SVI、SVR(紅黃綠燈判讀與下一步建議)", widget: "hemo-calc" },
       {
         h: "血液動力學參數",
         table: {

@@ -85,6 +85,73 @@
           "乳酸 >2 mEq/L 具臨床意義;合併代謝性酸中毒且 ≥5 mEq/L 屬嚴重",
           "給水後乳酸先因稀釋快速下降,之後受肝臟清除速率限制,每小時約降 10–20%;<b>給水後乳酸不降 → 不應再持續給水</b>"
         ]
+      },
+      {
+        tag:"UpToDate", cls:"uptodate", label:"UpToDate 臨床主題重點", note:"Minimally invasive liver resection;Anesthesia for the patient with liver disease",
+        preop:[
+          "<b>適合 MILR</b>:單一、≤5 cm、位於周邊 II–VI 節;>5 cm、後上段(VII / VIII)、多發或雙葉較困難;靠近肝門、大血管或 IVC 為相對禁忌",
+          "<b class='w'>心肺疾病無法耐受氣腹者不宜 MILR</b>",
+          "轉開腹率 0–20%;危險因子:年齡 >75、糖尿病、BMI >28、腫瘤 >10 cm、需膽道重建 → 以可能開腹做準備",
+          "肝硬化風險分級:Child-Pugh、MELD(10–15 風險增加,>15 不宜擇期手術)、MELD-Na、VOCAL-Penn;急性肝衰竭與急性病毒性或酒精性肝炎為擇期手術禁忌",
+          "<b>凝血</b>:疑似缺乏先補維生素 K;不以 INR 決定給 FFP(INR 不能代表肝病的凝血狀態,FFP 會升高門脈壓反而加重出血);血小板維持 ≥50,000、fibrinogen 150–200 mg/dL;以 TEG / ROTEM 引導"
+        ],
+        monitor:[
+          "備血 crossmatch 2–4 U;兩條 16–18G 大口徑管路;多數病人放動脈導管",
+          "不單為了量 CVP 放中央靜脈導管(許多中心已放棄 CVP 監測);需要時為給藥或管路而放",
+          "TEE 在食道靜脈曲張者個別化考量,但嚴重食道出血併發症罕見(肝移植資料 <0.86%)",
+          "術中細胞回收可用於高出血風險者,惡性腫瘤仍有爭議"
+        ],
+        hemo:[
+          "目標 <b>euvolemia 或輕度低容積</b>,避免容積過多;低 CVP(<5 cmH₂O)統合分析(18 篇 RCT)減少失血與輸血",
+          "腹腔鏡肝切除 RCT(146 人):麻醉手段把 CVP 降到 <5 cmH₂O,失血 188 vs 346 mL,圍術期不良事件未增加",
+          "<b class='w'>不要用頭高位來降 CVP</b>:肝靜脈壓不會因此下降,且低 CVP 時會增加空氣栓塞風險",
+          "<b>低容積放血(hypovolemic phlebotomy)</b>:切除前放血、切除後回輸;2025 多中心 RCT(446 位大範圍肝切除)輸血率 16% → 8%,併發症未增加(排除術前貧血與器官缺血高風險者)",
+          "<b>TXA</b>:小型 RCT 減少失血,但 2024 多中心 RCT(1245 人)失血無差異且併發症較多 → 肝切除不常規使用",
+          "Pringle 多為間歇夾 15–20 分鐘;TVE 用於肝靜脈或 IVC 受侵犯;兩者都會減少回心血量與心輸出",
+          "肝病常為<b>高動力循環</b>(低 SVR、高 CO)且對升壓劑反應差 → 可能需要較高劑量,或改用 norepinephrine / vasopressin",
+          "有腹水或低白蛋白者,擴容用 albumin 優於晶體液"
+        ],
+        drug:[
+          "誘導劑清除與一般人相近,但藥效較敏感;propofol 長時間輸注後清醒可能延遲",
+          "Benzodiazepine 半衰期延長 → 減量並滴定;dexmedetomidine 清除下降",
+          "Fentanyl 單次給藥影響小,重複或輸注會延長;morphine 清除延遲 35–60%,嚴重肝病劑量與頻率減半;hydromorphone 減量;<b class='w'>避免 meperidine</b>(代謝物有神經毒性);remifentanil 不受影響",
+          "Rocuronium / vecuronium 作用時間延長,但因分佈體積增加,起始劑量可能需較高;cisatracurium 不受肝功能影響;以肌鬆監測引導",
+          "Sugammadex 由腎臟排除,合併末期腎病時理論上擔心再箭毒化,但回溯研究未見發生",
+          "Acetaminophen 每日 2 g 一般安全(短期使用:低風險者可至 4 g、高風險者 2–3 g);NSAID 因腎毒性與出血風險較不建議用於肝病病人"
+        ],
+        postop:[
+          "肝切除後即使術前凝血正常也可能發生凝血異常:程度與切除範圍相關,術後第 1–2 天最嚴重,可持續 5 天以上 → epidural 導管在凝血異常時不可拔除",
+          "該作者在殘肝 ≥60–70% 時才提供 epidural;替代方案:intrathecal opioid、神經或筋膜平面阻斷",
+          "MILR 死亡率 0–3.7%(死因含肝衰竭、低血壓相關腦梗塞、肝腎衰竭、大出血);併發症 0–43%",
+          "與開腹相比:失血、輸血、住院天數、併發症與膽漏較少;ORANGE II PLUS(332 位半肝切除):功能恢復較快(4 vs 5 天)、較早接受輔助治療"
+        ]
+      },
+      {
+        tag:"其他文獻", cls:"otherlit", label:"其他文獻重點", note:"BJA Education 綜論(2022)",
+        preop:[
+          "肝切除死亡率已由 1970 年代約 20% 降到 2–3%,但術後併發症仍高(50–60%)",
+          "<b>殘肝(FLR)最低安全量</b>:正常肝 20%;嚴重脂肪肝炎或肝毒性化療後 30–40%;肝硬化至少 50%",
+          "ICG 15 分鐘滯留 >15% 代表清除不良(高膽紅素時不可靠)",
+          "Child-Pugh C 為絕對禁忌、A 為良好候選;MELD 10–15 風險增加",
+          "糖尿病病人肝切除死亡率較高 → 控制血糖與體重",
+          "新輔助化療結束後 4–6 週再手術",
+          "增大殘肝的方法:門靜脈栓塞(PVE)、ALPPS(增生快但併發症多)、肝靜脈剝奪(LVD)"
+        ],
+        hemo:[
+          "麻醉原則:審慎給水與使用血管活性藥,<b>減少肝靜脈出血、同時維持器官灌流</b>",
+          "降 CVP 的方法:furosemide、GTN 輸注、remifentanil、避免 PEEP、切除完成前限制輸液(文中另列體位調整)",
+          "低 CVP 統合分析:失血與輸血減少,但臨床預後未改善;回溯 135 例顯示 CVP 監測不影響失血;腹腔鏡下 CVP 受氣腹影響,不適合當目標",
+          "<b>CUSA 失血易被忽略</b>:吸引在切除點、收在獨立收集罐,常被 drape 遮住",
+          "Pringle:連續阻斷正常肝 >1 小時、病理肝 >30 分鐘易致缺血再灌流傷害 → 間歇 10–20 分鐘 + 再灌流 5 分鐘",
+          "MILR:評估病人能否耐受長時間 CO₂ 氣腹(尤其合併心肺疾病)"
+        ],
+        postop:[
+          "<b>止痛</b>:ERAS 不再建議開腹肝切除常規 TEA;intrathecal morphine 比 TEA 減少輸液與住院天數;傷口持續浸潤導管(腹膜前優於皮下);TAP / ESP 證據增加中",
+          "Paracetamol 除極大範圍切除外多屬安全;NSAID 無禁忌時可用",
+          "<b>ERAS 2016 重點</b>:術前碳水負荷、不需腸道準備、避免長效抗焦慮藥、術前 2–12 小時開始 LMWH 加 IPC、兩種止吐藥、平衡晶體液、切除期 CVP <5 cmH₂O,完成後回補到 euvolemia",
+          "小範圍或腹腔鏡切除可直接回一般病房;術後早期常仍對輸液有反應 → 短期 goal-directed,容積足即停點滴",
+          "<b>術後併發症</b>:傷口感染約 30%、膽漏 4–17%、PHLF(術後第 5 天後 INR 與膽紅素上升,專責中心 <3%)、術後出血 8–12%(Hb 下降 >30 g/L、需輸血或再介入)"
+        ]
       }
     ],
     refs:[
@@ -95,7 +162,8 @@
       "Edwards, M. R., & Grocott, M. P. W. (2025). Perioperative fluid and electrolyte therapy. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 1331–1373.e6). Elsevier.",
       "Neligan, P. J. (2025). Perioperative acid–base balance. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 1374–1397.e3). Elsevier.",
       "Remesz, O. (2013). <i>Pringle manoeuvre EN.svg</i> [Illustration]. Wikimedia Commons. https://commons.wikimedia.org/wiki/File:Pringle_manoeuvre_EN.svg (CC BY-SA 3.0, https://creativecommons.org/licenses/by-sa/3.0/; 經改作)",
-      "Pawlik, T. M., Schmidt, C. R., & Lewis, H. L. (2026). Minimally invasive liver resection (MILR). In UpToDate. Wolters Kluwer. (Topic last updated June 06, 2024)."
+      "Pawlik, T. M., Schmidt, C. R., & Lewis, H. L. (2026). Minimally invasive liver resection (MILR). In UpToDate. Wolters Kluwer. (Topic last updated November 10, 2026).",
+      "Steadman, R. H., & Xia, V. W. (2026). Anesthesia for the patient with liver disease. In UpToDate. Wolters Kluwer. (Topic last updated August 06, 2026)."
     ],
     diagram:{ section:"hemo", img:"@@IMG:pringle-maneuver-wikipedia.jpg:jpeg@@", alt:"Pringle maneuver:血管鉗夾住肝十二指腸韌帶", caption:"Pringle maneuver:以血管鉗夾住肝十二指腸韌帶(內含肝動脈、門靜脈、總膽管),阻斷入肝血流;肝靜脈 → IVC 的回流不受阻斷,故離斷期肝靜脈回血仍是主要出血源。(圖片來源見文獻出處)" },
     collapse:true
