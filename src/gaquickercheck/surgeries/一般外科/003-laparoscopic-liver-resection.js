@@ -4,11 +4,11 @@
     specialty:"一般外科",
     name:"腹腔鏡肝切除術",
     en:"Laparoscopic Liver Resection",
-    summary:{ position:"Supine · reverse Trendelenburg (± French/split-leg)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中～多(離斷期可能大量)", airway:"GA / ETT" },
+    summary:{ position:"Supine · reverse Trendelenburg (± French/split-leg)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中～多(離斷期可能大量)", airway:"ETGA" },
     preop:[
       "評估肝功能與肝儲備(Child-Pugh、MELD、ICG 清除率)、門脈高壓、食道靜脈曲張、凝血與血小板",
       "肝病(肝硬化、化療後肝、脂肪肝)影響藥物代謝與出血風險",
-      "新輔助化療 → <span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>化療相關脂肪肝炎</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'><b>化療相關肝損傷(CALI)</b>常見於大腸直腸癌肝轉移接受新輔助化療者,依藥物分兩型:<b>Irinotecan → 脂肪肝炎(CASH)</b>,肥胖者更明顯,與術後肝衰竭、死亡率上升相關;<b>Oxaliplatin → 肝竇阻塞症候群(SOS,外觀呈『藍肝』)</b>,肝實質易出血、離斷時失血與輸血增加。<b>5-FU</b> 可致脂肪肝。<b>Bevacizumab</b> 影響傷口癒合與出血,一般停藥 ≥6 週再手術。化療<b>療程越多、與手術間隔越短</b>,肝損傷越明顯 → 術前肝儲備評估更重要。</span>(↑周術期併發症)及心毒性(心律不整、心肌病、心衰、MI);建議化療結束後 4–6 週再手術",
+      "新輔助化療 → 化療相關脂肪肝炎(↑周術期併發症)及心毒性(心律不整、心肌病、心衰、MI);建議化療結束後 4–6 週再手術<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>化療相關肝損傷(CALI)</b>常見於大腸直腸癌肝轉移接受新輔助化療者,依藥物分兩型:<b>Irinotecan → 脂肪肝炎(CASH)</b>,肥胖者更明顯,與術後肝衰竭、死亡率上升相關;<b>Oxaliplatin → 肝竇阻塞症候群(SOS,外觀呈『藍肝』)</b>,肝實質易出血、離斷時失血與輸血增加。<b>5-FU</b> 可致脂肪肝。<b>Bevacizumab</b> 影響傷口癒合與出血,一般停藥 ≥6 週再手術。化療<b>療程越多、與手術間隔越短</b>,肝損傷越明顯 → 術前肝儲備評估更重要。</span>",
       "<b>備血</b>:預期可能大出血 → 確認血品可近性與大量輸血流程",
       "評估心肺功能(肺功能檢查及 cardiac echo 報告):<b class='w'>低 CVP 策略對前負荷依賴者(如主動脈瓣狹窄)風險高</b>"
     ],

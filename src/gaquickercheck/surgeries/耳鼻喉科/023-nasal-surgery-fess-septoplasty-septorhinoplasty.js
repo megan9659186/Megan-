@@ -3,7 +3,7 @@
     specialty:"耳鼻喉科",
     name:"鼻部手術(鼻竇/鼻中膈/鼻整形)",
     en:"Nasal Surgery (FESS / Septoplasty / Septorhinoplasty)",
-    summary:{ position:"Supine · reverse Trendelenburg 10–20° (head-up)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / oral RAE 氣管內管・共用氣道" },
+    summary:{ position:"Supine · reverse Trendelenburg 10–20° (head-up)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少–中", airway:"ETGA / oral RAE・共用氣道" },
     preop:[
       "常見<b>慢性鼻竇炎(chronic rhinosinusitis)</b>合併<b class='w'>下呼吸道發炎</b>:高達三分之二病人併氣喘/COPD/支氣管擴張 → 評估並優化氣道反應性<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>上下呼吸道為連續一體(『同一氣道』概念),鼻竇黏膜慢性發炎常伴支氣管高反應性。術前若氣喘控制不佳,誘導與拔管期較易支氣管痙攣;宜延續吸入型類固醇/支氣管擴張劑,並評估近期發作與用藥。</span>",
       "<b class='w'>阿斯匹靈加重呼吸道疾病(AERD;鼻息肉 + 氣喘 + NSAID 敏感)</b> → 避免非類固醇消炎止痛藥(NSAID)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>氣喘病人約一至二成在服用 NSAID 後出現呼吸道症狀,合併鼻息肉的慢性鼻竇炎者比例更高。術前用藥史問診應主動詢問止痛藥反應,並在麻醉計畫中改以 paracetamol 與其他非 NSAID 途徑止痛。</span>",

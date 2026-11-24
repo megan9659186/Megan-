@@ -3,7 +3,7 @@
     specialty:"胸腔外科",
     name:"達文西機器人胸腔手術",
     en:"Robotic-Assisted Thoracic Surgery (RATS / da Vinci)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"ETGA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
     preop:[
       "病人選擇同肺葉切除:肺功能(PFT、DLCO)、運動耐受度、預測術後肺功能;戒菸、心臟評估",
       "相較傳統 VATS,機器人器械自由度高、傷口小;但常需 CO₂ 灌注建立<b>capnothorax</b>(人工二氧化碳氣胸)、手術與 docking(機器對接)時間較長 → 對<b class='w'>心肺儲備差</b>者仍須審慎評估",

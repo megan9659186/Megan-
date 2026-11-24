@@ -53,6 +53,7 @@ tools/validate.mjs         驗證
 - 術式英文名在上、中文在下(清單卡與詳情頁皆是)。
 - 警示語 `<b class='w'>…</b>` → 紅字粗體。**class 一律單引號**(資料字串是雙引號)。一般重點用純 `<b>…</b>`。
 - `flags`(重要併發症)整區已是紅字粗體，裡面不必再加 `<b>`。
+- 麻醉方式(`summary.airway`)：會插氣管內管者寫 **ETGA**(如 `ETGA`、`ETGA/Oral RAE`、`ETGA/IONM`、`LMA 或 ETGA`)，不寫「GA / ETT」。
 - 體位：`position` 放英文標註(無中文)；`posType`：`supine` / `revtrend`(頭高)/ `trend`(頭低)/ `prone` / `lateral`。
 - 標點沿用現有樣式：半形括號 ()、頓號、→ 因果、; : 等。
 - 術中神經監測一律寫 **IONM**(不是 NIM、IOMN)。
@@ -69,16 +70,9 @@ tools/validate.mjs         驗證
 
 class 與屬性值一律單引號；面板內文字不可有雙引號(要引號用『』)；說明精簡、教學導向。
 
-## 術語補充(底線，點術語展開)
+## 補充說明一律用 ⓘ 說明
 
-內容裡出現需要額外補充說明的專業術語 → 在該術語加底線，點術語展開補充資訊，再點補充資訊即收起。寫法：
-
-```
-<span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>術語</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>補充文字，重點用 <b>…</b></span>
-```
-
-- 術語 span 後面**緊接** term-panel(中間不可有其他字)；class 與屬性值一律單引號；面板內不可有雙引號(要引號用『』)。
-- 用於「某個詞需要解釋」(定義、機轉、藥物清單)；整條 bullet 的延伸說明仍用 ⓘ 說明。
+不再使用底線術語(點術語展開)的寫法,避免與 ⓘ 說明混淆;需要解釋某個術語時,也用 ⓘ 說明,放在該 bullet 尾端,面板開頭用 <b>術語</b>: 標出解釋的是哪個詞。
 
 ## 示意圖(diagram)
 

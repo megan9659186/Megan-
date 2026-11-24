@@ -4,7 +4,7 @@
     specialty:"骨科",
     name:"腰椎手術(減壓／短節融合)",
     en:"Lumbar Spine Surgery (Decompression / Short-segment Fusion)",
-    summary:{ position:"Prone (Wilson frame / bolsters)", posType:"prone", time:"參考捷格手術排程時間", blood:"中(融合較多)", airway:"GA / ETT(Non-kinking ETT)" },
+    summary:{ position:"Prone (Wilson frame / bolsters)", posType:"prone", time:"參考捷格手術排程時間", blood:"中(融合較多)", airway:"ETGA(Non-kinking ETT)" },
     preop:[
       "紀錄神經功能基準值(肌力、感覺)→ 供術後比對",
       "共病與出血風險:抗凝／抗血小板藥物、狹窄程度、肥胖、OSA(阻塞性睡眠呼吸中止)",

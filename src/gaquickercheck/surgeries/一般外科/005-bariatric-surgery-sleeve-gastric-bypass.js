@@ -4,7 +4,7 @@
     specialty:"一般外科",
     name:"減重手術(袖狀胃/繞道)",
     en:"Bariatric Surgery (Sleeve / Gastric Bypass)",
-    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少", airway:"GA / ETT(困難氣道準備)" },
+    summary:{ position:"Supine · reverse Trendelenburg, split-leg", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少", airway:"ETGA(困難氣道準備)" },
     preop:[
       "常見 OSA/OHS(以 STOP-Bang 篩檢)、困難氣道、GERD、糖尿病、脂肪肝、肺高壓/右心負荷",
       "<b class='w'>預期困難插管與快速去飽和</b> → 完善氣道計畫、備困難氣道器材與影像喉鏡",

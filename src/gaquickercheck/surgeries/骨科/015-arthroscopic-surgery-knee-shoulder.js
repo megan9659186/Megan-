@@ -3,7 +3,7 @@
     name:"關節鏡手術(膝／肩)",
     en:"Arthroscopic Surgery (Knee / Shoulder)",
     updated:"2026-08-10",
-    summary:{ position:"Supine with leg holder (knee) · Beach chair or lateral (shoulder)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA(LMA 或 ETT)+ 區域阻斷;膝亦可半身麻醉" },
+    summary:{ position:"Supine with leg holder (knee) · Beach chair or lateral (shoulder)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"LMA 或 ETGA + 區域阻斷;膝亦可半身麻醉" },
     preop:[
       "多為健康年輕族群的日間手術(半月板、十字韌帶) → 目標是<b>快速甦醒、良好止痛、順利當日出院</b>;但肩袖修補與肩關節不穩定手術的病人年齡層較高",
       "<b class='w'>肩關節鏡若採沙灘椅位(beach chair),術前要問腦血管疾病、頸椎病變、姿勢性低血壓與高血壓控制情形</b>",

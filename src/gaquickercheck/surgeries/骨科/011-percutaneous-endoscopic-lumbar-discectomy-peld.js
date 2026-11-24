@@ -4,7 +4,7 @@
     specialty:"骨科",
     name:"經皮內視鏡腰椎椎間盤切除術",
     en:"Percutaneous Endoscopic Lumbar Discectomy (PELD)",
-    summary:{ position:"Prone", posType:"prone", time:"參考捷格手術排程時間", blood:"少", airway:"GA / ETT(Non-kinking)" },
+    summary:{ position:"Prone", posType:"prone", time:"參考捷格手術排程時間", blood:"少", airway:"ETGA(Non-kinking)" },
     preop:[
       "紀錄神經功能基準值(肌力、感覺)→ 供術後比對",
       "共病與出血風險:抗凝／抗血小板藥物、狹窄程度、肥胖、OSA(阻塞性睡眠呼吸中止)",

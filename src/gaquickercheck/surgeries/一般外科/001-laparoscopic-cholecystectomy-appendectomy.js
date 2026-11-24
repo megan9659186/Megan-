@@ -3,7 +3,7 @@
     specialty:"一般外科",
     name:"腹腔鏡膽囊/闌尾切除術",
     en:"Laparoscopic Cholecystectomy / Appendectomy",
-    summary:{ position:"Supine · LC rev Trendelenburg / Appy Trendelenburg + left tilt", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少", airway:"GA / ETT" },
+    summary:{ position:"Supine · LC rev Trendelenburg / Appy Trendelenburg + left tilt", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少", airway:"ETGA" },
     preop:[
       "一般評估;注意膽道疾病、黃疸、可能中轉開腹",
       "評估是否合併急性膽囊炎(飽胃→可能需要 RSI、感染狀態)",

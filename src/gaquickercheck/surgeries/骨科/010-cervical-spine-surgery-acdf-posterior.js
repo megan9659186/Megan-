@@ -4,7 +4,7 @@
     specialty:"骨科",
     name:"頸椎手術(前位 ACDF／後位)",
     en:"Cervical Spine Surgery (ACDF / Posterior)",
-    summary:{ position:"Supine · neck slightly extended (ACDF) / Prone (posterior)", posType:"supine", time:"參考捷格手術排程時間", blood:"少～中", airway:"GA / ETT(Non-kinking ETT・困難氣道準備)" },
+    summary:{ position:"Supine · neck slightly extended (ACDF) / Prone (posterior)", posType:"supine", time:"參考捷格手術排程時間", blood:"少～中", airway:"ETGA(Non-kinking ETT・困難氣道準備)" },
     preop:[
       "<b class='w'>頸椎不穩定／脊髓壓迫 → 插管時頸部活動須最小化</b>,評估是否需 Awake 插管(Fiber 或其他影像式插管工具備用,<b class='w'>call help</b>)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>頸椎不穩定或嚴重脊髓壓迫時,插管過程的頸部後仰或過度活動可能使脊髓進一步受損。此時常選擇<b>清醒纖維支氣管鏡插管</b>(病人保留自主呼吸與肌張力,插管後可即時確認神經功能),或在維持頸部中立(手動軸線固定,manual in-line stabilisation)下使用影像式喉鏡,盡量減少頸椎位移。</span>",
       "神經功能基準值(含脊髓病變 myelopathy 徵象)、活動範圍與症狀誘發姿勢",

@@ -594,6 +594,19 @@ body.pen-erasing #detail mark.umk{cursor:pointer;outline:1px dashed rgba(120,90,
 .pain-item.active{border-color:#9C8AA5;background:#E3D9E7;box-shadow:0 0 0 2px rgba(156,138,165,.25)}
 #detail .pain-card{margin-top:4px}
 #detail .pain-card .d-figure svg{max-width:640px}
+.pain-card .d-figure{position:relative}
+#detail .pain-card .d-figure svg.pain-map,.pain-card .d-figure svg.pain-map{max-width:860px}
+.pain-map .tip-hot{cursor:pointer;outline:none}
+.pain-map .tip-hot:hover,.pain-map .tip-hot:focus{fill:rgba(46,107,58,.12)}
+.d-legend{list-style:none;margin:12px auto 0;padding:10px 0 0;max-width:860px;border-top:1px solid var(--line);display:grid;gap:9px}
+.d-legend li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.6}
+.d-legend .dl-k{flex:none;width:26px;height:26px;border-radius:50%;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.d-legend b{display:block;color:var(--ink)}
+.d-legend span:not(.dl-k){color:var(--ink-soft)}
+.pain-tip{position:absolute;z-index:6;width:min(330px,calc(100% - 16px));background:#FFFDF8;border:1px solid #CFC5B4;border-radius:11px;box-shadow:0 8px 24px rgba(66,62,57,.18);padding:11px 38px 12px 13px;font-size:14.5px;line-height:1.65;color:var(--ink);text-align:left}
+.pain-tip .tip-t{font-weight:700;color:#2E6B3A;margin-bottom:3px}
+.pain-tip .tip-x{position:absolute;top:5px;right:6px;width:30px;height:30px;border:0;border-radius:50%;background:transparent;color:var(--ink-soft);font-size:20px;line-height:30px;cursor:pointer}
+.pain-tip .tip-x:hover{background:#EFE9DF}
 /* 互動小工具(麻醉冷知識) */
 .kw{margin:4px 0 12px}   /* 不再加外框:卡片本身已有框,避免框中框擠壓內容 */
 .kw-note{font-size:14.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
@@ -849,8 +862,8 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v15.0";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
-const APP_UPDATED = "2026-11-22";    /* 本版更新日期,顯示在首頁標題下 */
+const APP_VERSION = "v15.5";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_UPDATED = "2026-11-24";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = /*@@UPDATES@@*/;
 
@@ -1817,6 +1830,7 @@ function wireCrisis(){
    疼痛路徑:獨立教學區(資料在 src/gaquickercheck/pain/)
    每張卡 = { group, id, name, en, key, updated, sections:[{ h, items:[...], table:{ head:[...], rows:[[...]] } }],
               diagram:{ svg, caption }(選填,放在第一段之後), refs:[...] }
+              各段也可有 sections[i].diagram(放在該段內容之後)
    items 以 "## " 開頭 → 分段小標題
    ============================================================ */
 let PAIN_OPEN = null;
@@ -1849,8 +1863,9 @@ function painCardHtml(c){
             ${t.rows.map(r => `<tr>${r.map((d,i) => `<td>${i===0 ? `<b>${d}</b>` : d}</td>`).join("")}</tr>`).join("")}
           </table>
         </div>`;
-  const dia = c.diagram
-    ? `<figure class="d-figure">${c.diagram.svg || (c.diagram.img ? `<img class="d-img" src="${c.diagram.img}" alt="${c.diagram.alt||""}" loading="lazy">` : "")}${c.diagram.caption ? `<figcaption>${c.diagram.caption}</figcaption>` : ""}</figure>` : "";
+  const fig = d => !d ? ""
+    : `<figure class="d-figure">${d.svg || (d.img ? `<img class="d-img" src="${d.img}" alt="${d.alt||""}" loading="lazy">` : "")}${d.legend ? `<ul class="d-legend">${d.legend.map(l => `<li><span class="dl-k" style="background:${l.c}">${l.k}</span><div><b>${l.t}</b><span>${l.d}</span></div></li>`).join("")}</ul>` : ""}${d.caption ? `<figcaption>${d.caption}</figcaption>` : ""}</figure>`;
+  const dia = fig(c.diagram);
   return `
     <div class="tool-box cri-card pain-card">
       <div class="cri-h">
@@ -1864,6 +1879,7 @@ function painCardHtml(c){
         ${sec.widget ? `<div class="kw" data-widget="${sec.widget}"></div>` : ""}
         ${(sec.items && sec.items.length) ? `<ul class="cri-ul">${li(sec.items)}</ul>` : ""}
         ${tbl(sec.table)}
+        ${fig(sec.diagram)}
       </div>${i === 0 ? dia : ""}`).join("")}
       ${(c.refs && c.refs.length) ? `
       <div class="cri-refs">
@@ -2238,6 +2254,34 @@ function termKey(ev, t){
 }
 
 /* 通用「點擊展開說明」:切換按鈕緊鄰的 .info-panel(平時收縮) */
+/* 疼痛路徑圖:點圖上的英文字 → 說明小視窗(有 × 關閉) */
+const PAIN_TIPS = {
+  brain:{ t:"Brain 大腦", d:"疼痛訊號最後到達<b>視丘</b>,再送到<b>體感皮質</b>(判斷位置與強度)以及<b>扣帶迴、腦島、杏仁核</b>(不愉快感與情緒)。中腦的 <b>PAG</b> 與延腦的 <b>RVM</b> 是下行調控的起點。" },
+  stimulus:{ t:"Stimulus 刺激", d:"足以造成組織傷害的<b>機械、熱、化學</b>刺激;手術切割與發炎物質(bradykinin、PGE2、H⁺ 等)都屬於這一類。" },
+  transduction:{ t:"① Transduction 轉導", d:"周邊痛覺受器(<b>Aδ、C 纖維</b>的游離神經末梢)把刺激轉成電訊號:TRPV1 等通道打開 → 去極化 → 產生動作電位。<br><b>作用在這裡:</b>NSAID / COX-2 抑制劑、傷口局部浸潤。" },
+  transmission1:{ t:"② Transmission 傳遞(周邊 → 脊髓)", d:"動作電位沿 <b>Aδ 纖維</b>(快、尖銳、定位清楚)與 <b>C 纖維</b>(慢、鈍、燒灼)經背根神經節進入<b>脊髓背角</b>,釋放 glutamate、substance P。<br><b>作用在這裡:</b>局部麻醉藥(神經阻斷、plane block)阻斷 Na⁺ 通道。" },
+  transmission2:{ t:"② Transmission 傳遞(脊髓 → 大腦)", d:"背角第二級神經元多數<b>交叉到對側</b>,沿 <b>spinothalamic tract</b> 上行到視丘,再由第三級神經元送到大腦皮質。<br><b>作用在這裡:</b>脊髓背角是 opioid、ketamine、α2 agonist、gabapentinoid 的重要作用點。" },
+  perception:{ t:"③ Perception 知覺", d:"大腦把訊號整合成『痛』的感受:體感皮質判斷位置與強度,邊緣系統產生不愉快與情緒。<br><b>作用在這裡:</b>全身麻醉(抑制知覺,但脊髓仍持續接收傷害訊號)、paracetamol(中樞)、dexmedetomidine。" },
+  modulation:{ t:"④ Modulation 調控", d:"<b>PAG → RVM、藍斑核</b>的下行路徑回到背角,釋放<b>內生性鴉片、5-HT、NE</b>,把往上傳的痛訊號『關小聲』;下行路徑也可能反過來放大疼痛。<br><b>作用在這裡:</b>opioid、tramadol、tapentadol、SNRI(duloxetine)。" }
+};
+function painTip(el, key){
+  const fig = el.closest("figure"); if(!fig) return;
+  const old = fig.querySelector(".pain-tip");
+  if(old){ const same = old.dataset.key === key; old.remove(); if(same) return; }
+  const tip = PAIN_TIPS[key]; if(!tip) return;
+  const box = document.createElement("div");
+  box.className = "pain-tip"; box.dataset.key = key; box.setAttribute("role","dialog");
+  box.innerHTML = `<button class="tip-x" type="button" aria-label="關閉說明">×</button><div class="tip-t">${tip.t}</div><div>${tip.d}</div>`;
+  box.querySelector(".tip-x").onclick = () => box.remove();
+  fig.appendChild(box);
+  const fr = fig.getBoundingClientRect(), r = el.getBoundingClientRect();
+  let left = r.left - fr.left + r.width/2 - box.offsetWidth/2;
+  left = Math.max(8, Math.min(left, fig.clientWidth - box.offsetWidth - 8));
+  let top = r.bottom - fr.top + 6;
+  if(top + box.offsetHeight > fig.clientHeight - 4) top = Math.max(4, r.top - fr.top - box.offsetHeight - 6);
+  box.style.left = left + "px"; box.style.top = top + "px";
+}
+
 function toggleInfo(btn){
   const p = btn.nextElementSibling; if(!p) return;
   const show = p.hasAttribute("hidden");

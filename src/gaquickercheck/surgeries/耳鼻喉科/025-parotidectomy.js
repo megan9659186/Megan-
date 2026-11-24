@@ -4,7 +4,7 @@
     name:"腮腺切除術",
     en:"Parotidectomy",
     updated:"2026-08-04",
-    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中", airway:"GA / IONM tube・顏面神經監測→誘導後不維持肌鬆" },
+    summary:{ position:"Supine · head-up, neck extended, head turned to contralateral side", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中", airway:"ETGA / IONM tube・顏面神經監測→誘導後不維持肌鬆" },
     preop:[
       "評估腫瘤良惡性與範圍;深葉/惡性腫瘤手術較廣、時間較長",
       "<b class='w'>術前記錄基準顏面神經功能(House–Brackmann 分級)</b>",

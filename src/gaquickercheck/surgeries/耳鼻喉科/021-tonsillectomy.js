@@ -3,7 +3,7 @@
     specialty:"耳鼻喉科",
     name:"扁桃腺切除術",
     en:"Tonsillectomy",
-    summary:{ position:"Supine · head extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / RAE・共用氣道" },
+    summary:{ position:"Supine · head extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"ETGA/Oral RAE" },
     preop:[
       "<b class='w'>OSA評估</b>(打鼾/小兒)→對鴉片敏感",
       "近期上呼吸道感染→氣道反應性升高",

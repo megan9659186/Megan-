@@ -3,7 +3,7 @@
     specialty:"耳鼻喉科",
     name:"小兒扁桃腺/腺樣體切除術",
     en:"Pediatric Adenotonsillectomy",
-    summary:{ position:"Supine · shoulder roll, neck extended (Rose position)", posType:"supine", time:"參考捷格手術排程時間", blood:"少(吞入致低估)", airway:"GA / cuffed oral RAE / Non-kinking" },
+    summary:{ position:"Supine · shoulder roll, neck extended (Rose position)", posType:"supine", time:"參考捷格手術排程時間", blood:"少(吞入致低估)", airway:"ETGA / cuffed oral RAE / Non-kinking" },
     preop:[
       "<b>適應症決定風險屬性</b>:<b class='w'>阻塞型睡眠呼吸障礙(obstructive sleep-disordered breathing, oSDB)/阻塞型睡眠呼吸中止(OSA)</b>為最常見適應症;反覆扁桃腺炎則依 <b>Paradise criteria</b> 判定<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>Paradise criteria 用於界定『反覆咽扁桃腺炎嚴重族群』:一年內 ≥7 次、連續兩年每年 ≥5 次、或連續三年每年 ≥3 次發作,且僅採計有病歷紀錄者。臨床意義在於:以感染為適應症的孩子多半沒有睡眠呼吸障礙,圍術期呼吸風險相對低;以 oSDB/OSA 為適應症者才是鴉片敏感與呼吸不良事件的高風險族群。麻醉前分辨這兩類病人,是後續止痛與監測強度的第一個分岔點。</span>",
       "<b class='w'>OSA 嚴重度分層決定照護等級</b>:多項睡眠檢查(polysomnography, PSG)呈呼吸中止低通氣指數(AHI)≥10/hr 或 SpO₂ 最低值 <80% 屬重度;無 PSG 時可用夜間血氧與 McGill oximetry score 分層<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>PSG 是診斷金標準,但多數孩童術前拿不到。McGill oximetry score 只需一夜居家血氧紀錄,依去飽和事件的次數與最低血氧分為 1 到 4 級:分數愈高代表阻塞愈嚴重,與術後呼吸不良事件相關性良好。實務用法是『陽性結果有意義、陰性結果不能排除 OSA』——分數高即可直接視為高風險安排住院監測,分數正常仍須參考病史與共病。</span>",

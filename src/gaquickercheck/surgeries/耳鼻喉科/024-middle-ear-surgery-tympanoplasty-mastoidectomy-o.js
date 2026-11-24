@@ -4,7 +4,7 @@
     name:"耳部手術(鼓室成形/乳突/聽小骨)",
     en:"Middle Ear Surgery (Tympanoplasty / Mastoidectomy / Ossiculoplasty)",
     updated:"2026-08-02",
-    summary:{ position:"Supine · head turned, 10–15° head-up", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少(需 bloodless field)", airway:"GA / Non-kinking ETT 或有可能 LMA・顏面神經監測(如果使用顏面監測器)→肌鬆受限" },
+    summary:{ position:"Supine · head turned, 10–15° head-up", posType:"revtrend", time:"參考捷格手術排程時間", blood:"少(需 bloodless field)", airway:"ETGA(Non-kinking)或有可能 LMA・顏面神經監測(如果使用顏面監測器)→肌鬆受限" },
     preop:[
       "多為日間手術;評估共病、聽力障礙溝通;<b class='w'>近期上呼吸道感染</b>使氣道反應性升高,擇期宜延後",
       "小兒感音性聽損者留意合併症候群(如 Jervell–Lange-Nielsen 之 QT prolong)→ 術前心電圖",

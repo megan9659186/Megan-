@@ -3,7 +3,7 @@
     specialty:"一般外科",
     name:"腹腔鏡胰十二指腸切除術(Whipple)",
     en:"Laparoscopic Pancreaticoduodenectomy (Whipple)",
-    summary:{ position:"Supine · reverse Trendelenburg (± split-leg)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中～多", airway:"GA / ETT" },
+    summary:{ position:"Supine · reverse Trendelenburg (± split-leg)", posType:"revtrend", time:"參考捷格手術排程時間", blood:"中～多", airway:"ETGA" },
     preop:[
       "常見<b>阻塞性黃疸</b>(膽紅素↑ → 維生素 K 依賴因子↓致凝血異常、腎前氮質血症);黃疸另有全身效應:心肌抑制、急性腎損傷、免疫抑制、傷口癒合不良<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>阻塞性黃疸全身效應與膽鹽缺乏、內毒素血症、腸道屏障受損有關,可致<b>心肌抑制</b>、腎前性<b>急性腎損傷</b>與凝血異常;例行內視鏡膽道支架並不降低死亡率,且增加感染/敗血等操作併發症。</span>",
       "<b>惡病質與營養不良</b>:胰癌為所有癌症中惡病質發生率最高,診斷時可達八成;以 MUST / NRS-2002 篩檢,高蛋白(1.5 g/kg/day)、補充胰酶(PERT)",

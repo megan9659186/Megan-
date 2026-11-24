@@ -17,7 +17,7 @@
     ],
     hemo:[
       "<b class='w'>止血帶放氣→再灌流</b>:代謝性酸、鉀↑、暫時性低血壓<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>放氣後缺血肢體的乳酸、K⁺、CO₂ 等代謝產物流回循環,加上下肢血管床突然打開、周邊血管阻力下降 → <b>平均動脈壓明顯下降</b>,EtCO₂ 短暫上升。放氣前先告知、確認容積、備升壓藥;自發呼吸者會出現呼吸變快。放氣後傷口開始出血,且可持續到術後 24 小時。</span>",
-      "<b>止血帶痛</b>:充氣約 1 小時後血壓、心跳逐漸上升,放氣後緩解 → <span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>Tourniquet pain(止血帶痛)</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>止血帶充氣約 <b>45–60 分鐘後</b>出現的大腿鈍痛、灼熱痛,即使半身麻醉對手術本身已足夠也可能發生;全身麻醉下則表現為<b>血壓逐漸上升、心跳變快</b>,加深麻醉或給 opioid 效果有限,<b>放氣後很快緩解</b>。<b>機轉</b>:可能與半身麻醉逐漸消退時,細的無髓 C 纖維先恢復傳導有關,加上組織缺血與局部壓迫。<b>處理</b>:先排除麻醉過淺;spinal / epidural 加 opioid 可減輕;與外科討論縮短充氣時間或提早放氣;止血帶壓力一般為收縮壓加 50–100 mmHg,總時間上限約 3 小時,時間過長可放氣 30 分鐘讓肢體再灌流以減少神經缺血。</span>",
+      "<b>止血帶痛</b>:充氣約 1 小時後血壓、心跳逐漸上升,放氣後緩解 → Tourniquet pain(止血帶痛)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>Tourniquet pain(止血帶痛)</b>:止血帶充氣約 <b>45–60 分鐘後</b>出現的大腿鈍痛、灼熱痛,即使半身麻醉對手術本身已足夠也可能發生;全身麻醉下則表現為<b>血壓逐漸上升、心跳變快</b>,加深麻醉或給 opioid 效果有限,<b>放氣後很快緩解</b>。<b>機轉</b>:可能與半身麻醉逐漸消退時,細的無髓 C 纖維先恢復傳導有關,加上組織缺血與局部壓迫。<b>處理</b>:先排除麻醉過淺;spinal / epidural 加 opioid 可減輕;與外科討論縮短充氣時間或提早放氣;止血帶壓力一般為收縮壓加 50–100 mmHg,總時間上限約 3 小時,時間過長可放氣 30 分鐘讓肢體再灌流以減少神經缺血。</span>",
       "TXA可減少失血"
     ],
     intraop:[
