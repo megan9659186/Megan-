@@ -3,10 +3,10 @@
     specialty:"一般外科",
     name:"乳房切除術",
     en:"Mastectomy",
-    summary:{ position:"Supine · ipsilateral arm abducted ≤ 90°", posType:"supine", time:"參考捷格手術排程時間", blood:"少(合併重建時較多)", airway:"GA / LMA 或 ETT" },
+    summary:{ position:"Supine · ipsilateral arm abducted ≤ 90°", posType:"supine", time:"參考捷格手術排程時間", blood:"少(合併重建時較多)", airway:"LMA 或 ETGA" },
     preop:[
       "<b>確認術式範圍</b>:單純乳房切除、改良式根除術(MRM)、前哨淋巴結切片(SLNB)、腋下淋巴結清除(ALND)、是否同時重建(implant / 皮瓣)→ 影響時間、失血與呼吸道選擇",
-      "<b>新輔助化療/標靶病史</b>:<span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>心臟毒性</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>乳癌常用、與心臟相關的藥物:<b>Anthracycline(doxorubicin、epirubicin)</b>→ 累積劑量相關心肌病變、心衰竭,可在停藥多年後才出現;<b>Trastuzumab / pertuzumab</b>(HER2 陽性)→ 左心室收縮功能下降(多可逆);<b>5-FU / capecitabine</b> → 冠狀動脈痙攣;<b>Taxane</b> → 心律不整、體液滯留;<b>胸壁放射治療(尤其左側)</b>→ 冠心病、瓣膜與心包疾病。用過 anthracycline 或 trastuzumab 者看 <b>cardiac echo</b>(LVEF)與 ECG。</span>、骨髓抑制(CBC)、周邊神經病變、port-A 位置",
+      "<b>新輔助化療/標靶病史</b>:心臟毒性、骨髓抑制(CBC)、周邊神經病變、port-A 位置<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>心臟毒性</b>:乳癌常用、與心臟相關的藥物:<b>Anthracycline(doxorubicin、epirubicin)</b>→ 累積劑量相關心肌病變、心衰竭,可在停藥多年後才出現;<b>Trastuzumab / pertuzumab</b>(HER2 陽性)→ 左心室收縮功能下降(多可逆);<b>5-FU / capecitabine</b> → 冠狀動脈痙攣;<b>Taxane</b> → 心律不整、體液滯留;<b>胸壁放射治療(尤其左側)</b>→ 冠心病、瓣膜與心包疾病。用過 anthracycline 或 trastuzumab 者看 <b>cardiac echo</b>(LVEF)與 ECG。</span>",
       "<b>確認禁打針/量血壓的手臂</b>:對側曾做乳房手術或 ALND → 雙側都受限時與外科討論(可用下肢)",
       "乳癌病人多為焦慮的女性病人 → 術前充分說明;評估 <b>PONV 危險因子</b>",
       "注意乳癌骨轉移(病理性骨折、高血鈣)與肺轉移/胸水"

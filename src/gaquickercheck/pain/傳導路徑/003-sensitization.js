@@ -10,8 +10,8 @@
       {
         h: "兩個名詞",
         items: [
-          "<span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>Hyperalgesia(痛覺過敏)</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>原本就會痛的刺激,感覺<b>更痛</b>。<b>原發性</b>痛覺過敏發生在受傷部位本身,主要是周邊敏感化;<b>續發性</b>痛覺過敏擴及周圍未受傷的組織,來自中樞敏感化。</span>:會痛的刺激變得更痛",
-          "<span class='term' role='button' tabindex='0' aria-expanded='false' onclick='toggleTerm(this)' onkeydown='termKey(event,this)'>Allodynia(觸摸痛)</span><span class='term-panel' hidden onclick='toggleTerm(this.previousElementSibling)'>原本<b>不會痛</b>的刺激(輕觸、衣物摩擦、微風)也會引起疼痛。機轉:中樞敏感化後,負責觸覺的 <b>Aβ 纖維</b>輸入被背角當成疼痛訊號處理;神經受傷後 Aβ 纖維甚至會長進原本接收 C 纖維的 lamina II。</span>:不痛的刺激也會痛"
+          "Hyperalgesia(痛覺過敏):會痛的刺激變得更痛<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>Hyperalgesia(痛覺過敏)</b>:原本就會痛的刺激,感覺<b>更痛</b>。<b>原發性</b>痛覺過敏發生在受傷部位本身,主要是周邊敏感化;<b>續發性</b>痛覺過敏擴及周圍未受傷的組織,來自中樞敏感化。</span>",
+          "Allodynia(觸摸痛):不痛的刺激也會痛<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>Allodynia(觸摸痛)</b>:原本<b>不會痛</b>的刺激(輕觸、衣物摩擦、微風)也會引起疼痛。機轉:中樞敏感化後,負責觸覺的 <b>Aβ 纖維</b>輸入被背角當成疼痛訊號處理;神經受傷後 Aβ 纖維甚至會長進原本接收 C 纖維的 lamina II。</span>"
         ]
       },
       {

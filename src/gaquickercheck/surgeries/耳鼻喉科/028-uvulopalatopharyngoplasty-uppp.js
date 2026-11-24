@@ -4,7 +4,7 @@
     name:"懸壅垂顎咽成形術(打鼾/睡眠呼吸中止)",
     en:"Uvulopalatopharyngoplasty (UPPP)",
     updated:"2026-08-09",
-    summary:{ position:"Supine · slight head extension, mouth gag", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / ETT(常用 oral RAE)・OSA 困難氣道・共用氣道" },
+    summary:{ position:"Supine · slight head extension, mouth gag", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"ETGA(常用 oral RAE)・OSA 困難氣道・共用氣道" },
     preop:[
       "<b class='w'>幾乎所有病人都有阻塞性睡眠呼吸中止(OSA)</b>:先看多項睡眠檢查的 AHI 與最低血氧;沒做過檢查者以 STOP-Bang 評估<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>STOP-Bang 是八題篩檢工具,每題答是得一分:<b>S</b>noring 打鼾大聲、<b>T</b>iredness 白天嗜睡、<b>O</b>bserved apnea 有人目擊呼吸中止、<b>P</b>ressure 高血壓、<b>B</b>MI 大於 35、<b>a</b>ge 大於 50 歲、<b>n</b>eck 頸圍(男大於 43 cm、女大於 41 cm)、<b>g</b>ender 男性。0–2 分為低風險,3–4 分中風險,<b>5 分以上為高風險</b>,術後呼吸抑制、去飽和與非計畫入住加護的機率明顯上升。AHI(每小時呼吸中止與低通氣次數)則是嚴重度分級:5–15 輕度、15–30 中度、大於 30 重度。</span>",
       "<b class='w'>OSA 病人對鴉片與鎮靜劑異常敏感</b> → 術前避免給鎮靜前導藥",

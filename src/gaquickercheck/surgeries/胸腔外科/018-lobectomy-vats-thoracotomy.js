@@ -3,7 +3,7 @@
     specialty:"胸腔外科",
     name:"肺葉切除術",
     en:"Lobectomy (VATS / Thoracotomy)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"GA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"中", airway:"ETGA / DLT・單肺通氣(OLV)・CVC + Flowtrac" },
     preop:[
       "肺功能(PFT、DLCO)、運動耐受度、預測術後肺功能",
       "戒菸、心臟評估",

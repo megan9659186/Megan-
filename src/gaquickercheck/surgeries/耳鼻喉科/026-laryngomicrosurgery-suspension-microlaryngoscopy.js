@@ -4,7 +4,7 @@
     name:"顯微喉手術(支撐喉鏡)",
     en:"Laryngomicrosurgery (Suspension Microlaryngoscopy, LMS)",
     updated:"2026-08-04",
-    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA / 小半號 ETT・共用+困難氣道・雷射防護" },
+    summary:{ position:"Supine · sniffing / shoulder roll, head extended (suspension)", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"ETGA(小半號 ETT)・共用+困難氣道・雷射防護" },
     preop:[
       "<b class='w'>術前氣道評估至關重要</b>:聲帶/喉部病灶、腫瘤、放療後纖維化可致<b>氣道阻塞與插管困難</b> → 影像與內視鏡評估、與外科團隊共擬計畫(NAP4 教訓)<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>NAP4 是英國皇家麻醉學院與困難氣道學會 2011 年公布的第四次全國稽核,收集全英國一年內所有嚴重氣道事件(死亡、腦損傷、需要緊急外科氣道、非預期入住加護)。主要教訓:<b>一、氣道評估被省略,或評估了卻沒有據此改變計畫。二、只有 Plan A、沒有替代方案</b>,失敗後仍反覆嘗試同一手法而不換方式。<b>三、頭頸部腫瘤與氣道阻塞病人佔了不成比例的嚴重事件</b>,該做清醒插管時常常沒做。<b>四、需要緊急頸前氣道時失敗率高</b>,訓練與器材都不足。<b>五、EtCO₂ 監測使用不足</b>,導管滑脫或位置錯誤沒被及早發現。<b>六、吸入性肺炎是最常見的死因。七、延遲求援與跨團隊溝通不良</b>是共通背景。對共用氣道的喉部手術而言,重點就是術前確實評估、事先與外科團隊講好 Plan A/B/C,並把外科氣道器材備在手邊。</span>",
       "評估發聲改變、喘鳴、平躺呼吸困難等阻塞徵象",

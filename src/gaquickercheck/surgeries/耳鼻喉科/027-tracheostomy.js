@@ -4,7 +4,7 @@
     name:"氣管切開術",
     en:"Tracheostomy",
     updated:"2026-08-09",
-    summary:{ position:"Supine · shoulder roll, neck extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"GA / 原有 ETT 換至氣切管・共用氣道・電燒防火" },
+    summary:{ position:"Supine · shoulder roll, neck extended", posType:"supine", time:"參考捷格手術排程時間", blood:"少–中", airway:"ETGA → 換至氣切管・共用氣道・電燒防火" },
     preop:[
       "先確認<b>適應症與時機</b>:長期呼吸器脫離困難、上呼吸道阻塞、清除分泌物、頭頸手術前先建立氣道",
       "<b class='w'>區分『排程氣切手術』與『急氣切(Call help!)』</b>:後者常在氧合不穩、無法插管的情況進行,計畫與人力完全不同",

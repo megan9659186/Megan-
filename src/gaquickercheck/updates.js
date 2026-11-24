@@ -1,5 +1,71 @@
 [
   {
+    date: "2026-11-24",
+    note: "麻醉冷知識:疼痛路徑圖可點英文字看說明,四步驟中文直接標在圖上,圖片放大。",
+    items: [
+      "疼痛路徑圖(上行與下行疼痛路徑、類鴉片受體訊號、多模式止痛):點圖上的英文字(Brain、Stimulus、Transduction、Transmission、Perception、Modulation)跳出說明,按 × 關閉",
+      "疼痛傳導四步驟的中文(轉導、傳遞、知覺、調控)直接標在圖上;圖片放大,作用位置的文字說明移到圖下方、字體加大"
+    ]
+  },
+  {
+    date: "2026-11-24",
+    note: "麻醉冷知識:疼痛路徑圖改為透明底,並用來標示止痛藥的作用位置。",
+    items: [
+      { t:"類鴉片受體訊號:「作用在哪裡」新增疼痛路徑圖,標出脊髓背角、腦幹 PAG / RVM、周邊三個作用位置", en:"Classical Opioid Receptor Signaling" },
+      { t:"多模式止痛:新增疼痛路徑圖,依受傷組織、周邊神經、脊髓背角、下行路徑、大腦標出各類藥物的作用位置", en:"Multimodal Analgesia by Site of Action" },
+      { t:"上行與下行疼痛路徑:疼痛四步驟圖改為透明底(不再是白底)", en:"Ascending & Descending Pain Pathways" }
+    ]
+  },
+  {
+    date: "2026-11-24",
+    note: "婦產科依 Miller 產科麻醉章與 UpToDate 補充重點;新增子宮頸環紮術。",
+    items: [
+      { t:"剖腹產(全麻):麻醉方式改為 ETGA / RSI;新增 Miller 重點(誤吸與插管失敗風險、videolaryngoscope、術中知曉、magnesium 與肌鬆、誘導藥物選擇、產後出血第二線藥物與 TXA、羊水栓塞與孕婦心跳停止)與 UpToDate 重點(禁食與誤吸預防、先鋪單再誘導、1 MAC 防知曉、oxytocin 給法)", en:"Cesarean Section (GA)" },
+      { t:"剖腹產(脊髓):新增 Miller 重點(脊髓/硬脊膜外/CSE 劑量、phenylephrine 預防輸注、術後止痛、PDPH、硬脊膜外血腫、全脊髓阻斷)與 UpToDate 重點(阻斷不足的處理、norepinephrine 替代、寒顫處理、oxytocin 給法)", en:"Cesarean Section (SA)" },
+      { t:"腹腔鏡子宮肌瘤切除術:新增 UpToDate 重點(高出血風險肌瘤特徵、減少失血方法、vasopressin 注射、轉開腹與非計畫子宮切除)", en:"Laparoscopic Myomectomy (LM)" },
+      { t:"腹腔鏡卵巢切除術:新增 Miller 孕期合併手術重點(手術時機、子宮左傾、氣腹壓與 EtCO₂ 目標、胎心監測、孕期 sugammadex 與 NSAID 注意)", en:"Laparoscopic Oophorectomy / Ovarian Cystectomy" },
+      { t:"門診婦科小手術(D&C、子宮鏡):新增妊娠相關清宮的 Miller 與 UpToDate 重點(誤吸預防、何時插管、產後生理);移除氧化亞氮相關內容(本院未使用)", en:"Outpatient Gynecologic Procedures (D&C / Hysteroscopy)" },
+      { t:"新增手術:子宮頸環紮術(脊髓首選、≥ 18 週全麻插管、羊膜膨出擺位、孕期止痛用藥)", en:"Cervical Cerclage" }
+    ]
+  },
+  {
+    date: "2026-11-24",
+    note: "甲狀腺切除新增 Miller 與 UpToDate 重點;麻醉方式統一寫 ETGA;補充說明統一用 ⓘ。",
+    items: [
+      { t:"甲狀腺切除術:麻醉方式改為 ETGA/IONM;「肌鬆策略特殊」改為「注意肌鬆使用時機」;新增 Miller 重點(喉返神經損傷表現、拔管後喘鳴處理)與 UpToDate 重點(術前甲功與困難插管評估、IONM 插管與肌鬆選擇、平順拔管、血腫 SCOOP 處理、低血鈣)", en:"Thyroidectomy" },
+      { t:"頭頸部癌症切除合併游離皮瓣重建:麻醉方式改為 ETGA/Nasal RAE/± 預防性氣切;新增 Miller 重點(輸液與升壓劑觀點、全喉切除注意事項)與 UpToDate 重點(氣道策略、拔管計畫)", en:"Head & Neck Cancer Resection with Free Flap Reconstruction (Combined Surgery)" },
+      { t:"扁桃腺切除術:麻醉方式改為 ETGA/Oral RAE", en:"Tonsillectomy" },
+      "所有會插氣管內管的手術,麻醉方式統一寫為 ETGA",
+      "補充說明統一改為「ⓘ 說明」按鈕,不再使用底線術語(甲狀腺、肝切除、胃切除、乳房切除、全膝關節置換、疼痛路徑等)"
+    ]
+  },
+  {
+    date: "2026-11-24",
+    note: "新增 20 台手術(耳鼻喉、神經外科、大腸直腸、泌尿、整形、心臟外科)。",
+    items: [
+      { t:"耳鼻喉科新增:頭頸部癌症切除合併游離皮瓣重建(耳鼻喉科切除、整形外科做皮瓣;困難氣道、氣切、皮瓣灌流與升壓劑使用)", en:"Head & Neck Cancer Resection with Free Flap Reconstruction (Combined Surgery)" },
+      { t:"神經外科新增:微創經椎間孔腰椎椎體間融合術(MIS-TLIF)", en:"Minimally Invasive Transforaminal Lumbar Interbody Fusion (MIS-TLIF)" },
+      { t:"神經外科新增:腦室腹腔分流術(V-P shunt)", en:"Ventriculoperitoneal Shunt (V-P Shunt)" },
+      { t:"神經外科新增:腰椎腹腔分流術(L-P shunt)", en:"Lumboperitoneal Shunt (L-P Shunt)" },
+      { t:"神經外科新增:鑽孔引流術(慢性硬腦膜下血腫)", en:"Burr Hole Drainage (Chronic Subdural Hematoma)" },
+      { t:"神經外科新增:減壓性顱骨切除術", en:"Decompressive Craniectomy" },
+      { t:"神經外科新增:經皮椎體成形術", en:"Percutaneous Vertebroplasty / Kyphoplasty" },
+      { t:"神經外科新增:深部腦刺激術(DBS)", en:"Deep Brain Stimulation (DBS)" },
+      { t:"大腸直腸外科新增:痔瘡切除術", en:"Hemorrhoidectomy" },
+      { t:"泌尿科新增:膀胱鏡注射(Botox / PRP)", en:"Cystoscopic Intravesical Injection (Botox / PRP)" },
+      { t:"泌尿科新增:經皮腎造廔取石術(PCNL)", en:"Percutaneous Nephrolithotomy (PCNL)" },
+      { t:"泌尿科新增:輸尿管鏡碎石取石術(URS-SM)", en:"Ureteroscopic Stone Manipulation (URS-SM)" },
+      { t:"泌尿科新增:經尿道膀胱腫瘤切除術(TURBT)", en:"Transurethral Resection of Bladder Tumor (TURBT)" },
+      { t:"泌尿科新增:逆行性腎內手術(RIRS)", en:"Retrograde Intrarenal Surgery (RIRS)" },
+      { t:"泌尿科新增:腹腔鏡完全腹膜外疝氣修補術(TEP)", en:"Totally Extraperitoneal Inguinal Hernia Repair (TEP)" },
+      { t:"整形外科新增:清創術", en:"Surgical Debridement" },
+      { t:"整形外科新增:截肢術", en:"Amputation" },
+      { t:"心臟外科新增:動靜脈廔管手術(AV shunt)", en:"Arteriovenous Fistula / Graft Creation (AV Shunt)" },
+      { t:"心臟外科新增:周邊動脈阻塞疾病繞道手術(PAOD)", en:"Peripheral Arterial Occlusive Disease (PAOD) Bypass Surgery" },
+      { t:"心臟外科新增:經皮血管成形術(PTA)", en:"Percutaneous Transluminal Angioplasty (PTA)" }
+    ]
+  },
+  {
     date: "2026-11-22",
     note: "修正手機畫面左右晃動;血液動力學互動工具版面放大。",
     items: [

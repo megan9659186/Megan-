@@ -3,7 +3,7 @@
     name:"骨折閉鎖復位內固定術",
     en:"Closed Reduction and Internal Fixation (CRIF)",
     updated:"2026-08-10",
-    summary:{ position:"Supine (± traction table) · C-arm", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"GA(LMA 或 ETT)或區域麻醉;急診刀常需快速誘導插管" },
+    summary:{ position:"Supine (± traction table) · C-arm", posType:"supine", time:"參考捷格手術排程時間", blood:"少", airway:"LMA 或 ETGA 或區域麻醉;急診刀常需快速誘導插管" },
     preop:[
       "不切開傷口,在 X 光透視下把骨折復位後經皮打入鋼釘、螺釘或髓內釘;<b class='w'>切口小不等於麻醉單純</b>",
       "常見情境:小兒肱骨髁上與前腕骨折、成人腕部與髖部骨折、長骨的髓內釘固定",

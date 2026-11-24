@@ -3,7 +3,7 @@
     specialty:"胸腔外科",
     name:"楔形切除術",
     en:"Wedge Resection (VATS)",
-    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"少", airway:"GA / DLT 或 Blocker・單肺通氣(OLV)・粗 line + FloTrac 或 a-line" },
+    summary:{ position:"Lateral decubitus", posType:"lateral", time:"參考捷格手術排程時間", blood:"少", airway:"ETGA / DLT 或 Blocker・單肺通氣(OLV)・粗 line + FloTrac 或 a-line" },
     preop:[
       "適應症:周邊小結節之<b>診斷性切除</b>、原發性小型(≤2 cm)周邊 NSCLC 之治癒性 sublobar resection、或肺轉移瘤切除",
       "<b>非解剖式(non-anatomic)切除</b>:僅楔形移除病灶與其邊緣,保留最多肺實質 → 常用於<b class='w'>心肺儲備差、無法耐受肺葉切除</b>之病人<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>肺葉切除是<b>解剖式</b>切除:沿著肺葉的血管、支氣管界線,整葉拿掉。楔形切除則是<b>非解剖式</b>:不管肺葉邊界,直接用縫合切割器把含病灶的一小塊肺實質『咬』下來,像切一角蛋糕。好處是切得少、保留最多會換氣的肺 → 對本來就喘、肺功能差的病人負擔小。代價是切除範圍與淋巴清除較有限,腫瘤學上需嚴格篩選病人;若冰凍病理顯示邊緣(margin)不夠,可能得當場改做範圍更大的切除。</span>",
