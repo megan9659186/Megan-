@@ -204,9 +204,10 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
 .mt tr.me .nm{background:var(--accent);border-right:none}
 .mt tr.me .nm b{color:#fff}
 .mt tr.me .nm span{color:#cfc6ba}
-.mt td.no{font-family:'Libre Baskerville',serif;font-size:.75rem;color:var(--ink2);min-width:1.9rem;background:var(--surface2);border-left:1px solid var(--border)}
+.mt td.no{font-family:'Libre Baskerville',serif;font-size:.75rem;color:var(--ink2);line-height:1.15;min-width:1.9rem;background:var(--surface2);border-left:1px solid var(--border)}
 
-.mt thead th.no{background:var(--surface2);border-left:1px solid var(--border);font-size:.65rem}
+.mt thead th.no{background:var(--surface2);border-left:1px solid var(--border);font-size:.65rem;line-height:1.2}
+.mt td.no b{font-weight:700;color:var(--ink)}
 .mt td.c{padding:.14rem .09rem}
 .mt td.c span{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:2.15rem;height:2.1rem;border-radius:.3rem;border-width:1px;border-style:solid;font-weight:600;line-height:1.05;position:relative}
 .mt td.c span small{font-size:.58rem;font-weight:500;opacity:.8}
@@ -309,7 +310,9 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
 .ppick .quick button{padding:.35rem .7rem;font-size:.8rem;border:1px solid var(--border2);background:var(--surface);border-radius:99px;cursor:pointer;color:var(--ink2)}
 .ppick .names{display:flex;flex-wrap:wrap;gap:.35rem;max-height:14rem;overflow-y:auto}
 .ppick .names button{padding:.35rem .7rem;font-size:.85rem;border:1px solid var(--border2);background:var(--surface);border-radius:99px;cursor:pointer;color:var(--ink2);line-height:1.2}
-.ppick .names button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ppick .names button.on,.ppick .quick button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ppick .pk-hint{font-size:.78rem;color:var(--ink3);margin:0 0 .5rem}
+.ppick .pk-foot{display:flex;justify-content:flex-end;gap:.5rem;margin-top:.7rem;padding-top:.6rem;border-top:1px solid var(--border)}
 @media (min-width:900px){
   body{padding-left:24px;padding-right:24px}
   .simgrid{grid-template-columns:1fr 1fr}
@@ -400,7 +403,7 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
     </div>
     <div class="card">
       <h3>匯入新的公告班表</h3>
-      <p class="hint">醫院每出一期公告班表（Excel），直接選檔案匯入。會讀出那一期第 1 週每個人的號碼，跟目前推算的比對：一樣就不用動；有新人入號碼班、號碼總數改變或有人跳號，就從那一期開始換新的號碼表，之前的週次維持原樣。</p>
+      <p class="hint">醫院每出一期公告班表（Excel），直接選檔案匯入。會讀出那一期每一週每個人的「原始號碼」，跟目前推算的比對：一樣就不用動；有新人入號碼班、有人退出、號碼總數改變或有人跳號，就從變動的那一週開始換新的號碼表，之前的週次維持原樣。</p>
       <label class="btn pri filebtn">選擇公告班表 Excel<input type="file" id="xlsIn" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" onchange="importXlsx(this.files[0])"></label>
       <div id="impRes"></div>
     </div>
@@ -451,7 +454,7 @@ table.mt{border-collapse:separate;border-spacing:0;font-size:.72rem;min-width:10
 const SCH={"1":["D2","D","D5","D","D7","OFF","N2"],"2":["N1","N2","OFF","OFF","N2","N1","OFF"],"3":["E3","E3","E3","E3","E3","OFF","E1"],"4":["E4","E4","E4","E4","E4","OFF","OFF"],"5":["D10","D8","D2","D","D4","D1","OFF"],"6":["E1","E1","E1","E1","E1","OFF","N1"],"7":["N2","N1","N1","N2","OFF","OFF","OFF"],"8":["D4","D6","D","D10","D3","OFF","OFF"],"9":["E2","E2","E2","E2","E2","E2","OFF"],"10":["D5","D","D6","D2","DB1","D2","OFF"],"11":["DB1","D7","D1","D8","D5","OFF","OFF"],"12":["D3","DB1","N2","N1","N1","N2","OFF"],"13":["OFF","D10","D3","D7","D1","OFF","OFF"],"14":["12-8 4","12-8 1","12-8 2","12-8 3","12-8 4","OFF","E2"],"15":["12-8 2","12-8 3","12-8 4","12-8 1","12-8 2","OFF","OFF"],"16":["D7","D4","D9","DB1","D2","OFF","D2"],"17":["D","D3","D10","D1","D9","OFF","OFF"],"18":["12-8 3","12-8 4","12-8 1","12-8 2","12-8 3","E1","OFF"],"19":["12-8 1","12-8 2","12-8 3","12-8 4","12-8 1","OFF","OFF"],"20":["D1","D9","D4","D9","D6","OFF","OFF"],"21":["D9","D","DB1","D6","D8","OFF","D1"],"22":["D","D","D","D","D","OFF","OFF"],"23":["OFF","OFF","OFF","OFF","OFF","OFF","OFF"],"24":["D'OFF","D","D","D","D","OFF","OFF"],"25":["D","D","D","D","D","OFF","OFF"],"26":["D8","D2","D7","D4","D","OFF.B","OFF"],"27":["D6","D1","D8","D3","D10","OFF","OFF"],"28":["D","D5","D","D5","D","OFF","OFF"],"29":["D11","D11","D11","D11","D11","OFF","OFF"],"30":["D","D","D","D","D","OFF","OFF"],"31":["D12","D12","D12","D12","D12","OFF","OFF"],"32":["D","D","D","D","D","OFF","OFF"],"33":["D","D","D","D","D","OFF","OFF"],"34":["D","D","D","D","D","OFF","OFF"],"35":["D","D","D","D","D","OFF","OFF"],"36":["D","D","D","D","D","OFF","OFF"],"37":["D","D","D","D","D","OFF","OFF"],"38":["D","D","D","D","D","OFF","OFF"],"39":["D","D","D","D","D","OFF","OFF"],"40":["D","D","D","D","D","OFF","OFF"],"41":["D","D","D","D","D","OFF","OFF"],"42":["D","D","D","D","D","OFF","OFF"],"43":["D","D","D","D","D","OFF","OFF"]};
 const HOL=Object.assign({},{'2026-01-01':'元旦','2026-02-17':'初一','2026-02-18':'初二','2026-02-19':'初三','2026-02-20':'初四','2026-02-21':'初五','2026-02-28':'228','2026-04-04':'兒童節','2026-04-05':'清明節','2026-05-01':'勞動節','2026-06-19':'端午節','2026-09-25':'中秋節','2026-09-28':'教師節','2026-10-10':'國慶日','2026-10-25':'光復節','2026-12-25':'行憲紀念日'},{'2027-01-01':'元旦','2027-02-04':'小年夜','2027-02-05':'除夕','2027-02-06':'初一','2027-02-07':'初二','2027-02-08':'初三','2027-02-09':'初四','2027-02-10':'初五','2027-02-28':'228','2027-04-04':'兒童節','2027-04-05':'清明節','2027-05-01':'勞動節','2027-06-09':'端午節','2027-09-15':'中秋節','2027-09-28':'教師節','2027-10-10':'國慶日','2027-10-25':'光復節','2027-12-25':'行憲紀念日'});
 const ANC=new Date(2026,8,28); // 錨點：公告班表第 1 週（9/28）
-const VER=4;
+const VER=7;
 // 醫院四週區間：9/1–9/27（27 天，醫院公告），9/28 起每 28 天一期；9/1 以前往回每 28 天推估
 const P1=new Date(2026,8,1),P2=new Date(2026,8,28);
 function dayDiff(a,b){return Math.round((a-b)/86400000)}
@@ -462,14 +465,19 @@ function pLabel(p){return md(p.a)+' – '+md(p.b)}
 function holLine(off){const m=monOf(off),a=[];for(let i=0;i<7;i++){const d=ad(m,i),h=HOL[dk(d)];if(h)a.push(md(d)+'（'+WD[i]+'）'+esc(h))}return a.length?'<div class="hl">'+a.join('　')+'</div>':''}
 const MO=['D','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','DB1','E3','E4','12-8 1','12-8 2','12-8 3','12-8 4',"D'OFF",'D?'];
 const WD=['一','二','三','四','五','六','日'];
-const DEF_ROSTER=[[1,9,"NA4","Shelly"],[2,13,"NA4","鳳英"],[4,14,"NA4","Wuma"],[5,17,"NA4","Angel, 秋"],[6,34,"NA4","琇"],[7,19,"NA4","薰"],[8,35,"NA4","檸檬魚"],[9,8,"NA4","王美"],[10,12,"NA4","梅"],[11,26,"NA4","ZiHan"],[12,29,"NA4","LiWen"],[13,21,"NA4","心"],[14,18,"NA4","喬喬"],[15,33,"NA4","汝"],[16,24,"NA4","花生"],[17,28,"NA4","小牛"],[18,30,"NA4","真真"],[19,32,"NA4","Megan"],[20,25,"NA3","郎"],[21,16,"NA1","柔柔"],[22,36,"NA4","萍"],[23,1,"NA4","癢癢"],[24,4,"NA3","茹"],[25,2,"NA2","Lena"],[26,27,"NA3","帆帆"],[27,10,"NA3","嘉"],[28,5,"NA3","彭琳"],[29,11,"NA2","小陳"],[30,15,"NA2","晴"],[31,3,"NA2","戴"],[32,31,"NA3","強強"],[33,23,"NA2","榆"],[34,22,"NA2","彥良"],[35,20,"NA","瑩"],[36,7,"NA2","XuanRui"],[37,6,"NA2","Tin"]];
+const DEF_ROSTER=[[1,9,"","Shelly"],[2,13,"","鳳英"],[4,14,"","Wuma"],[5,17,"","Angel, 秋"],[6,34,"","琇"],[7,19,"","薰"],[8,35,"","檸檬魚"],[9,8,"","王美"],[10,12,"","梅"],[11,26,"","ZiHan"],[12,29,"","LiWen"],[13,21,"","心"],[14,18,"","喬喬"],[15,33,"","汝"],[16,24,"","花生"],[17,28,"","小牛"],[18,30,"","真真"],[19,32,"","Megan"],[20,25,"","郎 (AP)"],[21,16,"","柔柔"],[22,36,"","萍"],[23,1,"","癢癢"],[24,4,"","茹"],[25,2,"","Lena"],[26,27,"","帆帆"],[27,10,"","嘉"],[28,5,"","彭琳"],[29,11,"","小陳"],[30,15,"","晴"],[31,3,"","戴"],[32,31,"","強強"],[33,23,"","榆"],[34,22,"","彥良"],[35,20,"","瑩"],[36,7,"","XuanRui"],[37,6,"","Tin"]];
 const P='nt_';
 
 function load(k,d){try{const v=localStorage.getItem(P+k);return v?JSON.parse(v):d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(P+k,JSON.stringify(v))}catch(e){}}
 // 人員（代碼、暱稱、職級）與號碼表分開存：號碼表可以從某一週起換新的（新人入號碼班、號碼總數改變、有人跳號）
-function defPeople(){return DEF_ROSTER.map(r=>({id:String(r[0]),grade:r[2]||'',name:r[3]||''}))}
-function defPlans(){const nums={};DEF_ROSTER.forEach(r=>nums[String(r[0])]=r[1]);return[{start:'2026-09-28',cycle:36,nums}]}
+// ap：不入號碼班的期間固定上 D 班（週一到五 D、週末 OFF），月總表照樣顯示
+const AP_IDS=['20'];
+function defPeople(){return DEF_ROSTER.map(r=>{const p={id:String(r[0]),grade:r[2]||'',name:r[3]||''};if(AP_IDS.includes(p.id))p.ap=true;return p})}
+// 12/21 起：號碼總數 36 → 35（依 115/12/21–116/1/17 公告班表第 1 週；代碼 20 退出號碼班）
+const N1221={"1":21,"2":25,"4":26,"5":29,"6":10,"7":31,"8":11,"9":20,"10":24,"11":2,"12":5,"13":33,"14":30,"15":9,"16":1,"17":4,"18":6,"19":8,"21":28,"22":12,"23":13,"24":16,"25":14,"26":3,"27":22,"28":17,"29":23,"30":27,"31":15,"32":7,"33":35,"34":34,"35":32,"36":19,"37":18};
+function plan1221(){return{start:'2026-12-21',cycle:35,nums:Object.assign({},N1221)}}
+function defPlans(){const nums={};DEF_ROSTER.forEach(r=>nums[String(r[0])]=r[1]);return[{start:'2026-09-28',cycle:36,nums},plan1221()]}
 (function(){const v=load('ver',1);
   if(v<2){try{['roster','me','cfg'].forEach(k=>localStorage.removeItem(P+k))}catch(e){}}
   if(v>=2&&v<3){const r=load('roster',null);// v3：換上 Megan 提供的全員暱稱，號碼等其他欄位不動
@@ -480,6 +488,12 @@ function defPlans(){const nums={};DEF_ROSTER.forEach(r=>nums[String(r[0])]=r[1])
       save('people',r.map(p=>({id:String(p.id),grade:p.grade||'',name:p.name||''})));
       save('plans',[{start:'2026-09-28',cycle:c,nums}]);
       try{localStorage.removeItem(P+'roster')}catch(e){}}}
+  if(v>=2&&v<5){const pl=load('plans',null);// v5：加上 12/21 起的 35 號號碼表（已經有 12/21 以後的號碼表就不動）
+    if(pl&&!pl.some(q=>q.start>='2026-12-21')){pl.push(plan1221());save('plans',pl)}}
+  if(v>=2&&v<6){const r=load('people',null);// v6：清空全部人的職級（Megan 要求）
+    if(r){r.forEach(p=>p.grade='');save('people',r)}}
+  if(v>=2&&v<7){const r=load('people',null);// v7：郎 → 郎 (AP)，不入號碼班時固定 D 班
+    if(r){const p=r.find(x=>String(x.id)==='20');if(p){p.ap=true;if(!p.name||p.name==='郎')p.name='郎 (AP)'}save('people',r)}}
   if(v<VER)save('ver',VER);})();
 let roster=load('people',null)||defPeople();
 let plans=load('plans',null)||defPlans();
@@ -712,6 +726,9 @@ function renderSwap(){
 
 /* ── 名單與號碼表 ── */
 let armed={},rp=null,imp=null;
+function refOff(i){const st=PO[i];if(i!==planIdx(curOff()))return st;return Math.max(st,wo(periodOf(today()).a))}
+function shiftN(n,d,c){return((n-1+d)%c+c)%c+1}
+function refName(i){const d=monOf(refOff(i));return(d.getFullYear()!==today().getFullYear()?d.getFullYear()+'/':'')+md(d)}
 function planName(pl){const d=kd(pl.start);return(d.getFullYear()!==today().getFullYear()?d.getFullYear()+'/':'')+md(d)+' 起'}
 function selPlan(){if(rp==null||!plans[rp])rp=planIdx(curOff());return plans[rp]}
 function monday(d){return monOf(wo(d))}
@@ -721,7 +738,7 @@ function setRP(i){rp=i;armed={};renderRoster()}
 function setCycle(v){const pl=selPlan(),n=parseInt(v,10);if(n>=1&&n<=99){pl.cycle=n;savePlans()}renderAll()}
 function editP(i,f,v){
   const p=roster[i];if(!p)return;
-  if(f==='num'){const pl=selPlan(),n=parseInt(v,10);if(isNaN(n)||n<=0)delete pl.nums[p.id];else pl.nums[p.id]=n;savePlans();renderAll();return}
+  if(f==='num'){const pl=selPlan(),n=parseInt(v,10),d=refOff(rp)-PO[rp];if(isNaN(n)||n<=0)delete pl.nums[p.id];else pl.nums[p.id]=n>pl.cycle?n:shiftN(n,-d,pl.cycle);savePlans();renderAll();return}
   if(f==='id'){v=v.trim();if(!v||roster.some((q,j)=>j!==i&&q.id===v)){renderRoster();return}
     plans.forEach(pl=>{if(p.id in pl.nums){pl.nums[v]=pl.nums[p.id];delete pl.nums[p.id]}});
     if(p.id===meId){meId=v;save('me',v)}if(p.id===viewId)viewId=v;p.id=v;savePlans()}
@@ -742,9 +759,9 @@ function delPlan(){
   if(!armed.plan){armed={plan:1};renderRoster();setTimeout(()=>{if(armed.plan){armed={};renderRoster()}},4000);return}
   armed={};plans.splice(rp,1);rp=null;savePlans();renderAll();
 }
-function rosterIssues(pl){
-  const c=pl.cycle,by={},bad=[];
-  roster.forEach(p=>{const n=pl.nums[p.id];if(n==null)return;if(!(Number.isInteger(n)&&n>=1&&n<=c)){bad.push(p);return}(by[n]=by[n]||[]).push(p)});
+function rosterIssues(pl,d){
+  const c=pl.cycle,by={},bad=[];d=d||0;
+  roster.forEach(p=>{let n=pl.nums[p.id];if(n==null)return;if(!(Number.isInteger(n)&&n>=1&&n<=c)){bad.push(p);return}n=shiftN(n,d,c);(by[n]=by[n]||[]).push(p)});
   const dup=Object.keys(by).filter(k=>by[k].length>1).map(k=>by[k]);
   const miss=[];for(let n=1;n<=c;n++)if(!by[n])miss.push(n);
   return{dup,miss,bad,count:Object.values(by).reduce((a,g)=>a+g.length,0)};
@@ -753,18 +770,19 @@ function renderRoster(){
   roster.sort(byCode);
   document.getElementById('meSel').innerHTML=roster.map(p=>'<option value="'+esc(p.id)+'"'+(p.id===meId?' selected':'')+'>'+esc(label(p))+'</option>').join('');
   const pl=selPlan(),ci=planIdx(curOff());
-  document.getElementById('planChips').innerHTML=plans.map((q,i)=>'<button class="chip'+(i===rp?' on':'')+'" onclick="setRP('+i+')">'+planName(q)+'・'+q.cycle+' 號'+(i===ci?'（現在）':'')+'</button>').join('');
+  document.getElementById('planChips').innerHTML=plans.map((q,i)=>'<button class="chip'+(i===rp?' on':'')+'" onclick="setRP('+i+')">'+(i===ci?refName(i)+' 起':planName(q))+'・'+q.cycle+' 號'+(i===ci?'（現在）':'')+'</button>').join('');
   document.getElementById('planInfo').innerHTML='<span>號碼總數</span><input type="number" inputmode="numeric" min="1" max="99" value="'+pl.cycle+'" onchange="setCycle(this.value)" aria-label="號碼總數">'
     +(rp>0?'<button class="btn danger'+(armed.plan?' arm':'')+'" onclick="delPlan()">'+(armed.plan?'再按一次刪除這張號碼表':'刪除這張號碼表')+'</button>':'');
-  document.getElementById('rhNum').textContent=md(kd(pl.start))+' 號碼';
-  const iss=rosterIssues(pl),c0=curOff();let a=[];
+  const d=refOff(rp)-PO[rp],rn=refName(rp);
+  document.getElementById('rhNum').textContent=rn+' 號碼';
+  const iss=rosterIssues(pl,d),c0=curOff();let a=[];
   if(iss.bad.length)a.push('號碼要填 1–'+pl.cycle+'：'+iss.bad.map(p=>esc(short(p))).join('、'));
-  if(iss.dup.length)a.push('號碼重複：'+iss.dup.map(g=>'N.'+pl.nums[g[0].id]+'（'+g.map(p=>esc(short(p))).join('、')+'）').join('；'));
+  if(iss.dup.length)a.push('號碼重複：'+iss.dup.map(g=>'N.'+shiftN(pl.nums[g[0].id],d,pl.cycle)+'（'+g.map(p=>esc(short(p))).join('、')+'）').join('；'));
   if(iss.miss.length)a.push('沒有人的號碼：'+iss.miss.join('、')+'　（總表會顯示「未指定」）');
-  document.getElementById('rosterAlert').innerHTML=a.length?'<div class="alert">'+a.join('<br>')+'</div>':'<div class="alert ok">'+planName(pl)+'：'+iss.count+' 人對應 '+pl.cycle+' 個號碼，沒有重複。</div>';
+  document.getElementById('rosterAlert').innerHTML=a.length?'<div class="alert">'+a.join('<br>')+'</div>':'<div class="alert ok">'+rn+' 那週：'+iss.count+' 人對應 '+pl.cycle+' 個號碼，沒有重複。</div>';
   const badSet=new Set(iss.bad);
   document.getElementById('rosterRows').innerHTML=roster.map((p,i)=>{
-    const cur=numOf(p,c0),arm=armed['d'+i],v=pl.nums[p.id];
+    const cur=numOf(p,c0),arm=armed['d'+i],v0=pl.nums[p.id],v=v0==null?null:(v0>=1&&v0<=pl.cycle?shiftN(v0,d,pl.cycle):v0);
     return '<div class="rr'+(p.id===meId?' me':'')+'">'
       +'<input value="'+esc(p.id)+'" onchange="editP('+i+',\'id\',this.value)" aria-label="代碼">'
       +'<input value="'+esc(p.name)+'" placeholder="—" onchange="editP('+i+',\'name\',this.value)" aria-label="暱稱">'
@@ -877,64 +895,102 @@ async function importXlsx(f){
 function readPublished(X,buf){
   const wb=X.read(buf,{type:'array'}),norm=v=>String(v==null?'':v).replace(/\s+/g,' ').trim();
   const grid=ws=>X.utils.sheet_to_json(ws,{header:1,raw:false,defval:''});
+  const isMain=g=>g.some(r=>r.some(c=>{const v=norm(c);return v==='原始號碼'||v==='號碼班'}));
   let main=wb.Sheets['公告班表']?grid(wb.Sheets['公告班表']):null;
-  if(!main)for(const n of wb.SheetNames){const g=grid(wb.Sheets[n]);if(g.some(r=>r.some(c=>norm(c)==='職級'))&&g.some(r=>r.some(c=>norm(c)==='號碼班'))){main=g;break}}
+  if(!main)for(const n of wb.SheetNames){if(n==='號碼班')continue;const g=grid(wb.Sheets[n]);if(isMain(g)){main=g;break}}
   if(!main)throw new Error('找不到「公告班表」工作表');
   let start=null,end=null;
   for(const r of main){for(const c of r){const m=norm(c).match(/(\d{2,4})\s*年\s*(\d{1,2})\s*\/\s*(\d{1,2})\s*[-–~至]\s*(?:(\d{2,4})\s*年\s*)?(\d{1,2})\s*\/\s*(\d{1,2})/);
     if(m){const y=+m[1]<1911?+m[1]+1911:+m[1],y2=m[4]?(+m[4]<1911?+m[4]+1911:+m[4]):y;start=new Date(y,+m[2]-1,+m[3]);end=new Date(y2,+m[5]-1,+m[6]);break}}if(start)break}
   if(!start)throw new Error('找不到班表日期（標題要有「115年11/23-115年12/20」這種格式）');
-  let numCol=-1,gradeCol=1,hdr=0;
-  main.forEach((r,ri)=>r.forEach((c,ci)=>{const v=norm(c);if(v==='號碼班'&&numCol<0){numCol=ci;hdr=Math.max(hdr,ri)}if(v==='職級'){gradeCol=ci;hdr=Math.max(hdr,ri)}}));
-  if(numCol<0)throw new Error('找不到「號碼班」欄');
-  const people=[];
-  main.slice(hdr+1).forEach(r=>{const id=norm(r[0]);if(!/^\d+$/.test(id))return;const n=parseInt(norm(r[numCol]),10);people.push({id,grade:norm(r[gradeCol]),n:isNaN(n)?0:n})});
+  const st=monday(start);
+  // 新格式：每週一欄「原始號碼」；舊格式：只有一欄「號碼班」（第 1 週）
+  let cols=[],gradeCol=-1,hdr=-1;
+  main.forEach((r,ri)=>r.forEach((c,ci)=>{const v=norm(c);if(v==='原始號碼'){cols.push(ci);hdr=Math.max(hdr,ri)}}));
+  if(!cols.length){main.forEach((r,ri)=>r.forEach((c,ci)=>{const v=norm(c);if(v==='號碼班'&&!cols.length){cols=[ci];hdr=Math.max(hdr,ri)}}))}
+  main.forEach((r,ri)=>r.forEach((c,ci)=>{if(norm(c)==='職級'&&gradeCol<0){gradeCol=ci;hdr=Math.max(hdr,ri)}}));
+  if(!cols.length)throw new Error('找不到「原始號碼」或「號碼班」欄');
+  cols=[...new Set(cols)].sort((x,y)=>x-y);
+  const people=[],weeks=cols.map((c,k)=>({st:ad(st,7*k),nums:{}}));
+  main.slice(hdr+1).forEach(r=>{const id=norm(r[0]);if(!/^\d+$/.test(id))return;
+    people.push({id,grade:gradeCol>=0?norm(r[gradeCol]):''});
+    cols.forEach((c,k)=>{const v=norm(r[c]);if(/^\d+$/.test(v)&&+v>0)weeks[k].nums[id]=+v})});
   const sch={};const ns=wb.Sheets['號碼班'];
   if(ns)grid(ns).forEach(r=>{const k=norm(r[0]);if(/^\d+$/.test(k))sch[+k]=r.slice(1,8).map(v=>norm(v).replace(/^OFF ?\. ?B$/,'OFF.B'))});
-  return{start,end,people,sch};
+  return{start,end,people,weeks:weeks.filter(w=>Object.keys(w.nums).length),sch};
+}
+// 用一組號碼表推算某人某週的號碼（不動到目前的設定）
+function numIn(pls,id,off){
+  const ps=pls.slice().sort((a,b)=>a.start<b.start?-1:1);let i=0;ps.forEach((q,j)=>{if(wo(kd(q.start))<=off)i=j});
+  const pl=ps[i],n0=pl&&pl.nums[id];if(!n0)return null;const c=pl.cycle;return((n0-1+off-wo(kd(pl.start)))%c+c)%c+1}
+function planIn(pls,off){const ps=pls.slice().sort((a,b)=>a.start<b.start?-1:1);let i=0;ps.forEach((q,j)=>{if(wo(kd(q.start))<=off)i=j});return ps[i]}
+// 把公告班表各週分段：同一段內每週都是上一週 +1（依這段的號碼總數循環）
+function segWeeks(W){
+  const segs=[];
+  W.forEach((w,k)=>{const s=segs[segs.length-1],vals=Object.values(w.nums);
+    if(s){const c=Math.max(s.cycle,...vals),prev=W[k-1].nums,ids=Object.keys(w.nums);
+      if(ids.length===Object.keys(prev).length&&ids.every(id=>prev[id]!=null&&prev[id]%c+1===w.nums[id])){s.cycle=c;s.to=k;return}}
+    segs.push({k,to:k,st:w.st,nums:w.nums,cycle:Math.max(...vals)})});
+  return segs;
 }
 function importBuffer(X,buf){
-  const R=readPublished(X,buf),st=monday(R.start),off=wo(st);
-  const rot=R.people.filter(r=>r.n>0),zero=R.people.filter(r=>!(r.n>0));
-  if(!rot.length)throw new Error('檔案裡沒有人有號碼');
-  const cycle=Math.max(...rot.map(r=>r.n)),byN={};rot.forEach(r=>(byN[r.n]=byN[r.n]||[]).push(r.id));
-  const dup=Object.keys(byN).filter(n=>byN[n].length>1),miss=[];for(let n=1;n<=cycle;n++)if(!byN[n])miss.push(n);
+  const R=readPublished(X,buf);
+  if(!R.weeks.length)throw new Error('檔案裡沒有人有號碼');
   const nm=id=>{const p=person(id);return p?short(p):'代碼 '+id};
-  const joined=rot.filter(r=>!inRot(person(r.id),off)),left=roster.filter(p=>inRot(p,off)&&!rot.some(r=>r.id===p.id));
-  const jumped=[];rot.forEach(r=>{const pn=numOf(person(r.id),off);if(pn!=null&&pn!==r.n)jumped.push({id:r.id,from:pn,to:r.n})});
-  const cs=schAt(off),schDiff=[];for(let n=1;n<=cycle;n++)if(R.sch[n]&&R.sch[n].join()!==(cs[n]||PLAIN).join())schDiff.push(n);
+  const schSame=(a,b)=>{for(let n=1;n<=43;n++)if((a[n]||PLAIN).join()!==(b[n]||PLAIN).join())return false;return true};
+  const hasSch=Object.keys(R.sch).length>0;
+  // 每週檢查號碼有沒有重複或空號
+  const probs=[];
+  R.weeks.forEach(w=>{const by={};Object.entries(w.nums).forEach(([id,n])=>(by[n]=by[n]||[]).push(id));
+    const c=Math.max(...Object.values(w.nums)),dup=Object.keys(by).filter(n=>by[n].length>1),miss=[];for(let n=1;n<=c;n++)if(!by[n])miss.push(n);
+    if(dup.length||miss.length)probs.push(md(w.st)+' 那週：'+(dup.length?'號碼重複 '+dup.map(n=>'N.'+n+'（'+by[n].map(nm).join('、')+'）').join('；'):'')+(dup.length&&miss.length?'；':'')+(miss.length?'沒有人的號碼 '+miss.join('、'):''))});
+  // 逐段跟目前推算比對，不一樣才換新號碼表
+  let staged=plans.map(q=>Object.assign({},q,{nums:Object.assign({},q.nums)}));const out=[];
+  segWeeks(R.weeks).forEach(sg=>{
+    const off=wo(sg.st),cur=planIn(staged,off),curC=cur.cycle,ids=new Set([...roster.map(p=>p.id),...Object.keys(sg.nums)]);
+    const joined=[],left=[],jumped=[];
+    ids.forEach(id=>{const e=numIn(staged,id,off),n=sg.nums[id];
+      if(e==null&&n!=null)joined.push({id,n});else if(e!=null&&n==null)left.push(id);else if(e!=null&&e!==n)jumped.push({id,from:e,to:n})});
+    const curSch=cur.sch||SCH,schChg=hasSch&&!schSame(R.sch,curSch);
+    const schDiff=[];if(schChg)for(let n=1;n<=sg.cycle;n++)if(R.sch[n]&&R.sch[n].join()!==(curSch[n]||PLAIN).join())schDiff.push(n);
+    if(!joined.length&&!left.length&&!jumped.length&&sg.cycle===curC&&!schDiff.length)return;
+    const pl={start:dk(sg.st),cycle:sg.cycle,nums:Object.assign({},sg.nums)};
+    if(hasSch&&!schSame(R.sch,SCH)){pl.sch={};for(let n=1;n<=Math.max(sg.cycle,43);n++)pl.sch[n]=(R.sch[n]||curSch[n]||PLAIN).slice()}
+    staged=staged.filter(q=>q.start!==pl.start).concat(pl);
+    out.push({pl,curC,joined,left,jumped,schDiff});
+  });
   const grades=R.people.filter(r=>{const p=person(r.id);return p&&r.grade&&p.grade!==r.grade});
-  const same=!joined.length&&!left.length&&!jumped.length&&!schDiff.length&&cycle===C(off);
-  imp={R,st,off,rot,zero,cycle,schDiff,grades};
-  const range=md(R.start)+' – '+md(R.end);
-  let h='<div class="imp"><h4>公告班表 '+R.start.getFullYear()+'/'+range+'</h4>';
-  if(dup.length||miss.length)h+='<div class="alert">'+(dup.length?'號碼重複：'+dup.map(n=>'N.'+n+'（'+byN[n].map(nm).join('、')+'）').join('；')+'<br>':'')+(miss.length?'沒有人的號碼：'+miss.join('、'):'')+'</div>';
-  if(same){
-    h+='<div class="alert ok">這期第 1 週每個人的號碼，跟目前推算的完全一樣，不用換號碼表。</div>';
+  const add=R.people.filter(r=>!person(r.id)&&R.weeks.some(w=>w.nums[r.id]!=null));
+  imp={R,out,grades,add};
+  const span=R.weeks.length>1?'這期 '+R.weeks.length+' 週':'這期第 1 週';
+  let h='<div class="imp"><h4>公告班表 '+R.start.getFullYear()+'/'+md(R.start)+' – '+md(R.end)+'</h4>';
+  if(probs.length)h+='<div class="alert">'+probs.map(esc).join('<br>')+'</div>';
+  if(!out.length){
+    h+='<div class="alert ok">'+span+'每個人的號碼，都跟目前推算的一樣，不用換號碼表。</div>';
     if(grades.length)h+='<p>職級有變動：'+grades.map(r=>esc(nm(r.id))+' '+esc(person(r.id).grade)+' → '+esc(r.grade)).join('、')+'</p><button class="btn pri" onclick="applyImport(true)">更新職級</button>';
   }else{
-    h+='<ul>';
-    if(cycle!==C(off))h+='<li class="chg">號碼總數：'+C(off)+' → '+cycle+'</li>';
-    if(joined.length)h+='<li class="chg">新入號碼班 '+joined.length+' 人：'+joined.map(r=>esc(nm(r.id))+'（N.'+r.n+'）').join('、')+'</li>';
-    if(left.length)h+='<li class="chg">不再入號碼班 '+left.length+' 人：'+left.map(p=>esc(short(p))).join('、')+'</li>';
-    if(jumped.length)h+='<li class="chg">號碼跟推算不同（跳號）'+jumped.length+' 人：'+jumped.map(j=>esc(nm(j.id))+' N.'+j.from+' → N.'+j.to).join('、')+'</li>';
-    if(schDiff.length)h+='<li class="chg">號碼班內容有改：第 '+schDiff.join('、')+' 號</li>';
-    if(grades.length)h+='<li>職級有變動：'+grades.map(r=>esc(nm(r.id))+' → '+esc(r.grade)).join('、')+'</li>';
-    h+='</ul><p style="margin-bottom:.6rem">套用後，'+md(st)+' 以後的週次改用新號碼表推算，之前的週次維持原樣。</p><button class="btn pri" onclick="applyImport(false)">從 '+md(st)+' 起套用新號碼表</button>';
+    out.forEach(o=>{
+      h+='<p style="margin:.6rem 0 .2rem"><b>'+md(kd(o.pl.start))+' 起</b></p><ul>';
+      if(o.pl.cycle!==o.curC)h+='<li class="chg">號碼總數：'+o.curC+' → '+o.pl.cycle+'</li>';
+      if(o.joined.length)h+='<li class="chg">新入號碼班 '+o.joined.length+' 人：'+o.joined.map(r=>esc(nm(r.id))+'（N.'+r.n+'）').join('、')+'</li>';
+      if(o.left.length)h+='<li class="chg">不再入號碼班 '+o.left.length+' 人：'+o.left.map(id=>esc(nm(id))).join('、')+'</li>';
+      if(o.jumped.length)h+='<li class="chg">號碼跟推算不同（跳號）'+o.jumped.length+' 人：'+o.jumped.map(j=>esc(nm(j.id))+' N.'+j.from+' → N.'+j.to).join('、')+'</li>';
+      if(o.schDiff.length)h+='<li class="chg">號碼班內容有改：第 '+o.schDiff.join('、')+' 號</li>';
+      h+='</ul>'});
+    if(grades.length)h+='<p>職級有變動：'+grades.map(r=>esc(nm(r.id))+' → '+esc(r.grade)).join('、')+'</p>';
+    const first=md(kd(out[0].pl.start));
+    h+='<p style="margin-bottom:.6rem">套用後，'+first+' 以後的週次改用新號碼表推算，之前的週次維持原樣。</p><button class="btn pri" onclick="applyImport(false)">'+(out.length>1?'套用這 '+out.length+' 張新號碼表':'從 '+first+' 起套用新號碼表')+'</button>';
   }
   document.getElementById('impRes').innerHTML=h+'</div>';
 }
 function applyImport(gradesOnly){
   if(!imp)return;const I=imp;imp=null;
   I.grades.forEach(r=>{person(r.id).grade=r.grade});
-  if(!gradesOnly){
-    upsertPeople(I.rot);
-    const pl={start:dk(I.st),cycle:I.cycle,nums:{}};I.rot.forEach(r=>pl.nums[r.id]=r.n);
-    if(I.schDiff.length){const cs=schAt(I.off);pl.sch={};for(let n=1;n<=Math.max(I.cycle,43);n++)pl.sch[n]=(I.R.sch[n]||cs[n]||PLAIN).slice()}
-    rp=putPlan(pl);
-  }
+  let added=0;
+  if(!gradesOnly){added=upsertPeople(I.add.map(r=>({id:r.id,grade:r.grade,n:1})));I.out.forEach(o=>{rp=putPlan(o.pl)})}
   saveRoster();renderAll();
-  document.getElementById('impRes').innerHTML='<div class="alert ok" style="margin-top:.8rem">'+(gradesOnly?'職級已更新。':'已從 '+md(I.st)+' 起套用新號碼表。新加入的人還沒有暱稱，可以在下面的名單補上。')+'</div>';
+  const first=I.out.length?md(kd(I.out[0].pl.start)):'';
+  document.getElementById('impRes').innerHTML='<div class="alert ok" style="margin-top:.8rem">'+(gradesOnly?'職級已更新。':'已從 '+first+' 起套用新號碼表。'+(added?'新加入的 '+added+' 人還沒有暱稱，可以在下面的名單補上。':''))+'</div>';
 }
 
 /* ── 分頁 ── */
@@ -953,15 +1009,18 @@ function applyZoom(){const i=ZS.indexOf(cfg.z);const z=i<0?1:cfg.z;document.docu
 function zoom(d){let i=ZS.indexOf(cfg.z);if(i<0)i=1;i=Math.max(0,Math.min(ZS.length-1,i+d));cfg.z=ZS[i];save('cfg',cfg);applyZoom();fixMonthSticky()}
 
 /* ── 每月總表 ── */
-let mMode='month',mRef=null,mZone=0,mFilter='all',mPeople=[],mPickOpen=false;
+let mMode='month',mRef=null,mZone=0,mFilter='all',mPeople=(load('mpeople',[])||[]).map(String).filter(id=>roster.some(p=>p.id===id)),mPickOpen=false,mDraft=[];
 const MONTH_F=[['all','全部'],['sN','大夜 N','sN'],['sE','小夜 E','sE'],['s12','12-8','s12'],['sOFF','休假','sOFF']];
 function zoneOf(date){return periodIdxOf(date)}
 function setMonthMode(m){mMode=m;renderMonth()}
 function setMonthFilter(f){mFilter=f;renderMonth()}
-function togglePick(){mPickOpen=!mPickOpen;renderMonth()}
-function togglePerson(id){const i=mPeople.indexOf(id);if(i<0)mPeople.push(id);else mPeople.splice(i,1);renderMonth()}
-function pickAll(){mPeople=[];renderMonth()}
-function pickMe(){mPeople=[meId];renderMonth()}
+// 人員複選：在選單裡先勾，按「顯示」才更新月總表；選過的人下次打開還在
+function togglePick(){mPickOpen=!mPickOpen;if(mPickOpen)mDraft=mPeople.filter(id=>person(id));renderMonth()}
+function togglePerson(id){const i=mDraft.indexOf(id);if(i<0)mDraft.push(id);else mDraft.splice(i,1);renderPick()}
+function pickAll(){mDraft=[];renderPick()}
+function pickMe(){mDraft=[meId];renderPick()}
+function pickApply(){mPeople=mDraft.slice();save('mpeople',mPeople);mPickOpen=false;renderMonth()}
+function pickCancel(){mPickOpen=false;renderMonth()}
 function renderPick(){
   const btn=document.getElementById('pplBtn'),note=document.getElementById('pplNote'),box=document.getElementById('pplPick');
   const sel=roster.filter(p=>mPeople.includes(p.id));
@@ -970,8 +1029,11 @@ function renderPick(){
   note.textContent=sel.length?sel.slice(0,4).map(short).join('、')+(sel.length>4?' 等':''):'';
   box.classList.toggle('open',mPickOpen);
   if(!mPickOpen){box.innerHTML='';return}
-  box.innerHTML='<div class="quick"><button onclick="pickAll()">全部人</button><button onclick="pickMe()">只有我</button></div>'
-    +'<div class="names">'+roster.slice().sort(byCode).map(p=>'<button class="'+(mPeople.includes(p.id)?'on':'')+'" onclick="togglePerson(\''+esc(p.id)+'\')">'+esc(short(p))+'</button>').join('')+'</div>';
+  const dn=mDraft.filter(id=>person(id)).length;
+  box.innerHTML='<p class="pk-hint">可以一次點選很多人，點第二次取消。選好按「顯示」。</p>'
+    +'<div class="quick"><button class="'+(dn?'':'on')+'" onclick="pickAll()">全部人</button><button onclick="pickMe()">只有我</button></div>'
+    +'<div class="names">'+roster.slice().sort(byCode).map(p=>{const on=mDraft.includes(p.id);return '<button class="'+(on?'on':'')+'" aria-pressed="'+on+'" onclick="togglePerson(\''+esc(p.id)+'\')">'+(on?'✓ ':'')+esc(short(p))+'</button>'}).join('')+'</div>'
+    +'<div class="pk-foot"><button class="btn" onclick="pickCancel()">取消</button><button class="btn pri" onclick="pickApply()">顯示'+(dn?' '+dn+' 人':'全部人')+'</button></div>';
 }
 function monthMove(d){
   const t=today();
@@ -987,7 +1049,7 @@ function monthDates(){
   const out=[];for(let d=new Date(a);d<=b;d=ad(d,1))out.push(d);return out;
 }
 function byCode(a,b){const na=parseFloat(a.id),nb=parseFloat(b.id);return(!isNaN(na)&&!isNaN(nb))?na-nb:a.id.localeCompare(b.id)}
-function shiftOnDate(p,date){const off=wo(date),idx=(date.getDay()+6)%7,n=numOf(p,off);return n==null?null:Object.assign(shiftAt(n,off,idx),{n,off,idx})}
+function shiftOnDate(p,date){const off=wo(date),idx=(date.getDay()+6)%7,n=numOf(p,off);if(n==null&&!(p&&p.ap))return null;return Object.assign(shiftAt(n,off,idx),{n,off,idx})}
 function cellHTML(x,hit){
   const c=cls(x.s,x.holD);let inner,sm=false;
   if(x.s.startsWith('12-8')){inner='12-8<small>'+esc(x.s.slice(5))+'</small>';sm=true}else{inner=esc(x.s);sm=x.s.length>3}
@@ -1012,18 +1074,18 @@ function renderMonth(){
   let h1='<tr>',h2='<tr>';
   cols.forEach(c=>{
     const zs=c.zs?' zs':'';
-    if(c.no){h1+='<th class="no'+zs+'" rowspan="2">號</th>';return}
+    if(c.no){h1+='<th class="no'+zs+'" rowspan="2">號<br>碼</th>';return}
     const d=c.d,k=dk(d),hol=HOL[k],we=d.getDay()===0||d.getDay()===6;
     const cl=(k===tk?'td':hol?'hd':we?'we':'')+zs;
     h1+='<th class="'+cl+'">'+(mMode==='month'?d.getDate():md(d))+'</th>';
     h2+='<th class="'+cl+'">'+WD[(d.getDay()+6)%7]+(hol?'<small class="hn">'+esc(hol)+'</small>':'')+'</th>';
   });
   h1+='</tr>';h2+='</tr>';
-  const ppl=roster.filter(p=>(!mPeople.length||mPeople.includes(p.id))&&cols.some(c=>c.no&&inRot(p,wo(c.d)))).slice().sort(byCode);
+  const ppl=roster.filter(p=>(!mPeople.length||mPeople.includes(p.id))&&(p.ap||cols.some(c=>c.no&&inRot(p,wo(c.d))))).slice().sort(byCode);
   const rows=ppl.map(p=>{
     let r='<tr class="'+(p.id===meId?'me':'')+'">';
     cols.forEach(c=>{
-      if(c.no){const n=numOf(p,wo(c.d));r+='<td class="no'+(c.zs?' zs':'')+'">'+(n==null?'—':n)+'</td>';return}
+      if(c.no){const n=numOf(p,wo(c.d));r+='<td class="no'+(c.zs?' zs':'')+'">'+(n==null?'—':'<b>'+n+'</b>')+'</td>';return}
       const x=shiftOnDate(p,c.d);
       if(!x){r+='<td class="c'+(c.zs?' zs':'')+'"><span class="na">—</span></td>';return}
       const cl=cls(x.s,x.holD);
