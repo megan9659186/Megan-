@@ -1,6 +1,6 @@
 {
     checked: "2026-08-07",
-    updated:"2026-11-24",
+    updated:"2026-11-26",
     specialty:"一般外科",
     alsoSpec:["耳鼻喉科"],
     name:"甲狀腺切除術",
@@ -58,7 +58,41 @@
     ],
     lit:[
       {
-        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點", note:"第 10 版,第 66 章(耳鼻喉與頭頸部手術麻醉)",
+        tag:"Miller", cls:"miller", label:"Miller's Anesthesia 教科書重點", note:"第 10 版,第 66 章(耳鼻喉與頭頸部手術麻醉);第 29 章(合併疾病:甲亢、甲狀腺風暴、甲低、副甲狀腺與血鈣)",
+        preop:[
+          "<b>甲亢準備</b>:控制症狀,評估心律不整、心衰竭等器官影響,以及甲狀腺腫壓迫氣道的程度",
+          "PTU、methimazole 約 6–8 週控制;<b>propranolol 為首選 β-blocker</b>(同時減少 T4 轉 T3);時間不夠或藥物無效 → SSKI 約 7–10 天快速控制;<b>抗甲狀腺藥手術當天早上照吃</b>",
+          "<b>控制良好的指標</b>:free T4 正常、沒有明顯甲亢症狀;TSH 可能落後 4–6 週仍偏低",
+          "<b class='w'>甲亢未控制只做急診手術</b>,或內科治療無效、靠手術控制病情者;新證據顯示即使無法耐受抗甲狀腺藥,甲狀腺切除也未增加風暴與併發症",
+          "大型甲狀腺腫:仔細評估氣道並看頸部 CT,決定當天氣道處理",
+          "<b>甲低</b>:甲狀腺素手術當天照吃;輕度風險低,<b>嚴重甲低擇期手術前要先控制</b>(心肺失代償風險);有缺血性心臟病者補充要慢",
+          "<b>副甲狀腺亢進 / 高血鈣</b>:心電圖看 PR 延長、QT 縮短;嚴重高血鈣會明顯容積不足 → 術前補液,必要時加 furosemide",
+          "<b>慢性副甲狀腺低下</b>:血鈣維持在正常範圍下半(口服鈣、維生素 D);心電圖看 QTc"
+        ],
+        hemo:[
+          "<b>甲亢</b>:收縮性高血壓、脈壓變寬、全身血管阻力下降;心房顫動、竇性心搏過速,最後可能高輸出心衰竭",
+          "甲亢病人可能對兒茶酚胺較敏感 → 傳統建議低血壓用<b>直接作用</b>升壓劑(phenylephrine)而非 ephedrine,但仍有爭議",
+          "<b>嚴重甲低</b>:心輸出下降、心搏過緩、QTc 延長致心室性心律不整、容積不足 → 麻醉藥容易造成低血壓;補液時注意心臟失代償"
+        ],
+        intraop:[
+          "<b>高血鈣</b>:骨骼病變者擺位小心,避免病理性骨折",
+          "<b>低血鈣</b>:避免過度換氣與給 bicarbonate(鹼中毒使游離鈣下降);大量輸血的 citrate 會降低游離鈣;游離鈣突然下降可致嚴重低血壓"
+        ],
+        drug:[
+          "<b>甲亢</b>:甲狀腺功能不影響吸入麻醉 MAC;propofol 清除率與分布體積增加 → <b>TIVA 速率要提高</b>;心輸出高,誘導可能較慢;維持足夠麻醉深度,減少交感反應",
+          "避免交感興奮藥物:<b>ketamine、pancuronium、抗膽鹼藥</b>",
+          "術中甲亢症狀以 <b>β-blocker</b> 為主:先給小劑量 esmolol(0.1–0.2 mg/kg)試探,心衰竭未惡化再滴定;<b class='w'>β-blocker 只能控制症狀,不能預防甲狀腺風暴</b>",
+          "<b>嚴重甲低</b>:可能誤吸 → 考慮 RSI;對鴉片與鎮靜藥敏感、甦醒延遲 → 長效鎮靜藥謹慎;後天性 von Willebrand 可致出血;矯正低血鈉、低血糖",
+          "<b>高血鈣會拮抗肌鬆</b>,血鈣變化也會影響肌鬆 → 以 TOF 監測、滴定"
+        ],
+        postop:[
+          "<b>甲狀腺風暴</b>:可在術中或術後 18 小時內發生;表現為高燒、心搏過速、意識改變,與 MH、pheo、NMS 難區分",
+          "<b>風暴處置</b>:esmolol 輸注、積極降溫、acetaminophen、<b>hydrocortisone</b>(治療可能合併的腎上腺功能不全並減少 T4 轉 T3)、抗甲狀腺藥依內分泌科;準備處理心衰竭與心律不整;<b>心房顫動避免用 amiodarone</b>;ephedrine 等間接作用藥謹慎或避免;持續監測體溫",
+          "選擇性傷到雙側<b>內收肌</b>纖維 → 外展肌相對無對抗 → 誤吸風險;選擇性傷到<b>外展肌</b> → 內收肌無對抗 → 呼吸道阻塞",
+          "<b>血腫</b>:可考慮直接在恢復室打開傷口,不要等回手術室",
+          "<b>低血鈣</b>(副甲狀腺誤切):喉部喘鳴、抽搐、肌肉僵硬、感覺異常、Chvostek / Trousseau 徵象、QT 延長;有症狀 → 10% calcium gluconate 10–20 mL(5 mL/min),再持續輸注;嚴重時 10% calcium chloride 10 mL(10 分鐘);同時矯正鎂、磷(劑量依本院標準與主治醫師)",
+          "副甲狀腺切除後評估聲帶功能(請病人發『咿』音)"
+        ],
         airway:[
           "喉返神經支配環甲肌以外的所有喉內肌;<b>單側損傷</b> → 聲帶停在旁正中位置、聲音沙啞(平靜呼吸時可能不明顯,氣流增加時才出現)",
           "<b>雙側損傷</b> → 平靜呼吸也有喘鳴、呼吸困難,甚至完全呼吸道阻塞,常需氣切",
@@ -120,6 +154,7 @@
       "Wang, T. S., Lyden, M. L., & Sosa, J. A. (2026). Thyroidectomy. In UpToDate. Wolters Kluwer. (Topic last updated September 28, 2026).",
       "Robertson, A. C. (2026). Anesthesia for patients with thyroid disease and for patients who undergo thyroid or parathyroid surgery. In UpToDate. Wolters Kluwer. (Topic last updated October 27, 2026).",
       "Parotto, M., & Ellard, L. (2026). Extubation following anesthesia. In UpToDate. Wolters Kluwer. (Topic last updated October 28, 2026).",
+      "Sweitzer, B. J., Oprea, A. D., & Gerlach, R. M. (2025). Anesthetic implications of concurrent diseases. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 873–929.e7). Elsevier.",
       "Patel, A. (2025). Anesthesia for otolaryngologic and head–neck surgery. In M. A. Gropper, L. I. Eriksson, L. A. Fleisher, et al. (Eds.), Miller's anesthesia (10th ed., pp. 2103–2129.e4). Elsevier."
     ],
     collapse:true
