@@ -5146,6 +5146,7 @@ const SURGERIES = [
     hemo:[
       "<b class='w'>Pheo:三個高血壓、心律不整高峰</b><br>①插管 ②擺位、建立氣腹 ③<b>腫瘤操作</b>(壓力最大)→ 隨時與外科溝通,必要時請外科暫停操作;UpToDate 作者結紮前的目標收縮壓約 <b>100–160 mmHg</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>即使術前 α-blockade 做得很好,<b>直接擠壓腫瘤</b>仍可能讓兒茶酚胺大量釋放,收縮壓瞬間衝到 200 以上、合併心搏過速或心室性心律不整。處理靠<b>短效、可快速調整</b>的藥物(血管擴張劑、短效 β-blocker、magnesium),並請外科暫停操作。氣腹本身也會壓迫腫瘤,所以建立氣腹時一樣要盯血壓。</span>",
       "<b class='w'>Pheo:腎上腺靜脈結紮後 → 血壓可能驟降</b><br>先停所有降壓藥 → 輸液 → phenylephrine → norepinephrine → 仍頑固加 vasopressin(依本院標準稀釋表);事先請外科在結紮前喊出來<button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden>腫瘤靜脈一綁,兒茶酚胺來源瞬間消失;但血管長期處於收縮狀態、<b>受體被下調</b>,加上術前 α-blocker(尤其 phenoxybenzamine 作用長)殘留,血管張力突然沒了 → <b>低血壓</b>。所以結紮前就要把降壓輸注關小、準備好輸液與升壓劑。</span>",
+      "<b class='w'>結紮後低血壓升壓劑仍壓不住 → 先排除再考慮 hydrocortisone</b><br>先排除<b>出血</b>(右側想到 IVC)、<b>低血糖</b>、<b>α-blocker 殘留</b>;單側 pheo <b>不常規給類固醇</b>,合併低血糖、高血鉀、低血鈉時更要想到腎上腺危象 → 先抽 cortisol(不等報告)再給 <b>hydrocortisone 100 mg IV</b><button class='info-btn' type='button' aria-expanded='false' onclick='toggleInfo(this)'>ⓘ 說明</button><span class='info-panel' hidden><b>為什麼不常規給</b>:單側 pheo 切除後的低血壓主要是兒茶酚胺撤退、α 受體下調、α-blocker 殘留與容積不足,處理靠輸液與升壓劑;Miller 對 α 致效劑無效者列的是 vasopressin、methylene blue,不是類固醇。<br><b>計畫性補充(事先就給)</b>:雙側切除、腫瘤同時分泌皮質醇(Cushing 或 dexamethasone 抑制試驗異常)、長期使用類固醇。<br><b>疑似危象怎麼做</b>:①先抽 cortisol(可加 ACTH),但不要等報告;②hydrocortisone 100 mg IV push,因為它有礦物皮質素作用;③不要用 dexamethasone 代替,也避免 etomidate;④同時積極補液、升壓,追蹤血糖、K、Na;⑤之後的維持與減量交給內分泌科。<br><b>證據</b>:單側切除後頑固低血壓經驗性給 hydrocortisone,Miller 與 UpToDate 都沒有直接建議,是套用腎上腺危象處理原則的臨床判斷。</span>",
       "<b>右側腫瘤緊鄰 IVC</b>:右腎上腺靜脈短、直接匯入 IVC → 撕裂時出血快;左側靠近脾、胰尾與腎靜脈",
       "氣腹與 CO₂ 吸收 → 靜脈回流下降、高碳酸;側臥折床本身也會減少靜脈回流"
     ],
@@ -8396,10 +8397,17 @@ const SECTION_DEFS = [
      { t:"說明文字", en:"Surgery English Name" }     → 可點,直接跳到該台手術
    en 必須與該手術物件的 en 欄位完全一致(對不上就自動退回純文字)。
    ============================================================ */
-const APP_VERSION = "v15.8";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
+const APP_VERSION = "v15.9";          /* 每次改版手動 +0.1,並在 UPDATES 最上面加一筆 */
 const APP_UPDATED = "2026-11-26";    /* 本版更新日期,顯示在首頁標題下 */
 
 const UPDATES = [
+  {
+    date: "2026-11-26",
+    note: "腎上腺切除術:新增腫瘤切除後頑固低血壓何時考慮 hydrocortisone。",
+    items: [
+      { t:"達文西機器人腎上腺切除術:血流動力學新增結紮後頑固低血壓的判斷流程(先排除出血、低血糖、α-blocker 殘留),以及疑似腎上腺危象時 hydrocortisone 的給法與時機", en:"Robotic-Assisted Adrenalectomy (da Vinci)" }
+    ]
+  },
   {
     date: "2026-11-26",
     note: "腎上腺切除術新增 Miller 與 UpToDate 重點;甲狀腺切除術補充 Miller 甲狀腺、副甲狀腺疾病內容。",
