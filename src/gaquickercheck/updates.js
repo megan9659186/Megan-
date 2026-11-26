@@ -1,5 +1,28 @@
 [
   {
+    date: "2026-11-26",
+    note: "腎上腺切除術:新增腫瘤切除後頑固低血壓何時考慮 hydrocortisone。",
+    items: [
+      { t:"達文西機器人腎上腺切除術:血流動力學新增結紮後頑固低血壓的判斷流程(先排除出血、低血糖、α-blocker 殘留),以及疑似腎上腺危象時 hydrocortisone 的給法與時機", en:"Robotic-Assisted Adrenalectomy (da Vinci)" }
+    ]
+  },
+  {
+    date: "2026-11-26",
+    note: "腎上腺切除術新增 Miller 與 UpToDate 重點;甲狀腺切除術補充 Miller 甲狀腺、副甲狀腺疾病內容。",
+    items: [
+      { t:"達文西機器人腎上腺切除術:新增 Miller(腎上腺功能不全、Cushing、pheochromocytoma、Conn)與 UpToDate(pheochromocytoma 麻醉)分頁;主卡補充結紮前目標血壓、結紮後升壓順序、禁用與避免的藥物、腎上腺危象處理、Conn 不需補類固醇、術後血糖監測頻率", en:"Robotic-Assisted Adrenalectomy (da Vinci)" },
+      { t:"甲狀腺切除術:Miller 分頁新增甲亢術前準備與控制指標、術中血流動力學與用藥、甲狀腺風暴處置、嚴重甲低、副甲狀腺亢進與術後低血鈣", en:"Thyroidectomy" },
+      { t:"達文西機器人腎上腺切除術:其他文獻新增血流動力學段落,整理術中血壓不穩定與靜脈結紮後、術後低血壓的預測因子(腫瘤大小、normetanephrine 濃度、術前 β-blocker、冠心病等)", en:"Robotic-Assisted Adrenalectomy (da Vinci)" }
+    ]
+  },
+  {
+    date: "2026-11-25",
+    note: "泌尿科新增達文西機器人腎上腺切除術。",
+    items: [
+      { t:"達文西機器人腎上腺切除術:新增整張卡片,依腫瘤功能(pheochromocytoma、Cushing、Conn)整理術前準備、術中血壓高峰與靜脈結紮後低血壓、類固醇補充、術後低血糖與電解質變化,並附其他文獻重點", en:"Robotic-Assisted Adrenalectomy (da Vinci)" }
+    ]
+  },
+  {
     date: "2026-11-24",
     note: "麻醉冷知識:疼痛路徑圖可點英文字看說明,四步驟中文直接標在圖上,圖片放大。",
     items: [
